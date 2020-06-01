@@ -20,7 +20,10 @@ if [ $machine = 'mars' ] || [ $machine = 'venus' ]; then
   export COMP_SYS=intel_linux
 elif [ $machine = 'luna' ] || [ $machine = 'surge' ]; then
   echo cray
-  exit
+  module purge
+  module load gcc/4.9.2
+  export CC=gcc
+  export FC=gfortran
 else
   $machine NOT SUPPORTED.  STOP
   exit 1
