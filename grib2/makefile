@@ -96,9 +96,9 @@
 # export FC="gfortran -fplugin=dragonegg"
 #
 # for intel on linux
-# export CC=icc
-# export FC=ifort
-# export COMP_SYS=intel_linux
+#export CC=icc
+#export FC=ifort
+#export COMP_SYS=intel_linux
 #
 # can uncomment following two lines to use gcc/gfortran
 #export CC=gcc
@@ -115,15 +115,15 @@ SHELL=/bin/sh
 
 
 # Warning do not set both USE_NETCDF3 and USE_NETCDF4 to one
-USE_NETCDF3=1
+USE_NETCDF3=0
 USE_NETCDF4=0
 USE_REGEX=1
 USE_TIGGE=1
 USE_MYSQL=0
-USE_IPOLATES=3
+USE_IPOLATES=0
 USE_SPECTRAL=0
 USE_UDF=0
-USE_OPENMP=1
+USE_OPENMP=0
 USE_PROJ4=0
 USE_WMO_VALIDATION=0
 DISABLE_TIMEZONE=0
@@ -133,7 +133,7 @@ DISABLE_ALARM=0
 USE_G2CLIB=0
 USE_PNG=1
 USE_JASPER=1
-USE_AEC=1
+USE_AEC=0
 
 # Add any customization comments, appears in help and config pages
 BUILD_COMMENTS=stock build

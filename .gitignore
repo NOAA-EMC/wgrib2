@@ -1,0 +1,12 @@
+*.o
+*.a
+*.mod
+*.la
+grib2/zlib-1.2.11
+grib2/man
+grib2/libpng-1.2.57
+grib2/share
+grib2/jasper-1.900.1
+grib2/lib/pkgconfig
+grib2/gctpc
+grib2/bin
