@@ -1,0 +1,32 @@
+                                OpenMP                    revised 7.2016
+
+OpenMP is a shared-memory parallel-programming API.  As the grid dimensions get larger,
+the need for parallel computing becomes more important.  With OpenMP, wgrib2 will use
+multiple threads, typically one thread per core.  For the typical PC, wgrib2 will run 
+on the number of cores that are on the CPU chip which is typically 2, 3, 4, 6 or 8.
+(Yes, I've owned machines with 2, 3, 4, 6 and 8 cores.) The multi-core speedup is only 
+significant when the grids have several million grid points.
+
+You can control the number of cores used by the environment variable OMP_NUM_THREADS
+ and the -ncpu option.  The latter overrides the former.
+
+Status: working
+  Tested: AIX: xlc
+          Ubuntu 12.04+
+          Redhat 4: gcc did not officially support OpenMP, had problems
+          Redhat 5+: gcc, open64
+
+Hints:
+     complex-packing reading is parallelized when bitmaps are not used (-g2clib 0/1)
+     complex-packing reading is partly parallelized if bitmaps are used (-g2clib 0/1)
+     complex-packing writing is partly parallelized.
+     simple-packing is parallelized
+     jpeg2000, png, AEC are not parallelized because they depends on an external libraries
+     geolocation is parallelized except when using Proj4.
+     Running multiple copies of wgrib2 can be done along with OpenMP.
+     Nodes with 24+ cores should have environment variable OMP_NUM_THREADS set to
+      a number less than the number of cores. Little perforance gain for
+      a large number of cores.
+     NUMA should be considered.
+     wgrib2ms/wgrib2mv is faster than using wgrib2 with OpenMP.  
+        really fast: wgrib2ms/wgrib2mv with AEC compression

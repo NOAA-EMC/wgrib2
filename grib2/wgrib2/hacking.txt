@@ -1,0 +1,12 @@
+               Hacking, in the good sense of the word
+
+   Many people want a customized programs to handle a specific task.  With wgrib2,
+you should try modifying the program by adding your own option.  This will
+allow you to easily upgrade to future versions.  (Just add your module to the wgrib2
+directory.)
+
+ Ex.  instead of modifying -text option, add -my_text option
+      copy f_text() as f_my_text() and modify the latter
+
+
+

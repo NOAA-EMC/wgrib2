@@ -1,0 +1,6 @@
+    case 0: string="probability < lower limit"; break;
+    case 1: string="probability > upper limit"; break;
+    case 2: string="probability between upper and lower limits"; break;
+    case 3: string="probability > lower limit"; break;
+    case 4: string="probability < upper limit"; break;
+    case 255: string="missing"; break;

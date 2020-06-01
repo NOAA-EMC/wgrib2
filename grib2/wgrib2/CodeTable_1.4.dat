@@ -1,0 +1,9 @@
+    case 0: string="Analysis Products"; break;
+    case 1: string="Forecast Products"; break;
+    case 2: string="Analysis and Forecast Products"; break;
+    case 3: string="Control Forecast Products"; break;
+    case 4: string="Perturbed Forecast Products"; break;
+    case 5: string="Control and Perturbed Forecast Products"; break;
+    case 6: string="Processed Satellite Observations"; break;
+    case 7: string="Processed Radar Observations"; break;
+    case 255: string="Missing"; break;

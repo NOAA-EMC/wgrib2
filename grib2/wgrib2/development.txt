@@ -1,0 +1,15 @@
+8/2006-12/2006
+        rather than using .h for the various values .. use code
+
+int code_table_X_Y(sec)
+        returns the value of code table
+        -1 if no table
+
+int flag_table_X_Y(sec)
+        returns the value of code table in lowest byte
+        -1 if no table
+
+         Use code_table_X_Y(sec) and flag_table_X_Y(sec) to get code and flag values instead of 
+           using entries in the grb2.h file.  The code and flag tables move around so much, code 
+           is better than .h entries.  The grb2.h equivalents of code/flag_table_X_Y are going to 
+           be eliminated with time.

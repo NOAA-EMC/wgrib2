@@ -1,0 +1,8 @@
+    case 0: string="No"; break;
+    case 1: string="Yes"; break;
+    case 4: string="Low"; break;
+    case 5: string="Reserved"; break;
+    case 6: string="Medium"; break;
+    case 7: string="Reserved"; break;
+    case 8: string="High"; break;
+    case 255: string="Missing"; break;

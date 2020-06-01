@@ -1,0 +1,6 @@
+    case 0: string="Meteorological Products"; break;
+    case 1: string="Hydrological Products"; break;
+    case 2: string="Land Surface Products"; break;
+    case 3: string="Space Products"; break;
+    case 10: string="Oceanographic Products"; break;
+    case 255: string="Missing"; break;

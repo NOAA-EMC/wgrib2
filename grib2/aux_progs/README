@@ -1,0 +1,65 @@
+3/2013           aux_programs
+
+Some programs for multitasking wgrib2
+
+gmerge:  combines two or more streams of grib files
+         the output takes one grib message from the 1st file/pipe
+            one grib message fromt eh 2nd file/pipe
+            and so on until you reach the last file/pipe.  Then
+            the process starts again fromt he 1st file/pipe.
+
+         The program is to split the work load over several copies of wgrib2.
+
+            mkfifo pipe1 pipe2
+            wgrib2 IN.grb -for 1::2 -set_grib_type j -grib_out pipe1 &
+            wgrib2 IN.grb -for 2::2 -set_grib_type j -grib_out pipe2 &
+            gmerge OUT.grb pipe1 pipe2
+            rm pipe1 pipe2
+
+        OUT.grb contains the jpeg compressed version of IN.grb.  The compression
+        was run as two tasks.
+
+smallest_grib2:  takes 3 input files/pipes.
+          smallest_grib2 reads 1 grib message from all 3 files/pipes
+            and writes the shortest (byte length) to the output file/pipe.
+         This process continues until the file 1 runs out of data.
+
+         This program is used for compression.
+
+            mkfifo pipe1 pipe2 pipe3
+            wgrib2 IN.grb -set_grib_type c1 -grib_out pipe1 \
+                          -set_grib_type c2 -grib_out pipe2 \
+                          -set_grib_type c3 -grib_out pipe3 &
+            smallest_grib2 OUT.grb pipe1 pipe2 pipe3
+            rm pipe1 pipe2 pipe3
+
+         OUT.grb contains the same data as IN.grb but using the
+         best complex packing (c1, c2 or c3).
+
+
+smallest_4:  like small_grib2 but takes 4 input files/pipes.
+
+            mkfifo pipe1 pipe2 pipe3 pipe4
+            wgrib2 IN.grb -set_grib_type c1 -grib_out pipe1 \
+                          -set_grib_type c2 -grib_out pipe2 \
+                          -set_grib_type c3 -grib_out pipe3 \
+                          -set_grib_type j  -grib_out pipe4 &
+            smallest_grib2 OUT.grb pipe1 pipe2 pipe3 pipe4
+            rm pipe1 pipe2 pipe3 pipe4
+
+         OUT.grb contains the same data as IN.grb but compressed using
+         the best of jpeg and complex packing.
+
+grib_split:  takes a grib2 file and splits it into N pieces
+		input and output files can be pipes
+	grib_split IN OUT-1 OUT-2 .. OUT-N
+
+	mkfifo pipe1a pipe2a pipe1b pipe2b
+	grib_split IN.grb pipe1a pipe2a &
+	wgrib2 pipe1a -set_grib_type j -grib_out pipe1b &
+	wgrib2 pipe2a -set_grib_type j -grib_out pipe2b &
+	gmerge OUT.grb pipe1a pipe2a
+
+	grib_split and -for/-for_n are two solutions to the same problem
+	noticed that on an linux/NFS system, the system time was getting
+        when 12 processes were reading the same file.

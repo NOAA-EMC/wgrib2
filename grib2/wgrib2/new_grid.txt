@@ -1,0 +1,41 @@
+                                           -new_grid
+
+
+-new_grid option uses the NCEP iplib to do grid interpolation.  The iplib is
+based on a grib1 API.
+
+Problems:
+	grib1 uses "single" precision for latitudes and longitudes
+	iplib assumes a spherical earth.
+	iplib uses a fixed radius (not apparent to wgrib2 users)
+	iplib may have some problems with SH regional grids
+	written in fortran
+
+Pluses:
+	supports NCEP model grids
+	available
+	many interpolation options
+
+Customizations of iplib
+	1) portability
+	2) removed spectral interpolation
+	3) removed neighbor budget interpolation
+
+	2 and 3 were mainly done to deduce the code size
+
+
+                                   Adding support for a new Grid
+                                     already supported by iplib
+
+1) new input grid
+
+	Add grid to mk_kgds()  .. sec3 -> kgds
+
+2) new output grid
+	Modify New_grid.c: parse parameters describing new grid
+			   call sec3_new_grid() to create a new sec3. 
+				See sec3_grid.c
+			   add grid to mk_kgds()
+                           
+	Note: adding a new output grid automatically adds it to an supported
+	input grid.

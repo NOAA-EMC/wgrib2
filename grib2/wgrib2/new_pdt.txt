@@ -1,0 +1,109 @@
+4-2014   Adding new product definition templates
+
+Step 1. adding flags  X.Y
+
+PDTs have flags that need to be specified.
+
+Step 1:
+
+if the flag X.Y is already in FlagTable.c, add your flag new PDT to the existing code.
+
+if the flag X.Y is not defined in FlagTable.c, you need to define:
+
+  a) unsigned char *flag_table_X_Y_location(unsigned char **sec);
+     code in in FlagTable.c, prototype in wgrib2.h
+     this routine returns a pointer to the flag.
+
+  b) int flag_table_X_Y(unsigned char **sec);
+     code in in FlagTable.c, prototype in wgrib2.h
+     this routine returns an integer with the contents of the flag (-1 if not available)
+     calls flag_table_X_Y_location(unsigned char **sec)
+
+  c) int f_flag_table_X_Y(ARG0);
+     code in in FlagTable.c, prototype in wgrib2.h
+     a set of comments in FlagTable.c of the format
+
+       /*
+        * HEADER:-1:flag_table_X.Y:inv:0:flag table X.Y, description of flag X.Y
+        */
+
+     These comments are essential.  They are used by the compiling system to
+     define new wgrib2 options.  Format of the HEADER
+
+      HEADER:(priority):(name):(type of option):(number of args):(description)
+
+     priority = -1  means that the option will only appear in a -help all
+     name = name of option, option calls f_(name)
+     type = type of option: inv, output, inv_output, misc, setup
+
+     f_flage_table_X_Y(ARG0) writes a text output on the value 
+     of the flag.
+
+   d) optional: if you want the ability to set flag X.Y, from wgrib2
+      modify int f_set(ARG2)  in Mod_grib.c
+
+   Note: in the old standard, flag_table_X_Y_location() was optional.
+
+
+Step 2:
+
+Adding code tables from the new PDT.
+
+if the code table  X.Y is already in CodeTable.c, add your new PDT.
+if the code table X.Y is not defined in CodeTable.c, you need to define it.
+   This step is like adding a new flag, you need to define new functions
+   a) unsigned char *code_table_X_Y_location(unsigned char **sec);
+   b) int code_table_X_Y(unsigned char **sec);
+   c) int f_code_table_X_Y(ARG0);
+   optional: if you want the ability to set code table X.Y, from wgrib2
+       modify int f_set(ARG2)  in Mod_grib.c
+  
+   Note: in the old standard, code_table_X_Y_location() was optional.
+
+
+Step 3:
+
+
+Sometimes the pdt has values that are not flags or code tables. They can be added
+in Code_Values.c  I have been using long names which correspond to the GRIB
+documentation.  
+
+
+Note: File name Convention for *.c files.  If they start with a capital, they
+include an option (f_*) otherwise they start with a lower case.
+
+Note: try to keep the details of the PDTs in the FlagTable.c CodeTable.c
+and Code_Values.c 
+
+
+After step 1, 2 and 3, wgrib2 should work in a minimal way.  Of course there
+is a reason why you want to add a new template.  The next step will depend
+on the new template.  Here is my experience in adding new PDTs.
+
+---------------------------------------------------------------------
+
+          Background: Introduction to full/extended names:
+
+With grib1, the variable name was a good descriptor of the field.
+
+With grib2, the variable name can be modified by tables.  So the
+variable name is no longer a unique identifier.  For example
+with aerosols, every species is identified by mass concentration.  
+For probabilistic precip forecasts, the different forecasts have 
+the same grib identifier.  Having unique identifiers is
+convenient, so wgrib2 can generate full/extended names.  This
+is done by taking the grib name and appending selected fields
+to the name.
+
+---------------------------------------------------------------------
+
+Aerosols:
+   added a new option that will print out the aerosol information.  See Aerosol.c
+
+   Since aerosols alter the definition of the variable, it was added to
+
+   f_misc() in ExtName.c
+
+    
+
+

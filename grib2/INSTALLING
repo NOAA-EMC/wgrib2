@@ -1,0 +1,236 @@
+4/2016                        General Installation 
+
+                    Quick Directions for the Default Configuration
+                    "Any color that you like as long as it's black"
+
+Download source code from
+
+       ftp://ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz
+       http://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz
+
+Untar the compressed tarball
+
+       gunzip wgrib2.tgz
+       tar -xvf wgrib2.tar
+       
+       or if you have gnu tar:  tar -xzvf wgrib2.tgz
+
+Go to the main directory (grib2)
+
+       cd grib2
+
+Define the C compiler that you will be using.  Note icc and pgc have been
+found to be incompatible with the Jasper library and are not allowed.
+
+       sh/bash:    export CC=gcc
+       csh/tcsh:   setenv CC gcc
+
+Compile the wgrib2 using gnu make
+
+       linux:      make
+       MacOS:      gmake
+       Unix:       ???    ask system administrators
+
+Try executing wgrib2
+
+      wgrib2/wgrib2 -config
+
+Copy wgrib2 to SOMEPLACE
+
+      cygwin/linux/unix: cp wgrib2/wgrib2 SOMEPLACE
+
+
+                          Not So Quick Directions
+                          So you want some options
+
+
+Edit the file "makefile" and select the desired options:
+
+# netcdf3: write netcdf files with netcdf-3 library
+# netcdf4: write netcdf files with netcdf-4 library
+# regex: regular expression package used by (match,not), POSIX-2
+# tigge: enable -tigge option for tigge names
+# mysql: write to mysql files
+# ipolates: fortran interpolation library
+# udf: user defined functions
+# openmp: multicore support using OpenMP
+# proj4: use proj4 for geolocation
+# wmo_validation: used for testing new templates
+# fortran_api:  fortran api for callable wgrib2, requires a fortran 2003
+#               feature, subroutines can allocated/deallocated arrays
+# disable_timezone: some OS do not handle time zones in POSIX maner
+#
+# the flags are stored in wgrib2/config.h
+#
+# Warning do not set both USE_NETCDF3 and USE_NETCDF4 to one
+
+These are the default options
+
+USE_NETCDF3=1
+USE_NETCDF4=0
+USE_REGEX=1
+USE_TIGGE=1
+USE_MYSQL=0
+USE_IPOLATES=1
+USE_UDF=0
+USE_OPENMP=1
+USE_PROJ4=0
+USE_WMO_VALIDATION=0
+DISABLE_TIMEZONE=0
+MAKE_FTN_API=1
+
+USE_G2CLIB=0
+USE_PNG=1
+USE_JASPER=1
+
+COMMENTS:
+
+1) Do not set both USE_NETCDF3 and USE_NETCDF4 to one
+2) Some options require a compatible fortran compiler (usually gfortran).
+   You need to set the environment variable FC before running make
+
+       sh/bash:    export FC=gfortran
+       csh/tcsh:   setenv FC gfortran
+
+3) On some machines, you will have to define the C compiler
+   and C preprocessor.  On the NCEP's AIX, I have to define
+   them by
+
+	export CC=/usr/vacpp/bin/xlc_r
+	export CPP=/usr/bin/cpp
+
+
+                          Netcdf
+
+The makefile is set up to use either netcdf v3 or netcdf v4.  Netcdf-4
+makes wgrib2 much bigger, so don't install it unless you really have to.
+The source code for netcdf-4 (and necessary hdf5) is also very big
+and will have to be downloaded separately.  The makefile will
+prompt you for the downloads.  You also have to set the fortran
+compiler. See (2).
+
+The netcdf-3 library is included with this distribution.  The library is
+compiled in enable-C-only mode which is not be that useful for
+fortran code.  Don't use try to link other codes to this library.
+
+                              MYSQL
+
+Install MySQL requires the appropriate headers and libraries to be installed.
+The makefile may have to be modified to reflect the locations of the headers
+and libraries.
+
+
+                  IPOLATES, interpolation library
+
+IPOLATES is the interpolation library used by the -new_grid options.
+In order to use this library, you must have a f90/f95/f2003 fortran compiler
+enabled.  See (2).  You will have to change the source code if you are 
+not using g95, gfortran, openf95 or xlf.
+
+                              USE_UDF
+
+Set to zero in 99.999% of the times. 
+
+                             USE_PROJ4
+
+Wgrib2 can use Proj4 as its geolocation library.  The default geolocation 
+library, gctpc, is faster.  Proj4 is most used to compare check the
+results from gctpc.
+
+
+                        USE_WMO_VALIDATION
+
+Has been used for validation of proposed WMO extentions.
+
+                       DISABLE_TIMEZONE
+
+Set to zero if most cases.  For one non-POSIX system, the time zones
+had to be disabled in order for a certain option to work correctly.
+
+
+                             OpenMP
+
+OpenMP allows wgrib2 to run faster by using threading the code and
+running on multiple cores.  When you enable OpenMP, your C compiler must 
+support OpenMP v3.0 or higher.  
+
+
+                          MAKE_FTN_API
+
+The MAKE_FTN_API builds the wgrib2 library and the C and fortran API.
+This enables C and Fortran codes to call wgrib2 as a subroutine. This
+also requires a fortran compiler.
+
+
+                            USE_G2CLIB
+
+The internal grib decoders are better than g2clib so there is
+little reason to link in g2clib.  However, I've gotten complaints
+that wgrib2 decoded this field incorrectly.  My reply is that g2clib
+got the same results.
+
+
+                              USE_PNG
+
+If set to zero, the png library is not linked in and png-compressed
+grib message cannot be read.  When was the last time you saw a
+png-compressed grib message?  Must be set to one if g2clib is
+linked int.
+
+                            USE_JASPER
+
+If set to zero, the jasper library used for encoding and decoding
+jpeg2000 is not linked in.  Since jpeg2000-compressed files are
+very common, USE_JASPER should be set to one.  The only exception
+is when you are cross-compiling wgrib2.  Using autoconfig scripts
+(Proj4, png, jasper) can be a challenge.  Of course, you would
+have restrict yourself to simple, complex or ieee packed grib.
+
+
+                     INSTALLING on Cygwin and Windows
+
+The code including the IPOLATES option compiles in the cygwin development 
+system.  You'll have to install extra packages such as the C, gfortran 
+compilers and various scripting utilities. 
+
+    Before you compile, you set the default compilers.
+
+    export CC=gcc
+    export FC=gfortran
+    make
+
+                        INSTALLING on FreeBSD
+
+Set appropriate CC and FC environment variables and try make. wgrib2 v1.9.8
+was compiled with clang and gfortran.
+
+
+                        INSTALLING on Apple OS-X
+
+See Grace Peng's blog.
+
+
+                        INSTALLING on NCEP's AIX
+
+Define default C, C preprocessor and fortran
+
+   export CC=/usr/vacpp/bin/xlc_r
+   export CPP=/usr/bin/cpp
+   export FC=xlf_r
+   gmake
+
+
+			Static vs Dynamic Libraries
+
+The various libraries can be created in both dynamic and static versions.  
+I've tried to make the add-on libraries static.  
+
+                           Testing Package
+
+Yes it does exist.
+
+                             Problems
+
+Perfection?  Not here.
+
+

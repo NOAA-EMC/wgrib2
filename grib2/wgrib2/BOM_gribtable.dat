@@ -1,0 +1,38 @@
+/*
+ * place extra grib definitions that are inserted by hand here
+ *
+ * from BOM
+ * http://www.bom.gov.au/nwp/doc/access/GRIB2notes.shtml
+ * made my own names
+ */
+/*
+  int disc;   Section 0 Discipline
+  int mtab_set;   Section 1 Master Tables Version Number
+  int mtab_low;   Section 1 Master Tables Version Number
+  int mtab_high;   Section 1 Master Tables Version Number
+  int cntr;   Section 1 originating centre, used for local tables
+  int ltab;   Section 1 Local Tables Version Number
+  int pcat;   Section 4 Template 4.0 Parameter category
+  int pnum;   Section 4 Template 4.0 Parameter number
+  const char *name;
+  const char *desc;
+  const char *unit;
+*/
+
+/* {0,1,0,255,8,0,1,192, "WX", "Weather information", "WxInfo"},  */
+
+{ 0, 9, 0, 255, 1, 1, 1, 206, "EVP_OS", "Prelim Evaporation over open sea", "kg/m^2"},
+{ 0, 9, 0, 255, 1, 1, 4, 202, "SFC_SW_DIF", "Prelim Surface shortwave diffuse radiation flux", "W/m^2"},
+{ 0, 9, 0, 255, 1, 1, 4, 203, "SFC_SW_DIR", "Prelim Surface shortwave direct radiation flux", "W/m^2"},
+{ 2, 9, 0, 255, 1, 1, 86, 128, "SMOIST_TRANS", "Prelim Soil moisture avilabile for transpiration", "gm/m^2"},
+
+{ 0, 9, 0, 255, 2, 1, 1, 206, "EVP_OS", "Prelim Evaporation over open sea", "kg/m^2"},
+{ 0, 9, 0, 255, 2, 1, 4, 202, "SFC_SW_DIF", "Prelim Surface shortwave diffuse radiation flux", "W/m^2"},
+{ 0, 9, 0, 255, 2, 1, 4, 203, "SFC_SW_DIR", "Prelim Surface shortwave direct radiation flux", "W/m^2"},
+{ 2, 9, 0, 255, 2, 1, 86, 128, "SMOIST_TRANS", "Prelim Soil moisture avilabile for transpiration", "gm/m^2"},
+
+{ 0, 9, 0, 255, 3, 1, 1, 206, "EVP_OS", "Prelim Evaporation over open sea", "kg/m^2"},
+{ 0, 9, 0, 255, 3, 1, 4, 202, "SFC_SW_DIF", "Prelim Surface shortwave diffuse radiation flux", "W/m^2"},
+{ 0, 9, 0, 255, 3, 1, 4, 203, "SFC_SW_DIR", "Prelim Surface shortwave direct radiation flux", "W/m^2"},
+{ 2, 9, 0, 255, 3, 1, 86, 128, "SMOIST_TRANS", "Prelim Soil moisture avilabile for transpiration", "gm/m^2"},
+

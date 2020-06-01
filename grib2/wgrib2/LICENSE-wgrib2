@@ -1,0 +1,44 @@
+9/2005, 11/2006, 9/2013, 6/2016
+
+                    wgrib2's copyrights and licences
+
+wgrib2 is comprised of components of varying copyrights and licences.
+
+
+                               Libraries
+
+aec(compressioin): BSD 2-clause license, DWD
+gctpc(geolocation): public domain, USGS
+g2clib(grib): public domain, NCEP/NOAA
+HDF (used by netcdf4): HDF license
+iplib(interpolation): public domain, NCEP/NOAA
+jasper(jpeg2000): IMAGE POWER JPEG-2000 PUBLIC LICENSE
+libpng: libpng license
+mysql: used if mysql is installed, see mysql code (not supplied)
+netcdf: netcdf license, UCAR
+PROJ.4(geolocation): MIT style licence
+zlib(compression): zlib license
+
+Except for gctpc (public domain), all the above libraries are optional.
+Of course, you may loose support some functionality.
+
+                  wgrib2 *.c *.h *.sh and documentation
+
+
+The components of wgrib2, the C/Fortran API and wgrib2 library are either in 
+the public domain or covered by the GNU General Public License depending on 
+the files in question.  No other licence will be accepted into this archive 
+of wgrib2 modules.  (Already have too many licences for the libraries.)  Unlike
+the situation with the libraries, it would be difficult to make a PD-only
+version of wgrib2.
+
+Distribution of wgrib2 needs to be compatible with all applicatable licences.
+
+
+                         Contributing to wgrib2
+
+
+Contributions of new files can either be public domain or GNU GPL.
+If you modify an existing file, please state that your contribution
+is of the same (gnu or public domain) as the original file.  Otherwise
+it gets messy.  

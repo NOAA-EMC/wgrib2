@@ -1,0 +1,3 @@
+    case 0: string="Rhumb"; break;
+    case 1: string="Great Circle"; break;
+    case 255: string="Missing"; break;

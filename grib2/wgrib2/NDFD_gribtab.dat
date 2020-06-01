@@ -1,0 +1,30 @@
+/*
+ * place extra grib definitions that are inserted by hand here
+ */
+/*
+  int disc;   Section 0 Discipline
+  int mtab;   Section 1 Master Tables Version Number
+  int cntr;   Section 1 originating centre, used for local tables
+  int ltab;   Section 1 Local Tables Version Number
+  int pcat;   Section 4 Template 4.0 Parameter category
+  int pnum;   Section 4 Template 4.0 Parameter number
+  const char *name;
+  const char *desc;
+  const char *unit;
+*/
+
+{ 0, 1, 8, 0, 1, 192, "WX", "Weather information", "WxInfo"}, 
+{ 0, 1, 8, 0, 0, 193, "APPT", "Apparent temperature", "K"}, 
+{ 0, 1, 8, 0, 19, 194, "CONVOUTLOOK", "Convective hazard outlook", "??"}, 
+{ 0, 1, 8, 0, 19, 197, "PTORNADO", "Probability of tornado", "??"}, 
+{ 0, 1, 8, 0, 19, 198, "PHAIL", "Probability of hail", "??"}, 
+{ 0, 1, 8, 0, 19, 199, "PWIND", "Probability of damaging wind", "??"}, 
+{ 0, 1, 8, 0, 19, 200, "PXTRMTORN", "Probability of extreme tornado", "??"}, 
+{ 0, 1, 8, 0, 19, 201, "PXTRMHAIL", "Probability of extreme hail", "??"}, 
+{ 0, 1, 8, 0, 19, 202, "PXTRMWIND", "Probability of extreme wind", "??"}, 
+{ 0, 1, 8, 0, 19, 215, "TOTALSVRPROB", "Total probability of severe thunderstorms", "??"}, 
+{ 0, 1, 8, 0, 19, 215, "TOTALXTRMPROB", "Total probability of extreme severe thunderstorms", "??"}, 
+{ 0, 1, 8, 0, 19, 217, "WWA", "Watch Warning Advisory", "WxInfo"}, 
+{ 0, 1, 8, 0, 192, 192, "FIREWX", "Critcal Fire Weather", "??"}, 
+{ 0, 1, 8, 0, 192, 194, "DRYLIGHTNING", "Dry lightning", "??"}, 
+/* { 0, 1, 0, 0, 0, 0, "TMP", "Temperature", "K"}, */

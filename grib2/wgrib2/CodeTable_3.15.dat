@@ -1,0 +1,16 @@
+    case 20: string="Temperature [K]"; break;
+    case 100: string="Pressure [Pa]"; break;
+    case 101: string="Pressure deviation from mean sea level [Pa]"; break;
+    case 102: string="Altitude above mean sea level [m]"; break;
+    case 103: string="Height above ground  [m]"; break;
+    case 104: string="Sigma coordinate []"; break;
+    case 105: string="Hybrid coordinate []"; break;
+    case 106: string="Depth below land surface [m]"; break;
+    case 107: string="Potential temperature (theta) [K]"; break;
+    case 108: string="Pressure deviation from ground to level [Pa]"; break;
+    case 109: string="Potential vorticity [K m^-2 kg^-1 s^-1]"; break;
+    case 110: string="Geometric height [m]"; break;
+    case 111: string="Eta coordinate  []"; break;
+    case 112: string="Geopotential height [gpm]"; break;
+    case 160: string="Depth below sea level [m]"; break;
+    case 255: string="Missing []"; break;

@@ -1,0 +1,8 @@
+    case 0: string="no interpolation"; break;
+    case 1: string="bilinear interpolation"; break;
+    case 2: string="bicubic interpolation"; break;
+    case 3: string="nearest neighbor interpolation"; break;
+    case 4: string="budget interpolation"; break;
+    case 5: string="spectral interpolation"; break;
+    case 6: string="neighbor-budget interpolation"; break;
+    case 255: string="missing interpolation"; break;

@@ -1,0 +1,10 @@
+PGI: pgcc
+
+Preliminary testing using pgcc 11-10.0
+
+The makefile doesn't compile Jasper "correctly".  Testing 
+fails with writing of jpeg2000 encoded files.  The Intel
+C compiler fails with the exact same symtoms.  May be
+a Jasper source code problem rather than a compiler problem.
+
+Compiling by pgcc was turned off in the makefile

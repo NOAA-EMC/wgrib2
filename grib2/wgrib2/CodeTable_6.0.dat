@@ -1,0 +1,3 @@
+    case 0: string="a bit map applies to this product and is specified in this section."; break;
+    case 254: string="a bit map previously defined in the same grib2 message applies to this product."; break;
+    case 255: string="a bit map does not apply to this product."; break;

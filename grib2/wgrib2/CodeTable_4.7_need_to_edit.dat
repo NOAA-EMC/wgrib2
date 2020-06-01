@@ -1,0 +1,17 @@
+    case 0: string="Unweighted Mean of All Members"; break;
+    case 1: string="Weighted Mean of All Members"; break;
+    case 2: string="Standard Deviation with respect to Cluster Mean"; break;
+    case 3: string="Standard Deviation with respect to Cluster Mean, Normalized"; break;
+    case 4: string="Spread of All Members"; break;
+    case 5: string="Large Anomaly Index of All Members"; break;
+    case 6: string="Unweighted Mean of the Cluster Members"; break;
+    case 7: string="Interquartile Range (Range between the 25th and 75th quantile)"; break;
+    case 8: string="Minimum Of All Ensemble Members"; break;
+    case 9: string="Maximum Of All Ensemble Members"; break;
+    case 192: string="Unweighted Mode of All Members"; break;
+    case 193: string="Percentile value (10%) of All Members"; break;
+    case 194: string="Percentile value (50%) of All Members"; break;
+    case 195: string="Percentile value (90%) of All Members"; break;
+    case 196: string="Statistically decided weights for each ensemble member"; break;
+    case 197: string="Climate Percentile (percentile values from climate distribution)"; break;
+    case 255: string="Missing"; break;

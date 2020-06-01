@@ -1,0 +1,15 @@
+                                                      mysql
+
+Added by Niklas Sondell, Storm Weather Center
+
+5/2008: to enable, you need to have mysql installed
+        only supported by the "makefile" configuration (5/2008).
+        edit wgrib2/makefile and set USE_MYSQL=1
+
+The function -mysql adds each grid point value into the database.
+To use -mysql, you better know something about mysql because
+you will have to set up a database first.
+
+Questions?  Don't ask me (WNE) because I don't have mysql installed
+at work and I have never used it.  Niklas has agreed to provide
+some support.

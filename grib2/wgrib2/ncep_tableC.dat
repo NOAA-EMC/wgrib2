@@ -1,0 +1,17 @@
+    case 1: string="NCEP Re-Analysis Project"; break;
+    case 2: string="NCEP Ensemble Products"; break;
+    case 3: string="NCEP Central Operations"; break;
+    case 4: string="Environmental Modeling Center"; break;
+    case 5: string="Hydrometeorological Prediction Center"; break;
+    case 6: string="Ocean Prediction Center"; break;
+    case 7: string="Climate Prediction Center"; break;
+    case 8: string="Aviation Weather Center"; break;
+    case 9: string="Storm Prediction Center"; break;
+    case 10: string="Tropical Prediction Center"; break;
+    case 11: string="NWS Techniques Development Laboratory"; break;
+    case 12: string="NESDIS Office of Research and Applications"; break;
+    case 13: string="FAA"; break;
+    case 14: string="NWS Meteorological Development Laboratory (MDL)"; break;
+    case 15: string=" The North American Regional Reanalysis (NARR) Project"; break;
+    case 16: string="Space Environment Center"; break;
+    default: sprintf(tmp,"%d", subctr); string = tmp; break;

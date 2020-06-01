@@ -1,0 +1,18 @@
+    case 0: string="ave"; break;
+    case 1: string="acc"; break;
+    case 2: string="max"; break;
+    case 3: string="min"; break;
+    case 4: string="last-first"; break;
+    case 5: string="RMS"; break;
+    case 6: string="StdDev"; break;
+    case 7: string="covar"; break;
+    case 8: string="first-last"; break;
+    case 9: string="ratio"; break;
+    case 10: string="standardized anomaly"; break;
+    case 11: string="summation"; break;
+#ifdef WMO_VALIDATION
+    case 12: string="confidence index"; break;
+    case 13: string="quality indicator"; break;
+#endif
+/*    case 51: string="climo"; break; */
+    case 255: string="missing"; break;

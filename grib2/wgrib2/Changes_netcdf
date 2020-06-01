@@ -1,0 +1,230 @@
+ 
+ First version submitted by Kristian Nilssen, 2007
+ 3/2007 1st release version, changes by Wesley Ebisuzaki
+
+ List of modifications by Sergey Varlamov, inverse time order
+ 
+ See help file for "how to use" instructions and examples.
+ 
+ Version 20.02.2008 (Sergey Varlamov):
+
+  -corrected code bug in the grid_template processing, need to update
+   from Version 31.01.2008, else all grids are treated as CF-1.0
+   with zero x,y dimention variables added
+
+  -code divided in 3 files:
+     wgrib2nc.h - constant and the netcdf library-independant definitions,
+     Netcdf_sup.c - netcdf library-independant functions,
+     Netcdf.c - netcdf library-dependant, static-only functions,
+                except f_netcdf() function (import it only).
+                
+ Version 31.01.2008 (Sergey Varlamov):
+
+  -changed the way new netcdf file is created: it is created only if
+   no errors and arrived data met all required criteria. It help to avoid
+   generation of empty non-valid netcdf file that could cause
+   an error if the 'next run' will go with an -append option
+
+  -time info in netcdf is saved as double (NC_DOUBLE,
+   was integer NC_INTEGER but no 64b integer type in netcdf 3.6.2).
+   For int(4) type max valid range of dates is 1902-2037 or 1970-2037,
+   depending on C library implementation. Replace mktime by other function?
+
+  -changed here and in all wgrib2 subroutines presentation of
+   latitude and longitude from float to double to preserve accuracy for
+   high-resolution grids (especially ocean data)
+
+  -added nc_time option [[+|-]{yyyymmddhhnnss}][:{dt}{mn|hr|dy}]
+   where date could be used for alignment only (if negative),
+   or it is assumed absolute data input start date.
+   'dt' is time interval for data saved in the netcdf file.
+   The 'normal' calender is assumed.
+   Example:
+     -nc_time -200001010300:6hr
+   would be for data four times a day at 3,9,15 and 21 UTC.
+   If data do not align to initial and time step - these data are
+   silently ignored. Usefull if there is possible some
+   irregularity in grib2 data timing.
+
+  -fatal_error if the level type is unsupported by wgrib2
+ 
+ Version 09.01.2008 (Sergey Varlamov):
+
+  -with the help of Rich Signell added support for export
+   of Polar (grid_template=20) and Lambert (grid_template=30)
+   projected data under the CF-1.0 convention.
+   Mappind is done using "coordinates" attribute and directly
+   defining in the netcdf file the lat-lon values for all points.
+   Other possibility would be to specify in the netcdf file the "grid_mapping"
+   attributes (see CF convention) when mapping to lat-lon will be done
+   by user processing software. It would extend the range of eligible
+   for conversion grid templates in future.
+   CF convention NetCDF files are not directly compatible with GrADS v1.9b4 but
+   potentially could be used with user-provided "GrADS data description file (catalog)".
+   Could be used with the IDL and MATLAB data analysis tools.
+  
+  -changed behavior for -nc_pack option: with 'float' packing option
+   it does the check of data to be in valid data range, with the 'short' or 'byte'
+   option the simple packing of data is also going. Data outside of valid range
+   are writted as _FillValue values (missing). Originally it was an error
+   if non-missing data were found out of 'shor' or 'byte' packing range and
+   'float' option was ignored.
+
+  -updated help file.
+
+  -changed the _FillValue for the float non-packed data to the wgrib2 UNDEFINED,
+   was slightly different. [Do not 'append' data to necdf created with the earlier
+   version of wgrib2 if there could be undefined values - this attribute is not checked
+   or changed after the file first was created (variable added)
+   and new missing values could be treated as valid data].
+  
+ Version 13.07.2007 (Sergey Varlamov):
+
+  -help file was updated; removed dublicating instructions from this code
+
+  -corrected warnings with some compilers (like ecc) when printing size_t X values
+   usind the %d format: now apply %lu format and (unsigned long)X conversion
+   in print operations.
+
+  -added some attributes to the generated netcdf file that could help to make it more
+   "self-describing" as it is the strong feature of netcdf. These include time attributes
+   like reference_time/date if it is possible to fix, time_step etc.
+   The global attributes like center and sub-center information etc could be added.
+   Does somebody need it?
+
+ Version 18.06.2007 (Sergey Varlamov):
+
+  -in the user defined table of GRIB2 to NETCDF conversion parameters
+   it was added support for next optional directives, mainly for
+   the 'advanced' users, see help:
+    $nlev 5               Equivalent of '-nc_nlev'; has precedence over the command line option
+    $levs 1000 500.0 ...  Vertical level values exported to the netcdf file, in netcdf units
+    $lev_type 100:pressure:pressure level:mb:0.01
+                          User-defined type of vertical level for 4D data.
+    $grads 1              Equivalent of  '-nc_grads' if 1 or '-no_nc_grads' if 0; take precedence
+
+  -the total number of fields successfully added or updated in the netcdf file
+   is counted. If the user defined g2nc_table is used for data export to netcdf
+   and no field were added/updated - warning message is issued at the cleanup stage
+   as it could be caused by user error in filling the table. Error example:
+   specify $levs in [mb], but left scaling 1,0. As pressure levels in grib file
+   are default in [Pa] - no one level will fit to user table in [mb] and data
+   will be skipped from output to the netcdf. Hope that warning could help in such cases.
+
+  -corrected some found bugs. These include memory deallocation for the
+   such shared objects as user-defined table for GRIB2 to NETCDF convertion
+   and some others that could impact updating of existing partially undefined
+   netcdf file (undefined vertical levels). Modified some Netcdf.c
+   program variable names to be more self-explanatory,
+   like g2nc_smlt -> g2nc_4Dlt etc.
+
+ Version 13.06.2007 - changes by Sergey Varlamov:
+
+   -in the user defined table of GRIB2 to NETCDF conversion parameters added
+    keyword 'ignore'. New records format could be:
+
+    wgib2_name:wgrib2_level|*:nc_name|ignore[:ignore|no|float|short|byte[:min:max]]
+
+    Min and max values are significant for the short or byte packing only.
+    Both could be omitted; it means that automatic scaling for the short
+    or byte packing will be estimated from the first entered wgib2_name data
+    at the wgrib2_level or at first level in case of '*' as level value.
+
+    If the keyword 'ignore' is found as a netcdf variable name or
+    as a packing type value, the corresponding data are ingnored
+    and do not written to the netcdf file.
+    'Ignore' keyword is recommended if the data from the same
+    grib2 file are exported in number of output files (netcdf or other)
+    by the same wgrib2 process when the same decoded data could be passed
+    to output in other file of any supported type.
+    Doing export to single netcdf file using 'ignore' keyword is not recommended
+    as corresponding data are first decoded and after that skipped from writing
+    to the netcdf file.
+
+   -compare existing variables definition in open netcdf file
+    with new data attributes before updating or adding data.
+
+ Version 11.05.2007 (Sergey Varlamov):
+
+   -added posibility to export data to netcdf as 4D data. Now supported are
+    4D data, 3D data, or mixed 3D and 4D data in one netcdf file.
+    4D data are defined in {TIME,LEV,LAT,LON} space.
+    Grib2 types of vertical levels eligible for export to the netcdf as 4D data
+    are included in nc_4Dlt (this file) and now include types
+    20,100,104,105,107, and 160 of GRIB2 code.
+    First found eligible type is used, error is generetad if other
+    eligible type data are met in the input stream.
+    To activate 4D data output plese use '-nc_nlev' option followed by
+    integer 'max_number_of_vertical_levels'.
+    The 'max_number_of_vertical_levels' defines vertical dimension of
+    4D data exported to the netcdf file and do not apply to the data
+    at the 'non-eligible' vertical levels (like mean sea level etc)
+    or at levels included in to the user-defined
+    GRID2 to NETCDF conversion table explicitly (see description below).
+    Such 'invariant' level data are treated as 3D data
+    defined in {TIME,LAT,LON} space with possible level information
+    included into the variable names as were coded by Wesley Ebisuzaki.
+    If 'max_number_of_vertical_levels' is zero - all coming data are threated as 3D,
+    with level information included in variable names.
+    When existing netcdf file is updated in the '-append' mode (see description below)
+    the value of 'max_number_of_vertical_levels' must not exceed initial value provided
+    when file was first created (defined).
+    First creating netcdf file, vertical level values are not fixed (are undefined)
+    and these are defined one-by-one when data at new level are added
+    to the netcdf file, up to the 'max_number_of_vertical_levels'.
+    It is user responsibility to define monotonically changing sequence
+    of vertical levels, as it is required by the COARDS convention.
+    Error is generated if new vertical level is specified in non-regular
+    order.
+    Example1: sequence of data at: 1000 mb, 850 mb, 950 mb - generate error for 950 mb data
+    Example2: sequence of data at: 1000 mb, 950 mb, 850 mb, 1000 mb, 700 mb...
+    is appropriate as 1000 mb level was already defined and data would be placed
+    correctly in to the netcdf file.
+
+   -it is possible to pack data in netcdf using '-nc_pack' option or user defined table
+    of GRIB2 to NETCDF conversion parameters (see below).
+    With '-nc_pack' option folowed by X=min:max:byte|short] all NEW input variables
+    would be packed in short or byte with corresponding offset and scale fitting
+    given range in specified data type with possible loss of precision.
+    packed=(unpacked-offset)/scale; default no packing    
+    NEW means that if some variable was already defined in the netcdf file
+    and now is appended to it (in -append mode, see below), the initially defined
+    packing parameters are used.
+    Both zero min and max values activate 'auto' packing when scale and offset are defined
+    from first entered field. When packing, fitting is checked, error if data
+    do not fit packing limits.
+    Packing in 'byte' is not recognized by GrADS v1.9b4.
+
+   -added possibility to provide user defined table of GRIB2 to NETCDF
+    conversion parameters.  It would be read from the user file with name provided
+    following the '-nc_table' option.
+
+   -option '-nc_grads' is introduced. GrADS (version 1.9b4) do not support
+    non-constant data time stepping and silently generate wrong time stamps for such
+    netcdf or opendap data sets when creating nice graphics. With this option an error
+    is raised if time step is changing when writing data to the netcdf file. It is possible
+    for the sequence of forecasts as example. Packing to byte also is not supported
+    by GrADS v1.9b4.
+
+   -added support for the '-append' option; it works fine with netcdf files
+    created by wgrib2 as it uses dimension, variable and attribute names
+    from the netcdf file generated by this utility.
+    The existing netcdf file could be expanded in time as well as new variables
+    at invariant vertical levels or in the range of fixed
+    vertical levels could be added. For the netcdf (as 'direct access' data set)
+    '-append' option really is also 'overwrite if same' if new data come with the
+    variable name, level and verftime being same as already recorded in the file.
+    As for all other output types - do not forget to delete invalid netcdf file
+    if it was left from some errorneous runs. Else you could get unpredictable
+    result!
+
+   -changed float "_fillValue" attribute name to data type "_FillValue";
+    No problems with GrADS to recognize this missing value,
+    although not all is clear for me as in COARDS:
+    "In cases where the data variable is packed via the scale_value attribute
+     this implies that the missing_value flag is likewise packed. The same holds
+     for the _FillValue attribute."...
+
+   -check error code on verftime as in other Wesley Ebisuzaki files
+   -many other small changes...
+

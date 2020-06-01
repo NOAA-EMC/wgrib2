@@ -1,0 +1,122 @@
+                                 wgrib2           revised 7.2016
+
+wgrib2 is a program to read/write grib2 files.
+
+
+For documentation, see
+
+    http://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/index.html
+
+
+For documentation of commonly used program options, type
+
+    wgrib2
+
+
+For documentation of all program options, type
+
+   wgrib2 -help all
+
+For documenation of any program option that is poorly described on-line
+or by the "wgrib2 -help all", check the source code by searching
+for "f_{option}" where the option does not include the minus sign.
+
+
+Default makefile options
+
+	USE_NETCDF3=1
+	USE_NETCDF4=0
+	USE_REGEX=1
+	USE_TIGGE=1
+	USE_MYSQL=0
+	USE_IPOLATES=0
+	USE_UDF=0
+	USE_OPENMP=1
+	USE_PROJ4=0
+	USE_WMO_VALIDATION=0
+	DISABLE_TIMEZONE=0
+	MAKE_FTN_API=0
+
+	USE_G2CLIB=0
+	USE_PNG=1
+	USE_JASPER=1
+	USE_AEC=1
+
+To compile without netcdf,    set USE_NETCDF3=0 and USE_NETCDF4=0
+To compile without netcdf v3, set USE_NETCDF3=1 and USE_NETCDF4=0
+To compile without netcdf v4, set USE_NETCDF3=0 and USE_NETCDF4=1
+
+For netcdf4, the netcdf4 and hdf5 libraries are usually not included 
+  in the wgrib2.tgz file to save space.  The makefile suggests
+  how to download the netcdf4 and hdf5 libraries.
+
+If you have non-POSIX C compiler system that doesn't include <regex.h>, then
+you have to set USE_REGEX=0.  This disables the use of regular expressions. 
+
+No harm to keep TIGGE support on.  USE_TIGGE=1
+
+Support for Mysql is an option.  You have to modify the makefile to indicate 
+the locations of the mysql includes and libraries and set USE_MYSQL=1
+
+The option -new_grid uses the ipolates library to do the interpolation.
+The required libraries are written in fortran and a few compilers are
+already supported in the makefile.  For other compilers, you are on
+your own.  The source code and makefile will have to be modified to use 
+the ipolates option.  Consult a local expert if you want to install this 
+optional package.  No help is available from NCEP for installing the package.
+
+User Defined Functions (UDF) allow you to run shell commands from
+within wgrib2. UDF are not available on windows machines unless
+<unistd.h> is implimented by the compiler (cygwin, MinGW).  For
+the security paranoid, turn off UDF by USE_UDF=0.  
+
+OpenMP allows wgrib2 to run on many cores for a faster run time.  See 
+README.openmp.  The USE_OPENMP option will compile wgrib2 with openmp 
+for several compilers.
+
+Proj4 is a open-source geolocation library.  Usually the faster gctpc library
+is used for geolocation.  At the current time, Proj4 does not add any
+capabilty over gctpc.
+
+Wgrib2 has been used to test proposals to the WMO grib standard.  Developers
+might want to have conditional compilation of the tests using 
+
+        #ifdef WMO_VALIDATION
+            ... test code ...
+        #endif
+
+and compile using
+
+	USE_WMO_VALIDATION=1
+
+
+If you have a non-POSIX C compiler system that doesn't support time zones
+or supports time zones in a non-POSIX manner, then you have to set
+DISABLE_TIMEZONE to 1.
+
+Wgrib2 is both a stand alone utility and a library that is callable
+from both C and Fortran.  To enable the making the wgrib2 library, you
+have to set
+
+	MAKE_FTN_API=1
+
+In older versions of wgrib2, the g2clib was the default decoder of grib files.
+In the current version, you can use g2clib as an optional decoder.  The main 
+use of compiling wgrib2 with g2clib is for testing g2clib.   
+
+	USE_G2CLIB=1
+
+Support for the png, jpeg2000 and CDCSD(AEC) compression can be turned off through 
+the following options.
+
+	USE_PNG=0
+	USE_JASPER=0
+        USE_AEC=0
+
+
+You might want to turn off the various compressions because
+
+   1) libraries do not compile correctly (icc and pgcc have problems with Jasper)
+   2) reduce the executable size and compile time
+   3) problems with cross-compiling
+

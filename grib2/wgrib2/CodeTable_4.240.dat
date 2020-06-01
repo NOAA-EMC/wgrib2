@@ -1,0 +1,9 @@
+    case 0: string="No specific distribution function given"; break;
+    case 1: string="Delta functions with spatially variable concentration and fixed diameters Dl(p1) in meter"; break;
+    case 2: string="Delta functions with spatially variable concentration and fixed masses Ml(p1) in kg"; break;
+    case 3: string="Gaussian (Normal) distribution with spatially variable concentration and fixed mean diameter Dl(p1) and variance delta (p2)"; break;
+    case 4: string="Gaussian (Normal) distribution with spatially variable concentration, mean diameter and variance"; break;
+    case 5: string="Log-normal distribution with spatially variable number density, mean diameter and variance"; break;
+    case 6: string="Log-normal distribution with spatially variable number density, mean diameter and fixed variance delta (p1)"; break;
+    case 7: string="Log-normal distribution with spatially variable number density and mass density and fixed variance delta and fixed particle density rho (p2)"; break;
+    case 65535: string="Missing"; break;

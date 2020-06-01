@@ -1,0 +1,7 @@
+    case 0: string="Operational Products"; break;
+    case 1: string="Operational Test Products"; break;
+    case 2: string="Research Products"; break;
+    case 3: string="Re-Analysis Products"; break;
+    case 4: string="TIGGE operational Products"; break;
+    case 5: string="TIGGE test Products"; break;
+    case 255: string="Missing"; break;

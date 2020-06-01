@@ -1,0 +1,33 @@
+			Introduction: wgrib2
+
+Wgrib2 is a program for decoding and making inventories of GRIB2 files.  Using wgrib2
+is similar to using wgrib except the number of options (flags) has increased to a huge
+number and is expected to triple before things settle down.  Why has the number of
+options increased?  The idea was to make wgrib2 (1) more configurable, (2)
+easier to customize and (3) GRIB2 contains a huge amount of new options for
+the metadata.  Maybe modularity and ease of development/maintaince could be
+mentioned.
+
+			Is it an option or a language?
+
+If you look at unix programs like awk, sed and even find, you see that the
+command line contains options that get "run" for every line or file in the
+case of "find".  Wgrib2 takes that concept a little bit farther.  Each
+option on the command line is now a call to a function and each
+option-function gets called N+2 times.  First in an initialization phase,
+once for each GRIB record (N times) and finally in a cleanup phase.  Now we
+can have functions that can compute things like averages or manipulate files.
+The only exception to this rule are "init" functions that only get called in 
+the initialzation phase; for example, open an output file.  
+
+		Order of calling option functions.
+
+Initialization phase:
+	each function is called in order (as on the commmand line) (mode=1)
+
+Execution phase:
+	each non-init function is called in order, mode=verbosity level >= 0
+
+Cleanup phase:
+	each non-init function is called in order, mode=-2
+

@@ -1,0 +1,61 @@
+12/2010			User Defined Functions
+
+
+UDFs are programs that can be called from wgrib2.  Data to the UDF
+will be transfered by a file and the data from the UDF will be transfered
+by another file.
+
+Some possible UDF could be
+
+	program to calculate the depth of the 20C isotherm
+	program to calculate the specific humidity from the RH, temp, pressure
+	program to calculate the wind chill
+
+
+
+UDF will be implemented in 3 phases.
+
+
+
+				Phase 1: Implemented
+
+Calls to external programs by the -sys option.  
+
+				Phase 2: Implemented
+
+Create calling argument file with -udf_arg
+Call udf with -udf
+Return parameter overwrite the "data".
+
+
+				Phase 3: to do
+
+Modify RPN.c so the register 0..9 are replaced by register with names.
+
+
+				Phase 4: to do
+
+Change call to udf so it can call with named parameters.
+Change call to udf so it can return named parameters.
+The -udf syntax will be a extended, not replaced
+
+
+Pass input/output by files.
+
+File protocol.
+			Binary
+			Either header or no-header format
+
+			Each element has a 3 element structure
+
+			{
+				int desc[3];		// 4 byte integer
+							// desc[0] = strlen(name) + 1
+							// desc[1] = number of elements
+							// desc[2] = type  1=char, 128+4=4 byte int  256+4=4 byte float
+							// size of data element is desc[2] % 8
+				char name[desc[0]]	// 0 terminated character string, 
+
+				char data[N]		// N = desc[1] * (desc[2] % 8)
+
+			}

@@ -1,0 +1,14 @@
+
+Getting data from internet
+
+   Look for scripts like code_table_0_0.sh
+
+   They look at a URL (ncep web site)
+   write out a data file/C code
+
+   Some tables will be used as is.
+   Some tables (written in *need_to_edit*) will have to be merged by hand
+      (sorry) with the old table.  Reason: want to use abreviations and
+      shorter description than used by the table.  Note: old entries
+      should not change so not to break user code.
+ 

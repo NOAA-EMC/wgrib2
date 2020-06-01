@@ -1,0 +1,13 @@
+IPLIB for HWRF:  /nwprod/hwrf.v7.0.6/sorc/hwrf_post.fd/src/lib/ip/
+changes: copied makefile from iplib.2012
+changes: copied ipolates.f from iplib.2012
+changes: copied ipolates.v from iplib.2012
+changes: copied splat.f from iplib.2012
+
+C     KGDS     - INTEGER (200) GDS PARAMETERS AS DECODED BY W3FI63
+C                IMPORTANT NOTE: IF THE 9TH BIT (FROM RIGHT) OF KGDS(11)
+C                                (SCANNING MODE FLAG) IS 1, THEN THIS
+C                                THE GRID IS COMPUTED FOR A WIND FIELD;
+C                                OTHERWISE IT IS FOR A MASS FIELD.  THUS
+C                                MOD(KGDS(11)/256,2)=0 FOR MASS GRID.
+

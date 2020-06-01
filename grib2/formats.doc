@@ -1,0 +1,103 @@
+wgrib2 formats: -bin -ieee, -text 					Wesley Ebisuzaki 8/2013
+
+
+The -bin, -ieee, -text output have two flavors depending on whether the
+header flag is set (-header, default) or not set (-no_header)
+
+Definitions
+
+npts = number of points in the grid including undefined points (-npts)
+nx, ny = for a "rectangular" grid, the dimensions of the grid.  For
+         a non-rectangular grid, nx=npts and ny=1 (-nxny)
+
+
+The -text, -bin and -ieee formats were adopted from wgrib. The differences
+is that in scanning order went from raw to we:sn.
+
+
+			-no_header -text Format
+
+
+(grid 1)	(grid value)		grid value (text format)
+		(grid value)
+		...
+		(grid value)		npts values
+(grid 2)	(grid value)		grid value
+		(grid value)
+		...
+		(grid value)		npts values
+		...
+
+
+			Binary and IEEE, no header
+
+(grid 1)	(binary float value)		grid value (4 bytes with IEEE)
+		(binary float value)
+		...
+		(binary float value)		npts values
+
+(grid 2)	(binary float value)
+		(binary float value)
+		...
+		(binary float value)		npts values
+		etc
+
+With binary, the binary float value is native floating point representation.
+For the x86 cpus (intel, amd), this is little endian IEEE.  For IBM power
+chips, this is big endian IEEE. For a Cray X-MP, the binary format will be
+8 bytes long.  (No, I haven't compiled wgrib2 on a X-MP but this section
+of the code came from wgrib which did run on the X-MP.)
+
+With -IEEE, the grid point values are software converted to big endian IEEE
+values.  (The code has no dependance the the native floating point format.)
+
+Note: the default order of the grid points has a scanning order of WE:SN.
+This may not be order that the grid points were stored in the grib message
+(-order raw).  This is different from wgrib which is -order raw.
+
+
+The no-header format is not a recommended format to use.  The format does 
+not indicate the size of the grid. If your program makes a mistake in the 
+grid dimension, you could get interesting results.  However, some fortran 
+compilers require this format for binary files (Cray, ABSoft under AmigaOS).  
+In addition, GrADs defaults to the binary/no-header format.
+
+			-header -text Format
+
+
+(grid 1)	(nx) (ny)		grid dimensions, two text integers
+		(grid value)		grid value (text)
+		(grid value)
+		...
+		(grid value)		nx*ny values
+(grid 2)	(nx) (ny)		grid dimensions
+		(grid value)
+		(grid value)
+		...
+		(grid value)		nx*ny values
+		...
+
+
+			Binary and IEEE, with header
+
+
+(grid 1)	(binary integer)	npts*sizeof(float) (4 bytes with IEEE)
+		(binary float value)	grid value (4 bytes with IEEE)
+		...
+		(binary float value)	npts values
+		(binary integer)	npts*sizeof(float) (4 bytes)
+
+(grid 2)	(binary integer)	npts*sizeof(float)
+		(binary float value)
+		...
+		(binary float value)	npts values
+		(binary integer)	npts*sizeof(float)
+
+The binary-with-header and IEEE-with-header is the f77 format binary file.
+Each record starts with the size of the record in bytes stored as an integer.
+With -ieee, the number is 4 bytes long stored as an unsigned integer in big
+endian format. For -bin, the integer is stored in its native format. The
+length of the integer is determined by the cpu (sizeof(int) bytes long).
+
+The body of the message is the same as -ieee or -bin.
+

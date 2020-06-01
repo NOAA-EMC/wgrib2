@@ -1,0 +1,15 @@
+The steps used in reading a grib file
+
+seek_grib2 -- finds next grib message
+
+int read_grib2(FILE *file, long pos, long len_grib, unsigned char *buffer);
+	reads a grib2 message and saves in buffer
+
+int parse_1st_msg(unsigned char **sec); reads buffer and returns sec
+int parse_next_msg(unsigned char **sec); reads buffer and returns sec
+
+wgrib2.h:int unpk_grib(unsigned char **sec, float *data);
+
+possible program interfaces for reading
+
+	1)	read N.M/byte_location

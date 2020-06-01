@@ -1,0 +1,41 @@
+	Using wgrib2 with Interactive programs
+		Version 1.0
+
+Introduction.
+
+    With some jobs, you know what you want before hand.  In this
+situation, one could run wgrib2 to decode the files and then run
+another program to process the decoded data.  However, with interactive
+programs, the flow is much different. You want to be able to control
+the functions of wgrib2 on the fly.
+
+Simple case: Decode a simple file
+
+	(stdin) is from a named pipe
+	(output) is to a named pipe
+
+	program starts wgrib2 with the desired options and with the two pipe
+	connections
+
+	when the main program wants a record decoded, it send the inventory
+	line to the (stdin) pipe.  Then it read the (output) pipe.
+
+	ToDo: change code to read "stdin" from arbitrary files.  Add fflush to
+	output files.
+
+Simple cast + 1: Decode a "template" dataset
+
+	Need to add a dataset name into the "stdin" stream.
+
+Complicated: change options and datasets on the fly.
+
+
+
+Neat things to consider:
+
+	Batch processor for Nomads.  Don't want to "restart" wgrib2 all the
+	time.
+
+	OpenDAP server based on wgrib2.
+
+

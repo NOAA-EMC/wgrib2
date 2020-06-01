@@ -1,0 +1,8 @@
+    case 0: string="data is calculated directly from the source grid with no interpolation"; break;
+    case 1: string="bilinear interpolation using the 4 source grid grid-point values surrounding the nominal grid-point"; break;
+    case 2: string="bicubic interpolation using the 4 source grid grid-point values surrounding the nominal grid-point"; break;
+    case 3: string="using the value from the source grid grid-point which is nearest to the nominal grid-point"; break;
+    case 4: string="budget interpolation using the 4 source grid grid-point values surrounding the nominal grid-point"; break;
+    case 5: string="spectral interpolation using the 4 source grid grid-point values surrounding the nominal grid-point"; break;
+    case 6: string="neighbor-budget interpolation using the 4 source grid grid-point values surrounding the nominal grid-point"; break;
+    case 255: string="missing"; break;

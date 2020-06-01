@@ -1,0 +1,43 @@
+                      Changes for wgrib2 v0.1.9.8   revised 9.2017
+
+Wgrib2 v0.1.9.8 changes the default decoders from g2clib to an emulation
+of g2clib using the internal decoders.  The g2clib decoders are now an 
+optional package.
+
+The change was precipitated by reports of segmentation faults.  The
+problem was finally traced back to a repository of precompiled programs.
+They were compiling wgrib2 using a precompiled official version of g2clib.
+This was bad because the official version of g2clib did not have
+the bug fixes included with the wgrib2 source code (since fixed).
+In addition the g2clib is often compile with a weird makefile.  On 64-bit 
+systems, the library API uses 32-bit integers.  However, on 32-bit systems, 
+the library API uses 64-bit integers.  (Wgrib2 was using the opposite
+convention.)
+
+
+                      Changes for wgrib2 v0.1.9.9
+
+The default configuration is not to include the g2clib decoders in the build.
+
+
+                                 WMO Standard
+
+The g2clib and g2lib libraries do not follow the WMO standard when encoding
+and decoding non-zero constant fields when the decimal scaling is not zero .  
+This is a known problem for several years.  The post-processor developers 
+at NCEP work around the problem when encoding a constant field so the problem 
+is not commonly encountered.   
+
+This same problem has been found in other libraries. In one library, this
+error was encountered in all the tested packing formats.  Guess that it
+is easier to copy the algorithm of some faulty code than to write the
+code based on the specifications.  Many centers' default is set the decimal
+scaling to zero and only use the binary scaling.  By using this convention,
+this problem is avoided.
+
+Wgrib2 internal routines either follow the WMO standard or the g2clib/g2lib
+behavior on non-zero constant fields with a non-zero decimal scaling.  The
+default for wgrib2 to emulate the g2clib/g2lib bug.  However, if a non-zero 
+constant field with a non-zero decimal scaling is encountered, a warning 
+message is given.  
+

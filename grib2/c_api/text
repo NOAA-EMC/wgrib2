@@ -1,0 +1,26 @@
+                          C_API
+
+
+Version 2
+
+1.	int grb2_mk_inv("grb","inv")
+
+2'.     long long int grb2_inq(file,inv, output, int options, search strings)
+        returns size of array (1 found)   save msg in mem:19
+             0  (no match)
+             n  (size of array, one field found)
+	     -n (number of matches)
+
+	options = SEQUENTIAL | DATA | LATLON | WENS | RAW_ORDER | META | GRIDMETA | REGEX
+
+        int grb2_get_XXXX()
+             XXXX data, gridmeta, meta, lonlat
+
+long long int grb2_wrtVA(const char *grb, const char *template, int msgno, float *data,
+         unsigned int ndata, ...) {
+
+
+     grb2_wrt(IN,OUT,data,metadata) - grib out mem/fileZZ
+	percentile, int
+	set, string, int	
+              

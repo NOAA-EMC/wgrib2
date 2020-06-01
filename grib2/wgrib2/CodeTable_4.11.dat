@@ -1,0 +1,7 @@
+    case 0: string="Reserved"; break;
+    case 1: string="Successive times processed have same forecast time, start time of forecast is incremented."; break;
+    case 2: string="Successive times processed have same start time of forecast, forecast time is incremented."; break;
+    case 3: string="Successive times processed have start time of forecast incremented and forecast time decremented so that valid time remains constant."; break;
+    case 4: string="Successive times processed have start time of forecast decremented and forecast time incremented so that valid time remains constant."; break;
+    case 5: string="Floating subinterval of time between forecast time and end of overall time interval."; break;
+    case 255: string="Missing"; break;

@@ -1,0 +1,114 @@
+Updating the gribtable 11/2018
+ run get_gribtab.sh -> gribtab
+    new variables
+       0:0:0:255:7:1:1:234:PCPDUR:Precipitation Duration:hour
+       0:0:0:255:7:1:1:235:CLLMR:Cloud Liquid Mixing Ratio:kg/kg
+       0:0:0:255:7:1:19:238:ELLINX:Ellrod Index:-
+    ** CLWMR is misnamed, it should be CLMR
+       change CLWMR to CLMR
+       people who used CLWMR to mean cloud water mixing ratio should use CLLMR (new)
+ run make_gribtable.sh
+
+Updating the gribtable 7/2018
+	Manfred Schwarb <schwarb@meteodat.ch> updated get_gribtab.sh
+        1) new URL 
+        2) old manual changes are now in the get_gribtab.sh code
+        3) fixed problems that I missed
+        4) made units more consistent
+        nice job
+
+updating the gribtable 12.2017
+
+ run get_gribtab.sh -> gribtab   using updated get_gribtab.sh mods by Manfred Schwarb
+ changes made to gribtab
+
+0:1:0:255:0:0:6:17:TCOND:Total Condensate:kg/kg -> TCONDold
+0:1:0:255:0:0:6:18:TCOLW:Total Column-Integrated Cloud Water:kg/m^2 -> TCOLWold
+0:1:0:255:0:0:6:19:TCOLI:Total Column-Integrated Cloud Ice:kg/m^2 -> TCOLIold
+10:1:0:0:0:17:FRICV:Friction Velocity:m/s  -> FRICVW
+2:1:0:0:0:26:WILT:Wilting Point:kg/m^3  -> WILTPT
+0:0:0:255:7:1:1:197:MCONV:Horizontal Moisture Divergence:kg/kg/s -> MDIV
+0:1:0:255:0:0:1:87:SPRATE:Stratiform Precipitation Rate:kg/m^2/s
+0:1:0:255:0:0:191:3:DSLOBS:Days Since Last Observation:d -> DSLOBSO
+
+
+0:1:0:255:0:0:191:1:GEOLAT:Geographical Latitude:deg -> degN
+0:1:0:255:0:0:191:2:GEOLON:Geographical Longitude:deg  -> degN
+
+
+note: CH -> LCH
+      new CH defined
+
+great only added one new grib variable with the same name!
+
+run make_gribtable.sh  by Manfred Schwarb
+
+
+Updating the grib table 9.2015
+ run get_gribtab.sh -> gribtab   using updated get_gribtab.sh mods by Manfred Schwarb
+ change gribtab
+ 
+0:1:0:255:0:0:6:17:TCOND:Total Condensate:kg/kg -> TCONDold
+0:1:0:255:0:0:6:18:TCOLW:Total Column-Integrated Cloud Water:kg/m^2 -> TCOLWold
+0:1:0:255:0:0:6:19:TCOLI:Total Column-Integrated Cloud Ice:kg/m^2 -> TCOLIold
+10:1:0:0:0:17:FRICV:Friction Velocity:m/s  -> FRICVW
+2:1:0:0:0:26:WILT:Wilting Point:kg/m^3  -> WILTPT
+
+ run make_gribtable.sh  by Manfred Schwarb
+edit gribtable.dat
+        remove notes
+	MCONV ->  MDIV  (:Horizontal Moisture Divergence:kg/k)
+        GEOLAT    deg -> degN
+        GEOLON    deg -> degE
+
+Updating the grib table 8.2015
+ run get_gribtab.dat -> gribtab
+  sort -k7 -k1,6  <gribtab -t: >gribtab.sort
+  mk_gribtable_dat.pl -> gribtable.dat
+
+ Look for duplicates: check_dup_gribtable.sh
+  SOILM -
+     {2,1,0,255,0,0,0,22, "SOIL_M", "Soil Moisture", "kg/m^3"},
+  WILT -2:1:0:0:0:26:WILTPT:Wilting Point:kg/m^3
+  CDCT 0:1:0:0:6:8:CDTYP:Cloud Type:-
+  TCOND:0:1:0:0:6:17:TCONDold:Total Condensate:kg/kg
+  TCOLW: 0:1:0:0:6:18:TCOLWold:Total Column-Integrated Cloud Water:kg/m^2
+  TCOLI: 0:1:0:0:6:19:TCOLIold:Total Column-Integrated Cloud Ice:kg/m^2
+  FRICV: 10:1:0:0:0:17:FRICVW:Friction Velocity:m/s
+
+Note: above only looks for duplicates in WMO defined.
+
+Updating the grib table 7.2015
+
+SOILM  2 def
+WILT   2 def
+2:1:0:0:0:26:WILT:Wilting Point:kg/m^3
+  WILTPT
+
+0:1:0:0:6:8:CDCT:Cloud Type:-
+  -> CDTYP
+
+
+Updating the grib table is automated   revised 2/2014
+
+./get_gribtab.sh
+	updates gribtab
+
+New:
+sort -t: -k7,7 -k1,6 gribtab >gribtab.sort
+   edit:
+     ***: -> :
+     **: -> :
+     *: -> :
+     (space): => :
+	remove Note
+	remove cloud type (duplicate name)
+	remove FRICV ocean (duplicate name)
+	MCONV ->  MDIV  (:Horizontal Moisture Divergence:kg/k)
+	TCOLI (remove 2 WMO defns)
+	TCOLW (remove 2 WMO defns)
+   ..176 -> deg
+
+./mk_gribtable_dat.pl
+	gribtab.sort -> gribtable.dat
+

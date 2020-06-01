@@ -1,0 +1,19 @@
+/*
+ * place extra grib definitions that are inserted by hand here
+ */
+/*
+  int disc;   Section 0 Discipline
+  int mtab_set;   Section 1 Master Tables Version Number
+  int mtab_low;   Section 1 Master Tables Version Number
+  int mtab_high;  Section 1 Master Tables Version Number
+  int cntr;   Section 1 originating centre, used for local tables
+  int ltab;   Section 1 Local Tables Version Number
+  int pcat;   Section 4 Template 4.0 Parameter category
+  int pnum;   Section 4 Template 4.0 Parameter number
+  const char *name;
+  const char *desc;
+  const char *unit;
+*/
+
+/* { 0, 1, 0, 0, 0, 0, "TMP", "Temperature", "K"}, */
+

@@ -1,0 +1,4 @@
+    case 0: string="Grid points at triangle vertices"; break;
+    case 1: string="Grid points at centers of triangles"; break;
+    case 2: string="Grid points at midpoints of triangle sides"; break;
+    case 255: string="Missing"; break;

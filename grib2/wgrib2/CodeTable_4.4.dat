@@ -1,0 +1,13 @@
+    case 0: string="minute"; break;
+    case 1: string="hour"; break;
+    case 2: string="day"; break;
+    case 3: string="month"; break;
+    case 4: string="year"; break;
+    case 5: string="decade"; break;
+    case 6: string="normal (30 years)"; break;
+    case 7: string="century"; break;
+    case 10: string="3 hours"; break;
+    case 11: string="6 hours"; break;
+    case 12: string="12 hours"; break;
+    case 13: string="second"; break;
+    case 255: string="missing"; break;

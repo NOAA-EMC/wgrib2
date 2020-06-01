@@ -1,0 +1,10 @@
+9/2005
+Types of functions
+
+   setup only called once
+   inv: writes to stdout
+   output: writes to out file
+   misc: something else
+
+Note:
+   the functions MUST set variables to decode data, open data files, etc

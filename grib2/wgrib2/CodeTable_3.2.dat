@@ -1,0 +1,10 @@
+    case 0: string="Earth assumed spherical with radius = 6,367,470.0 m"; break;
+    case 1: string="Earth assumed spherical with radius specified (in m) by data producer"; break;
+    case 2: string="Earth assumed oblate spheriod with size as determined by IAU in 1965 (major axis = 6,378,160.0 m, minor axis = 6,356,775.0 m, f = 1/297.0)"; break;
+    case 3: string="Earth assumed oblate spheriod with major and minor axes specified (in km) by data producer"; break;
+    case 4: string="Earth assumed oblate spheriod as defined in IAG-GRS80 model (major axis = 6,378,137.0 m, minor axis = 6,356,752.314 m, f = 1/298.257222101)"; break;
+    case 5: string="Earth assumed represented by WGS84 (as used by ICAO since 1998) (Uses IAG-GRS80 as a basis)"; break;
+    case 6: string="Earth assumed spherical with radius = 6,371,229.0 m"; break;
+    case 7: string="Earth assumed oblate spheroid with major and minor axes specified (in m) by data producer"; break;
+    case 8: string="Earth model assumed spherical with radius 6,371,200 m, but the horizontal datum of the resulting Latitude/Longitude field is        the WGS84 reference frame"; break;
+    case 255: string="Missing"; break;

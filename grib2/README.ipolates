@@ -1,0 +1,93 @@
+                 IPOLATES: grid interpolation library   8/2018
+
+IPOLATES is a fortran library from NCEP that interpolates between 
+grids using both scalar and vector interpolates.  IPOLATES knows 
+about grid-relative winds and can convert those winds to earth-relative
+winds and vice versa.  IPOLATES included with wgrib2 supports
+
+   bilinear
+   bicubic
+   nearest neighbor
+   budget
+
+interpolation.  The interpolation routines are aware of and uses 
+the flag for undefined values.  As of writing (8/2018), the single
+precision GRIB1 version of ipolates is being replaced by the
+double precision GRIB2 version of ipolates.. (wgrib2 v2.0.7 uses
+the former and v2.0.8 will use the latter.)
+
+Installing the IPOLATE enables the following functions to work
+
+	-new_grid                  interpolate to a new grid
+
+	-new_grid_winds            set type of winds to use (mandatory)
+
+	-new_grid_vectors          set type of vector fields
+
+	-new_grid_interpolation    set type of interpolation to use
+					bilinear is the default
+
+	-new_grid_ipopt            set interpolation parameters
+				   see iplib documentation
+
+       The single-precision GRIB1 ipolates is used in operations at NCEP.
+       The double-precision GRIB2 ipolates is formally in beta testing at NCEP.
+
+           ipolates was written by staff at NCEP and is in the public domain
+
+
+                  IPOLATES and wgrib2: the good
+
+With the IPOLATES library, wgrib2 can interpolate from one grib file 
+to another grib file.  You can also convert from grid-relative to 
+more commonly used earth-relative winds.
+
+            Single precision GRIB1 IPOLATES: the bad
+
+This version of IPOLATES is a single precision library.  It assumes a
+spherical earth, The grib1 standard uses a position to the nearest
+millidegreee except the single precsion math puts the practical
+precision to about a hundredth of a degree using IEEE floats.
+
+The ipoltes library assumes a hard-coded radius of spherical earth.  Wgrib2
+works around the problem and supports a variable radius spherical grid by
+assuming the radius is the mean of the semi-major and semi-minor axes.
+
+"Glahn" scanning mode is not supported.
+
+
+            Double precision GRIB2 IPOLATES: the good
+
+This library supports lat-lon values to the grib2 standard of a 
+millidegree.  The WMO standard rotated lat-lon grids are supported, and
+we are working towards supporting the FV3 cubed sphere.
+
+Double precision should be slower than single precision. However, more threaded
+code has made the performance on multi-core machines similar or much better
+(budget interpolation).
+
+Future versions of this library will support the "Glahn" scanning order
+and perhaps the staggering bits.
+
+            Double precision GRIB2 IPOLATES: the bad
+
+This library is restricted to a spherical earth.
+
+Wgrib2 is probably the first major use of this library.
+
+
+                 Changes
+
+2/2012   changed to new IPOLATES
+3/2013:  removed OpenMP directives
+7/2016:  tested iplib.v3.0.0 (current version at NCEP)
+         internal interface uses optional arguments, faster because 
+            unnecessary calculations are avoided
+         passes testing, if passes more testing, will replace iplib.2012
+9/2017   iplib.v3.0.0 is default, tested in NCO Operations
+	 (this wasn't my idea)
+
+5/2018   option to use grib2 ipolates
+7/2018   finished optimization of grib2 ipolates so that I expect that
+         time critical codes will not be affected by the new library.
+

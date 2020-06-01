@@ -1,0 +1,13 @@
+    case 0: string="grid point data - simple packing"; break;
+    case 1: string="matrix value at grid point - simple packing"; break;
+    case 2: string="grid point data - complex packing"; break;
+    case 3: string="grid point data - complex packing and spatial differencing"; break;
+    case 4: string="grid point data - ieee floating point data"; break;
+    case 40: string="grid point data - jpeg2000 compression"; break;
+    case 41: string="grid point data - png compression"; break;
+    case 42: string="grid point and spectral data - CCSDS recommended lossless compression"; break;
+    case 50: string="spectral data - simple packing"; break;
+    case 51: string="spectral data - complex packing"; break;
+    case 61: string="grid point data - simple packing with logarithm pre-processing"; break;
+    case 200: string="run length packing with level values"; break;
+    case 65535: string="missing"; break;

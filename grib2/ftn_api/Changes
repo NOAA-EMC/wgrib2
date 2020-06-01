@@ -1,0 +1,12 @@
+    Still in prerelease
+	10/2016
+	grb2_wrt: added append=integer
+                  fixed data2=grid
+	grb2_inq: added verf_date, verf_edate, start_date, start_edate, end_date, end_edate
+	12/2016
+	grb2_mk_inv:  fixed -rewind_init grb, fixed -rewind_init-ignore error return
+	1/2017
+	grb2_wrt: order code fixed, use we:ns, we:sn or raw
+                  grb2_wrt, grb2_inq, added optional parameter debug
+	grb_inq: added copy=file
+	1/2018: added real, parameter :: grb2_UNDEFINED

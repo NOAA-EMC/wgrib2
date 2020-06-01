@@ -1,0 +1,10 @@
+                       Going from wgrib to wgrib2: differences
+
+1) wgrib: data in -raw order
+   wgrib2: data in we:sn order
+
+2) wgrib:  -bin -o outputfile   (dump = default)
+   wgrib2:  -bin outputfile
+     applies to bin, ieee and text
+
+3) -nh is now -no_header  

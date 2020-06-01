@@ -1,0 +1,2495 @@
+Documentation of the general interpolation library iplib             May 2, 1996
+--------------------------------------------------------------------------------
+
+I. Introduction
+
+The general interpolation library iplib contains FORTRAN subprograms
+to be used for interpolating between almost any grids used at NCEP.
+The library has been optimized for the CRAY machines, taking full advantage
+of both the vector and parallel capabilities.  The library is particularly
+efficient when interpolating many fields at one time.  The library should be
+transportable to other platforms with compilers allowing automatic arrays.
+
+There are currently five interpolation methods available in the library.
+They are respectively bilinear, bicubic, neighbor, budget and spectral
+interpolation methods.  Some of the methods have interpolation sub-options.
+A few methods have restrictions on the type of input or output grids as well.
+Also, several methods can perform interpolation on fields with bitmaps
+(i.e. some points on the input grid may not have valid data).  In this case,
+the bitmap is interpolated to the output grid as well.  Only valid input points
+are used to interpolate to valid output points.  An output bitmap will also be
+created to locate invalid data where the output grid extends outside the domain
+of the input grid.  Thus an output bitmap must always be dimensioned.
+
+Bilinear interpolation is chosen by setting IP=0.  This method has no options.
+This method also has no restrictions and can interpolate with bitmaps.
+
+Bicubic interpolation is chosen by setting IP=1.  This method has one option,
+a monotonic constraint option IPOPT(1) which is 0 for straight bicubic or
+is 1 for contraining the output value to be within the range of the four
+surrounding input values.  This method cannot interpolate with bitmaps.
+
+Neighbor interpolation is chosen by setting IP=2.  Neighbor interpolation
+means that the output value is set to the nearest input value.  It would be
+appropriate for interpolating integer fields such as vegetation index.
+This method has no options.  This method also has no restrictions and can
+interpolate with bitmaps.
+
+Budget interpolation is chosen by setting IP=3.  Budget interpolation
+means a low-order interpolation method that quasi-conserves area averages.
+It would be appropriate for interpolating budget fields such as precipitation.
+This method assumes that the field really represents box averages where each
+box extends halfway to its neighboring grid point in each direction.
+The method actually averages bilinearly interpolated values in a square array
+of points distributed within each output grid box.  The first option of this
+method IPOPT(1) is the number of points in the radius of the square array.
+If IPOPT(1)=-1, then the number defaults to 2 meaning that 25 sample points
+will be averaged for each output value.  Note that if IPOPT(1)=0, then
+this method degenerates to simple bilinear interpolation.  Further options
+(IPOPT(2:2+IPOPT(1)) are the respective averaging weights for the radius points
+starting at the center point.  If IPOPT(2)=-1, then all the weights default
+to 1 giving an unweighted average.  This method can interpolate with bitmaps.
+The output grid must be a well-defined grid and not a set of stations.
+
+Spectral interpolation is chosen by setting IP=4.  This method has two options,
+the spectral shape IPOPT(1) which is 0 for triangular or 1 for rhomboidal
+and the spectral truncation IPOPT(2).  The input grid must be a global
+cylindrical grid (either Gaussian or equidistant).  This method cannot
+interpolate with bitmaps.  Unless the output grid is a global cylindrical
+grid, a polar stereographic grid centered at the pole or a Mercator grid,
+this method can be quite expensive.
+
+The library can handle two-dimensional vector fields as well as scalar fields.
+The input and output vectors are rotated if necessary so that they are
+either resolved relative to their defined grid in the direction of
+increasing x and y coordinates or resolved relative to eastward and northward
+directions on the earth.  The rotation is determined by the grid definitions.
+Vectors are generally interpolated (by all methods but spectral interpolation)
+by moving the relevant input vectors along a great circle to the output point,
+keeping their orientations with respect to the great circle constant, before
+independently interpolating the respective components.  This ensures that vector
+interpolation will be consistent over the whole globe including the poles.
+
+The input and output grids are defined by their respective GRIB grid description
+sections (GDS) passed in integer form KGDS as decoded by subprogram w3fi63
+in w3lib or by subprogram makgds in this library.  That is, the interpolation
+subprograms can readily interpolate from a GRIB field that is unpacked
+by subprogram w3fi63; the interpolation subprograms can also readily
+interpolate to an NCEP pre-defined grid that is expanded into KGDS form by 
+subprogram makgds (which in turn calls w3fi71).  There are currently six grid
+projections recognized in the library.  The projections are respectively
+equidistant cylindrical (KGDS(1)=000), Mercator cylindrical (KGDS(1)=001),
+Lambert conformal conical (KGDS(1)=003), Gaussian cylindrical (KGDS(1)=004), 
+polar stereographic azimuthal (KGDS(1)=005), and filled rotated equidistant
+cylindrical (KGDS(1)=202).
+
+If the output data representation type is negative (KGDSO(1)<0), then the
+output data may be just a set of station points.  (This feature cannot be
+used with the budget interpolation method.)  In this case, the user must pass
+the number of points to be output along with their latitudes and longitudes.
+For vector interpolation, the vector rotations parameters must also be passed.
+On the other hand, for non-negative output data representation types,
+the number of output grid points and their latitudes and longitudes
+(and the vector rotation parameters for vector interpolation) are all
+returned by the interpolation subprograms.
+
+If an output equidistant cylindrical grid contains multiple pole points, then
+the pole points are forced to be self-consistent.  That is, scalar fields
+are obliged to be constant at the pole and vector components are obliged
+to exhibit a wavenumber one variation at the pole.
+
+Generally, only regular grids can be interpolated in this library.  However,
+the thinned WAFS grids and the staggered eta grids can be interpolated by using
+transform subprograms (ipxwafs and ipxetas, respectively) in this library that
+will either expand the irregular grid to a regular grid or contract a regular
+grid to an irregular grid as necessary.
+
+The return code issued by an interpolation subprogram determines whether
+it ran successfully or how it failed.  Check nonzero return codes
+against the docblock of the respective subprogram.
+
+Developers are encouraged to create additional interpolation methods or
+to create additional map projection "wizards" for iplib.
+
+This documentation is divided into 4 chapters.  Chapter I is this introduction.
+Chapter II is a list of all entry points.  Chapter III is a set of examples.
+Chapter IV is a recapitulation of all the docblocks.  The chapters all start
+on a line number that is 1 modulo 60 in order to facilitate laser printing.
+
+
+
+II. Entry point list
+
+   Name       Function
+   ----       ------------------------------------------------------------------
+
+              Scalar field interpolation subprograms
+
+   IPOLATES   IREDELL'S POLATE FOR SCALAR FIELDS
+   POLATES0   INTERPOLATE SCALAR FIELDS (BILINEAR)
+   POLATES1   INTERPOLATE SCALAR FIELDS (BICUBIC)
+   POLATES2   INTERPOLATE SCALAR FIELDS (NEIGHBOR)
+   POLATES3   INTERPOLATE SCALAR FIELDS (BUDGET)
+   POLATES4   INTERPOLATE SCALAR FIELDS (SPECTRAL)
+   POLFIXS    MAKE MULTIPLE POLE SCALAR VALUES CONSISTENT
+
+              Vector field interpolation subprograms
+
+   IPOLATEV   IREDELL'S POLATE FOR VECTOR FIELDS
+   POLATEV0   INTERPOLATE VECTOR FIELDS (BILINEAR)
+   POLATEV1   INTERPOLATE VECTOR FIELDS (BICUBIC)
+   POLATEV2   INTERPOLATE VECTOR FIELDS (NEIGHBOR)
+   POLATEV3   INTERPOLATE VECTOR FIELDS (BUDGET)
+   POLATEV4   INTERPOLATE VECTOR FIELDS (SPECTRAL)
+   MOVECT     MOVE A VECTOR ALONG A GREAT CIRCLE
+   POLFIXV    MAKE MULTIPLE POLE VECTOR VALUES CONSISTENT
+
+              Grid description section decoders
+
+   GDSWIZ     GRID DESCRIPTION SECTION WIZARD
+   GDSWIZ00   GDS WIZARD FOR EQUIDISTANT CYLINDRICAL
+   GDSWIZ01   GDS WIZARD FOR MERCATOR CYLINDRICAL
+   GDSWIZ03   GDS WIZARD FOR LAMBERT CONFORMAL CONICAL
+   GDSWIZ04   GDS WIZARD FOR GAUSSIAN CYLINDRICAL
+   GAUSSLAT   COMPUTE GAUSSIAN LATITUDES
+   GDSWIZ05   GDS WIZARD FOR POLAR STEREOGRAPHIC AZIMUTHAL
+   GDSWIZCA   GDS WIZARD FOR ROTATED EQUIDISTANT CYLINDRICAL
+   IJKGDS     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+   MAKGDS     MAKE OR BREAK A GRID DESCRIPTION SECTION
+
+              Transform subprograms for special irregular grids
+
+   IPXWAFS    EXPAND OR CONTRACT WAFS GRIDS
+   IPXETAS    EXPAND OR CONTRACT ETA GRIDS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+III. Examples
+
+Example 1. Interpolate from an arbitrary input grid (probably 1x1)
+           to NCEP grid 27 (65x65 northern polar stereographic).
+           Interpolate heights bilinearly and winds bicubically.
+           Interpolate soil moisture and precipitation using bitmaps
+           with the budget method.  Encode the soil moisture bitmap in GRIB.
+           Subprograms GETGB and PUTGB from w3lib are referenced.
+
+c example of using ipolate package.
+c see documentation of ipolates and ipolatev
+c for further possible options.
+      integer ipopt(20)
+      integer jpds(25),jgds(22),kpdsi(25),kgdsi(22),kpdso(25),kgdso(22)
+      parameter(ji=360*181,ig=27,jo=65*65,km=4)
+      real rlat(jo),rlon(jo),crot(jo),srot(jo)
+      integer ibi(km),ibo(km)
+      logical li(ji,km),lo(jo,km)
+      real hi(ji,km),ri(ji),ui(ji),vi(ji)
+      real ho(jo,km),ro(jo),uo(jo),vo(jo)
+      character gdso(42)
+      integer lev(km)
+      data lev/1000,500,250,100/
+c define 65x65 grid
+      call makgds(ig,kgdso,gdso,lengds,iret)
+      if(iret.ne.0) call exit(iret)
+       kgdso(4)=-20826! fix w3fi71 error
+      print *,'kgdso=',kgdso
+      ipopt=0
+c interpolate 4 levels of height to 65x65 bilinearly
+      do k=1,km
+        jpds=-1
+        jpds(5)=7
+        jpds(6)=100
+        jpds(7)=lev(k)
+        call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &             li(1,k),hi(1,k),iret)
+        if(iret.ne.0) call exit(iret)
+        call putgb(50,ki,kpdsi,kgdsi,li(1,k),hi(1,k),iret)
+        if(iret.ne.0) call exit(iret)
+        ibi(k)=mod(kpdsi(4)/64,2)
+        print *,'ibi(k)=',ibi(k)
+      enddo
+      call ipolates(0,ipopt,kgdsi,kgdso,ji,jo,km,ibi,li,hi,
+     &              ko,rlat,rlon,ibo,lo,ho,iret)
+      if(iret.ne.0) call exit(iret)
+      kpdso=kpdsi
+      kpdso(3)=ig
+      do k=1,km
+        kpdso(7)=lev(k)
+        call putgb(51,ko,kpdso,kgdso,lo(1,k),ho(1,k),iret)
+        if(iret.ne.0) call exit(iret)
+      enddo
+c interpolate precipitation to 65x65 with budget method
+c (zero rain is masked out)
+      jpds=-1
+      jpds(5)=61
+      call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &           li,ri,iret)
+      if(iret.ne.0) call exit(iret)
+      call putgb(50,ki,kpdsi,kgdsi,li,ri,iret)
+      if(iret.ne.0) call exit(iret)
+      ipopt(1)=-1
+      ipopt(2)=-1
+      li(1:ki,1)=ri(1:ki).gt.0.
+      call ipolates(3,ipopt,kgdsi,kgdso,ji,jo,1,1,li,ri,
+     &              ko,rlat,rlon,ibo,lo,ro,iret)
+      if(iret.ne.0) call exit(iret)
+      kpdso=kpdsi
+      kpdso(3)=ig
+      call putgb(51,ko,kpdso,kgdso,lo,ro,iret)
+      if(iret.ne.0) call exit(iret)
+c interpolate soil moisture to 65x65 with budget method
+      jpds=-1
+      jpds(5)=144
+      jpds(6)=112
+      jpds(7)=10
+      call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &           li,ri,iret)
+      if(iret.ne.0) call exit(iret)
+      call putgb(50,ki,kpdsi,kgdsi,li,ri,iret)
+      if(iret.ne.0) call exit(iret)
+      ibi(1)=mod(kpdsi(4)/64,2)
+      ipopt(1)=-1
+      ipopt(2)=-1
+      call ipolates(3,ipopt,kgdsi,kgdso,ji,jo,1,ibi,li,ri,
+     &              ko,rlat,rlon,ibo,lo,ro,iret)
+      if(iret.ne.0) call exit(iret)
+      kpdso=kpdsi
+      kpdso(3)=ig
+      kpdso(4)=128+64*ibo(1)
+      call putgb(51,ko,kpdso,kgdso,lo,ro,iret)
+      if(iret.ne.0) call exit(iret)
+c interpolate 200 mb winds to 65x65 bicubically
+      jpds=-1
+      jpds(5)=33
+      jpds(6)=100
+      jpds(7)=200
+      call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &           li,ui,iret)
+      if(iret.ne.0) call exit(iret)
+      call putgb(50,ki,kpdsi,kgdsi,li,ui,iret)
+      if(iret.ne.0) call exit(iret)
+      jpds(5)=34
+      call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &           li,vi,iret)
+      if(iret.ne.0) call exit(iret)
+      call putgb(50,ki,kpdsi,kgdsi,li,vi,iret)
+      if(iret.ne.0) call exit(iret)
+      ipopt(1)=0
+      call ipolatev(1,ipopt,kgdsi,kgdso,ji,jo,1,0,li,ui,vi,
+     &              ko,rlat,rlon,crot,srot,ibo,lo,uo,vo,iret)
+      if(iret.ne.0) call exit(iret)
+      kpdso=kpdsi
+      kpdso(3)=ig
+      kpdso(5)=33
+      call putgb(51,ko,kpdso,kgdso,lo,uo,iret)
+      if(iret.ne.0) call exit(iret)
+      kpdso(5)=34
+      call putgb(51,ko,kpdso,kgdso,lo,vo,iret)
+      if(iret.ne.0) call exit(iret)
+      stop
+      end
+
+Example 2. Interpolate winds from an arbitrary input grid (probably 1x1)
+           to 4 station points while truncating spectrally to R30.
+
+c read and unpack the 500 mb winds, truncate to R30,
+c and interpolate to 4 corners of a box
+      integer ipopt(20)
+      integer jpds(25),jgds(22),kpdsi(25),kgdsi(22),kgdso(22)
+      parameter(jf=360*181,kp=4)
+      real rlat(kp),rlon(kp),crot(kp),srot(kp)
+      logical lgi(jf),lgo(kp)
+      real ui(jf),vi(jf),uo(kp),vo(kp)
+      jpds=-1
+      jpds(5)=33
+      jpds(6)=100
+      jpds(7)=500
+      call getgb(11,31,jf,0,jpds,jgds,kf,kr,kpdsi,kgdsi,
+     &           lgi,ui,iret)
+      jpds(5)=34
+      call getgb(11,31,jf,0,jpds,jgds,kf,kr,kpdsi,kgdsi,
+     &           lgi,vi,iret)
+      kgdso=-1
+      rlat(1)=20.
+      rlat(2)=20.
+      rlat(3)=10.
+      rlat(4)=10.
+      rlon(1)=-50.
+      rlon(2)=-40.
+      rlon(3)=-50.
+      rlon(4)=-40.
+      crot=1.
+      srot=0.
+      ipopt(1)=1
+      ipopt(2)=30
+      uo=-999
+      vo=-999
+      call ipolatev(4,ipopt,kgdsi,kgdso,jf,kp,1,0,lgi,ui,vi,
+     &              kp,rlat,rlon,crot,srot,ibo,lgo,uo,vo,iret)
+      print '(2(2x,2f8.2))',(uo(k),vo(k),k=1,kp)
+      end
+
+Example 3. Interpolate winds from an arbitrary input grid (probably 1x1)
+           bilinearly to 3 station points.
+
+c read and unpack 4 levels of heights and winds
+c and interpolate to 3 sonde sites.
+      integer ipopt(20)
+      integer jpds(25),jgds(22),kpdsi(25),kgdsi(22),kgdso(22)
+      parameter(ji=360*181,km=4,jo=3)
+      real rlat(jo),rlon(jo),crot(jo),srot(jo)
+      integer ibi(km),ibo(km)
+      logical li(ji,km),lo(jo,km)
+      real hi(ji,km),ui(ji,km),vi(ji,km),ho(jo,km),uo(jo,km),vo(jo,km)
+      integer lev(km)
+      data lev/1000,500,250,100/
+c define output locations
+      kgdso=-1
+      rlat(1)=22.2
+      rlat(2)=33.3
+      rlat(3)=44.4
+      rlon(1)=-50.
+      rlon(2)=-40.
+      rlon(3)=-30.
+      crot=1.
+      srot=0.
+c heights
+      do k=1,km
+        jpds=-1
+        jpds(5)=7
+        jpds(6)=100
+        jpds(7)=lev(k)
+        call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &             li(1,k),hi(1,k),iret)
+        if(iret.ne.0) call exit(iret)
+        ibi(k)=mod(kpdsi(4)/64,2)
+      enddo
+      call ipolates(0,ipopt,kgdsi,kgdso,ji,jo,km,ibi,li,hi,
+     &              jo,rlat,rlon,ibo,lo,ho,iret)
+      if(iret.ne.0) call exit(iret)
+c winds
+      do k=1,km
+        jpds=-1
+        jpds(5)=33
+        jpds(6)=100
+        jpds(7)=lev(k)
+        call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &             li(1,k),ui(1,k),iret)
+        if(iret.ne.0) call exit(iret)
+        jpds=-1
+        jpds(5)=34
+        jpds(6)=100
+        jpds(7)=lev(k)
+        call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &             li(1,k),vi(1,k),iret)
+        if(iret.ne.0) call exit(iret)
+        ibi(k)=mod(kpdsi(4)/64,2)
+      enddo
+      call ipolatev(0,ipopt,kgdsi,kgdso,ji,jo,km,ibi,li,ui,vi,
+     &              jo,rlat,rlon,crot,srot,ibo,lo,uo,vo,iret)
+      if(iret.ne.0) call exit(iret)
+      print '((i8,3(2x,3f8.2)))',
+     & (lev(k),(ho(j,k),uo(j,k),vo(j,k),j=1,jo),k=1,km)
+      end
+
+Example 4. Interpolate 850 mb height and winds from the staggered meso-eta
+           to a regional 0.25 degree grid.
+
+      integer ipopt(20)
+      integer jpds(25),jgds(22),kpdsi(25),kgdsi(22),kpdso(25),kgdso(22)
+      integer kgdsi2(22)
+      parameter(ji=361*271,ig=255,jo=121*81)
+      real rlat(jo),rlon(jo),crot(jo),srot(jo)
+      logical li(ji),lo(jo)
+      real fi(ji),fi2(ji),fo(jo)
+      real vi(ji),vi2(ji),vo(jo)
+      character gdso(400)
+      kgdso=0
+      kgdso(1)=0
+      kgdso(2)=121
+      kgdso(3)=81
+      kgdso(4)=30000
+      kgdso(5)=-90000
+      kgdso(6)=128
+      kgdso(7)=50000
+      kgdso(8)=-60000
+      kgdso(9)=250
+      kgdso(10)=250
+      kgdso(11)=64
+      kgdso(19)=0
+      kgdso(20)=255
+      if(iret.ne.0) call exit(iret)
+      ipopt=0
+      jpds=-1
+      jpds(6)=100
+      jpds(7)=850
+      jpds(5)=7
+      call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &           li,fi,iret)
+      if(iret.ne.0) call exit(iret)
+      call ipxetas(1,ji,ji,1,kgdsi,fi,kgdsi2,fi2,iret)
+      if(iret.ne.0) call exit(iret)
+      call ipolates(0,ipopt,kgdsi2,kgdso,ji,jo,1,0,li,fi2,
+     &              ko,rlat,rlon,ibo,lo,fo,iret)
+      if(iret.ne.0) call exit(iret)
+      kpdso=kpdsi
+      kpdso(3)=ig
+      kpdso(4)=128+64*ibo
+      kpdso(22)=1
+      call putgb(51,ko,kpdso,kgdso,lo,fo,iret)
+      if(iret.ne.0) call exit(iret)
+      jpds(5)=33
+      call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &           li,fi,iret)
+      if(iret.ne.0) call exit(iret)
+      call ipxetas(2,ji,ji,1,kgdsi,fi,kgdsi2,fi2,iret)
+      if(iret.ne.0) call exit(iret)
+      jpds(5)=34
+      call getgb(11,31,ji,0,jpds,jgds,ki,kr,kpdsi,kgdsi,
+     &           li,vi,iret)
+      if(iret.ne.0) call exit(iret)
+      call ipxetas(2,ji,ji,1,kgdsi,vi,kgdsi2,vi2,iret)
+      if(iret.ne.0) call exit(iret)
+      call ipolatev(0,ipopt,kgdsi2,kgdso,ji,jo,1,0,li,fi2,vi2,
+     &              ko,rlat,rlon,crot,srot,ibo,lo,fo,vo,iret)
+      if(iret.ne.0) call exit(iret)
+      kpdso=kpdsi
+      kpdso(3)=ig
+      kpdso(4)=128+64*ibo
+      kpdso(22)=1
+      kpdso(5)=33
+      call putgb(51,ko,kpdso,kgdso,lo,fo,iret)
+      if(iret.ne.0) call exit(iret)
+      kpdso(5)=34
+      call putgb(51,ko,kpdso,kgdso,lo,vo,iret)
+      if(iret.ne.0) call exit(iret)
+      end
+
+IV. Docblocks
+
+The primary documentation of iplib is via the docblocks in its subprograms.
+The following recapitulation of docblocks is current as of May, 1996.
+
+Docblock for ipolates.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  IPOLATES   IREDELL'S POLATE FOR SCALAR FIELDS
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM INTERPOLATES SCALAR FIELDS
+C           FROM ANY GRID TO ANY GRID (JOE IRWIN'S DREAM).
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE FOLLOWING INTERPOLATION METHODS ARE POSSIBLE:
+C             (IP=0) BILINEAR
+C             (IP=1) BICUBIC
+C             (IP=2) NEIGHBOR
+C             (IP=3) BUDGET
+C             (IP=4) SPECTRAL
+C           SOME OF THESE METHODS HAVE INTERPOLATION OPTIONS AND/OR
+C           RESTRICTIONS ON THE INPUT OR OUTPUT GRIDS, BOTH OF WHICH
+C           ARE DOCUMENTED MORE FULLY IN THEIR RESPECTIVE SUBPROGRAMS.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT.
+C           INPUT BITMAPS WILL BE INTERPOLATED TO OUTPUT BITMAPS.
+C           OUTPUT BITMAPS WILL ALSO BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL IPOLATES(IP,IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,GI,
+C    &                    NO,RLAT,RLON,IBO,LO,GO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IP       - INTEGER INTERPOLATION METHOD
+C                (IP=0 FOR BILINEAR;
+C                 IP=1 FOR BICUBIC;
+C                 IP=2 FOR NEIGHBOR;
+C                 IP=3 FOR BUDGET;
+C                 IP=4 FOR SPECTRAL)
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS
+C                (IP=0: (NO OPTIONS)
+C                 IP=1: CONSTRAINT OPTION
+C                 IP=2: (NO OPTIONS)
+C                 IP=3: NUMBER IN RADIUS, RADIUS WEIGHTS ...
+C                 IP=4: SPECTRAL SHAPE, SPECTRAL TRUNCATION)
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     GI       - REAL (MI,KM) INPUT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     GO       - REAL (MO,KM) OUTPUT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                1    UNRECOGNIZED INTERPOLATION METHOD
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C                1X   INVALID BICUBIC METHOD PARAMETERS
+C                3X   INVALID BUDGET METHOD PARAMETERS
+C                4X   INVALID SPECTRAL METHOD PARAMETERS
+C
+C SUBPROGRAMS CALLED:
+C   POLATES0     INTERPOLATE SCALAR FIELDS (BILINEAR)
+C   POLATES1     INTERPOLATE SCALAR FIELDS (BICUBIC)
+C   POLATES2     INTERPOLATE SCALAR FIELDS (NEIGHBOR)
+C   POLATES3     INTERPOLATE SCALAR FIELDS (BUDGET)
+C   POLATES4     INTERPOLATE SCALAR FIELDS (SPECTRAL)
+C
+C REMARKS: EXAMPLES DEMONSTRATING RELATIVE CPU COSTS.
+C   THIS EXAMPLE IS INTERPOLATING 12 LEVELS OF TEMPERATURES
+C   FROM THE 360 X 181 GLOBAL GRID (NCEP GRID 3)
+C   TO THE 93 X 68 HAWAIIAN MERCATOR GRID (NCEP GRID 204).
+C   THE EXAMPLE TIMES ARE FOR THE C90.  AS A REFERENCE, THE CP TIME
+C   FOR UNPACKING THE GLOBAL 12 TEMPERATURE FIELDS IS 0.04 SECONDS.
+C
+C   METHOD      IP  IPOPT          CP SECONDS
+C   --------    --  -------------  ----------
+C   BILINEAR    0                   0.03
+C   BICUBIC     1   0               0.07
+C   BICUBIC     1   1               0.07
+C   NEIGHBOR    2                   0.01
+C   BUDGET      3   -1,-1           0.46
+C   SPECTRAL    4   0,40            0.23
+C   SPECTRAL    4   1,40            0.25
+C   SPECTRAL    4   0,-1            0.43
+C
+C   THE SPECTRAL INTERPOLATION IS FAST FOR THE MERCATOR GRID.
+C   HOWEVER, FOR SOME GRIDS THE SPECTRAL INTERPOLATION IS SLOW.
+C   THE FOLLOWING EXAMPLE IS INTERPOLATING 12 LEVELS OF TEMPERATURES
+C   FROM THE 360 X 181 GLOBAL GRID (NCEP GRID 3)
+C   TO THE 93 X 65 CONUS LAMBERT CONFORMAL GRID (NCEP GRID 211).
+C
+C   METHOD      IP  IPOPT          CP SECONDS
+C   --------    --  -------------  ----------
+C   BILINEAR    0                   0.02
+C   BICUBIC     1   0               0.06
+C   BICUBIC     1   1               0.06
+C   NEIGHBOR    2                   0.01
+C   BUDGET      3   -1,-1           0.45
+C   SPECTRAL    4   0,40            4.10
+C   SPECTRAL    4   1,40            5.23
+C   SPECTRAL    4   0,-1           11.75
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polates0.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATES0   INTERPOLATE SCALAR FIELDS (BILINEAR)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS BILINEAR INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR SCALAR FIELDS.
+C           NO OPTIONS ARE ALLOWED.
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT.
+C           INPUT BITMAPS WILL BE INTERPOLATED TO OUTPUT BITMAPS.
+C           OUTPUT BITMAPS WILL ALSO BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATES0(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,GI,
+C    &                    NO,RLAT,RLON,IBO,LO,GO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS (NO OPTIONS)
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C                (KGDSO(1)<0 IMPLIES RANDOM STATION POINTS)
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     GI       - REAL (MI,KM) INPUT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     GO       - REAL (MO,KM) OUTPUT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   (IJKGDS)     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+C   POLFIXS      MAKE MULTIPLE POLE SCALAR VALUES CONSISTENT
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polates1.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATES1   INTERPOLATE SCALAR FIELDS (BICUBIC)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS BICUBIC INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR SCALAR FIELDS.
+C           IT REQUIRES THAT NO INPUT FIELDS HAVE BITMAPS (IBI=0).
+C           OPTIONS ALLOW CHOICES BETWEEN STRAIGHT BICUBIC (IPOPT(1)=0)
+C           AND CONSTRAINED BICUBIC (IPOPT(1)=1) WHERE THE VALUE IS
+C           CONFINED WITHIN THE RANGE OF THE SURROUNDING 4 POINTS.
+C           BILINEAR USED WITHIN ONE GRID LENGTH OF BOUNDARIES.
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT.
+C           OUTPUT BITMAPS WILL ONLY BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATES1(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,GI,
+C    &                    NO,RLAT,RLON,IBO,LO,GO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS
+C                IPOPT(1)=0 FOR STRAIGHT BICUBIC;
+C                IPOPT(1)=1 FOR CONSTRAINED BICUBIC WHERE VALUE IS
+C                CONFINED WITHIN THE RANGE OF THE SURROUNDING 4 POINTS.
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C                (KGDSO(1)<0 IMPLIES RANDOM STATION POINTS)
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS (MUST BE ALL 0)
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     GI       - REAL (MI,KM) INPUT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     GO       - REAL (MO,KM) OUTPUT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C                11   INVALID INPUT BITMAPS
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   (IJKGDS)     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+C   POLFIXS      MAKE MULTIPLE POLE SCALAR VALUES CONSISTENT
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polates2.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATES2   INTERPOLATE SCALAR FIELDS (NEIGHBOR)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS NEIGHBOR INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR SCALAR FIELDS.
+C           NO OPTIONS ARE ALLOWED.
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT.
+C           INPUT BITMAPS WILL BE INTERPOLATED TO OUTPUT BITMAPS.
+C           OUTPUT BITMAPS WILL ALSO BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATES2(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,GI,
+C    &                    NO,RLAT,RLON,IBO,LO,GO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS (NO OPTIONS)
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C                (KGDSO(1)<0 IMPLIES RANDOM STATION POINTS)
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     GI       - REAL (MI,KM) INPUT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     GO       - REAL (MO,KM) OUTPUT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   (IJKGDS)     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+C   POLFIXS      MAKE MULTIPLE POLE SCALAR VALUES CONSISTENT
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polates3.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATES3   INTERPOLATE SCALAR FIELDS (BUDGET)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS BUDGET INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR SCALAR FIELDS.
+C           IT REQUIRES A GRID FOR THE OUTPUT FIELDS (KGDSO(1)>=0).
+C           THE ALGORITHM SIMPLY COMPUTES (WEIGHTED) AVERAGES
+C           OF BILINEARLY INTERPOLATED POINTS ARRANGED IN A SQUARE BOX
+C           CENTERED AROUND EACH OUTPUT GRID POINT AND STRETCHING
+C           NEARLY HALFWAY TO EACH OF THE NEIGHBORING GRID POINTS.
+C           OPTIONS ALLOW CHOICES OF NUMBER OF POINTS IN EACH RADIUS
+C           FROM THE CENTER POINT (IPOPT(1)) WHICH DEFAULTS TO 2
+C           (IF IPOPT(1)=-1) MEANING THAT 25 POINTS WILL BE AVERAGED;
+C           FURTHER OPTIONS ARE THE RESPECTIVE WEIGHTS FOR THE RADIUS
+C           POINTS STARTING AT THE CENTER POINT (IPOPT(2:2+IPOPT(1))
+C           WHICH DEFAULTS TO ALL 1 (IF IPOPT(2)=-1.).
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED.
+C           INPUT BITMAPS WILL BE INTERPOLATED TO OUTPUT BITMAPS.
+C           OUTPUT BITMAPS WILL ALSO BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATES3(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,GI,
+C    &                    NO,RLAT,RLON,IBO,LO,GO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS
+C                IPOPT(1) IS NUMBER OF RADIUS POINTS
+C                (DEFAULTS TO 2 IF IPOPT(1)=-1);
+C                IPOPT(2:2+IPOPT(1)) ARE RESPECTIVE WEIGHTS
+C                (DEFAULTS TO ALL 1 IF IPOPT(2)=-1).
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     GI       - REAL (MI,KM) INPUT FIELDS TO INTERPOLATE
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     GO       - REAL (MO,KM) OUTPUT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C                31   INVALID UNDEFINED OUTPUT GRID
+C                32   INVALID BUDGET METHOD PARAMETERS
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   (IJKGDS)     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+C   POLFIXS      MAKE MULTIPLE POLE SCALAR VALUES CONSISTENT
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polates4.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATES4   INTERPOLATE SCALAR FIELDS (SPECTRAL)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS SPECTRAL INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR SCALAR FIELDS.
+C           IT REQUIRES THAT THE INPUT FIELDS BE UNIFORMLY GLOBAL.
+C           OPTIONS ALLOW CHOICES BETWEEN TRIANGULAR SHAPE (IPOPT(1)=0)
+C           AND RHOMBOIDAL SHAPE (IPOPT(1)=1) WHICH HAS NO DEFAULT;
+C           A SECOND OPTION IS THE TRUNCATION (IPOPT(2)) WHICH DEFAULTS 
+C           TO A SENSIBLE TRUNCATION FOR THE INPUT GRID (IF OPT(2)=-1).
+C           NOTE THAT IF THE OUTPUT GRID IS NOT FOUND IN A SPECIAL LIST,
+C           THEN THE TRANSFORM BACK TO GRID IS NOT VERY FAST.
+C           THIS SPECIAL LIST CONTAINS GLOBAL CYLINDRICAL GRIDS,
+C           POLAR STEREOGRAPHIC GRIDS CENTERED AT THE POLE
+C           AND MERCATOR GRIDS.
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT.
+C           OUTPUT BITMAPS WILL NOT BE CREATED.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATES4(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,GI,
+C    &                    NO,RLAT,RLON,IBO,LO,GO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS
+C                IPOPT(1)=0 FOR TRIANGULAR, IPOPT(1)=1 FOR RHOMBOIDAL;
+C                IPOPT(2) IS TRUNCATION NUMBER
+C                (DEFAULTS TO SENSIBLE IF IPOPT(2)=-1).
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C                (KGDSO(1)<0 IMPLIES RANDOM STATION POINTS)
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS (MUST BE ALL 0)
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     GI       - REAL (MI,KM) INPUT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     GO       - REAL (MO,KM) OUTPUT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C                41   INVALID NONGLOBAL INPUT GRID
+C                42   INVALID SPECTRAL METHOD PARAMETERS
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   SPTRUN       SPECTRALLY TRUNCATE GRIDDED SCALAR FIELDS
+C   SPTRUNS      SPECTRALLY INTERPOLATE SCALARS TO POLAR STEREO.
+C   SPTRUNM      SPECTRALLY INTERPOLATE SCALARS TO MERCATOR
+C   SPTRUNG      SPECTRALLY INTERPOLATE SCALARS TO STATIONS
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polfixs.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLFIXS    MAKE MULTIPLE POLE SCALAR VALUES CONSISTENT
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM AVERAGES MULTIPLE POLE SCALAR VALUES
+C           ON A LATITUDE/LONGITUDE GRID.  BITMAPS MAY BE AVERAGED TOO.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLFIXS(NM,NX,KM,RLAT,RLON,IB,LO,GO)
+C
+C   INPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF GRID POINTS
+C     NX       - INTEGER LEADING DIMENSION OF FIELDS
+C     KM       - INTEGER NUMBER OF FIELDS
+C     RLAT     - REAL (NO) LATITUDES IN DEGREES
+C     RLON     - REAL (NO) LONGITUDES IN DEGREES
+C     IB       - INTEGER (KM) BITMAP FLAGS
+C     LO       - LOGICAL (NX,KM) BITMAPS (IF RESPECTIVE IB(K)=1)
+C     GO       - REAL (NX,KM) FIELDS
+C
+C   OUTPUT ARGUMENT LIST:
+C     LO       - LOGICAL (NX,KM) BITMAPS (IF RESPECTIVE IB(K)=1)
+C     GO       - REAL (NX,KM) FIELDS
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for ipolatev.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  IPOLATEV   IREDELL'S POLATE FOR VECTOR FIELDS
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM INTERPOLATES VECTOR FIELDS
+C           FROM ANY GRID TO ANY GRID (JOE IRWIN'S DREAM).
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE FOLLOWING INTERPOLATION METHODS ARE POSSIBLE:
+C             (IP=0) BILINEAR
+C             (IP=1) BICUBIC
+C             (IP=2) NEIGHBOR
+C             (IP=3) BUDGET
+C             (IP=4) SPECTRAL
+C           SOME OF THESE METHODS HAVE INTERPOLATION OPTIONS AND/OR
+C           RESTRICTIONS ON THE INPUT OR OUTPUT GRIDS, BOTH OF WHICH
+C           ARE DOCUMENTED MORE FULLY IN THEIR RESPECTIVE SUBPROGRAMS.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           THE INPUT AND OUTPUT VECTORS ARE ROTATED SO THAT THEY ARE
+C           EITHER RESOLVED RELATIVE TO THE DEFINED GRID
+C           IN THE DIRECTION OF INCREASING X AND Y COORDINATES
+C           OR RESOLVED RELATIVE TO EASTERLY AND NORTHERLY DIRECTIONS,
+C           AS DESIGNATED BY THEIR RESPECTIVE GRID DESCRIPTION SECTIONS.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT 
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           INPUT BITMAPS WILL BE INTERPOLATED TO OUTPUT BITMAPS.
+C           OUTPUT BITMAPS WILL ALSO BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL IPOLATEV(IP,IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,UI,VI,
+C    &                    NO,RLAT,RLON,CROT,SROT,IBO,LO,UO,VO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IP       - INTEGER INTERPOLATION METHOD
+C                (IP=0 FOR BILINEAR;
+C                 IP=1 FOR BICUBIC;
+C                 IP=2 FOR NEIGHBOR;
+C                 IP=3 FOR BUDGET;
+C                 IP=4 FOR SPECTRAL)
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS
+C                (IP=0: (NO OPTIONS)
+C                 IP=1: CONSTRAINT OPTION
+C                 IP=2: (NO OPTIONS)
+C                 IP=3: NUMBER IN RADIUS, RADIUS WEIGHTS ...
+C                 IP=4: SPECTRAL SHAPE, SPECTRAL TRUNCATION)
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     UI       - REAL (MI,KM) INPUT U-COMPONENT FIELDS TO INTERPOLATE
+C     VI       - REAL (MI,KM) INPUT V-COMPONENT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES (IF KGDSO(1)<0)
+C     SROT     - REAL (NO) VECTOR ROTATION SINES (IF KGDSO(1)<0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     CROT     - REAL (MO) VECTOR ROTATION COSINES (IF KGDSO(1)>=0)
+C     SROT     - REAL (MO) VECTOR ROTATION SINES (IF KGDSO(1)>=0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     UO       - REAL (MO,KM) OUTPUT U-COMPONENT FIELDS INTERPOLATED
+C     VO       - REAL (MO,KM) OUTPUT V-COMPONENT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                1    UNRECOGNIZED INTERPOLATION METHOD
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C                1X   INVALID BICUBIC METHOD PARAMETERS
+C                3X   INVALID BUDGET METHOD PARAMETERS
+C                4X   INVALID SPECTRAL METHOD PARAMETERS
+C
+C SUBPROGRAMS CALLED:
+C   POLATEV0     INTERPOLATE VECTOR FIELDS (BILINEAR)
+C   POLATEV1     INTERPOLATE VECTOR FIELDS (BICUBIC)
+C   POLATEV2     INTERPOLATE VECTOR FIELDS (NEIGHBOR)
+C   POLATEV3     INTERPOLATE VECTOR FIELDS (BUDGET)
+C   POLATEV4     INTERPOLATE VECTOR FIELDS (SPECTRAL)
+C
+C REMARKS: EXAMPLE DEMONSTRATING RELATIVE CPU COSTS.
+C   THIS EXAMPLE IS INTERPOLATING 12 LEVELS OF WINDS
+C   FROM THE 360 X 181 GLOBAL GRID (NCEP GRID 3)
+C   TO THE 93 X 68 HAWAIIAN MERCATOR GRID (NCEP GRID 204).
+C   THE EXAMPLE TIMES ARE FOR THE C90.  AS A REFERENCE, THE CP TIME
+C   FOR UNPACKING THE GLOBAL 12 PAIRS OF WIND FIELDS IS 0.07 SECONDS.
+C
+C   METHOD      IP  IPOPT          CP SECONDS
+C   --------    --  -------------  ----------
+C   BILINEAR    0                   0.06
+C   BICUBIC     1   0               0.16
+C   BICUBIC     1   1               0.17
+C   NEIGHBOR    2                   0.03
+C   BUDGET      3   -1,-1           0.92
+C   SPECTRAL    4   0,40            0.32
+C   SPECTRAL    4   1,40            0.34
+C   SPECTRAL    4   0,-1            0.59
+C
+C   THE SPECTRAL INTERPOLATION IS FAST FOR THE MERCATOR GRID.
+C   HOWEVER, FOR SOME GRIDS THE SPECTRAL INTERPOLATION IS SLOW.
+C   THE FOLLOWING EXAMPLE IS INTERPOLATING 12 LEVELS OF WINDS
+C   FROM THE 360 X 181 GLOBAL GRID (NCEP GRID 3)
+C   TO THE 93 X 65 CONUS LAMBERT CONFORMAL GRID (NCEP GRID 211).
+C
+C   METHOD      IP  IPOPT          CP SECONDS
+C   --------    --  -------------  ----------
+C   BILINEAR    0                   0.05
+C   BICUBIC     1   0               0.14
+C   BICUBIC     1   1               0.15
+C   NEIGHBOR    2                   0.02
+C   BUDGET      3   -1,-1           0.88
+C   SPECTRAL    4   0,40            4.47
+C   SPECTRAL    4   1,40            5.62
+C   SPECTRAL    4   0,-1           12.59
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polatev0.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATEV0   INTERPOLATE VECTOR FIELDS (BILINEAR)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS BILINEAR INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR VECTOR FIELDS.
+C           NO OPTIONS ARE ALLOWED.
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           THE INPUT AND OUTPUT VECTORS ARE ROTATED SO THAT THEY ARE
+C           EITHER RESOLVED RELATIVE TO THE DEFINED GRID
+C           IN THE DIRECTION OF INCREASING X AND Y COORDINATES
+C           OR RESOLVED RELATIVE TO EASTERLY AND NORTHERLY DIRECTIONS,
+C           AS DESIGNATED BY THEIR RESPECTIVE GRID DESCRIPTION SECTIONS.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT 
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           INPUT BITMAPS WILL BE INTERPOLATED TO OUTPUT BITMAPS.
+C           OUTPUT BITMAPS WILL ALSO BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATEV0(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,UI,VI,
+C    &                    NO,RLAT,RLON,CROT,SROT,IBO,LO,UO,VO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS (NO OPTIONS)
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C                (KGDSO(1)<0 IMPLIES RANDOM STATION POINTS)
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     UI       - REAL (MI,KM) INPUT U-COMPONENT FIELDS TO INTERPOLATE
+C     VI       - REAL (MI,KM) INPUT V-COMPONENT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES (IF KGDSO(1)<0)
+C     SROT     - REAL (NO) VECTOR ROTATION SINES (IF KGDSO(1)<0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES (IF KGDSO(1)>=0)
+C     SROT     - REAL (NO) VECTOR ROTATION SINES (IF KGDSO(1)>=0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     UO       - REAL (MO,KM) OUTPUT U-COMPONENT FIELDS INTERPOLATED
+C     VO       - REAL (MO,KM) OUTPUT V-COMPONENT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   (IJKGDS)     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+C   (MOVECT)     MOVE A VECTOR ALONG A GREAT CIRCLE
+C   POLFIXV      MAKE MULTIPLE POLE VECTOR VALUES CONSISTENT
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polatev1.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATEV1   INTERPOLATE VECTOR FIELDS (BICUBIC)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS BICUBIC INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR VECTOR FIELDS.
+C           IT REQUIRES THAT NO INPUT FIELDS HAVE BITMAPS (IBI=0).
+C           OPTIONS ALLOW CHOICES BETWEEN STRAIGHT BICUBIC (IPOPT(1)=0)
+C           AND CONSTRAINED BICUBIC (IPOPT(1)=1) WHERE THE VALUE IS
+C           CONFINED WITHIN THE RANGE OF THE SURROUNDING 4 POINTS.
+C           BILINEAR USED WITHIN ONE GRID LENGTH OF BOUNDARIES.
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           THE INPUT AND OUTPUT VECTORS ARE ROTATED SO THAT THEY ARE
+C           EITHER RESOLVED RELATIVE TO THE DEFINED GRID
+C           IN THE DIRECTION OF INCREASING X AND Y COORDINATES
+C           OR RESOLVED RELATIVE TO EASTERLY AND NORTHERLY DIRECTIONS,
+C           AS DESIGNATED BY THEIR RESPECTIVE GRID DESCRIPTION SECTIONS.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT 
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           OUTPUT BITMAPS WILL ONLY BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATEV1(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,UI,VI,
+C    &                    NO,RLAT,RLON,CROT,SROT,IBO,LO,UO,VO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS
+C                IPOPT(1)=0 FOR STRAIGHT BICUBIC;
+C                IPOPT(1)=1 FOR CONSTRAINED BICUBIC WHERE VALUE IS
+C                CONFINED WITHIN THE RANGE OF THE SURROUNDING 4 POINTS.
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C                (KGDSO(1)<0 IMPLIES RANDOM STATION POINTS)
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS (MUST BE ALL 0)
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     UI       - REAL (MI,KM) INPUT U-COMPONENT FIELDS TO INTERPOLATE
+C     VI       - REAL (MI,KM) INPUT V-COMPONENT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES (IF KGDSO(1)<0)
+C     SROT     - REAL (NO) VECTOR ROTATION SINES (IF KGDSO(1)<0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES (IF KGDSO(1)>=0)
+C     SROT     - REAL (NO) VECTOR ROTATION SINES (IF KGDSO(1)>=0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     UO       - REAL (MO,KM) OUTPUT U-COMPONENT FIELDS INTERPOLATED
+C     VO       - REAL (MO,KM) OUTPUT V-COMPONENT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C                11   INVALID INPUT BITMAPS
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   (IJKGDS)     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+C   (MOVECT)     MOVE A VECTOR ALONG A GREAT CIRCLE
+C   POLFIXV      MAKE MULTIPLE POLE VECTOR VALUES CONSISTENT
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polatev2.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATEV2   INTERPOLATE VECTOR FIELDS (NEIGHBOR)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS NEIGHBOR INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR VECTOR FIELDS.
+C           NO OPTIONS ARE ALLOWED.
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           THE INPUT AND OUTPUT VECTORS ARE ROTATED SO THAT THEY ARE
+C           EITHER RESOLVED RELATIVE TO THE DEFINED GRID
+C           IN THE DIRECTION OF INCREASING X AND Y COORDINATES
+C           OR RESOLVED RELATIVE TO EASTERLY AND NORTHERLY DIRECTIONS,
+C           AS DESIGNATED BY THEIR RESPECTIVE GRID DESCRIPTION SECTIONS.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT 
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           INPUT BITMAPS WILL BE INTERPOLATED TO OUTPUT BITMAPS.
+C           OUTPUT BITMAPS WILL ALSO BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATEV2(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,UI,VI,
+C    &                    NO,RLAT,RLON,CROT,SROT,IBO,LO,UO,VO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS (NO OPTIONS)
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C                (KGDSO(1)<0 IMPLIES RANDOM STATION POINTS)
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     UI       - REAL (MI,KM) INPUT U-COMPONENT FIELDS TO INTERPOLATE
+C     VI       - REAL (MI,KM) INPUT V-COMPONENT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES (IF KGDSO(1)<0)
+C     SROT     - REAL (NO) VECTOR ROTATION SINES (IF KGDSO(1)<0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES (IF KGDSO(1)>=0)
+C     SROT     - REAL (NO) VECTOR ROTATION SINES (IF KGDSO(1)>=0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     UO       - REAL (MO,KM) OUTPUT U-COMPONENT FIELDS INTERPOLATED
+C     VO       - REAL (MO,KM) OUTPUT V-COMPONENT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   (IJKGDS)     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+C   (MOVECT)     MOVE A VECTOR ALONG A GREAT CIRCLE
+C   POLFIXV      MAKE MULTIPLE POLE VECTOR VALUES CONSISTENT
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polatev3.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATEV3   INTERPOLATE VECTOR FIELDS (BUDGET)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS BUDGET INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR VECTOR FIELDS.
+C           IT REQUIRES A GRID FOR THE OUTPUT FIELDS (KGDSO(1)>=0).
+C           THE ALGORITHM SIMPLY COMPUTES (WEIGHTED) AVERAGES
+C           OF BILINEARLY INTERPOLATED POINTS ARRANGED IN A SQUARE BOX
+C           CENTERED AROUND EACH OUTPUT GRID POINT AND STRETCHING
+C           NEARLY HALFWAY TO EACH OF THE NEIGHBORING GRID POINTS.
+C           OPTIONS ALLOW CHOICES OF NUMBER OF POINTS IN EACH RADIUS
+C           FROM THE CENTER POINT (IPOPT(1)) WHICH DEFAULTS TO 2
+C           (IF IPOPT(1)=-1) MEANING THAT 25 POINTS WILL BE AVERAGED;
+C           FURTHER OPTIONS ARE THE RESPECTIVE WEIGHTS FOR THE RADIUS
+C           POINTS STARTING AT THE CENTER POINT (IPOPT(2:2+IPOPT(1))
+C           WHICH DEFAULTS TO ALL 1 (IF IPOPT(2)=-1.).
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           THE INPUT AND OUTPUT VECTORS ARE ROTATED SO THAT THEY ARE
+C           EITHER RESOLVED RELATIVE TO THE DEFINED GRID
+C           IN THE DIRECTION OF INCREASING X AND Y COORDINATES
+C           OR RESOLVED RELATIVE TO EASTERLY AND NORTHERLY DIRECTIONS,
+C           AS DESIGNATED BY THEIR RESPECTIVE GRID DESCRIPTION SECTIONS.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           INPUT BITMAPS WILL BE INTERPOLATED TO OUTPUT BITMAPS.
+C           OUTPUT BITMAPS WILL ALSO BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATEV3(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,UI,VI,
+C    &                    NO,RLAT,RLON,CROT,SROT,IBO,LO,UO,VO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS
+C                IPOPT(1) IS NUMBER OF RADIUS POINTS
+C                (DEFAULTS TO 2 IF IPOPT(1)=-1);
+C                IPOPT(2:2+IPOPT(1)) ARE RESPECTIVE WEIGHTS
+C                (DEFAULTS TO ALL 1 IF IPOPT(2)=-1).
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     UI       - REAL (MI,KM) INPUT U-COMPONENT FIELDS TO INTERPOLATE
+C     VI       - REAL (MI,KM) INPUT V-COMPONENT FIELDS TO INTERPOLATE
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES
+C     SROT     - REAL (NO) VECTOR ROTATION SINES
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     UO       - REAL (MO,KM) OUTPUT U-COMPONENT FIELDS INTERPOLATED
+C     VO       - REAL (MO,KM) OUTPUT V-COMPONENT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C                31   INVALID UNDEFINED OUTPUT GRID
+C                32   INVALID BUDGET METHOD PARAMETERS
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   (IJKGDS)     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+C   (MOVECT)     MOVE A VECTOR ALONG A GREAT CIRCLE
+C   POLFIXV      MAKE MULTIPLE POLE VECTOR VALUES CONSISTENT
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polatev4.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLATEV4   INTERPOLATE VECTOR FIELDS (SPECTRAL)
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PERFORMS SPECTRAL INTERPOLATION
+C           FROM ANY GRID TO ANY GRID FOR VECTOR FIELDS.
+C           IT REQUIRES THAT THE INPUT FIELDS BE UNIFORMLY GLOBAL.
+C           OPTIONS ALLOW CHOICES BETWEEN TRIANGULAR SHAPE (IPOPT(1)=0)
+C           AND RHOMBOIDAL SHAPE (IPOPT(1)=1) WHICH HAS NO DEFAULT;
+C           A SECOND OPTION IS THE TRUNCATION (IPOPT(2)) WHICH DEFAULTS 
+C           TO A SENSIBLE TRUNCATION FOR THE INPUT GRID (IF OPT(2)=-1).
+C           NOTE THAT IF THE OUTPUT GRID IS NOT FOUND IN A SPECIAL LIST,
+C           THEN THE TRANSFORM BACK TO GRID IS NOT VERY FAST.
+C           THIS SPECIAL LIST CONTAINS GLOBAL CYLINDRICAL GRIDS,
+C           POLAR STEREOGRAPHIC GRIDS CENTERED AT THE POLE
+C           AND MERCATOR GRIDS.
+C           ONLY HORIZONTAL INTERPOLATION IS PERFORMED.
+C           THE GRIDS ARE DEFINED BY THEIR GRID DESCRIPTION SECTIONS
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63).
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           WHERE KGDS COULD BE EITHER INPUT KGDSI OR OUTPUT KGDSO.
+C           THE INPUT AND OUTPUT VECTORS ARE ROTATED SO THAT THEY ARE
+C           EITHER RESOLVED RELATIVE TO THE DEFINED GRID
+C           IN THE DIRECTION OF INCREASING X AND Y COORDINATES
+C           OR RESOLVED RELATIVE TO EASTERLY AND NORTHERLY DIRECTIONS,
+C           AS DESIGNATED BY THEIR RESPECTIVE GRID DESCRIPTION SECTIONS.
+C           AS AN ADDED BONUS THE NUMBER OF OUTPUT GRID POINTS
+C           AND THEIR LATITUDES AND LONGITUDES ARE ALSO RETURNED
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           ON THE OTHER HAND, THE OUTPUT CAN BE A SET OF STATION POINTS
+C           IF KGDSO(1)<0, IN WHICH CASE THE NUMBER OF POINTS
+C           AND THEIR LATITUDES AND LONGITUDES MUST BE INPUT 
+C           ALONG WITH THEIR VECTOR ROTATION PARAMETERS.
+C           OUTPUT BITMAPS WILL ONLY BE CREATED WHEN THE OUTPUT GRID
+C           EXTENDS OUTSIDE OF THE DOMAIN OF THE INPUT GRID.
+C           THE OUTPUT FIELD IS SET TO 0 WHERE THE OUTPUT BITMAP IS OFF.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLATEV4(IPOPT,KGDSI,KGDSO,MI,MO,KM,IBI,LI,UI,VI,
+C    &                    NO,RLAT,RLON,CROT,SROT,IBO,LO,UO,VO,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IPOPT    - INTEGER (20) INTERPOLATION OPTIONS
+C                IPOPT(1)=0 FOR TRIANGULAR, IPOPT(1)=1 FOR RHOMBOIDAL;
+C                IPOPT(2) IS TRUNCATION NUMBER
+C                (DEFAULTS TO SENSIBLE IF IPOPT(2)=-1).
+C     KGDSI    - INTEGER (22) INPUT GDS PARAMETERS AS DECODED BY W3FI63
+C     KGDSO    - INTEGER (22) OUTPUT GDS PARAMETERS AS DECODED BY W3FI63
+C                (KGDSO(1)<0 IMPLIES RANDOM STATION POINTS)
+C     MI       - INTEGER SKIP NUMBER BETWEEN INPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF INPUT GRID FIELDS IF KM=1
+C     MO       - INTEGER SKIP NUMBER BETWEEN OUTPUT GRID FIELDS IF KM>1
+C                OR DIMENSION OF OUTPUT GRID FIELDS IF KM=1
+C     KM       - INTEGER NUMBER OF FIELDS TO INTERPOLATE
+C     IBI      - INTEGER (KM) INPUT BITMAP FLAGS (MUST BE ALL 0)
+C     LI       - LOGICAL (MI,KM) INPUT BITMAPS (IF RESPECTIVE IBI(K)=1)
+C     UI       - REAL (MI,KM) INPUT U-COMPONENT FIELDS TO INTERPOLATE
+C     VI       - REAL (MI,KM) INPUT V-COMPONENT FIELDS TO INTERPOLATE
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)<0)
+C     RLAT     - REAL (NO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)<0)
+C     RLON     - REAL (NO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)<0)
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES (IF KGDSO(1)<0)
+C     SROT     - REAL (NO) VECTOR ROTATION SINES (IF KGDSO(1)<0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C   OUTPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF OUTPUT POINTS (ONLY IF KGDSO(1)>=0)
+C     RLAT     - REAL (MO) OUTPUT LATITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     RLON     - REAL (MO) OUTPUT LONGITUDES IN DEGREES (IF KGDSO(1)>=0)
+C     CROT     - REAL (NO) VECTOR ROTATION COSINES (IF KGDSO(1)>=0)
+C     SROT     - REAL (NO) VECTOR ROTATION SINES (IF KGDSO(1)>=0)
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C     IBO      - INTEGER (KM) OUTPUT BITMAP FLAGS
+C     LO       - LOGICAL (MO,KM) OUTPUT BITMAPS (ALWAYS OUTPUT)
+C     UO       - REAL (MO,KM) OUTPUT U-COMPONENT FIELDS INTERPOLATED
+C     VO       - REAL (MO,KM) OUTPUT V-COMPONENT FIELDS INTERPOLATED
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL INTERPOLATION
+C                2    UNRECOGNIZED INPUT GRID OR NO GRID OVERLAP
+C                3    UNRECOGNIZED OUTPUT GRID
+C                41   INVALID NONGLOBAL INPUT GRID
+C                42   INVALID SPECTRAL METHOD PARAMETERS
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ       GRID DESCRIPTION SECTION WIZARD
+C   SPTRUNV      SPECTRALLY TRUNCATE GRIDDED VECTOR FIELDS
+C   SPTRUNSV     SPECTRALLY INTERPOLATE VECTORS TO POLAR STEREO.
+C   SPTRUNMV     SPECTRALLY INTERPOLATE VECTORS TO MERCATOR
+C   SPTRUNGV     SPECTRALLY INTERPOLATE VECTORS TO STATIONS
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for movect.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  MOVECT     MOVE A VECTOR ALONG A GREAT CIRCLE
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM PROVIDES THE ROTATION PARAMETERS
+C           TO MOVE A VECTOR ALONG A GREAT CIRCLE FROM ONE
+C           POSITION TO ANOTHER WHILE CONSERVING ITS ORIENTATION
+C           WITH RESPECT TO THE GREAT CIRCLE.  THESE ROTATION
+C           PARAMETERS ARE USEFUL FOR VECTOR INTERPOLATION.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL MOVECT(FLAT,FLON,TLAT,TLON,CROT,SROT)
+C
+C   INPUT ARGUMENT LIST:
+C     FLAT     - REAL LATITUDE IN DEGREES FROM WHICH TO MOVE THE VECTOR
+C     FLON     - REAL LONGITUDE IN DEGREES FROM WHICH TO MOVE THE VECTOR
+C     TLAT     - REAL LATITUDE IN DEGREES TO WHICH TO MOVE THE VECTOR
+C     TLON     - REAL LONGITUDE IN DEGREES TO WHICH TO MOVE THE VECTOR
+C
+C   OUTPUT ARGUMENT LIST:
+C     CROT     - REAL CLOCKWISE VECTOR ROTATION COSINE
+C     SROT     - REAL CLOCKWISE VECTOR ROTATION SINE
+C                (UTO=CROT*UFROM-SROT*VFROM;
+C                 VTO=SROT*UFROM+CROT*VFROM)
+C
+C REMARKS: THIS SUBPROGRAM IS CORRECT TO SEVEN DIGITS ON THE CRAYS.
+C          USE DOUBLE PRECISION IF BETTER PRECISION IS REQUIRED.
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for polfixv.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  POLFIXV    MAKE MULTIPLE POLE VECTOR VALUES CONSISTENT
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM AVERAGES MULTIPLE POLE VECTOR VALUES
+C           ON A LATITUDE/LONGITUDE GRID.  BITMAPS MAY BE AVERAGED TOO.
+C           VECTORS ARE ROTATED WITH RESPECT TO THEIR LONGITUDE.
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL POLFIXV(NM,NX,KM,RLAT,RLON,IB,LO,UO,VO)
+C
+C   INPUT ARGUMENT LIST:
+C     NO       - INTEGER NUMBER OF GRID POINTS
+C     NX       - INTEGER LEADING DIMENSION OF FIELDS
+C     KM       - INTEGER NUMBER OF FIELDS
+C     RLAT     - REAL (NO) LATITUDES IN DEGREES
+C     RLON     - REAL (NO) LONGITUDES IN DEGREES
+C     IB       - INTEGER (KM) BITMAP FLAGS
+C     LO       - LOGICAL (NX,KM) BITMAPS (IF RESPECTIVE IB(K)=1)
+C     UO       - REAL (NX,KM) U-WINDS
+C     VO       - REAL (NX,KM) V-WINDS
+C
+C   OUTPUT ARGUMENT LIST:
+C     LO       - LOGICAL (NX,KM) BITMAPS (IF RESPECTIVE IB(K)=1)
+C     UO       - REAL (NX,KM) U-WINDS
+C     VO       - REAL (NX,KM) V-WINDS
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for gdswiz.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  GDSWIZ     GRID DESCRIPTION SECTION WIZARD
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM DECODES THE GRIB GRID DESCRIPTION SECTION
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63)
+C           AND RETURNS ONE OF THE FOLLOWING:
+C             (IOPT= 0) GRID AND EARTH COORDINATES OF ALL GRID POINTS
+C             (IOPT=+1) EARTH COORDINATES OF SELECTED GRID COORDINATES
+C             (IOPT=-1) GRID COORDINATES OF SELECTED EARTH COORDINATES
+C           THE CURRENT CODE RECOGNIZES THE FOLLOWING PROJECTIONS:
+C             (KGDS(1)=000) EQUIDISTANT CYLINDRICAL
+C             (KGDS(1)=001) MERCATOR CYLINDRICAL
+C             (KGDS(1)=003) LAMBERT CONFORMAL CONICAL
+C             (KGDS(1)=004) GAUSSIAN CYLINDRICAL (SPECTRAL NATIVE)
+C             (KGDS(1)=005) POLAR STEREOGRAPHIC AZIMUTHAL
+C             (KGDS(1)=202) ROTATED EQUIDISTANT CYLINDRICAL (ETA NATIVE)
+C           IF THE SELECTED COORDINATES ARE MORE THAN ONE GRIDPOINT
+C           BEYOND THE THE EDGES OF THE GRID DOMAIN, THEN THE RELEVANT
+C           OUTPUT ELEMENTS ARE SET TO FILL VALUES.  ALSO IF IOPT=0,
+C           IF THE NUMBER OF GRID POINTS EXCEEDS THE NUMBER ALLOTTED,
+C           THEN ALL THE OUTPUT ELEMENTS ARE SET TO FILL VALUES.
+C           THE ACTUAL NUMBER OF VALID POINTS COMPUTED IS RETURNED TOO.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL GDSWIZ(KGDS,IOPT,NPTS,FILL,XPTS,YPTS,RLON,RLAT,NRET,
+C     &                 LROT,CROT,SROT)
+C
+C   INPUT ARGUMENT LIST:
+C     KGDS     - INTEGER (22) GDS PARAMETERS AS DECODED BY W3FI63
+C     IOPT     - INTEGER OPTION FLAG
+C                ( 0 TO COMPUTE EARTH COORDS OF ALL THE GRID POINTS)
+C                (+1 TO COMPUTE EARTH COORDS OF SELECTED GRID COORDS)
+C                (-1 TO COMPUTE GRID COORDS OF SELECTED EARTH COORDS)
+C     NPTS     - INTEGER MAXIMUM NUMBER OF COORDINATES
+C     FILL     - REAL FILL VALUE TO SET INVALID OUTPUT DATA
+C                (MUST BE IMPOSSIBLE VALUE; SUGGESTED VALUE: -9999.)
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT>0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT>0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT<0
+C                (ACCEPTABLE RANGE: -360. TO 360.)
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT<0
+C                (ACCEPTABLE RANGE: -90. TO 90.)
+C     LROT     - INTEGER FLAG TO RETURN VECTOR ROTATIONS IF 1
+C
+C   OUTPUT ARGUMENT LIST:
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT<=0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT<=0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT>=0
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT>=0
+C     NRET     - INTEGER NUMBER OF VALID POINTS COMPUTED
+C                (-1 IF PROJECTION UNRECOGNIZED)
+C     CROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION COSINES IF LROT=1
+C     SROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION SINES IF LROT=1
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C SUBPROGRAMS CALLED:
+C   GDSWIZ00     GDS WIZARD FOR EQUIDISTANT CYLINDRICAL
+C   GDSWIZ01     GDS WIZARD FOR MERCATOR CYLINDRICAL
+C   GDSWIZ03     GDS WIZARD FOR LAMBERT CONFORMAL CONICAL
+C   GDSWIZ04     GDS WIZARD FOR GAUSSIAN CYLINDRICAL
+C   GDSWIZ05     GDS WIZARD FOR POLAR STEREOGRAPHIC AZIMUTHAL
+C   GDSWIZCA     GDS WIZARD FOR ROTATED EQUIDISTANT CYLINDRICAL
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for gdswiz00.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  GDSWIZ00   GDS WIZARD FOR EQUIDISTANT CYLINDRICAL
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM DECODES THE GRIB GRID DESCRIPTION SECTION
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63)
+C           AND RETURNS ONE OF THE FOLLOWING:
+C             (IOPT=+1) EARTH COORDINATES OF SELECTED GRID COORDINATES
+C             (IOPT=-1) GRID COORDINATES OF SELECTED EARTH COORDINATES
+C           FOR EQUIDISTANT CYLINDRICAL PROJECTIONS.
+C           IF THE SELECTED COORDINATES ARE MORE THAN ONE GRIDPOINT
+C           BEYOND THE THE EDGES OF THE GRID DOMAIN, THEN THE RELEVANT
+C           OUTPUT ELEMENTS ARE SET TO FILL VALUES.
+C           THE ACTUAL NUMBER OF VALID POINTS COMPUTED IS RETURNED TOO.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL GDSWIZ00(KGDS,IOPT,NPTS,FILL,XPTS,YPTS,RLON,RLAT,NRET,
+C     &                   LROT,CROT,SROT)
+C
+C   INPUT ARGUMENT LIST:
+C     KGDS     - INTEGER (22) GDS PARAMETERS AS DECODED BY W3FI63
+C     IOPT     - INTEGER OPTION FLAG
+C                (+1 TO COMPUTE EARTH COORDS OF SELECTED GRID COORDS)
+C                (-1 TO COMPUTE GRID COORDS OF SELECTED EARTH COORDS)
+C     NPTS     - INTEGER MAXIMUM NUMBER OF COORDINATES
+C     FILL     - REAL FILL VALUE TO SET INVALID OUTPUT DATA
+C                (MUST BE IMPOSSIBLE VALUE; SUGGESTED VALUE: -9999.)
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT>0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT>0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT<0
+C                (ACCEPTABLE RANGE: -360. TO 360.)
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT<0
+C                (ACCEPTABLE RANGE: -90. TO 90.)
+C     LROT     - INTEGER FLAG TO RETURN VECTOR ROTATIONS IF 1
+C
+C   OUTPUT ARGUMENT LIST:
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT<0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT<0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT>0
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT>0
+C     NRET     - INTEGER NUMBER OF VALID POINTS COMPUTED
+C     CROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION COSINES IF LROT=1
+C     SROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION SINES IF LROT=1
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for gdswiz01.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  GDSWIZ01   GDS WIZARD FOR MERCATOR CYLINDRICAL
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM DECODES THE GRIB GRID DESCRIPTION SECTION
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63)
+C           AND RETURNS ONE OF THE FOLLOWING:
+C             (IOPT=+1) EARTH COORDINATES OF SELECTED GRID COORDINATES
+C             (IOPT=-1) GRID COORDINATES OF SELECTED EARTH COORDINATES
+C           FOR MERCATOR CYLINDRICAL PROJECTIONS.
+C           IF THE SELECTED COORDINATES ARE MORE THAN ONE GRIDPOINT
+C           BEYOND THE THE EDGES OF THE GRID DOMAIN, THEN THE RELEVANT
+C           OUTPUT ELEMENTS ARE SET TO FILL VALUES.
+C           THE ACTUAL NUMBER OF VALID POINTS COMPUTED IS RETURNED TOO.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL GDSWIZ01(KGDS,IOPT,NPTS,FILL,XPTS,YPTS,RLON,RLAT,NRET,
+C     &                   LROT,CROT,SROT)
+C
+C   INPUT ARGUMENT LIST:
+C     KGDS     - INTEGER (22) GDS PARAMETERS AS DECODED BY W3FI63
+C     IOPT     - INTEGER OPTION FLAG
+C                (+1 TO COMPUTE EARTH COORDS OF SELECTED GRID COORDS)
+C                (-1 TO COMPUTE GRID COORDS OF SELECTED EARTH COORDS)
+C     NPTS     - INTEGER MAXIMUM NUMBER OF COORDINATES
+C     FILL     - REAL FILL VALUE TO SET INVALID OUTPUT DATA
+C                (MUST BE IMPOSSIBLE VALUE; SUGGESTED VALUE: -9999.)
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT>0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT>0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT<0
+C                (ACCEPTABLE RANGE: -360. TO 360.)
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT<0
+C                (ACCEPTABLE RANGE: -90. TO 90.)
+C     LROT     - INTEGER FLAG TO RETURN VECTOR ROTATIONS IF 1
+C
+C   OUTPUT ARGUMENT LIST:
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT<0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT<0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT>0
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT>0
+C     NRET     - INTEGER NUMBER OF VALID POINTS COMPUTED
+C     CROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION COSINES IF LROT=1
+C     SROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION SINES IF LROT=1
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for gdswiz03.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  GDSWIZ03   GDS WIZARD FOR LAMBERT CONFORMAL CONICAL
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM DECODES THE GRIB GRID DESCRIPTION SECTION
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63)
+C           AND RETURNS ONE OF THE FOLLOWING:
+C             (IOPT=+1) EARTH COORDINATES OF SELECTED GRID COORDINATES
+C             (IOPT=-1) GRID COORDINATES OF SELECTED EARTH COORDINATES
+C           FOR LAMBERT CONFORMAL CONICAL PROJECTIONS.
+C           IF THE SELECTED COORDINATES ARE MORE THAN ONE GRIDPOINT
+C           BEYOND THE THE EDGES OF THE GRID DOMAIN, THEN THE RELEVANT
+C           OUTPUT ELEMENTS ARE SET TO FILL VALUES.
+C           THE ACTUAL NUMBER OF VALID POINTS COMPUTED IS RETURNED TOO.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL GDSWIZ03(KGDS,IOPT,NPTS,FILL,XPTS,YPTS,RLON,RLAT,NRET,
+C     &                   LROT,CROT,SROT)
+C
+C   INPUT ARGUMENT LIST:
+C     KGDS     - INTEGER (22) GDS PARAMETERS AS DECODED BY W3FI63
+C     IOPT     - INTEGER OPTION FLAG
+C                (+1 TO COMPUTE EARTH COORDS OF SELECTED GRID COORDS)
+C                (-1 TO COMPUTE GRID COORDS OF SELECTED EARTH COORDS)
+C     NPTS     - INTEGER MAXIMUM NUMBER OF COORDINATES
+C     FILL     - REAL FILL VALUE TO SET INVALID OUTPUT DATA
+C                (MUST BE IMPOSSIBLE VALUE; SUGGESTED VALUE: -9999.)
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT>0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT>0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT<0
+C                (ACCEPTABLE RANGE: -360. TO 360.)
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT<0
+C                (ACCEPTABLE RANGE: -90. TO 90.)
+C     LROT     - INTEGER FLAG TO RETURN VECTOR ROTATIONS IF 1
+C
+C   OUTPUT ARGUMENT LIST:
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT<0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT<0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT>0
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT>0
+C     NRET     - INTEGER NUMBER OF VALID POINTS COMPUTED
+C     CROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION COSINES IF LROT=1
+C     SROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION SINES IF LROT=1
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for gdswiz04.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  GDSWIZ04   GDS WIZARD FOR GAUSSIAN CYLINDRICAL
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM DECODES THE GRIB GRID DESCRIPTION SECTION
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63)
+C           AND RETURNS ONE OF THE FOLLOWING:
+C             (IOPT=+1) EARTH COORDINATES OF SELECTED GRID COORDINATES
+C             (IOPT=-1) GRID COORDINATES OF SELECTED EARTH COORDINATES
+C           FOR GAUSSIAN CYLINDRICAL PROJECTIONS.
+C           IF THE SELECTED COORDINATES ARE MORE THAN ONE GRIDPOINT
+C           BEYOND THE THE EDGES OF THE GRID DOMAIN, THEN THE RELEVANT
+C           OUTPUT ELEMENTS ARE SET TO FILL VALUES.
+C           THE ACTUAL NUMBER OF VALID POINTS COMPUTED IS RETURNED TOO.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL GDSWIZ04(KGDS,IOPT,NPTS,FILL,XPTS,YPTS,RLON,RLAT,NRET,
+C    &                    LROT,CROT,SROT)
+C
+C   INPUT ARGUMENT LIST:
+C     KGDS     - INTEGER (22) GDS PARAMETERS AS DECODED BY W3FI63
+C     IOPT     - INTEGER OPTION FLAG
+C                (+1 TO COMPUTE EARTH COORDS OF SELECTED GRID COORDS)
+C                (-1 TO COMPUTE GRID COORDS OF SELECTED EARTH COORDS)
+C     NPTS     - INTEGER MAXIMUM NUMBER OF COORDINATES
+C     FILL     - REAL FILL VALUE TO SET INVALID OUTPUT DATA
+C                (MUST BE IMPOSSIBLE VALUE; SUGGESTED VALUE: -9999.)
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT>0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT>0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT<0
+C                (ACCEPTABLE RANGE: -360. TO 360.)
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT<0
+C                (ACCEPTABLE RANGE: -90. TO 90.)
+C     LROT     - INTEGER FLAG TO RETURN VECTOR ROTATIONS IF 1
+C
+C   OUTPUT ARGUMENT LIST:
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT<0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT<0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT>0
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT>0
+C     NRET     - INTEGER NUMBER OF VALID POINTS COMPUTED
+C     CROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION COSINES IF LROT=1
+C     SROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION SINES IF LROT=1
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C SUBPROGRAMS CALLED:
+C   GAUSSLAT     COMPUTE GAUSSIAN LATITUDES
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for gausslat.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  GAUSSLAT   COMPUTE GAUSSIAN LATITUDES
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 92-04-16
+C
+C ABSTRACT: COMPUTES COSINES OF COLATITUDE AND GAUSSIAN WEIGHTS
+C   ON THE GAUSSIAN LATITUDES.  THE GAUSSIAN LATITUDES ARE AT
+C   THE ZEROES OF THE LEGENDRE POLYNOMIAL OF THE GIVEN ORDER.
+C
+C PROGRAM HISTORY LOG:
+C   92-04-16  IREDELL
+C
+C USAGE:    CALL GAUSSLAT(JMAX,SLAT,WLAT)
+C
+C   INPUT ARGUMENT LIST:
+C     JMAX     - INPUT NUMBER OF LATITUDES.
+C
+C   OUTPUT ARGUMENT LIST:
+C     SLAT     - REAL (K) COSINES OF COLATITUDE.
+C     WLAT     - REAL (K) GAUSSIAN WEIGHTS.
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for gdswiz05.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  GDSWIZ05   GDS WIZARD FOR POLAR STEREOGRAPHIC AZIMUTHAL
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM DECODES THE GRIB GRID DESCRIPTION SECTION
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63)
+C           AND RETURNS ONE OF THE FOLLOWING:
+C             (IOPT=+1) EARTH COORDINATES OF SELECTED GRID COORDINATES
+C             (IOPT=-1) GRID COORDINATES OF SELECTED EARTH COORDINATES
+C           FOR POLAR STEREOGRAPHIC AZIMUTHAL PROJECTIONS.
+C           IF THE SELECTED COORDINATES ARE MORE THAN ONE GRIDPOINT
+C           BEYOND THE THE EDGES OF THE GRID DOMAIN, THEN THE RELEVANT
+C           OUTPUT ELEMENTS ARE SET TO FILL VALUES.
+C           THE ACTUAL NUMBER OF VALID POINTS COMPUTED IS RETURNED TOO.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL GDSWIZ05(KGDS,IOPT,NPTS,FILL,XPTS,YPTS,RLON,RLAT,NRET,
+C     &                   LROT,CROT,SROT)
+C
+C   INPUT ARGUMENT LIST:
+C     KGDS     - INTEGER (22) GDS PARAMETERS AS DECODED BY W3FI63
+C     IOPT     - INTEGER OPTION FLAG
+C                (+1 TO COMPUTE EARTH COORDS OF SELECTED GRID COORDS)
+C                (-1 TO COMPUTE GRID COORDS OF SELECTED EARTH COORDS)
+C     NPTS     - INTEGER MAXIMUM NUMBER OF COORDINATES
+C     FILL     - REAL FILL VALUE TO SET INVALID OUTPUT DATA
+C                (MUST BE IMPOSSIBLE VALUE; SUGGESTED VALUE: -9999.)
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT>0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT>0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT<0
+C                (ACCEPTABLE RANGE: -360. TO 360.)
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT<0
+C                (ACCEPTABLE RANGE: -90. TO 90.)
+C     LROT     - INTEGER FLAG TO RETURN VECTOR ROTATIONS IF 1
+C
+C   OUTPUT ARGUMENT LIST:
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT<0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT<0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT>0
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT>0
+C     NRET     - INTEGER NUMBER OF VALID POINTS COMPUTED
+C     CROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION COSINES IF LROT=1
+C     SROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION SINES IF LROT=1
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for gdswizca.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  GDSWIZCA   GDS WIZARD FOR ROTATED EQUIDISTANT CYLINDRICAL
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM DECODES THE GRIB GRID DESCRIPTION SECTION
+C           (PASSED IN INTEGER FORM AS DECODED BY SUBPROGRAM W3FI63)
+C           AND RETURNS ONE OF THE FOLLOWING:
+C             (IOPT=+1) EARTH COORDINATES OF SELECTED GRID COORDINATES
+C             (IOPT=-1) GRID COORDINATES OF SELECTED EARTH COORDINATES
+C           FOR ROTATED EQUIDISTANT CYLINDRICAL PROJECTIONS.
+C           IF THE SELECTED COORDINATES ARE MORE THAN ONE GRIDPOINT
+C           BEYOND THE THE EDGES OF THE GRID DOMAIN, THEN THE RELEVANT
+C           OUTPUT ELEMENTS ARE SET TO FILL VALUES.
+C           THE ACTUAL NUMBER OF VALID POINTS COMPUTED IS RETURNED TOO.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL GDSWIZCA(KGDS,IOPT,NPTS,FILL,XPTS,YPTS,RLON,RLAT,NRET,
+C     &                   LROT,CROT,SROT)
+C
+C   INPUT ARGUMENT LIST:
+C     KGDS     - INTEGER (22) GDS PARAMETERS AS DECODED BY W3FI63
+C     IOPT     - INTEGER OPTION FLAG
+C                (+1 TO COMPUTE EARTH COORDS OF SELECTED GRID COORDS)
+C                (-1 TO COMPUTE GRID COORDS OF SELECTED EARTH COORDS)
+C     NPTS     - INTEGER MAXIMUM NUMBER OF COORDINATES
+C     FILL     - REAL FILL VALUE TO SET INVALID OUTPUT DATA
+C                (MUST BE IMPOSSIBLE VALUE; SUGGESTED VALUE: -9999.)
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT>0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT>0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT<0
+C                (ACCEPTABLE RANGE: -360. TO 360.)
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT<0
+C                (ACCEPTABLE RANGE: -90. TO 90.)
+C     LROT     - INTEGER FLAG TO RETURN VECTOR ROTATIONS IF 1
+C
+C   OUTPUT ARGUMENT LIST:
+C     XPTS     - REAL (NPTS) GRID X POINT COORDINATES IF IOPT<0
+C     YPTS     - REAL (NPTS) GRID Y POINT COORDINATES IF IOPT<0
+C     RLON     - REAL (NPTS) EARTH LONGITUDES IN DEGREES E IF IOPT>0
+C     RLAT     - REAL (NPTS) EARTH LATITUDES IN DEGREES N IF IOPT>0
+C     NRET     - INTEGER NUMBER OF VALID POINTS COMPUTED
+C     CROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION COSINES IF LROT=1
+C     SROT     - REAL (NPTS) CLOCKWISE VECTOR ROTATION SINES IF LROT=1
+C                (UGRID=CROT*UEARTH-SROT*VEARTH;
+C                 VGRID=SROT*UEARTH+CROT*VEARTH)
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for ijkgds.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  IJKGDS     RETURN FIELD POSITION FOR A GIVEN GRID POINT
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM DECODES THE GRIB GRID DESCRIPTION SECTION
+C           AND RETURNS THE FIELD POSITION FOR A GIVEN GRID POINT.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    ...IJKGDS(I,J,KGDS)
+C
+C   INPUT ARGUMENT LIST:
+C     I        - INTEGER X GRID POINT
+C     J        - INTEGER Y GRID POINT
+C     KGDS     - INTEGER (22) GDS PARAMETERS AS DECODED BY W3FI63
+C
+C   OUTPUT ARGUMENT LIST:
+C     IJKGDS   - INTEGER POSITION IN GRIB FIELD TO LOCATE GRID POINT
+C                (0 IF OUT OF BOUNDS)
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for makgds.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  MAKGDS     MAKE OR BREAK A GRID DESCRIPTION SECTION
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM MAKES OR BREAKS A GRID DESCRIPTION SECTION.
+C           IT CAN DO ONE OF THE FOLLOWING:
+C             (IOPT=-1)    UNPACK A GDS INTO W3FI63 KGDS INTEGER FORM
+C             (IOPT=255)   PACK A GDS FROM W3FI63 KGDS INTEGER FORM
+C             (0<IOPT<255) PACK A GDS FROM AN NCEP GRID IDENTIFICATION
+C        
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL MAKGDS(IOPT,KGDS,GDS,LENGDS,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IOPT     - INTEGER OPTION
+C                IOPT=-1 TO UNPACK GDS INTO KGDS;
+C                IOPT=255 TO USE KGDS TO PACK GDS;
+C                0<IOPT<255 NCEP GRID ID TO MAKE GDS AND KGDS.
+C     KGDS     - INTEGER (200) W3FI63-STYLE UNPACKED GDS (IF IOPT=255)
+C                (ONLY FIRST 22 VALUES ARE ACCESSED IF KGDS(20)=255.)
+C                (SEE REMARKS BELOW FOR A DETAILED DESCRIPTION OF KGDS.)
+C     GDS      - CHARACTER (400) GRID DEFINITION SECTION (IF IOPT=-1)
+C
+C   OUTPUT ARGUMENT LIST:
+C     KGDS     - INTEGER (200) W3FI63-STYLE UNPACKED GDS (IF IOPT<255)
+C                (ONLY FIRST 22 VALUES ARE ACCESSED IF KGDS(20)=255.)
+C                (SEE REMARKS BELOW FOR A DETAILED DESCRIPTION OF KGDS.)
+C     GDS      - CHARACTER (400) GRID DEFINITION SECTION (IF IOPT>0)
+C     LENGDS   - INTEGER LENGTH OF THE GDS (IF IOPT>0)
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL
+C                1    GRID REPRESENTATION TYPE NOT VALID
+C                4    DATA REPRESENTATION TYPE NOT CURRENTLY ACCEPTABLE
+C
+C REMARKS: THE KGDS PARAMETERS ARE DESCRIBED BELOW
+C          AS COPIED FROM THE W3FI63 DOCBLOCK.
+C          (1)   - DATA REPRESENTATION TYPE
+C          (19)  - NUMBER OF VERTICAL COORDINATE PARAMETERS
+C          (20)  - OCTET NUMBER OF THE LIST OF VERTICAL COORDINATE
+C                  PARAMETERS
+C                  OR
+C                  OCTET NUMBER OF THE LIST OF NUMBERS OF POINTS
+C                  IN EACH ROW
+C                  OR
+C                  255 IF NEITHER ARE PRESENT
+C          (21)  - FOR GRIDS WITH PL, NUMBER OF POINTS IN GRID
+C          (22)  - NUMBER OF WORDS IN EACH ROW
+C       LATITUDE/LONGITUDE GRIDS
+C          (2)   - N(I) NR POINTS ON LATITUDE CIRCLE
+C          (3)   - N(J) NR POINTS ON LONGITUDE MERIDIAN
+C          (4)   - LA(1) LATITUDE OF ORIGIN
+C          (5)   - LO(1) LONGITUDE OF ORIGIN
+C          (6)   - RESOLUTION FLAG (RIGHT ADJ COPY OF OCTET 17)
+C          (7)   - LA(2) LATITUDE OF EXTREME POINT
+C          (8)   - LO(2) LONGITUDE OF EXTREME POINT
+C          (9)   - DI LATITUDINAL DIRECTION OF INCREMENT
+C          (10)  - DJ LONGITUDINAL DIRECTION INCREMENT
+C          (11)  - SCANNING MODE FLAG (RIGHT ADJ COPY OF OCTET 28)
+C       GAUSSIAN  GRIDS
+C          (2)   - N(I) NR POINTS ON LATITUDE CIRCLE
+C          (3)   - N(J) NR POINTS ON LONGITUDE MERIDIAN
+C          (4)   - LA(1) LATITUDE OF ORIGIN
+C          (5)   - LO(1) LONGITUDE OF ORIGIN
+C          (6)   - RESOLUTION FLAG  (RIGHT ADJ COPY OF OCTET 17)
+C          (7)   - LA(2) LATITUDE OF EXTREME POINT
+C          (8)   - LO(2) LONGITUDE OF EXTREME POINT
+C          (9)   - DI LATITUDINAL DIRECTION OF INCREMENT
+C          (10)  - N - NR OF CIRCLES POLE TO EQUATOR
+C          (11)  - SCANNING MODE FLAG (RIGHT ADJ COPY OF OCTET 28)
+C          (12)  - NV - NR OF VERT COORD PARAMETERS
+C          (13)  - PV - OCTET NR OF LIST OF VERT COORD PARAMETERS
+C                             OR
+C                  PL - LOCATION OF THE LIST OF NUMBERS OF POINTS IN
+C                       EACH ROW (IF NO VERT COORD PARAMETERS
+C                       ARE PRESENT
+C                             OR
+C                  255 IF NEITHER ARE PRESENT
+C       POLAR STEREOGRAPHIC GRIDS
+C          (2)   - N(I) NR POINTS ALONG LAT CIRCLE
+C          (3)   - N(J) NR POINTS ALONG LON CIRCLE
+C          (4)   - LA(1) LATITUDE OF ORIGIN
+C          (5)   - LO(1) LONGITUDE OF ORIGIN
+C          (6)   - RESOLUTION FLAG  (RIGHT ADJ COPY OF OCTET 17)
+C          (7)   - LOV GRID ORIENTATION
+C          (8)   - DX - X DIRECTION INCREMENT
+C          (9)   - DY - Y DIRECTION INCREMENT
+C          (10)  - PROJECTION CENTER FLAG
+C          (11)  - SCANNING MODE (RIGHT ADJ COPY OF OCTET 28)
+C       SPHERICAL HARMONIC COEFFICIENTS
+C          (2)   - J PENTAGONAL RESOLUTION PARAMETER
+C          (3)   - K      "          "         "
+C          (4)   - M      "          "         "
+C          (5)   - REPRESENTATION TYPE
+C          (6)   - COEFFICIENT STORAGE MODE
+C       MERCATOR GRIDS
+C          (2)   - N(I) NR POINTS ON LATITUDE CIRCLE
+C          (3)   - N(J) NR POINTS ON LONGITUDE MERIDIAN
+C          (4)   - LA(1) LATITUDE OF ORIGIN
+C          (5)   - LO(1) LONGITUDE OF ORIGIN
+C          (6)   - RESOLUTION FLAG (RIGHT ADJ COPY OF OCTET 17)
+C          (7)   - LA(2) LATITUDE OF LAST GRID POINT
+C          (8)   - LO(2) LONGITUDE OF LAST GRID POINT
+C          (9)   - LATIT - LATITUDE OF PROJECTION INTERSECTION
+C          (10)  - RESERVED
+C          (11)  - SCANNING MODE FLAG (RIGHT ADJ COPY OF OCTET 28)
+C          (12)  - LONGITUDINAL DIR GRID LENGTH
+C          (13)  - LATITUDINAL DIR GRID LENGTH
+C       LAMBERT CONFORMAL GRIDS
+C          (2)   - NX NR POINTS ALONG X-AXIS
+C          (3)   - NY NR POINTS ALONG Y-AXIS
+C          (4)   - LA1 LAT OF ORIGIN (LOWER LEFT)
+C          (5)   - LO1 LON OF ORIGIN (LOWER LEFT)
+C          (6)   - RESOLUTION (RIGHT ADJ COPY OF OCTET 17)
+C          (7)   - LOV - ORIENTATION OF GRID
+C          (8)   - DX - X-DIR INCREMENT
+C          (9)   - DY - Y-DIR INCREMENT
+C          (10)  - PROJECTION CENTER FLAG
+C          (11)  - SCANNING MODE FLAG (RIGHT ADJ COPY OF OCTET 28)
+C          (12)  - LATIN 1 - FIRST LAT FROM POLE OF SECANT CONE INTER
+C          (13)  - LATIN 2 - SECOND LAT FROM POLE OF SECANT CONE INTER
+C
+C SUBPROGRAMS CALLED:
+C   FI633        EXTRACT INFO FROM GRIB-GDS
+C   R63W72       CONVERT W3FI63 PARMS TO W3FI72 PARMS
+C   W3FI71       MAKE ARRAY USED BY GRIB PACKER FOR GDS
+C   W3FI74       CONSTRUCT GRID DEFINITION SECTION (GDS)
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for ipxwafs.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  IPXWAFS    EXPAND OR CONTRACT WAFS GRIDS
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM TRANSFORMS BETWEEN THE THINNED WAFS GRIDS
+C           AS USED FOR TRANSMITTING TO THE AVIATION COMMUNITY
+C           AND THEIR FULL EXPANSION AS USED FOR GENERAL INTERPOLATION
+C           AND GRAPHICS.  THE WAFS GRIDS ARE LATITUDE-LONGITUDE GRIDS
+C           THINNED ONLY IN THE ZONAL DIRECTION AS INDICATED
+C           BY THE PL PARAMETERS IN THE GRIB GRID DESCRIPTION SECTION.
+C           THE PL PARAMETERS MUST BE SUPPLIED FOR CONTRACTION
+C           (STARTING AT KGDS1(22)).  OTHERWISE (IF KGDS1(22)<=0)
+C           GRID CONTRACTION IS PERFORMED SPECIFICALLY FOR
+C           THE 1.25 DEGREE NCEP WAFS GRID IDENTIFICATIONS 37-44.
+C           THE EXPANSION AND CONTRACTION OF THE FIELDS ARE DONE
+C           BY LINEAR INTERPOLATION, SO THAT THEY ARE NOT REVERSIBLE.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL IPXWAFS(IDIR,M1,M2,KM,KGDS1,F1,KGDS2,F2,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IDIR     - INTEGER TRANSFORM OPTION
+C                (+1 TO EXPAND THINNED FIELDS TO FULL FIELDS)
+C                (-1 TO CONTRACT FULL FIELDS TO THINNED FIELDS)
+C     M1       - INTEGER SKIP NUMBER BETWEEN THINNED GRID FIELDS
+C     M2       - INTEGER SKIP NUMBER BETWEEN FULL GRID FIELDS
+C     KM       - INTEGER NUMBER OF FIELDS TO TRANSFORM
+C     KGDS1    - INTEGER (200) GDS PARMS OF THINNED GRID IF IDIR>0
+C                (IF IDIR<0, THEN EITHER THE PL PARAMETERS STARTING AT
+C                 KGDS1(22) MUST BE SUPPLIED OR IF KGDS1(22)<=0,
+C                 THEN THE PL PARAMETERS DEFAULT TO THOSE FOR
+C                 SPECIFIC NCEP WAFS GRIDS 37-44).
+C     F1       - REAL (M1,KM) THINNED GRID FIELDS IF IDIR>0
+C     KGDS2    - INTEGER (22) GDS PARMS OF FULL GRID IF IDIR<0
+C     F2       - REAL (M2,KM) FULL GRID FIELDS IF IDIR<0
+C
+C   OUTPUT ARGUMENT LIST:
+C     KGDS1    - INTEGER (200) GDS PARMS OF THINNED GRID IF IDIR<0
+C     F1       - REAL (M1,KM) THINNED GRID FIELDS IF IDIR<0
+C     KGDS2    - INTEGER (22) GDS PARMS OF FULL GRID IF IDIR>0
+C     F2       - REAL (M2,KM) FULL GRID FIELDS IF IDIR>0
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL TRANSFORMATION
+C                1    IMPROPER GRID SPECIFICATION
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
+
+Docblock for ipxetas.
+
+C$$$  SUBPROGRAM DOCUMENTATION BLOCK
+C
+C SUBPROGRAM:  IPXETAS    EXPAND OR CONTRACT ETA GRIDS
+C   PRGMMR: IREDELL       ORG: W/NMC23       DATE: 96-04-10
+C
+C ABSTRACT: THIS SUBPROGRAM TRANSFORMS BETWEEN THE STAGGERED ETA GRIDS
+C           AS USED IN THE ETA MODEL AND FOR NATIVE GRID TRANSMISSION
+C           AND THEIR FULL EXPANSION AS USED FOR GENERAL INTERPOLATION
+C           AND GRAPHICS.  THE ETA GRIDS ARE ROTATED LATITUDE-LONGITUDE
+C           GRIDS STAGGERED AS DEFINED BY THE ARAKAWA E-GRID, THAT IS
+C           WITH MASS DATA POINTS ALTERNATING WITH WIND DATA POINTS.
+C           THE EXPANSION OF THE FIELDS IS DONE BY 4-POINT AVERAGING.
+C
+C PROGRAM HISTORY LOG:
+C   96-04-10  IREDELL
+C
+C USAGE:    CALL IPXETAS(IDIR,M1,M2,KM,KGDS1,F1,KGDS2,F2,IRET)
+C
+C   INPUT ARGUMENT LIST:
+C     IDIR     - INTEGER TRANSFORM OPTION
+C                (+1 TO EXPAND STAGGERED MASS FIELDS TO FULL FIELDS)
+C                (+2 TO EXPAND STAGGERED WIND FIELDS TO FULL FIELDS)
+C                (-1 TO CONTRACT FULL MASS FIELDS TO STAGGERED FIELDS)
+C                (-2 TO CONTRACT FULL WIND FIELDS TO STAGGERED FIELDS)
+C     M1       - INTEGER SKIP NUMBER BETWEEN STAGGERED GRID FIELDS
+C     M2       - INTEGER SKIP NUMBER BETWEEN FULL GRID FIELDS
+C     KM       - INTEGER NUMBER OF FIELDS TO TRANSFORM
+C     KGDS1    - INTEGER (22) GDS PARMS OF STAGGERED GRID IF IDIR>0
+C     F1       - REAL (M1,KM) STAGGERED GRID FIELDS IF IDIR>0
+C     KGDS2    - INTEGER (22) GDS PARMS OF FULL GRID IF IDIR<0
+C     F2       - REAL (M2,KM) FULL GRID FIELDS IF IDIR<0
+C
+C   OUTPUT ARGUMENT LIST:
+C     KGDS1    - INTEGER (22) GDS PARMS OF STAGGERED GRID IF IDIR<0
+C     F1       - REAL (M1,KM) STAGGERED GRID FIELDS IF IDIR<0
+C     KGDS2    - INTEGER (22) GDS PARMS OF FULL GRID IF IDIR>0
+C     F2       - REAL (M2,KM) FULL GRID FIELDS IF IDIR>0
+C     IRET     - INTEGER RETURN CODE
+C                0    SUCCESSFUL TRANSFORMATION
+C                1    IMPROPER GRID SPECIFICATION
+C
+C ATTRIBUTES:
+C   LANGUAGE: FORTRAN 77
+C
+C$$$
