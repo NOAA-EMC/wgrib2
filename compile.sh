@@ -21,9 +21,13 @@ if [ $machine = 'mars' ] || [ $machine = 'venus' ]; then
 elif [ $machine = 'luna' ] || [ $machine = 'surge' ]; then
   echo cray
   module purge
-  module load gcc/4.9.2
-  export CC=gcc
-  export FC=gfortran
+  module load PrgEnv-intel/5.2.56
+  module rm intel
+  module load intel/16.3.210
+  module load craype-haswell
+  export CC=icc
+  export FC=ifort
+  export COMP_SYS=intel_linux
 else
   $machine NOT SUPPORTED.  STOP
   exit 1
