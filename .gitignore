@@ -10,3 +10,4 @@ grib2/jasper-1.900.1
 grib2/lib/pkgconfig
 grib2/gctpc
 grib2/bin
+grib2/include
