@@ -1,0 +1,28 @@
+-------------
+Release Notes
+-------------
+
+Library: wgrib2
+Version: 2.0.8
+Purpose: A wgrib2 library that is callable from Fortran.
+Developed by: NCEP/CPC/EMC
+Contact info: NCEP.List.EMC.nceplibs.Developers@noaa.gov or
+              wesley.ebisuzaki@noaa.gov  or
+              george.gayno@noaa.gov
+
+
+Change History
+--------------
+ v2.0.8 - Initial version.
+
+
+Implementation Instructions for WCOSS-Phase 3 (Dell)
+----------------------------------------------------
+ - checkout from git repository
+
+
+Implementation Instructions for WCOSS-Cray
+----------------------------------------------------
+ - checkout from git repository
+
+
