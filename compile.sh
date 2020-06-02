@@ -1,12 +1,20 @@
 #!/bin/bash
 
 #--------------------------------------------------
-# Compile wgrib2 api on WCOSS-DELL.
+# Compile wgrib2 api.
 #
-# Invoke this script with no arguments.
+# Invoke this script with one argument - the
+# machine name.
 #--------------------------------------------------
 
 set -x
+
+if [ $# -lt 1 ]; then
+  set +x
+  echo
+  echo '***ERROR*** must specify machine name as argument.'
+  exit 1
+fi
 
 machine=$1
 echo $machine
@@ -34,8 +42,16 @@ elif [ $machine = 'jet' ]; then
   export CC=icc
   export FC=ifort
   export COMP_SYS=intel_linux
+elif [ $machine = 'orion' ]; then
+  module purge
+  module load intel/2018.4
+  export CC=icc
+  export FC=ifort
+  export COMP_SYS=intel_linux
 else
-  $machine NOT SUPPORTED.  STOP
+  set +x
+  echo
+  echo "ERROR: MACHINE " $machine " NOT SUPPORTED.  STOP."
   exit 1
 fi
 
