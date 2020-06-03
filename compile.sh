@@ -1,10 +1,18 @@
 #!/bin/bash
 
 #--------------------------------------------------
-# Compile wgrib2 api.
+# Compile the wgrib2 api.
 #
 # Invoke this script with one argument - the
-# machine name.
+# machine name.  Valid choices are: 'dell',
+# 'cray', 'jet', 'orion', 'hera'.
+#
+# The default is to build without NETCDF and
+# without IPOLATES.  To modify the build, set
+# the appropriate "USE" flags in ./grib2/makefile.
+# See the comments in the makefile for more
+# details.
+# 
 #--------------------------------------------------
 
 set -x

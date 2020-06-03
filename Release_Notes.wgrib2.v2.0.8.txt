@@ -21,12 +21,14 @@ Change History
  v2.0.8 - Initial version.
 
 
-Implementation Instructions for WCOSS-Phase 3 (Dell)
+Implementation Instructions for WCOSS
 ----------------------------------------------------
- - checkout from git repository
-
-
-Implementation Instructions for WCOSS-Cray
-----------------------------------------------------
- - checkout from git repository
-
+ - Checkout from git repository
+    $ git clone git@github.com:NOAA-EMC/NCEPLIBS-wgrib2.git
+    $ cd NCEPLIBS-wgrib2
+    $ git checkout tags/wgrib2_v2.0.8
+ - Compile.  Script takes one argument - the machine name.
+    $ ./compile.sh cray  (WCOSS-Cray)
+    $ ./compile.sh dell  (WCOSS-Phase 3/Dell)
+ - The libraries and include files will be placed in
+   the ./include and ./lib sub-directories.
