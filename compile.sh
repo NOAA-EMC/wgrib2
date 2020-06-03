@@ -48,6 +48,12 @@ elif [ $machine = 'orion' ]; then
   export CC=icc
   export FC=ifort
   export COMP_SYS=intel_linux
+elif [ $machine = 'hera' ]; then
+  module purge
+  module load intel/18.0.5.274
+  export CC=icc
+  export FC=ifort
+  export COMP_SYS=intel_linux
 else
   set +x
   echo
