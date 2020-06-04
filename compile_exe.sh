@@ -1,19 +1,21 @@
 #!/bin/bash
 
-#--------------------------------------------------
-# Compile the wgrib2 api.
+#------------------------------------------------------
+#
+# Compile the wgrib2 stand-alone executable.
+# To compile the wgrib2 library, use compile_lib.sh.
 #
 # Invoke this script with one argument - the
 # machine name.  Valid choices are: 'dell',
 # 'cray', 'jet', 'orion', 'hera'.
 #
-# The default is to build without NETCDF and
-# without IPOLATES.  To modify the build, set
-# the appropriate "USE" flags in ./grib2/makefile.
+# The default is to build with NETCDF and with
+# IPOLATES.  To modify the build, set the
+# appropriate "USE" flags in ./grib2/makefile_exec
 # See the comments in the makefile for more
 # details.
 # 
-#--------------------------------------------------
+#------------------------------------------------------
 
 set -x
 
@@ -69,25 +71,17 @@ else
   exit 1
 fi
 
-rm -fr ./include
-rm -fr ./lib
+rm -fr ./bin
 
 cd grib2
-make deep-clean
-make clean
-make lib
+make -f makefile_exec deep-clean
+make -f makefile_exec clean
+make -f makefile_exec
 cd ..
 
-mkdir ./include
-mkdir ./lib
+mkdir ./bin
 
-cd include
-ln -fs ../grib2/lib/wgrib2api.mod .
-ln -fs ../grib2/lib/wgrib2lowapi.mod .
-cd ..
-
-cd lib
-ln -fs ../grib2/lib/libwgrib2.a
-ln -fs ../grib2/lib/libwgrib2_api.a
+cd bin
+cp ../grib2/wgrib2/wgrib2  .
 
 exit 0
