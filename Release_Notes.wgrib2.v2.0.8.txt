@@ -6,8 +6,9 @@ Library: wgrib2
 
 Version: 2.0.8
 
-Purpose: A wgrib2 library that is callable from Fortran.
-         This is NOT the wgrib2 stand-alone executable.
+Purpose: wgrib2 is a grib2 utility.  It is both a library 
+         that is callable from Fortran and a stand-alone
+         executable.
 
 Developed by: NCEP/CPC/EMC
 
@@ -27,8 +28,15 @@ Implementation Instructions for WCOSS
     $ git clone git@github.com:NOAA-EMC/NCEPLIBS-wgrib2.git
     $ cd NCEPLIBS-wgrib2
     $ git checkout tags/wgrib2_v2.0.8
- - Compile.  Script takes one argument - the machine name.
-    $ ./compile.sh cray  (WCOSS-Cray)
-    $ ./compile.sh dell  (WCOSS-Phase 3/Dell)
+
+ - Compile the library.  Script takes one argument - the machine name.
+    $ ./compile_lib.sh cray  (WCOSS-Cray)
+    $ ./compile_lib.sh dell  (WCOSS-Phase 3/Dell)
  - The libraries and include files will be placed in
    the ./include and ./lib sub-directories.
+
+ - Compile the stand-alone program.  Script takes one argument - 
+   the machine name.
+    $ ./compile_exe.sh cray  (WCOSS-Cray)
+    $ ./compile_exe.sh dell  (WCOSS-Phase 3/Dell)
+ - The executable will be placed in ./bin.

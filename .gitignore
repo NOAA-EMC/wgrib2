@@ -11,3 +11,8 @@ grib2/lib/pkgconfig
 grib2/gctpc
 grib2/bin
 grib2/include
+grib2/wgrib2/wgrib2
+grib2/netcdf-3.6.3
+grib2/aux_progs/smallest_grib2
+grib2/aux_progs/smallest_4
+grib2/aux_progs/gmerge
