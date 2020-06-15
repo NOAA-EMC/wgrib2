@@ -131,8 +131,8 @@ MAKE_FTN_API=1
 DISABLE_ALARM=0
 
 USE_G2CLIB=0
-USE_PNG=1
-USE_JASPER=1
+USE_PNG=0
+USE_JASPER=0
 USE_AEC=0
 
 # Add any customization comments, appears in help and config pages
