@@ -1,5 +1,4 @@
 #include "wgrib2.h"
-#include "config.h"
 
 #ifdef USE_PNG
 

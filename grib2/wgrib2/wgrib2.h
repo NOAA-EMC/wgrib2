@@ -5,7 +5,7 @@
  */
 
 #include <stdio.h>
-#include "config.h"
+//#include "config.h"
 #include "wgrib2_api.h"
 
 #ifdef USE_NETCDF4

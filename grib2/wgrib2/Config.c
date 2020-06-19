@@ -207,5 +207,5 @@ strcat(inv_out, "  spherical geolocation is enabled\n");
 }
 
 const char *wgrib2api_info(void) {
-  return WGRIB2_VERSION "  " BUILD_COMMENTS " " CC;
+  return WGRIB2_VERSION "  " BUILD_COMMENTS;
 }
