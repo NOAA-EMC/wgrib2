@@ -1,3 +1,6 @@
 [submodule "grib2/grib2/CMakeModules"]
 	path = grib2/grib2/CMakeModules
 	url = https://github.com/NOAA-EMC/CMakeModules.git
+[submodule "grib2/CMakeModules"]
+	path = grib2/CMakeModules
+	url = https://github.com/NOAA-EMC/CMakeModules.git
