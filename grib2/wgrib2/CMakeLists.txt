@@ -199,17 +199,18 @@ set(callable_src
 
 # make this an object lib so we can re-use most of object files
 # The only files that differ are ${callable_src} which are compiled
-# with -DCALLABLE. 
+# with -DCALLABLE_WGRIB2
 add_library(obj_lib OBJECT ${lib_src})
 target_compile_definitions(obj_lib PUBLIC ${definitions_list}) 
 target_link_libraries(obj_lib PRIVATE gctpc)
 
-# without -DCALLABLE for the lib
+# with -DCALLABLE_WGRIB2 for the lib
 add_library(wgrib2_lib $<TARGET_OBJECTS:obj_lib> ${callable_src})
+target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
+target_link_libraries(wgrib2_lib PUBLIC gctpc)
 
-# with -DCALLABLE for the executable
+# without -DCALLABLE_WGRIB2 for the executable
 add_executable(wgrib2_exe $<TARGET_OBJECTS:obj_lib> ${callable_src})
-target_compile_definitions(wgrib2_exe PRIVATE CALLABLE)
 target_link_libraries(wgrib2_exe PRIVATE gctpc)
 
 if(USE_NETCDF4)
@@ -220,11 +221,13 @@ endif()
 if(USE_JASPER)
   target_include_directories(obj_lib PUBLIC ${JASPER_INCLUDE_DIR})
   target_link_libraries(wgrib2_exe PRIVATE ${JASPER_LIBRARIES})
+  target_link_libraries(wgrib2_lib PUBLIC ${JASPER_LIBRARIES})
 endif()
 
 if(USE_PNG)
   target_link_libraries(obj_lib PUBLIC PNG::PNG)
   target_link_libraries(wgrib2_exe PRIVATE PNG::PNG)
+  target_link_libraries(wgrib2_lib PUBLIC PNG::PNG)
 endif()
 
 install(

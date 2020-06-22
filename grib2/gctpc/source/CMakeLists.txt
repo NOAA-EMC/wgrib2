@@ -78,5 +78,14 @@ set(src
   )
 
 add_library(gctpc ${src})
-target_include_directories(gctpc PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+target_include_directories(gctpc PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
+  
+install(
+  TARGETS gctpc
+  EXPORT wgrib2_exports
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
