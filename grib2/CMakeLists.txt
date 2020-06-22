@@ -52,8 +52,6 @@ if(USE_NETCDF3 AND USE_NETCDF4)
     message(FATAL_ERROR "USE_NETCDF3 OR USE_NetCDF4, not both")
 endif()
 
-set(definitions_list "")
-
 if(USE_REGEX) 
     list(APPEND definitions_list -DUSE_REGEX)
 endif()
