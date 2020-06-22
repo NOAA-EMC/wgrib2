@@ -9,7 +9,22 @@ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
 
 include(CMakeFindDependencyMacro)
 
+if(@USE_NETCDF4@)
+  find_dependency(NetCDF)
+endif()
 
+if(@USE_JASPER@)
+  find_dependency(Jasper)
+endif()
+
+if(@USE_PNG@)
+  find_dependency(PNG)
+endif()
+
+  
 #get_target_property(@PROJECT_NAME@_BUILD_TYPES @PROJECT_NAME@::@PROJECT_NAME@ IMPORTED_CONFIGURATIONS)
 
 check_required_components("@PROJECT_NAME@")
+
+get_target_property(location wgrib2::wgrib2_lib LOCATION)
+message(STATUS "Found @PROJECT_NAME@: ${location} (found version @PROJECT_VERSION@)")
