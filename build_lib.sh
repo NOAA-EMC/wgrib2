@@ -17,6 +17,12 @@ if [ $machine = 'hera' ]; then
   module load intel/18.0.5.274
   export CC=icc
   export FC=ifort
+elif [ $machine = 'dell' ]; then
+  module purge
+  module load cmake
+  module load ips/18.0.1.163
+  export CC=icc
+  export FC=ifort
 else
   set +x
   echo
