@@ -17,6 +17,12 @@ if [ $machine = 'hera' ]; then
   module load intel/18.0.5.274
   export CC=icc
   export FC=ifort
+elif [ $machine = 'orion' ]; then
+  module purge
+  module load cmake/3.17.3
+  module load intel/2018.4
+  export CC=icc
+  export FC=ifort
 elif [ $machine = 'jet' ]; then
   module purge
   module load cmake/3.16.1
