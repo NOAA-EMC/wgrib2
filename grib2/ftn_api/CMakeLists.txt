@@ -21,6 +21,7 @@ target_include_directories(wgrib2_api
     PUBLIC $<BUILD_INTERFACE:${module_dir}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 
+target_link_libraries(wgrib2_api PUBLIC wgrib2_lib)  
 
 install(DIRECTORY ${module_dir} DESTINATION ${CMAKE_INSTALL_PREFIX})
 

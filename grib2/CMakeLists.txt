@@ -22,7 +22,7 @@ option(USE_OPENMP "Use OpenMP?" off)
 option(USE_PROJ4 "Use Proj4?" off)
 option(USE_WMO_VALIDATION "Use WMO Validation?" off)
 option(DISABLE_TIMEZONE "Disable Timezone?" off)
-option(MAKE_FTN_API "Make Fortran API?" off)
+option(MAKE_FTN_API "Make Fortran API?" on)
 option(DISABLE_ALARM "Disable Alarm?" off)
 
 option(USE_G2CLIB "Use g2c lib?" off)
@@ -51,8 +51,6 @@ endif()
 if(USE_NETCDF3 AND USE_NETCDF4)
     message(FATAL_ERROR "USE_NETCDF3 OR USE_NetCDF4, not both")
 endif()
-
-set(definitions_list "")
 
 if(USE_REGEX) 
     list(APPEND definitions_list -DUSE_REGEX)
