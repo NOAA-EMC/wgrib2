@@ -36,7 +36,7 @@ Built with NetCDF4 support
 
 * USE_OPENMP = OFF
 
-* MAKE\_FTN\_API = OFF
+* MAKE_FTN_API = ON
 
 Build Fortran interface
 
