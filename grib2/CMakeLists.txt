@@ -15,8 +15,8 @@ option(USE_NETCDF4 "Use NetCDF-4?" on)
 option(USE_REGEX "Use Regex?" on)
 option(USE_TIGGE "Use tigge?" on)
 option(USE_MYSQL "Use MySQL?" off)
-set(USE_IPOLATES 0)
-option(USE_SPECTRAL "Use SP lib?" off)
+set(USE_IPOLATES 3)
+option(USE_SPECTRAL "Use SP lib?" on)
 option(USE_UDF "Use UDF?" off)
 option(USE_OPENMP "Use OpenMP?" off)
 option(USE_PROJ4 "Use Proj4?" off)
@@ -43,7 +43,7 @@ endif()
 
 
 if(USE_SPECTRAL)
-    if(not USE_IPOLATES EQUAL 3)
+    if(NOT USE_IPOLATES EQUAL 3)
         message(FATAL_ERROR "If USE_SPECTRAL is on, USE_IPOLATES must be 3")
     endif()
 endif()
@@ -72,16 +72,18 @@ if(USE_UDF)
     list(APPEND definitions_list -DUSE_UDF)
 endif()
 
-# Fill in here
 if(USE_IPOLATES EQUAL 1)
+  message(FATAL_ERROR "USE_IPOLATES=1 not supported")
 elseif(USE_IPOLATES EQUAL 3)
-    #list(APPEND definitions_list "USE_SPECTRAL")
+  find_package(ip2 CONFIG REQUIRED)
+  list(APPEND definitions_list -DUSE_SPECTRAL=1)
 endif()
 
 if(NOT USE_IPOLATES EQUAL 0)
-else()
-    list(APPEND definitions_list -DUSE_IPOLATES=0)
+  list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib")
 endif()
+
+list(APPEND definitions_list -DUSE_IPOLATES=${USE_IPOLATES})
 
 if(USE_NETCDF4)
     find_package(NetCDF REQUIRED C)
@@ -114,13 +116,14 @@ if(USE_WMO_VALIDATION)
     list(APPEND definitions_list -DUSE_WMO_VALIDATION)
 endif()
 
+add_subdirectory(gctpc)
+add_subdirectory(wgrib2)
+add_subdirectory(aux_progs)
+
 if(MAKE_FTN_API)
   add_subdirectory(ftn_api)
 endif()
 
-add_subdirectory(gctpc)
-add_subdirectory(wgrib2)
-add_subdirectory(aux_progs)
 
 
 ### Package config

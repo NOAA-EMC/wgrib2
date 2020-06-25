@@ -8,6 +8,9 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+#define IPOLATES ipolates_
+#define IPOLATEV ipolatev_
+
 /*
  * New_grid
  *
@@ -128,44 +131,6 @@ int f_new_grid_vectors(ARG1) {
  *  (2) double precision
  *  (3) spectral support was removed
  */
-
-#ifdef G95
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-void g95_runtime_start(int ,char **);
-void g95_runtime_stop(void);
-static int g95_runstop = 0;
-#endif
-
-#ifdef GFORTRAN
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
-
-#ifdef OPENF95
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
-
-#ifdef IFORT
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
-
-#ifdef XLF
-#define IPOLATES ipolates
-#define IPOLATEV ipolatev
-#endif
-
-#ifdef CRAYCE
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
-
-#ifdef SOLARIS
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
 
 void IPOLATES(int *interpol, int *ipopt, int *kgds, int *kgds_out, int *npnts, int *n_out0, 
 		int *km, int *ibi, unsigned char *bitmap, float *data_in, int *n_out, 
@@ -754,44 +719,6 @@ int f_new_grid(ARG4) {
  *
  * spectral restored (removed from grib1 version because I didn't want to support it)
  */
-
-#ifdef G95
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-void g95_runtime_start(int ,char **);
-void g95_runtime_stop(void);
-static int g95_runstop = 0;
-#endif
-
-#ifdef GFORTRAN
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
-
-#ifdef OPENF95
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
-
-#ifdef IFORT
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
-
-#ifdef XLF
-#define IPOLATES ipolates
-#define IPOLATEV ipolatev
-#endif
-
-#ifdef CRAYCE
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
-
-#ifdef SOLARIS
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-#endif
 
 void IPOLATES(int *interpol, int *ipopt, int *gdt_in, int *gdttmpl_in, int *gdttmpl_size_in,
   int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
