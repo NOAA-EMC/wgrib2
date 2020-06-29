@@ -50,13 +50,14 @@ else
   exit 1
 fi
 
-rm -fr ./build
-mkdir -p ./build
-cd build
+rm -fr ./build.lib
+mkdir -p ./build.lib
+cd build.lib
 
-cmake -DMAKE_FTN_API=ON -DUSE_NETCDF4=OFF -DUSE_PNG=OFF -DUSE_JASPER=OFF ../grib2
+cmake -DMAKE_FTN_API=ON -DUSE_IPOLATES=0 -DUSE_SPECTRAL=OFF -DUSE_NETCDF4=OFF -DUSE_PNG=OFF -DUSE_JASPER=OFF ../grib2
 
 make -j 8 VERBOSE=1
 
 make install
 
+rm -fr ./install/bin
