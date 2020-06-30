@@ -36,8 +36,14 @@ elif [ $machine = 'dell' ]; then
   module purge
   module load cmake
   module load ips/18.0.1.163
+  module use /usrx/local/nceplibs/dev/NCEPLIBS/modulefiles
+  module load netcdf_parallel/4.7.4
+  module load jasper/1.900.29
+  export Jasper_ROOT="/usrx/local/prod/packages/gnu/4.8.5/jasper/1.900.29"
   export CC=icc
   export FC=ifort
+  export ip2_DIR=/gpfs/dell2/emc/modeling/noscrub/George.Gayno/ip2lib.git/NCEPLIBS-ip2/lib/cmake/ip2
+  export sp_DIR=/gpfs/dell2/emc/modeling/noscrub/George.Gayno/splib.git/NCEPLIBS-sp/lib/cmake/sp
 else
   set +x
   echo
@@ -50,8 +56,9 @@ rm -fr ./build.exe
 mkdir -p ./build.exe
 cd build.exe
 
-cmake -DMAKE_FTN_API=OFF -DUSE_SPECTRAL=OFF -DUSE_IPOLATES=3  \
- -DUSE_NETCDF4=ON ../grib2
+cmake -DMAKE_FTN_API=OFF -DUSE_SPECTRAL=ON -DUSE_IPOLATES=3  \
+ -DUSE_NETCDF4=ON -DUSE_JASPER=OFF -DUSE_AEC=ON -DUSE_PROJ4=OFF \
+ -DUSE_OPENMP=ON ../grib2
 
 make -j 8 VERBOSE=1
 

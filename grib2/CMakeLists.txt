@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(wgrib2 VERSION 2.9.0 LANGUAGES Fortran C)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../cmake/")
 
 #set default install path if not provided
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

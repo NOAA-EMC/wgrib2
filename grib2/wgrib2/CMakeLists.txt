@@ -41,6 +41,10 @@ if(USE_PNG)
   target_link_libraries(wgrib2_lib PUBLIC PNG::PNG)
 endif()
 
+if(OpenMP_FOUND)
+  target_link_libraries(wgrib2_exe PRIVATE OpenMP::OpenMP_C)
+endif()
+
 if(USE_SPECTRAL)
 endif()
 
