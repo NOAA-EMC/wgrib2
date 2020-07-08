@@ -15,7 +15,7 @@ if [ $machine = 'hera' ]; then
   module purge
   module load cmake/3.16.1
   module load intel/18.0.5.274
-  module load netcdf_parallel/4.7.4
+  module load netcdf/4.6.1
   export CC=icc
   export FC=ifort
   export ip2_DIR=/scratch1/NCEPDEV/da/George.Gayno/ip2lib.git/NCEPLIBS-ip2/lib/cmake/ip2
