@@ -26,6 +26,10 @@ elif [ $machine = 'orion' ]; then
   module load intel/2018.4
   export CC=icc
   export FC=ifort
+  export ip2_DIR=/work/noaa/da/ggayno/save/ip2lib.git/NCEPLIBS-ip2/lib/cmake/ip2
+  export sp_DIR=/work/noaa/da/ggayno/save/splib.git/NCEPLIBS-sp/lib/cmake/sp
+  module load netcdf/4.7.2
+  export Jasper_ROOT=/apps/jasper-1.900.1
 elif [ $machine = 'jet' ]; then
   module purge
   module load cmake/3.16.1
