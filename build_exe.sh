@@ -45,7 +45,7 @@ elif [ $machine = 'dell' ]; then
   module load ips/18.0.1.163
   module use /usrx/local/nceplibs/dev/NCEPLIBS/modulefiles
   module load NetCDF/4.5.0
-  export Jasper_ROOT="/usrx/local/prod/packages/ips/19.0.5/serial/jasper/1.900.29"
+  export Jasper_ROOT=/usrx/local/prod/packages/gnu/4.8.5/jasper/1.900.1
   export CC=icc
   export FC=ifort
   export ip2_DIR=/gpfs/dell2/emc/modeling/noscrub/George.Gayno/ip2lib.git/NCEPLIBS-ip2/lib/cmake/ip2
