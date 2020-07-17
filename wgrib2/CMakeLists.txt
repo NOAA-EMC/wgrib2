@@ -17,11 +17,13 @@ target_link_libraries(obj_lib PRIVATE gctpc)
 
 # with -DCALLABLE_WGRIB2 for the lib
 add_library(wgrib2_lib $<TARGET_OBJECTS:obj_lib> ${callable_src})
+set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
 target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
 target_link_libraries(wgrib2_lib PUBLIC gctpc)
 
 # without -DCALLABLE_WGRIB2 for the executable
 add_executable(wgrib2_exe $<TARGET_OBJECTS:obj_lib> ${callable_src})
+set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 target_link_libraries(wgrib2_exe PRIVATE gctpc)
 
 if(USE_NETCDF4)
