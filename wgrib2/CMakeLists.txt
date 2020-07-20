@@ -8,6 +8,7 @@ set(callable_src
     wgrib2_api.c
 )   
 
+add_subdirectory(gctpc)
 # make this an object lib so we can re-use most of object files
 # The only files that differ are ${callable_src} which are compiled
 # with -DCALLABLE_WGRIB2

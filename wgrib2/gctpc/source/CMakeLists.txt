@@ -59,7 +59,6 @@ set(src
   somfor.c
   sominv.c
   sphdz.c
-  spload.f
   sterfor.c
   sterinv.c
   stplnfor.c
@@ -77,7 +76,7 @@ set(src
   wviiinv.c
   )
 
-add_library(gctpc ${src})
+add_library(gctpc OBJECT ${src})
 
 target_include_directories(gctpc PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

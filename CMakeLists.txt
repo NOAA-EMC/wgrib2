@@ -116,7 +116,6 @@ if(USE_WMO_VALIDATION)
     list(APPEND definitions_list -DUSE_WMO_VALIDATION)
 endif()
 
-add_subdirectory(gctpc)
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
 
