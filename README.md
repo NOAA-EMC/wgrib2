@@ -8,7 +8,7 @@ configuration.
 
 ```
 mkdir build && cd build
-cmake .. -DCMAKE\_INSTALL\_PREFIX=install -DCMAKE\_PREFIX\_PATH=path/to/dependencies
+cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH=path/to/dependencies
 make
 make install
 ```
