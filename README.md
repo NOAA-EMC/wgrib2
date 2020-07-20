@@ -26,19 +26,17 @@ wgrib2::wgrib2_api (fortran target)
 
 * USE_NETCDF4 = ON
 
-Built with NetCDF4 support
-
 * USE_REGEX = ON
 
 * USE_TIGGE = ON
 
 * USE_MYSQL = OFF
 
+* USE_IPOLATES = 3 (requires ip2 lib)
+
 * USE_OPENMP = OFF
 
 * MAKE_FTN_API = ON
-
-Build Fortran interface
 
 * DISABLE_ALARM = OFF
 
