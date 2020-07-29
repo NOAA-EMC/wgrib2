@@ -94,7 +94,7 @@ if(USE_JASPER)
   find_package(Jasper REQUIRED)
 endif()
 
-if(USE_OPENMP)
+if(OPENMP)
     list(APPEND definitions_list -DUSE_OPENMP)
     find_package(OpenMP)
 endif()
