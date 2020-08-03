@@ -86,7 +86,8 @@ endif()
 list(APPEND definitions_list -DUSE_IPOLATES=${USE_IPOLATES})
 
 if(USE_NETCDF4)
-    find_package(NetCDF MODULE REQUIRED COMPONENTS C)
+  find_package(NetCDF MODULE REQUIRED COMPONENTS C)
+  list(APPEND definitions_list -DUSE_NETCDF4 -DUSE_HDF5 -DHDF5="hdf5")
 endif()
 
 if(USE_JASPER)
