@@ -49,6 +49,7 @@ if(OpenMP_FOUND)
 endif()
 
 if(USE_SPECTRAL)
+  target_link_libraries(wgrib2_exe PUBLIC sp::sp_d)
 endif()
 
 if(USE_G2CLIB)
