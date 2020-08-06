@@ -24,8 +24,8 @@ if(DEFINED ENV{IP2_LIBd} )
       get_filename_component(lib_dir ${${uppercase_name}_LIB${kind}} DIRECTORY)
       find_library(ip2_path_${kind} NAMES ${versioned_lib_name} PATHS ${lib_dir} NO_DEFAULT_PATH)
     
-      add_library(${lib_name}::${lib_name}_${kind} STATIC IMPORTED)
-      set_target_properties(${lib_name} PROPERTIES
+      add_library(${name}::${lib_name} STATIC IMPORTED)
+      set_target_properties(${name}::${lib_name} PROPERTIES
         IMPORTED_LOCATION ${ip2_path_${kind}}
         INTERFACE_INCLUDE_DIRECTORIES ${${uppercase_name}_INC${kind}})
     endif()

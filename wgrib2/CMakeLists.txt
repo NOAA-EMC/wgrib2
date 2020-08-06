@@ -28,6 +28,7 @@ set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 target_link_libraries(wgrib2_exe PRIVATE gctpc)
 
 if(USE_NETCDF4)
+  target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
   target_link_libraries(wgrib2_lib PUBLIC NetCDF::NetCDF_C)
   target_link_libraries(wgrib2_exe PUBLIC NetCDF::NetCDF_C)
 endif()

@@ -43,7 +43,7 @@ endif()
 
 
 if(USE_SPECTRAL)
-  find_packge(sp MODULE REQUIRED)
+  find_package(sp MODULE REQUIRED)
   if(NOT USE_IPOLATES EQUAL 3)
     message(FATAL_ERROR "If USE_SPECTRAL is on, USE_IPOLATES must be 3")
   endif()
