@@ -31,6 +31,8 @@ option(USE_JASPER "Use Jasper?" on)
 option(USE_AEC "Use AEC?" off)
 
 
+# DH* ??? if the "... must be off" statements are correct, the 
+# test should be for if (USE_PNG) and if(USE_JASPER) *DH
 if(USE_G2CLIB) 
     if(not USE_PNG) 
         message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
