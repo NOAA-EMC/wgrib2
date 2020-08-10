@@ -16,7 +16,6 @@ add_library(obj_lib OBJECT ${lib_src})
 target_compile_definitions(obj_lib PUBLIC ${definitions_list}) 
 
 # with -DCALLABLE_WGRIB2 for the lib
-#add_library(wgrib2_lib $<TARGET_OBJECTS:obj_lib> ${callable_src})
 add_library(wgrib2_lib $<TARGET_OBJECTS:obj_lib> $<TARGET_OBJECTS:gctpc> ${callable_src})
 # library and executable have same name (wgrib2) but different target names
 set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
