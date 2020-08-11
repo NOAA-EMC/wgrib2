@@ -32,11 +32,11 @@ option(USE_AEC "Use AEC?" off)
 
 
 if(USE_G2CLIB) 
-    if(not USE_PNG) 
+    if(USE_PNG) 
         message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
     endif()
 
-    if(not USE_JASPER) 
+    if(USE_JASPER) 
         message(FATAL_ERROR "If USE_G2CLIB is on, USE_JASPER must be off")
     endif()
 endif()
