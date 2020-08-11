@@ -18,8 +18,9 @@ if [ $machine = 'hera' ]; then
   module load netcdf/4.6.1
   export CC=icc
   export FC=ifort
-  export ip2_DIR=/scratch1/NCEPDEV/da/George.Gayno/ip2lib.git/NCEPLIBS-ip2/lib/cmake/ip2
-  export sp_DIR=/scratch1/NCEPDEV/da/George.Gayno/splib.git/NCEPLIBS-sp/lib/cmake/sp
+  module use -a /scratch2/NCEPDEV/nwprod/NCEPLIBS/modulefiles
+  module load ip2/1.0.0
+  module load sp/2.0.2
 elif [ $machine = 'orion' ]; then
   module purge
   module load cmake/3.17.3
@@ -77,7 +78,7 @@ cd build.exe
 
 cmake -DMAKE_FTN_API=OFF -DUSE_SPECTRAL=ON -DUSE_IPOLATES=3  \
  -DUSE_NETCDF4=ON -DUSE_JASPER=ON -DUSE_AEC=ON -DUSE_PROJ4=OFF \
- -DUSE_OPENMP=ON ..
+ -DOPENMP=ON ..
 
 make -j 8 VERBOSE=1
 

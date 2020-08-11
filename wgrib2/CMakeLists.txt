@@ -49,10 +49,6 @@ if(OpenMP_FOUND)
   target_link_libraries(wgrib2_exe PRIVATE OpenMP::OpenMP_C)
 endif()
 
-if(USE_SPECTRAL)
-  target_link_libraries(wgrib2_exe PUBLIC sp::sp_d)
-endif()
-
 if(USE_G2CLIB)
 endif()
 
@@ -60,12 +56,16 @@ if(USE_IPOLATES EQUAL 3)
   target_link_libraries(obj_lib PUBLIC ip2::ip2_d)
   target_link_libraries(wgrib2_exe PUBLIC ip2::ip2_d)
   target_link_libraries(wgrib2_lib PUBLIC ip2::ip2_d)
-  
-  if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel)$")
-    target_link_libraries(wgrib2_exe PRIVATE "-lifcore")
-  elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
-    target_link_libraries(wgrib2_exe PRIVATE "-lgfortran")
-  endif()
+endif()
+
+if(USE_SPECTRAL)
+  target_link_libraries(wgrib2_exe PUBLIC sp::sp_d)
+endif()
+
+if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel)$")
+  target_link_libraries(wgrib2_exe PRIVATE "-lifcore")
+elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
+  target_link_libraries(wgrib2_exe PRIVATE "-lgfortran")
 endif()
 
 install(
