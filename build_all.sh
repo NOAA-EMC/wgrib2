@@ -40,6 +40,10 @@ elif [ $machine = 'jet' ]; then
   module load intel/18.0.5.274
   export CC=icc
   export FC=ifort
+  module use -a /lfs4/HFIP/hfv3gfs/nwprod/NCEPLIBS/modulefiles
+  module load netcdf/4.6.1
+  module load sp/v2.0.2
+  module load ip2/v1.0.0
 elif [ $machine = 'dell' ]; then
   module purge
   module load cmake
