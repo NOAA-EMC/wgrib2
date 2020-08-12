@@ -50,6 +50,10 @@ elif [ $machine = 'dell' ]; then
   module load ips/18.0.1.163
   export CC=icc
   export FC=ifort
+  module load sp/2.0.2
+  module load ip2/1.0.0
+  module load NetCDF/4.5.0
+  export Jasper_ROOT="/usrx/local/prod/packages/gnu/4.8.5/jasper/1.900.29"
 else
   set +x
   echo
