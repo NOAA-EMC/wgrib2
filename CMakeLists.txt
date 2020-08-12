@@ -30,6 +30,8 @@ option(USE_PNG "Use PNG?" on)
 option(USE_JASPER "Use Jasper?" on)
 option(USE_AEC "Use AEC?" off)
 
+option(BUILD_SHARED_LIB "Build shared library?" off)
+
 
 if(USE_G2CLIB) 
     if(USE_PNG) 
