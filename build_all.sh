@@ -15,8 +15,12 @@ if [ $machine = 'hera' ]; then
   module purge
   module load cmake/3.16.1
   module load intel/18.0.5.274
+  module load netcdf/4.6.1
   export CC=icc
   export FC=ifort
+  module use -a /scratch2/NCEPDEV/nwprod/NCEPLIBS/modulefiles
+  module load ip2/1.0.0
+  module load sp/2.0.2
 elif [ $machine = 'cray' ]; then
   module purge
   module load cmake/3.16.2
@@ -50,9 +54,11 @@ else
   exit 1
 fi
 
-rm -fr ./build.lib
-mkdir -p ./build.lib
-cd build.lib
+# Build library without any external libs.
+
+rm -fr ./build
+mkdir -p ./build
+cd build
 
 cmake -DMAKE_FTN_API=ON -DUSE_IPOLATES=0 -DUSE_SPECTRAL=OFF -DUSE_NETCDF4=OFF -DUSE_PNG=OFF -DUSE_JASPER=OFF ..
 
@@ -61,3 +67,24 @@ make -j 8 VERBOSE=1
 make install
 
 rm -fr ./install/bin
+
+cd ..
+
+# Now build executable.
+
+rm -fr ./build.exe
+mkdir -p ./build.exe
+cd build.exe
+
+cmake -DMAKE_FTN_API=OFF -DUSE_SPECTRAL=ON -DUSE_IPOLATES=3  \
+ -DUSE_NETCDF4=ON -DUSE_JASPER=ON -DUSE_AEC=ON -DUSE_PROJ4=OFF \
+ -DOPENMP=ON ..
+
+make -j 8 VERBOSE=1
+
+make install
+
+cp -r ./install/bin ../build/install
+
+cd ..
+rm -fr ./build.exe
