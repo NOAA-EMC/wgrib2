@@ -32,7 +32,9 @@ wgrib2::wgrib2_api (fortran target)
 
 * USE_MYSQL = OFF
 
-* USE_IPOLATES = 3 (requires ip2 lib)
+* USE_IPOLATES = 0 (= 3 requires ip2 lib)
+
+* USE_SPECTRAL = OFF
 
 * USE_OPENMP = OFF
 
