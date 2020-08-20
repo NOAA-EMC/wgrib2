@@ -49,8 +49,8 @@ elif [ $machine = 'dell' ]; then
   export Jasper_ROOT=/usrx/local/prod/packages/gnu/4.8.5/jasper/1.900.1
   export CC=icc
   export FC=ifort
-  export ip2_DIR=/gpfs/dell2/emc/modeling/noscrub/George.Gayno/ip2lib.git/NCEPLIBS-ip2/lib/cmake/ip2
-  export sp_DIR=/gpfs/dell2/emc/modeling/noscrub/George.Gayno/splib.git/NCEPLIBS-sp/lib/cmake/sp
+  module load ip2/1.0.0
+  module load sp/2.0.2
 elif [ $machine = 'cray' ]; then
   module purge
   module load cmake/3.16.2
