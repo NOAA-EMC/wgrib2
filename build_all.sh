@@ -34,6 +34,11 @@ elif [ $machine = 'orion' ]; then
   module load intel/2018.4
   export CC=icc
   export FC=ifort
+  module use -a /apps/contrib/NCEPLIBS/orion/modulefiles
+  module load ip2/1.0.0
+  module load sp/2.0.3
+  module load netcdf/4.7.2
+  export Jasper_ROOT="/apps/jasper-1.900.1"
 elif [ $machine = 'jet' ]; then
   module purge
   module load cmake/3.16.1
