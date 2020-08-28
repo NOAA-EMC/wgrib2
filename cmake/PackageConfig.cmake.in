@@ -21,6 +21,10 @@ if(@USE_PNG@)
   find_dependency(PNG)
 endif()
 
+if(@USE_IPOLATES@ EQUAL 3)
+  find_dependency(ip2)
+endif()
+
   
 #get_target_property(@PROJECT_NAME@_BUILD_TYPES @PROJECT_NAME@::@PROJECT_NAME@ IMPORTED_CONFIGURATIONS)
 
