@@ -18,6 +18,7 @@ jobs:
 
     - name: install-netcdf
       run: |
+        sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
 
     - name: install-png
