@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#--------------------------------------------------------------
+# See Release notes for how to build.
+#
+# Script takes one argument, the machine name.
+#--------------------------------------------------------------
+
 set -x
 
 if [ $# -lt 1 ]; then
@@ -27,15 +33,15 @@ elif [ $machine = 'cray' ]; then
   module load PrgEnv-intel/5.2.56
   module rm intel
   module load intel/16.3.210
-  module load craype-haswell
+  module load craype-sandybridge
   module load sp-intel/2.0.2
   module load ip2-intel/1.0.0
   module load cray-netcdf/4.3.3.1
   export NETCDF=/opt/cray/netcdf/4.3.3.1/GNU/5.1
   module load cray-hdf5/1.8.14
-  export Jasper_ROOT=/usrx/local/prod/jasper/1.900.1/intel/haswell
-  export PNG_ROOT=/usrx/local/prod/png/1.2.49/intel/haswell
-  export ZLIB_ROOT=/usrx/local/prod/zlib/1.2.7/intel/haswell
+  export Jasper_ROOT=/usrx/local/prod/jasper/1.900.1/intel/sandybridge
+  export PNG_ROOT=/usrx/local/prod/png/1.2.49/intel/sandybridge
+  export ZLIB_ROOT=/usrx/local/prod/zlib/1.2.7/intel/sandybridge
 elif [ $machine = 'orion' ]; then
   module purge
   module load cmake/3.17.3
