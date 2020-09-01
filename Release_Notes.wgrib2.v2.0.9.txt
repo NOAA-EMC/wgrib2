@@ -1,0 +1,36 @@
+Code manager: George Gayno
+
+-------------
+Release Notes
+-------------
+
+Library/executable: wgrib2
+Version: 2.0.9
+Purpose: Degribs grib2 data.  
+Developed by: NCEP/EMC
+Contact info:  NCEP.List.EMC.nceplibs.Developers@noaa.gov or
+               george.gayno@noaa.gov or wesley.ebisuzaki@noaa.gov
+
+
+Change History
+--------------
+ v2.0.9 - Initial CMake version to build both the executable
+          and library.
+
+
+Implementation Instructions on WCOSS
+------------------------------------------------
+ - Checkout from git repository: 
+    $ git clone https://github.com/NOAA-EMC/NCEPLIBS-wgrib2.git
+    $ cd NCEPLIBS-wgrib2
+    $ git checkout tags/wgrib2_v2.0.9
+ - After building, the library, include files and executable
+   will be placed in ./build/install
+ - On Dell:
+    - Invoke the build script as follows:
+      $ ./build_all.sh dell
+    - Move library, include files and executable to final location.
+ - On Cray:
+    - Invoke the build script as follows:
+      $ ./build_all.sh cray 
+    - Move library, include files and executable to final location.
