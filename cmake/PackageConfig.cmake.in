@@ -25,7 +25,10 @@ if(@USE_IPOLATES@ EQUAL 3)
   find_dependency(ip2)
 endif()
 
-  
+if(@OPENMP@)
+  find_dependency(OpenMP)
+endif()
+
 #get_target_property(@PROJECT_NAME@_BUILD_TYPES @PROJECT_NAME@::@PROJECT_NAME@ IMPORTED_CONFIGURATIONS)
 
 check_required_components("@PROJECT_NAME@")
