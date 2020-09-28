@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(wgrib2 VERSION 2.9.0 LANGUAGES Fortran C)
+project(wgrib2 VERSION 2.0.8 LANGUAGES Fortran C)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/Modules")
 
