@@ -23,7 +23,7 @@ Implementation Instructions on WCOSS
  - Checkout from git repository: 
     $ git clone https://github.com/NOAA-EMC/NCEPLIBS-wgrib2.git
     $ cd NCEPLIBS-wgrib2
-    $ git checkout tags/wgrib2_v2.0.8
+    $ git checkout tags/v2.0.8-nco
  - After building, the library, include files and executable
    will be placed in ./build/install
  - On Dell:
