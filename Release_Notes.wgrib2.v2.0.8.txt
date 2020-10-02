@@ -25,12 +25,14 @@ Implementation Instructions on WCOSS
     $ cd NCEPLIBS-wgrib2
     $ git checkout tags/v2.0.8-nco
  - After building, the library, include files and executable
-   will be placed in ./build/install
+   will be installed in $install_dir 
  - On Dell:
-    - Invoke the build script as follows:
-      $ ./build_all.sh dell
-    - Move library, include files and executable to final location.
+    - Invoke the build script with two arguments:
+      $ ./build_all.sh dell $install_dir
  - On Cray:
-    - Invoke the build script as follows:
-      $ ./build_all.sh cray 
-    - Move library, include files and executable to final location.
+    - Invoke the build script with two arguments:
+      $ ./build_all.sh cray $install_dir
+
+WARNING!  Once everything is installed in $install_dir, you can
+NOT move it to another location.  You will need to rebuild
+and install in the new directory.

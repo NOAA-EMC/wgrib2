@@ -3,19 +3,25 @@
 #--------------------------------------------------------------
 # See Release notes for how to build.
 #
-# Script takes one argument, the machine name.
+# Script takes two argument, the machine name and the
+# path to the final install directory.  Note: you can not
+# install in one directory, then move everything to another
+# directory.
 #--------------------------------------------------------------
 
 set -x
 
-if [ $# -lt 1 ]; then
+if [ $# -lt 2 ]; then
   set +x
-  echo '***ERROR*** must specify machine name as argument.'
+  echo '***ERROR*** must specify machine name and install directory as arguments.'
   exit 1
 fi
 
 machine=$1
 echo $machine
+
+final_install_dir=$2
+echo will install in ${final_install_dir}
 
 if [ $machine = 'hera' ]; then
   module purge
@@ -87,13 +93,13 @@ rm -fr ./build
 mkdir -p ./build
 cd build
 
-cmake -DMAKE_FTN_API=ON -DUSE_IPOLATES=0 -DUSE_SPECTRAL=OFF -DUSE_NETCDF4=OFF -DUSE_PNG=OFF -DUSE_JASPER=OFF ..
+cmake -DMAKE_FTN_API=ON -DUSE_IPOLATES=0 -DUSE_SPECTRAL=OFF -DUSE_NETCDF4=OFF -DUSE_PNG=OFF -DUSE_JASPER=OFF -DCMAKE_INSTALL_PREFIX=${final_install_dir}  ..
 
 make -j 8 VERBOSE=1
 
 make install
 
-rm -fr ./install/bin
+rm -fr ${final_install_dir}/bin
 
 cd ..
 
@@ -105,13 +111,15 @@ cd build.exe
 
 cmake -DMAKE_FTN_API=OFF -DUSE_SPECTRAL=ON -DUSE_IPOLATES=3  \
  -DUSE_NETCDF4=ON -DUSE_JASPER=ON -DUSE_AEC=ON -DUSE_PROJ4=OFF \
- -DOPENMP=ON ..
+ -DOPENMP=ON -DCMAKE_INSTALL_PREFIX=${final_install_dir}/binary ..
 
 make -j 8 VERBOSE=1
 
 make install
 
-cp -r ./install/bin ../build/install
+cp -r ${final_install_dir}/binary/bin ${final_install_dir}/bin
+
+rm -fr ${final_install_dir}/binary
 
 cd ..
 rm -fr ./build.exe
