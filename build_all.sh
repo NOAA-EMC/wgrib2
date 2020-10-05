@@ -4,9 +4,7 @@
 # See Release notes for how to build.
 #
 # Script takes two argument, the machine name and the
-# path to the final install directory.  Note: you can not
-# install in one directory, then move everything to another
-# directory.
+# path to the final install directory.
 #--------------------------------------------------------------
 
 set -x

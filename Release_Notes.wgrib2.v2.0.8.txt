@@ -24,15 +24,16 @@ Implementation Instructions on WCOSS
     $ git clone https://github.com/NOAA-EMC/NCEPLIBS-wgrib2.git
     $ cd NCEPLIBS-wgrib2
     $ git checkout tags/v2.0.8-nco
- - After building, the library, include files and executable
-   will be installed in $install_dir 
+ - After building, the libraries, include files, executable and
+   cmake package configuration files will be installed in
+   $install_dir:
+     - $install_dir/bin (executable)
+     - $install_dir/include (include files)
+     - $install_dir/lib (libraries)
+     - $install_dir/lib/cmake/wgrib2 (cmake package config files)
  - On Dell:
     - Invoke the build script with two arguments:
       $ ./build_all.sh dell $install_dir
  - On Cray:
     - Invoke the build script with two arguments:
       $ ./build_all.sh cray $install_dir
-
-WARNING!  Once everything is installed in $install_dir, you can
-NOT move it to another location.  You will need to rebuild
-and install in the new directory.
