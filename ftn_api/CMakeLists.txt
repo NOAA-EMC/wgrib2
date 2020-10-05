@@ -15,13 +15,11 @@ add_library(wgrib2_api ${fortran_src} ${c_src})
 set(module_dir "${CMAKE_CURRENT_BINARY_DIR}/include")
 set_target_properties(wgrib2_api PROPERTIES Fortran_MODULE_DIRECTORY ${module_dir})
 
-
-
 target_include_directories(wgrib2_api
     PUBLIC $<BUILD_INTERFACE:${module_dir}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
+    $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(wgrib2_api PUBLIC wgrib2_lib)  
+target_link_libraries(wgrib2_api PUBLIC wgrib2_lib)
 
 install(DIRECTORY ${module_dir} DESTINATION ${CMAKE_INSTALL_PREFIX})
 
