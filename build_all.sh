@@ -78,6 +78,8 @@ elif [ $machine = 'dell' ]; then
   module load HDF5-serial/1.10.1
   module load NetCDF/4.5.0
   export Jasper_ROOT="/usrx/local/prod/packages/gnu/4.8.5/jasper/1.900.1"
+  export ZLIB_ROOT="/usrx/local/prod/packages/ips/18.0.1/zlib/1.2.11"
+  export PNG_ROOT="/usrx/local/prod/packages/gnu/4.8.5/libpng/1.2.44"
 else
   set +x
   echo
