@@ -75,6 +75,7 @@ elif [ $machine = 'dell' ]; then
   export FC=ifort
   module load sp/2.0.2
   module load ip2/1.0.0
+  module load HDF5-serial/1.10.1
   module load NetCDF/4.5.0
   export Jasper_ROOT="/usrx/local/prod/packages/gnu/4.8.5/jasper/1.900.1"
 else

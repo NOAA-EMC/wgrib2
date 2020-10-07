@@ -74,6 +74,10 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   target_link_libraries(wgrib2_exe PRIVATE "-lgfortran")
 endif()
 
+if(USE_NETCDF4)
+  target_link_libraries(wgrib2_exe PUBLIC ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES})
+endif()
+
 install(
   TARGETS wgrib2_lib wgrib2_exe
   EXPORT wgrib2_exports
