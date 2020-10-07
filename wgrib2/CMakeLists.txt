@@ -75,7 +75,7 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
 endif()
 
 if(USE_NETCDF4)
-  target_link_libraries(wgrib2_exe PUBLIC ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES})
+  target_link_libraries(wgrib2_exe PUBLIC ${HDF5_HL_LIBRARIES} ${HDF5_LIBRARIES})
 endif()
 
 install(
