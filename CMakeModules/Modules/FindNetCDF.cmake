@@ -198,7 +198,7 @@ foreach( _comp IN LISTS _search_components )
   endif()
 
   #Use nc-config to set per-component LIBRARIES variable if possible
-  netcdf_config( ${NetCDF_${_comp}_CONFIG_EXECUTABLE} ${_${_comp}_libs_flag} _val )
+  #netcdf_config( ${NetCDF_${_comp}_CONFIG_EXECUTABLE} ${_${_comp}_libs_flag} _val )
   if( _val )
     set( NetCDF_${_comp}_LIBRARIES ${_val} )
     if(NOT NetCDF_${_comp}_LIBRARY_SHARED AND NOT NetCDF_${_comp}_FOUND) #Static targets should use nc_config to get a proper link line with all necessary static targets.
@@ -206,9 +206,7 @@ foreach( _comp IN LISTS _search_components )
     endif()
   else()
     set( NetCDF_${_comp}_LIBRARIES ${NetCDF_${_comp}_LIBRARY} )
-    if(NOT NetCDF_${_comp}_LIBRARY_SHARED)
-      message(SEND_ERROR "Unable to properly find NetCDF.  Found static libraries at: ${NetCDF_${_comp}_LIBRARY} but could not run nc-config: ${NetCDF_CONFIG_EXECUTABLE}")
-    endif()
+    list( APPEND NetCDF_LIBRARIES ${NetCDF_${_comp}_LIBRARIES} )
   endif()
 
   #Use nc-config to set per-component INCLUDE_DIRS variable if possible
@@ -226,8 +224,7 @@ foreach( _comp IN LISTS _search_components )
       add_library(NetCDF::NetCDF_${_comp} ${_library_type} IMPORTED)
       set_target_properties(NetCDF::NetCDF_${_comp} PROPERTIES
         IMPORTED_LOCATION ${NetCDF_${_comp}_LIBRARY}
-        INTERFACE_INCLUDE_DIRECTORIES "${NetCDF_${_comp}_INCLUDE_DIRS}"
-        INTERFACE_LINK_LIBRARIES ${NetCDF_${_comp}_LIBRARIES} )
+        INTERFACE_INCLUDE_DIRECTORIES "${NetCDF_${_comp}_INCLUDE_DIRS}")	
     endif()
   endif()
 endforeach()
