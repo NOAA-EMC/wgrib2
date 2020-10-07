@@ -30,6 +30,8 @@ option(USE_PNG "Use PNG?" on)
 option(USE_JASPER "Use Jasper?" on)
 option(USE_AEC "Use AEC?" off)
 
+option(BUILD_SHARED_LIB "Build shared library?" off)
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".so")
 
 if(USE_G2CLIB) 
     if(not USE_PNG) 
@@ -88,6 +90,8 @@ list(APPEND definitions_list -DUSE_IPOLATES=${USE_IPOLATES})
 
 if(USE_NETCDF4)
   find_package(NetCDF MODULE REQUIRED COMPONENTS C)
+  set(HDF5_USE_STATIC_LIBRARIES ON)
+  find_package(HDF5 COMPONENTS C HL)
   list(APPEND definitions_list -DUSE_NETCDF4 -DUSE_HDF5 -DHDF5="hdf5")
 endif()
 

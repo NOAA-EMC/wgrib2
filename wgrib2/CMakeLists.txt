@@ -17,7 +17,13 @@ target_compile_definitions(obj_lib PUBLIC ${definitions_list})
 target_link_libraries(obj_lib PRIVATE gctpc)
 
 # with -DCALLABLE_WGRIB2 for the lib
-add_library(wgrib2_lib $<TARGET_OBJECTS:obj_lib> ${callable_src})
+if(BUILD_SHARED_LIB)
+  add_library(wgrib2_lib SHARED $<TARGET_OBJECTS:obj_lib> $<TARGET_OBJECTS:gctpc> ${callable_src})
+else()
+  add_library(wgrib2_lib STATIC $<TARGET_OBJECTS:obj_lib> $<TARGET_OBJECTS:gctpc> ${callable_src})
+endif()
+
+# with -DCALLABLE_WGRIB2 for the lib
 set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
 target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
 target_link_libraries(wgrib2_lib PUBLIC gctpc)
@@ -66,6 +72,10 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel)$")
   target_link_libraries(wgrib2_exe PRIVATE "-lifcore")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   target_link_libraries(wgrib2_exe PRIVATE "-lgfortran")
+endif()
+
+if(USE_NETCDF4)
+  target_link_libraries(wgrib2_exe PUBLIC ${HDF5_HL_LIBRARIES} ${HDF5_LIBRARIES})
 endif()
 
 install(
