@@ -6,7 +6,7 @@ Provides functionality for interacting with, reading, writing, and manipulating 
 
 See wgrib2 documentation and release page [here](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/)
 
-The CMake build provided here supports most build options (NetCDF, PNG, Jasper, spectral, and ipolates), but not support certain build features such as MySQL. If those features are necessary please use the makefile build provided in the link above.
+The CMake build provided here supports most build options (NetCDF, PNG, Jasper, spectral, and ipolates), but not certain features such as MySQL. If those features are necessary please use the makefile build provided in the link above.
 
 ### Authors
 
