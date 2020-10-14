@@ -1,0 +1,92 @@
+name: Build
+on:
+  push:
+    branches:
+      - feature/cmake
+  pull_request:
+    branches:
+      - feature/cmake
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    env:
+      FC: gfortran-9
+      CC: gcc-9
+
+    steps:
+
+    - name: install-netcdf
+      run: |
+        sudo apt-get update
+        sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
+
+    - name: install-png
+      run: |
+        sudo apt-get install libpng-dev
+    
+    - name: install-autotools
+      run: |
+        sudo apt-get install autotools-dev
+        sudo apt-get install autoconf
+  
+    - name: checkout-jasper
+      uses: actions/checkout@v2
+      with:
+        repository: jasper-software/jasper
+        path: jasper
+        ref: version-1.900.1
+
+    - name: build-jasper
+      if: steps.cache-jasper.outputs.cache-hit != 'true'
+      run: |
+        cd jasper
+        ./configure --prefix=$HOME/Jasper
+        make
+        make install
+
+    - name: checkout-sp
+      uses: actions/checkout@v2
+      with:
+        repository: NOAA-EMC/NCEPLIBS-sp
+        path: sp
+        ref: develop
+
+    - name: build-sp
+      run: |
+        cd sp
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/sp
+        make -j2
+        make install
+
+    - name: checkout-ip2
+      uses: actions/checkout@v2
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip2
+        path: ip2
+        ref: develop
+
+    - name: build-ip2
+      run: |
+        cd ip2
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip2 -DCMAKE_PREFIX_PATH=~
+        make -j2
+        make install        
+
+    - name: checkout
+      uses: actions/checkout@v2
+      with: 
+        path: wgrib2
+        submodules: true
+
+    - name: build
+      run: |
+        cd wgrib2
+        mkdir build 
+        cd build
+        cmake .. -DCMAKE_PREFIX_PATH=$HOME -DJasper_ROOT=$HOME/Jasper
+        make -j2
