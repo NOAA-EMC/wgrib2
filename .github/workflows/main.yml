@@ -83,7 +83,6 @@ jobs:
       uses: actions/checkout@v2
       with: 
         path: wgrib2
-        submodules: true
 
     - name: build
       run: |
