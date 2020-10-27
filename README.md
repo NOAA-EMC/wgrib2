@@ -2,11 +2,19 @@
 
 # WGRIB 2
 
-Provides functionality for interacting with, reading, writing, and manipulating grib2 files, with a CMake build. 
+Provides functionality for interacting with, reading, writing, and
+manipulating grib2 files, with a CMake build.
 
-See wgrib2 documentation and release page [here](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/)
+See wgrib2 documentation and release page
+[here](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/).
 
-The CMake build provided here supports most build options (NetCDF, PNG, Jasper, spectral, and ipolates), but not certain features such as MySQL. If those features are necessary please use the makefile build provided in the link above.
+This release of the wgrib2 package, with CMake build capability, is
+part of the [NCEPLIBS](https://github.com/NOAA-EMC/NCEPLIBS) project.
+
+The CMake build provided here supports most build options (NetCDF,
+PNG, Jasper, spectral, and ipolates), but not certain features such as
+MySQL. If those features are necessary please use the makefile build
+provided in the link above.
 
 ### Authors
 
