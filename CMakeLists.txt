@@ -136,7 +136,7 @@ include(CMakePackageConfigHelpers)
 set(CONFIG_INSTALL_DESTINATION lib/cmake/${PROJECT_NAME})
 
 export(EXPORT wgrib2_exports
-  NAMESPACE wgrib2}::
+  NAMESPACE wgrib2::
   FILE wgrib2-targets.cmake)
 
 configure_package_config_file(
