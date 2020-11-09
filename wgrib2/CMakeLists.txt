@@ -28,32 +28,24 @@ set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
 target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
 
 # without -DCALLABLE_WGRIB2 for the executable
-add_executable(wgrib2_exe $<TARGET_OBJECTS:obj_lib> ${callable_src})
+add_executable(wgrib2_exe ${callable_src})
 set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
 if(USE_NETCDF4)
   target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
-  target_link_libraries(wgrib2_exe PRIVATE NetCDF::NetCDF_C)
-  target_link_libraries(wgrib2_lib PUBLIC NetCDF::NetCDF_C)
 endif()
 
 if(USE_JASPER)
   target_include_directories(obj_lib PUBLIC ${JASPER_INCLUDE_DIR})
   target_link_libraries(obj_lib PUBLIC ${JASPER_LIBRARIES})
-  target_link_libraries(wgrib2_exe PRIVATE ${JASPER_LIBRARIES})
-  target_link_libraries(wgrib2_lib PUBLIC ${JASPER_LIBRARIES})
 endif()
 
 if(USE_PNG)
   target_link_libraries(obj_lib PUBLIC PNG::PNG)
-  target_link_libraries(wgrib2_exe PRIVATE PNG::PNG)
-  target_link_libraries(wgrib2_lib PUBLIC PNG::PNG)
 endif()
 
 if(OpenMP_FOUND)
   target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
-  target_link_libraries(wgrib2_exe PRIVATE OpenMP::OpenMP_C)
-  target_link_libraries(wgrib2_lib PUBLIC OpenMP::OpenMP_C)
 endif()
 
 if(USE_SPECTRAL)
@@ -64,8 +56,6 @@ endif()
 
 if(USE_IPOLATES EQUAL 3)
   target_link_libraries(obj_lib PUBLIC ip2::ip2_d)
-  target_link_libraries(wgrib2_exe PUBLIC ip2::ip2_d)
-  target_link_libraries(wgrib2_lib PUBLIC ip2::ip2_d)
 
   # Link to the Fortran runtime library for each compiler if using ip2.
   # The wgrib2 exectuable is created using the C compiler and
@@ -78,16 +68,21 @@ if(USE_IPOLATES EQUAL 3)
   
 endif()
 
-target_link_libraries(obj_lib PUBLIC gctpc)
-target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
-target_link_libraries(wgrib2_lib PUBLIC -lm)
+target_link_libraries(obj_lib PUBLIC gctpc -lm)
+
+# Link to gctpc directly because oobject libraries do not link transitively
+target_link_libraries(wgrib2_exe PRIVATE gctpc)
+target_link_libraries(wgrib2_lib PUBLIC gctpc)
+
+target_link_libraries(wgrib2_exe PRIVATE obj_lib)
+target_link_libraries(wgrib2_lib PRIVATE obj_lib)
 
 set(headers wgrib2_api.h wgrib2.h)
 
 set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
 
 install(
-  TARGETS wgrib2_lib wgrib2_exe
+  TARGETS wgrib2_lib wgrib2_exe obj_lib
   EXPORT wgrib2_exports
   RUNTIME DESTINATION bin
   PUBLIC_HEADER DESTINATION include
