@@ -15,17 +15,19 @@ add_subdirectory(gctpc)
 add_library(obj_lib OBJECT ${lib_src})
 target_compile_definitions(obj_lib PUBLIC ${definitions_list}) 
 
-# with -DCALLABLE_WGRIB2 for the lib
-if(BUILD_SHARED_LIB)
-  add_library(wgrib2_lib SHARED $<TARGET_OBJECTS:obj_lib> $<TARGET_OBJECTS:gctpc> ${callable_src})
-else()
-  add_library(wgrib2_lib STATIC $<TARGET_OBJECTS:obj_lib> $<TARGET_OBJECTS:gctpc> ${callable_src})
+if(BUILD_LIB)
+  # with -DCALLABLE_WGRIB2 for the lib
+  if(BUILD_SHARED_LIB)
+    add_library(wgrib2_lib SHARED ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
+  else()
+    add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
+  endif()
 endif()
 
 # library and executable have same name (wgrib2) but different target names
 set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
 
-target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
+target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2 USE_REGEX)
 
 # without -DCALLABLE_WGRIB2 for the executable
 add_executable(wgrib2_exe ${callable_src})
@@ -75,7 +77,6 @@ target_link_libraries(wgrib2_exe PRIVATE gctpc)
 target_link_libraries(wgrib2_lib PUBLIC gctpc)
 
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
-target_link_libraries(wgrib2_lib PRIVATE obj_lib)
 
 set(headers wgrib2_api.h wgrib2.h)
 

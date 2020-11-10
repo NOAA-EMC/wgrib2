@@ -13,7 +13,7 @@ endif()
 include(GNUInstallDirs)
 
 option(USE_NETCDF3 "Use NetCDF-3?" off)
-option(USE_NETCDF4 "Use NetCDF-4?" on)
+option(USE_NETCDF4 "Use NetCDF-4?" off)
 option(USE_REGEX "Use Regex?" on)
 option(USE_TIGGE "Use tigge?" on)
 option(USE_MYSQL "Use MySQL?" off)
@@ -32,6 +32,7 @@ option(USE_PNG "Use PNG?" on)
 option(USE_JASPER "Use Jasper?" on)
 option(USE_AEC "Use AEC?" off)
 
+option(BUILD_LIB "Build wgrib2 library?" on)
 option(BUILD_SHARED_LIB "Build shared library?" off)
 
 
