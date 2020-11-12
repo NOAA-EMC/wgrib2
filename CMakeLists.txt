@@ -10,6 +10,8 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
       CACHE PATH "default install path" FORCE)
 endif()
 
+include(GNUInstallDirs)
+
 option(USE_NETCDF3 "Use NetCDF-3?" off)
 option(USE_NETCDF4 "Use NetCDF-4?" on)
 option(USE_REGEX "Use Regex?" on)
