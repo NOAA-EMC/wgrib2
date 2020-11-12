@@ -5,6 +5,8 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+extern int warn_nonzero_min_sec;
+
 #ifdef USE_REGEX
 #include <sys/types.h>
 #include <regex.h>
@@ -41,7 +43,6 @@ int regex_type;
 static regex_t egrep_preg[GREP_MAX];
 static int egrep_type[GREP_MAX];
 
-extern int warn_nonzero_min_sec;
 /*
  *  match, if use extended regex library call (like in egrep)
  * 
