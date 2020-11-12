@@ -34,7 +34,7 @@ set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 target_link_libraries(wgrib2_exe PRIVATE gctpc)
 
 if(USE_NETCDF4)
-  target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
+  target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C ${HDF5_HL_LIBRARIES} ${HDF5_LIBRARIES})
 endif()
 
 if(USE_JASPER)
@@ -46,10 +46,6 @@ if(USE_PNG)
   target_link_libraries(obj_lib PUBLIC PNG::PNG)
 endif()
 
-if(OpenMP_FOUND)
-  target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
-endif()
-
 if(USE_SPECTRAL)
 endif()
 
@@ -57,7 +53,7 @@ if(USE_G2CLIB)
 endif()
 
 if(USE_IPOLATES EQUAL 3)
-  target_link_libraries(obj_lib PUBLIC ip2::ip2_d)
+  target_link_libraries(obj_lib PUBLIC ip2::ip2_d sp::sp_d)
 
   # Link to the Fortran runtime library for each compiler if using ip2.
   # The wgrib2 exectuable is created using the C compiler and
@@ -72,6 +68,10 @@ endif()
 
 target_link_libraries(obj_lib PUBLIC gctpc -lm)
 
+if(OpenMP_FOUND)
+  target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
+endif()
+
 # Link to gctpc directly because oobject libraries do not link transitively
 target_link_libraries(wgrib2_exe PRIVATE gctpc)
 target_link_libraries(wgrib2_lib PUBLIC gctpc)
@@ -83,10 +83,6 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel)$")
   target_link_libraries(wgrib2_exe PRIVATE "-lifcore")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   target_link_libraries(wgrib2_exe PRIVATE "-lgfortran")
-endif()
-
-if(USE_NETCDF4)
-  target_link_libraries(wgrib2_exe PUBLIC ${HDF5_HL_LIBRARIES} ${HDF5_LIBRARIES})
 endif()
 
 install(
