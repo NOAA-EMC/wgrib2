@@ -6,8 +6,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #set default install path if not provided
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX
-      "${CMAKE_BINARY_DIR}/install"
-      CACHE PATH "default install path" FORCE)
+    "${CMAKE_BINARY_DIR}/install"
+    CACHE PATH "default install path" FORCE)
 endif()
 
 include(GNUInstallDirs)
@@ -24,7 +24,6 @@ option(OPENMP "Use OpenMP?" off)
 option(USE_PROJ4 "Use Proj4?" off)
 option(USE_WMO_VALIDATION "Use WMO Validation?" off)
 option(DISABLE_TIMEZONE "Disable Timezone?" off)
-option(MAKE_FTN_API "Make Fortran API?" on)
 option(DISABLE_ALARM "Disable Alarm?" off)
 
 option(USE_G2CLIB "Use g2c lib?" off)
@@ -37,44 +36,44 @@ option(BUILD_SHARED_LIB "Build shared library?" off)
 
 
 if(USE_G2CLIB) 
-    if(USE_PNG) 
-        message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
-    endif()
+  if(USE_PNG) 
+    message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
+  endif()
 
-    if(USE_JASPER) 
-        message(FATAL_ERROR "If USE_G2CLIB is on, USE_JASPER must be off")
-    endif()
+  if(USE_JASPER) 
+    message(FATAL_ERROR "If USE_G2CLIB is on, USE_JASPER must be off")
+  endif()
 endif()
 
 
 if(USE_SPECTRAL)
-    if(NOT USE_IPOLATES EQUAL 3)
-        message(FATAL_ERROR "If USE_SPECTRAL is on, USE_IPOLATES must be 3")
-    endif()
+  if(NOT USE_IPOLATES EQUAL 3)
+    message(FATAL_ERROR "If USE_SPECTRAL is on, USE_IPOLATES must be 3")
+  endif()
 endif()
 
 if(USE_NETCDF3 AND USE_NETCDF4)
-    message(FATAL_ERROR "USE_NETCDF3 OR USE_NetCDF4, not both")
+  message(FATAL_ERROR "USE_NETCDF3 OR USE_NetCDF4, not both")
 endif()
 
 if(USE_REGEX) 
-    list(APPEND definitions_list -DUSE_REGEX)
+  list(APPEND definitions_list -DUSE_REGEX)
 endif()
 
 if(USE_TIGGE)
-    list(APPEND  -DUSE_TIGGE)
+  list(APPEND  -DUSE_TIGGE)
 endif()
 
 if(DISABLE_ALARM)
-    list(APPEND definitions_list -DDISABLE_ALARM)
+  list(APPEND definitions_list -DDISABLE_ALARM)
 endif()
 
 if(DISABLE_TIMEZONE)
-    list(APPEND definitions_list -DDISABLE_TIMEZONE)
+  list(APPEND definitions_list -DDISABLE_TIMEZONE)
 endif()
 
 if(USE_UDF)
-    list(APPEND definitions_list -DUSE_UDF)
+  list(APPEND definitions_list -DUSE_UDF)
 endif()
 
 if(USE_IPOLATES EQUAL 1)
@@ -104,16 +103,16 @@ if(USE_JASPER)
 endif()
 
 if(OPENMP)
-    list(APPEND definitions_list -DUSE_OPENMP)
-    find_package(OpenMP)
+  list(APPEND definitions_list -DUSE_OPENMP)
+  find_package(OpenMP)
 endif()
 
 if(USE_G2CLIB) 
-    list(APPEND definitions_list -DUSE_G2CLIB)
+  list(APPEND definitions_list -DUSE_G2CLIB)
 endif()
 
 if(USE_PROJ4)
-    list(APPEND definitions_list -DUSE_PROJ4)
+  list(APPEND definitions_list -DUSE_PROJ4)
 endif()
 
 if(USE_PNG)
@@ -122,40 +121,41 @@ if(USE_PNG)
 endif()
 
 if(USE_WMO_VALIDATION)
-    list(APPEND definitions_list -DUSE_WMO_VALIDATION)
+  list(APPEND definitions_list -DUSE_WMO_VALIDATION)
 endif()
 
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
 
-if(MAKE_FTN_API)
+
+if(BUILD_LIB)
   add_subdirectory(ftn_api)
+
+  ### Package config
+  include(CMakePackageConfigHelpers)
+  set(CONFIG_INSTALL_DESTINATION lib/cmake/${PROJECT_NAME})
+
+  # No need for config file if library isn't built
+  export(EXPORT wgrib2_exports
+    NAMESPACE wgrib2::
+    FILE wgrib2-targets.cmake)
+
+  configure_package_config_file(
+    ${CMAKE_SOURCE_DIR}/cmake/PackageConfig.cmake.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+    INSTALL_DESTINATION ${CONFIG_INSTALL_DESTINATION})
+  install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+    DESTINATION ${CONFIG_INSTALL_DESTINATION})
+
+  write_basic_package_version_file(
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion)
+  install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+    DESTINATION ${CONFIG_INSTALL_DESTINATION})
+
+  install(EXPORT wgrib2_exports
+    NAMESPACE wgrib2::
+    FILE wgrib2-targets.cmake
+    DESTINATION ${CONFIG_INSTALL_DESTINATION})
 endif()
 
-
-
-### Package config
-include(CMakePackageConfigHelpers)
-set(CONFIG_INSTALL_DESTINATION lib/cmake/${PROJECT_NAME})
-
-export(EXPORT wgrib2_exports
-  NAMESPACE wgrib2::
-  FILE wgrib2-targets.cmake)
-
-configure_package_config_file(
-  ${CMAKE_SOURCE_DIR}/cmake/PackageConfig.cmake.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config.cmake
-  INSTALL_DESTINATION ${CONFIG_INSTALL_DESTINATION})
-install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config.cmake
-  DESTINATION ${CONFIG_INSTALL_DESTINATION})
-
-write_basic_package_version_file(
-  ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-  VERSION ${PROJECT_VERSION}
-  COMPATIBILITY AnyNewerVersion)
-install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-  DESTINATION ${CONFIG_INSTALL_DESTINATION})
-
-install(EXPORT wgrib2_exports
-  NAMESPACE wgrib2::
-  FILE wgrib2-targets.cmake
-  DESTINATION ${CONFIG_INSTALL_DESTINATION})

@@ -3,10 +3,10 @@
 include("source-files.cmake")
 
 set(callable_src
-    wgrib2.c
-    fatal_error.c
-    wgrib2_api.c
-)   
+  wgrib2.c
+  fatal_error.c
+  wgrib2_api.c
+  )   
 
 add_subdirectory(gctpc)
 # make this an object lib so we can re-use most of object files
@@ -22,12 +22,12 @@ if(BUILD_LIB)
   else()
     add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
   endif()
+
+  # library and executable have same name (wgrib2) but different target names
+  set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
+  target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2 USE_REGEX)
 endif()
 
-# library and executable have same name (wgrib2) but different target names
-set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
-
-target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2 USE_REGEX)
 
 # without -DCALLABLE_WGRIB2 for the executable
 add_executable(wgrib2_exe ${callable_src})
@@ -48,9 +48,6 @@ endif()
 
 if(OpenMP_FOUND)
   target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
-endif()
-
-if(USE_SPECTRAL)
 endif()
 
 if(USE_G2CLIB)
@@ -74,16 +71,25 @@ target_link_libraries(obj_lib PUBLIC gctpc -lm)
 
 # Link to gctpc directly because oobject libraries do not link transitively
 target_link_libraries(wgrib2_exe PRIVATE gctpc)
-target_link_libraries(wgrib2_lib PUBLIC gctpc)
-
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
-set(headers wgrib2_api.h wgrib2.h)
+if(BUILD_LIB)
+  set(headers wgrib2_api.h wgrib2.h)
+  target_link_libraries(wgrib2_lib PUBLIC gctpc)
+  set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
 
-set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
+  install(
+    TARGETS wgrib2_lib
+    EXPORT wgrib2_exports
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+  
+endif()
 
 install(
-  TARGETS wgrib2_lib wgrib2_exe obj_lib
+  TARGETS wgrib2_exe obj_lib
   EXPORT wgrib2_exports
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
