@@ -53,9 +53,16 @@ endif()
 if(USE_G2CLIB)
 endif()
 
+if(USE_IPOLATES EQUAL 1)
+  target_link_libraries(obj_lib PUBLIC ip::ip_4)
+  target_link_libraries(obj_lib PUBLIC sp::sp_4)
+endif()
+
 if(USE_IPOLATES EQUAL 3)
   target_link_libraries(obj_lib PUBLIC ip2::ip2_d)
+endif()
 
+if(USE_IPOLATES EQUAL 1 OR USE_IPOLATES EQUAL 3)
   # Link to the Fortran runtime library for each compiler if using ip2.
   # The wgrib2 exectuable is created using the C compiler and
   # doesn't link the necessary Fortran library required for ip2.
@@ -64,7 +71,6 @@ if(USE_IPOLATES EQUAL 3)
   elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
     target_link_libraries(wgrib2_exe PRIVATE "-lgfortran")
   endif()
-  
 endif()
 
 target_link_libraries(obj_lib PUBLIC gctpc -lm)
