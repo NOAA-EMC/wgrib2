@@ -61,13 +61,6 @@ if(USE_G2CLIB)
   endif()
 endif()
 
-
-if(USE_SPECTRAL)
-  if(NOT USE_IPOLATES EQUAL 3)
-    message(FATAL_ERROR "If USE_SPECTRAL is on, USE_IPOLATES must be 3")
-  endif()
-endif()
-
 if(USE_NETCDF3 AND USE_NETCDF4)
   message(FATAL_ERROR "USE_NETCDF3 OR USE_NetCDF4, not both")
 endif()
