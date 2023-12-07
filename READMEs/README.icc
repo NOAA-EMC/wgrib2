@@ -2,7 +2,7 @@ Intel ICC:                                                      updated 2/2017
 
 prior to wgrib2 v2.0.6
 
-   The makefile doesn't compile Jasper 1.900.1 "correctly".  Testing 
+   The makefile did not compile Jasper 1.900.1 "correctly".  Testing 
    fails with writing of jpeg2000 encoded files.  The portland
    C compiler fails with the exact same symptoms.  May be
    a Jasper source code problem rather than a compiler problem.
@@ -28,18 +28,18 @@ Bash:
    make lib                                    makes lib/*.a lib/*.mod for wgrib2api
 
 
-            WARNING WARNING - Compiling wgrib2 on WINDOWS
+            WARNING WARNING - Compiling wgrib2 on WINDOWS (including using icc)
 
 
-Wgrib2 follows the standards (no Microsoft Visual C is not a standard).  Wgrib2
+Wgrib2 follows the standards (no, Microsoft Visual C is not a standard).  Wgrib2
 uses fseek(FILE *stream, long offset, int whence) for random access.  Most 64-bit
-systems define long to be a 64 bit integer.  As a result,  wgrib2 on will support 
+systems define long to be a 64 bit integer.  As a result,  wgrib2 will support 
 large files.  
 
 Unfortunately long is usually defined as 32-bits on 64-bit Windows compilers including the 
 windows version of icc.  This is entirely appropriate as "640K ought to be enough for anybody".  
 Icc/windows defines long to be 32 bits long, and wgrib2 compiled with icc is limited to 2GB 
-files.  You could use fseeko(FILE *stream, off_t offset, int whence) to access large files.  
+files.  One could use fseeko(FILE *stream, off_t offset, int whence) to access large files.  
 Unfortunately this comforms to standards SUSv2 and POSIX.1-2001 which are not usually supported 
 by Windows C compilers.  (I could find no suggestion that it was supported by icc/windows.)
 For Windows, I suggest that you use the 64-bit Cgywin gcc/gfortran compilers.  They are the 

@@ -76,6 +76,20 @@ This library is restricted to a spherical earth.
 Wgrib2 is probably the first major use of this library.
 
 
+                       Spectral Interpolation
+
+
+Spectral interpolation has been part IPOLATES but it wasn't implimented because
+of large executable size increase for a minor feature and the origins of the source 
+code were questionable. For the 2/2019 wgrib2 release, codes were documented to be
+open source by either being rewritten or removed.  Consequently the spectral library 
+included with wgrib2 should not be used as a "clean" version for general use.
+
+Spectral interpolation is more accurate than bilinear interpolation for smooth fields.
+Spectral interpolation was added for the Conventional Observation Reanalysis project.
+Other reanalyses have a higher resolution, so partially compansate by improving the
+interpolation.
+
                  Changes
 
 2/2012   changed to new IPOLATES
@@ -90,4 +104,3 @@ Wgrib2 is probably the first major use of this library.
 5/2018   option to use grib2 ipolates
 7/2018   finished optimization of grib2 ipolates so that I expect that
          time critical codes will not be affected by the new library.
-

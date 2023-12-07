@@ -1,10 +1,25 @@
 		     Compiling wgrib2 with netcdf-4
 
-9/2013:
+9/2022: wgrib2 v3.1.2beta3
+        compiles in Ubuntu 20.04LTS gcc 9.4.0
+        compiles in RedHat release 7.9 gcc 4.8.5
+        does not compile (hdf5) with AMD clang version 13.0.0
 
-It has been a long time since I compiled wgrib2 with netcdf4.
-To get the makefile working with the new netcdf4 and hdf5 src
-code required a couple of days of working.
+4/2022: netcdf4 seems to be working gcc v9.4.0. clang is a no go.
+I am trying to compile on cygwin but it has been compiling for 3 hours.
+
+8/2020:
+
+NetCDF4 support has been in shambles for many years.  The good news,
+Redhat with its vintage compilers has been working fine. If you
+are using the Intel compilers, it compiles and probably works.
+
+
+Support:  There is no way to support using XYZ compiler in ABC operating
+system.  The user has to test whether their copy of wgrib2 with the NetCDF4 
+options works.  Don't assume that "it compiled" means "it worked". I have
+seen "it compiled" but "it doesn't work".  The NetCDF4 code seems to be
+robust but the hdf5 library is sensitive to the version of the compiler.
 
 Configuration:
 

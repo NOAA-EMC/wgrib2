@@ -9,7 +9,7 @@ problem was finally traced back to a repository of precompiled programs.
 They were compiling wgrib2 using a precompiled official version of g2clib.
 This was bad because the official version of g2clib did not have
 the bug fixes included with the wgrib2 source code (since fixed).
-In addition the g2clib is often compile with a weird makefile.  On 64-bit 
+In addition the g2clib is often compiled with a weird makefile.  On 64-bit 
 systems, the library API uses 32-bit integers.  However, on 32-bit systems, 
 the library API uses 64-bit integers.  (Wgrib2 was using the opposite
 convention.)
@@ -37,7 +37,7 @@ this problem is avoided.
 
 Wgrib2 internal routines either follow the WMO standard or the g2clib/g2lib
 behavior on non-zero constant fields with a non-zero decimal scaling.  The
-default for wgrib2 to emulate the g2clib/g2lib bug.  However, if a non-zero 
-constant field with a non-zero decimal scaling is encountered, a warning 
-message is given.  
+default for wgrib2 to emulate the g2clib/g2lib bug for NCEP files.  However, 
+if a non-zero constant field with a non-zero decimal scaling is encountered, 
+a warning message is given.  
 
