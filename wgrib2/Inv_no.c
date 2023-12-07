@@ -29,7 +29,7 @@
  */
 
 extern int inv_no;
-extern int match_flag;
+extern int run_flag;
 
 int f_n(ARG0)  {
     if (mode >= 0) {
@@ -54,7 +54,7 @@ int f_for_n(ARG1)  {
 }
 
 /*
- * HEADER:100:if_n:misc:1:if (inv numbers in range),  X=(start:end:step)
+ * HEADER:100:if_n:If:1:if (inv numbers in range),  X=(start:end:step)
  */
 
 
@@ -82,8 +82,8 @@ int f_if_n(ARG1)  {
     if (mode >= 0) {
 	save = (struct local_struct *) *local;
 	if (inv_no >= save->start && inv_no <= save->end && ((inv_no - save->start) % save->step) 
-		== 0) match_flag=0;
-	else match_flag = 1;
+		== 0) run_flag=1;
+	else run_flag = 0;
         return 0;
     }
     return 0;

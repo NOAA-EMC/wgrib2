@@ -16,9 +16,9 @@
  */
 
 
-extern int decode, latlon;
+extern int decode, latlon, scan;
 extern double *lat, *lon;
-extern int nx_, ny_, scan;
+extern unsigned int nx_, ny_;
 
 /*
  * HEADER:100:undefine:misc:3:sets grid point values to undefined X=(in-box|out-box) Y=lon0:lon1 Z=lat0:lat1

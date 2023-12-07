@@ -13,6 +13,7 @@
  * 7/2008 v0.9: Public Domain: Wesley Ebisuzaki
  * 10/2010 v0.99: bug fix H. Peifer
  * 7/2016  v1.0  Manfred Schwarb, allow dx != dy
+ * 1/2020  v1.1  Manfred Schwarb, output filename has ensemble info
  */
 
 
@@ -28,7 +29,8 @@ extern enum output_order_type output_order, output_order_wanted;
 int f_AAIG(ARG0) {
 
     double cellsize, dlon, dlat;
-    char *save_inv_out, level[STRING_SIZE], file[STRING_SIZE], name[STRING_SIZE];
+    char *save_inv_out, level[STRING_SIZE], file[STRING_SIZE*3], name[STRING_SIZE];
+    char ensinfo[STRING_SIZE];
     size_t i, j;
     struct full_date date_ref, date_verf;
     FILE *out;
@@ -59,14 +61,21 @@ int f_AAIG(ARG0) {
     dlat = lat[nx_] - lat[0];
     if ( fabs(dlat - dlon) > 0.0001*dlon) cellsize = 0.0;
 
-    *name = *level = 0;
+    name[0] = level[0] = ensinfo[0] = 0;
 
-    if (getExtName(sec, mode, NULL, name, NULL, NULL,".","_") != 0) {
+    if (getExtName(sec, mode, NULL, name, NULL, NULL) != 0) {
         fatal_error("AAIG does nothing, no name","");
         return 0;
     }
 
     f_lev(call_ARG0(level,NULL));
+    f_ens(call_ARG0(ensinfo,NULL));
+    if ((i = strlen(ensinfo)) > 0) {
+	if (strlen(level)+i+1  < STRING_SIZE) {
+	    strncat(level,".",2);
+	    strncat(level,ensinfo,STRING_SIZE-strlen(level)-1);
+	}
+    }
 
     save_inv_out = level;
     while (*save_inv_out) {

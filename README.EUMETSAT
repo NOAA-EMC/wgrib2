@@ -1,0 +1,85 @@
+         Using wgrib2 to process space-perspective EUMETSAT grib2 fields
+                           revised 9.2017
+
+9/2017: Bugs found in space view perspective code when the satellite
+is not at 0N OE.  Fixed in wgrib2 2.0.7.  Space view perspective
+is limited to 0N XX-E-  (Original testing only had satellite at 0N OE.)
+
+
+Some of the EUMETSAT data is on a space view perspective grid.
+
+    -sh-3.00$ wgrib2 LMPEF_CLM_110328_0945.grib2 -grid
+    1:0:grid_template=90:winds(N/S):
+          Space view perspective or orographic grid (3712 x 3712) units 1e-06 
+	            input EW:SN output WE:SN res 0
+          sub-sat point: lat 0.000000 lon 0.000000 ix=1856.000000 iy=1856.000000
+          diameter of earth dx=3622 dy=3610 grid cells ori_angle 0.000000
+          sat. altitude=6.610700 (equatorial radii) grid_origin Xo=0 Yo=0
+
+wgrib2 has support for space view perspective grids with the restriction that
+the sub-sat point have a latitude of 0.
+
+The rest of the text assumes that you have a space view perspective file.
+
+                  0. Getting the value at a specific point
+
+      bash-4.1$ wgrib2 LMPEF_CLM_110328_0945.grib2.c0 -S
+      1:0:D=20110328094500:CLOUDM:no_level:anl:
+      bash-4.1$ wgrib2 LMPEF_CLM_110328_0945.grib2.c0 -lon 10 20
+      ALPHA: experimental space_view2ll scan=12
+      ALPHA: experimental space_view2ij
+      1:0:lon=9.989726,lat=20.003905,val=1
+
+      note: use -S otherwise wgrib2 will use a YYYYMMDDHH date code format
+      and then may complain that the minutes/seconds are non-zero
+
+                  1. IIRATE has undefined, not zeros
+
+I have a file of IIRATE (instantaneous rain rate), and the values
+are either > 0 or undefined.  Maybe the values are undefined because
+of algorithm limitations but for display, I wanted to have the undefineds
+replaced by zero.  This is easily done by the -rpn option
+
+   wgrib2 IN.grb -rpn "0:exc:merge" -grib_out OUT.grb
+
+
+                  2. PDT 30 is not supported by GrADS
+
+My version of GrADS does not support product definition template 30 (PDT 30),
+so you need to convert it to a supported PDT.  You can convert the PDT to
+zero by.
+
+   wgrib2 IN.grb -set_pdt +0 -grib_out  OUT.grb
+
+
+                  3. No level or forecast time
+
+PDT 0 has metadata for level and forecast time.  They can be added by
+
+   wgrib2 IN.grb -set_lev surface -set_ftime anl -grib OUT.grb
+
+
+               1-3. Update space view perspective file.
+
+Steps 1-3 can be combined into one by
+
+   In this example, the 1st grib message is space view perspective
+
+    wgrib2 IN.grb -d 1 -rpn "0:exc:merge" -set_pdt +0 -set_lev surface 
+           -set_ftime anl -grib_out final_svp.grb
+
+
+                  4. Convert to a lat-lon grid
+
+GrADS does not understand space view perspecive grid, you need to convert 
+it to a lat-lon grid.  
+
+    wgrib2 final_svp.grb -lola 0:3600:.1 -90:1801:.1 latlon.grb grib
+
+   
+                  5. Make a GrADS control and index file
+
+    g2ctl latlon.grb >latlon.ctl
+    gribmap -i new.ctl
+
+

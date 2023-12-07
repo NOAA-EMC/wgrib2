@@ -11,7 +11,7 @@ static int n_cmds = -1;
 char cmd[N_CMDS][CMD_LEN];
 char *cmds[N_CMDS+1];
 
-void wgrib2_init_cmds() {
+void wgrib2_init_cmds(void) {
 
     cmds[0] = "wgrib2 C_api";
     n_cmds = 1;
@@ -30,17 +30,17 @@ int wgrib2_add_cmd(const char *string) {
     return 0;
 }
 
-int wgrib2_cmd() {
-    return wgrib2(n_cmds, cmds);
+int wgrib2_cmd(void) {
+    return wgrib2(n_cmds, (const char **) cmds);
 }
 
-int wgrib2_list_cmd() {
+int wgrib2_list_cmd(void) {
     int i;
     if (n_cmds < 0) {
         fprintf(stderr,"no wgrib2 cmds\n");
         return 0;
     }
-    fprintf(stderr,"wgrib2  ", cmd[i]);
+    fprintf(stderr,"wgrib2  ");
     for (i = 1; i < n_cmds; i++) {
         fprintf(stderr,"%s ", cmds[i]);
     }

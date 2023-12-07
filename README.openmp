@@ -1,0 +1,36 @@
+                                OpenMP                    revised 7.2016, 1.2020, 10.2023
+
+OpenMP is a shared-memory parallel-programming API.  As the grid dimensions get larger,
+the need for parallel computing becomes more important.  With OpenMP, wgrib2 will use
+multiple threads, typically one thread per core.  For the typical PC, wgrib2 will run 
+on the number of cores that are on the CPU chip which is typically 2, 3, 4, 6 or 8.
+(Yes, I've owned machines with 2, 3, 4, 6 and 8 cores.) The multi-core speedup is only 
+significant when the grids have several million grid points. (Update: 2019 brings
+12 and 16 core PCs. Update 2021: Alder Lakes brings more cores.)
+
+You can control the number of cores used by the environment variable OMP_NUM_THREADS
+ and the -ncpu option.  The latter overrides the former.
+
+Status: requires OpenMP v3.1 or greater
+wgrib2 v3.1.3: allows code to be written for SIMD and GPUs
+               only SIMD is present in v3.1.3
+
+Hints:
+     complex-packing reading is parallelized
+     complex-packing writing is partly parallelized.
+     simple-packing is parallelized
+     jpeg2000, png, AEC are not parallelized because they depends on external libraries
+     geolocation is parallelized except when using Proj4.
+     Running multiple copies of wgrib2 can be done along with OpenMP.
+     Nodes with 24+ cores should have environment variable OMP_NUM_THREADS set to
+      a number less than the number of cores. Little perforance gain for
+      a large number of cores.
+     NUMA should be considered.
+     wgrib2ms/wgrib2mv is faster than using wgrib2 with OpenMP.  
+        really fast: wgrib2ms/wgrib2mv with AEC compression
+
+Future:
+     wgrib2 allows writting SIMD and GPU code through OpenMP pragmas.
+     Wgrib2 is frequently I/O bound, and the run time is usually quite fast.
+       So speeding up wgrib2 will have little impact.  Consider writing
+       SIMD and gpu code for wgrib2 an exercise on non-trivial code.

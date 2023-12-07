@@ -1,0 +1,26 @@
+              makefiles for wgrib2 upto v3.0.0
+                   gnu make v3 vs v4
+
+
+Gnu make is needed for wgrib2's makefile.  Gnu make v4 (ex. v4.2
+and v4.3) is incompatible with the gnu make v3 by the way they
+treat the # character.
+
+   foo := $(shell echo '\#abc')
+     old gnu make: will print #abc
+     new gnu make: will print \#abc 
+
+   fix introduced with v3.0.1 (staight from the gnu make release notes)
+
+   H:=\#
+   foo := $(shell echo '$Habc')
+     old gnu make: will print #abc
+     new gnu make: will print #abc
+
+If want to compile an old version of wgrib2 on a system that
+has gnu make v4, you can do one of the following,
+
+   a)  build wgrib2 with gnu make v3.x
+   b)  edit grib2/makefile, replace /# by #.
+   c)  follow the fix using H:=\# (see above)
+        makes the makefile compatible with gnu make v3 and v4.

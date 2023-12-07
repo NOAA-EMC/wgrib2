@@ -12,6 +12,23 @@
  */
 
 /*
+ * HEADER:-1:number_of_coordinate_values_after_template:inv:0:
+ */
+int f_number_of_coordinate_values_after_template(ARG0) {
+    if (mode >= 0) {
+	sprintf(inv_out,"number_coordinates_values_in_pdt=%d", 
+		number_of_coordinate_values_after_template(sec));
+    }
+    return 0;
+}
+int number_of_coordinate_values_after_template(unsigned char **sec) {
+   int n;
+   n=0;
+   n = uint2(sec[4]+5);
+   return n;
+}
+
+/*
  * HEADER:-1:pds_fcst_time:inv:0:fcst_time(1) in units given by pds
  */
 int f_pds_fcst_time(ARG0) {
@@ -24,7 +41,6 @@ int f_pds_fcst_time(ARG0) {
     return 0;
 }
 
-
 int number_of_forecasts_in_the_ensemble(unsigned char **sec) {
     unsigned char *p;
     p = number_of_forecasts_in_the_ensemble_location(sec);
@@ -33,21 +49,20 @@ int number_of_forecasts_in_the_ensemble(unsigned char **sec) {
 }
 
 unsigned char *number_of_forecasts_in_the_ensemble_location(unsigned char **sec) {
-    int pdt, nb;
+    int pdt, nb, np;
     unsigned char *p;
 
     pdt = code_table_4_0(sec);
     switch(pdt) {
 	case 1:
 	case 11:
-        case 60:
-        case 61:
 		p = sec[4]+36; break;
 	case 2:
 	case 3:
 	case 4:
 	case 12:
 	case 13:
+	case 14:
 		p = sec[4]+35; break;
 	case 33:
 	case 34:
@@ -56,8 +71,28 @@ unsigned char *number_of_forecasts_in_the_ensemble_location(unsigned char **sec)
 	case 41:
 	case 43:
 		p = sec[4]+38; break;
+	case 45:
+	case 47:
+		p = sec[4]+49; break;
+	case 49:
+		p = sec[4]+60; break;
+	case 54:
+		np = sec[4][12];
+		p = sec[4]+40+2*np; break;
+	case 56:
+	case 59:
 	case 71:
-	case 73: p = sec[4] + 41; break;
+	case 73:
+		p = sec[4]+41; break;
+	case 58:
+	case 68:
+		np = sec[4][19];
+		p = sec[4]+45+5*np; break;
+	case 60:
+	case 61:
+		p = sec[4]+36; break;
+	case 63:
+		p = sec[4] + 42; break;
 	default: p=NULL; break;
     }
     return p;
@@ -89,6 +124,7 @@ unsigned char *perturbation_number_location(unsigned char **sec) {
 	case 43:
 		p = sec[4]+37; break;
 	case 45:
+	case 47:
 		p = sec[4]+48; break;
 	case 49:
 		p = sec[4]+59; break;
@@ -96,15 +132,17 @@ unsigned char *perturbation_number_location(unsigned char **sec) {
 		np = sec[4][12];
 		p = sec[4]+39+2*np; break;
 	case 56:
-		p = sec[4]+40; break;
-	case 59:
-		p = sec[4]+41; break;
-	case 68:
-		np = sec[4][19];
-		p = sec[4]+44+5*np; break;
 	case 71:
 	case 73:
 		p = sec[4]+40; break;
+	case 58:
+	case 68:
+		np = sec[4][19];
+		p = sec[4]+44+5*np; break;
+
+	case 59:
+	case 63:
+		p = sec[4]+41; break;
 	default: p = NULL; break;
     }
     return p;
@@ -161,12 +199,12 @@ void fixed_surfaces(unsigned char **sec, int *type1, float *surface1,
     p1 = code_table_4_5a_location(sec);
     p2 = code_table_4_5b_location(sec);
 
-    if (p1 != NULL && *p1 != 255) {
+    if (p1 != NULL && p1[0] != 255) {
 	*type1 = *p1;
         if (p1[1] != 255) {
 	    if (p1[2] != 255 || p1[3] != 255 || p1[4] != 255 || p1[5] != 255) {
 		*undef_val1 = 0;
-                *surface1 = scaled2flt(INT1(p1[1]), int4(p1+2));
+		*surface1 = scaled2flt(INT1(p1[1]), int4(p1+2));
 	    }
 	}
     }
@@ -179,7 +217,7 @@ void fixed_surfaces(unsigned char **sec, int *type1, float *surface1,
 	    }
 	}
     }
-    return ;
+    return;
 }
 
 int background_generating_process_identifier(unsigned char **sec) {
@@ -189,32 +227,41 @@ int background_generating_process_identifier(unsigned char **sec) {
     return -1;
 }
 unsigned char *background_generating_process_identifier_location(unsigned char **sec) {
-    int p, center;
+    int p, np, center;
     p = GB2_ProdDefTemplateNo(sec);
     center = GB2_Center(sec);
 
+    if (p <= 15 || (p >= 32 && p <= 34) || p == 51 || p == 60 || p == 61 || p == 91 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
+        return sec[4]+12;
+    if (p >= 40 && p <= 43) return sec[4]+14;
+    if (p >= 44 && p <= 47) return sec[4]+25;
+    if (p == 48 || p == 49) return sec[4]+36;
+    if (p == 52) return sec[4]+15;
+    if (p == 53 || p == 54) { np = sec[4][12]; return sec[4]+16+2*np; }
+    if (p == 55 || p == 56 || p == 59 || p == 62 || p == 63) return sec[4]+18;
+    if (p == 57 || p == 58 || p == 67 || p == 68) { np = sec[4][19]; return sec[4]+21+5*np; }
+    if (p >= 70 && p <= 73) return sec[4]+17;
+
     if ((center == JMA1) || (center == JMA2)) {
         switch(p) {
-        case 50000:
-        case 50008:
-        case 50009:
-        case 50010:
-        case 50011:
+            case 50000:
+            case 50002:
+            case 50008:
+            case 50009:
+            case 50010:
+            case 50011:
+            case 50012:
+            case 50020:
+            case 51020:
+            case 51021:
+            case 51022:
+            case 51122:
+            case 51123:
+            case 52020:
                 return sec[4]+12;
-                break;
-        default: break;
         }
     }
-    if (p <= 15 || (p >= 32 && p <= 34) || p == 60 || p == 61 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
-        return sec[4]+12;
-    if ( (p >= 40 && p <= 43) )
-        return sec[4]+14;
-    if ( p == 44 ) return sec[4]+25;
-    if ( p == 45 ) return sec[4]+25;
-    if ( p == 46 ) return sec[4]+25;
-    if ( p == 47 ) return sec[4]+25;
-    if ( p == 48 ) return sec[4]+36;
-    if ( p == 52 ) return sec[4]+15;
+
     return NULL;
 }
 
@@ -226,10 +273,24 @@ int analysis_or_forecast_generating_process_identifier(unsigned char **sec) {
     return -1;
 }
 unsigned char *analysis_or_forecast_generating_process_identifier_location(unsigned char **sec) {
-    int p, center;
-    p = GB2_ProdDefTemplateNo(sec);
-    center = GB2_Center(sec);
+    int p, np, center;
 
+    p = GB2_ProdDefTemplateNo(sec);
+
+    if (p <= 15 || (p >= 32 && p <= 34) || p == 51 || p == 60 || p == 61 || p == 91 || p == 1000 || p == 1001 || 
+		    p == 1002 || p == 1100 || p == 1101)
+        return sec[4]+13;
+    if (p >= 40 && p <= 43) return sec[4]+15;
+    if (p >= 44 && p <= 47) return sec[4]+26;
+    if (p == 48 || p == 49) return sec[4]+37;
+    if (p == 52) return sec[4]+16;
+    if (p == 53 || p == 54) { np = sec[4][12]; return sec[4]+17+2*np; }
+    if (p == 55 || p == 56 || p == 59 || p == 62 || p == 63) return sec[4]+19;
+    if (p == 57 || p == 58 || p == 67 || p == 68) { np = sec[4][19]; return sec[4]+22+5*np; }
+    if (p >= 70 && p <= 73) return sec[4]+18;
+
+
+    center = GB2_Center(sec);
     if ((center == JMA1) || (center == JMA2)) {
 	switch(p) {
 	case 50000:
@@ -237,20 +298,12 @@ unsigned char *analysis_or_forecast_generating_process_identifier_location(unsig
 	case 50009:
 	case 50010:
 	case 50011:
+	case 50012:
 		return sec[4]+13;
-		break;
 	default: break;
 	}
     }
 
-    if (p <= 15 || (p >= 32 && p <= 34) || p == 60 || p == 61 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
-        return sec[4]+13;
-    if ( (p >= 40 && p <= 43) )
-        return sec[4]+15;
-    if (p >= 44 && p <= 47) return sec[4]+26;
-    if (p == 48) return sec[4]+37;
-    if ( p == 52 ) return sec[4]+16;
-    if ( p >= 70 && p <= 73 ) return sec[4]+18;
     return NULL;
 }
 
@@ -262,13 +315,19 @@ int hours_of_observational_data_cutoff_after_reference_time(unsigned char **sec)
 }
 
 unsigned char *hours_of_observational_data_cutoff_after_reference_time_location(unsigned char **sec) {
-    int p;
+    int p, np;
     p = GB2_ProdDefTemplateNo(sec);
-    if (p <= 15 || (p >= 32 && p <= 34) || p == 60 || p == 61 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
+    if (p <= 15 || (p >= 32 && p <= 34) || p == 51 || p == 60 || p == 61 || p == 91 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
         return sec[4]+14;
+    if (p >= 40 && p <= 43) return sec[4]+16;
     if (p >= 44 && p <= 47) return sec[4]+27;
-    if (p == 48 ) return sec[4]+38;
-    if (p == 70) return sec[4]+19;
+    if (p == 48 || p == 49) return sec[4]+38;
+    if (p == 52) return sec[4]+17;
+    if (p == 53 || p == 54) { np = sec[4][12]; return sec[4]+18+2*np; }
+    if (p == 55 || p == 56 || p == 59 || p == 62 || p == 63) return sec[4]+20;
+    if (p == 57 || p == 58 || p == 67 || p == 68) { np = sec[4][19]; return sec[4]+23+5*np; }
+    if (p >= 70 && p <= 73) return sec[4]+19;
+
     return NULL;
 }
 
@@ -280,13 +339,18 @@ int minutes_of_observational_data_cutoff_after_reference_time(unsigned char **se
 }
 
 unsigned char *minutes_of_observational_data_cutoff_after_reference_time_location(unsigned char **sec) {
-    int p;
+    int p, np;
     p = GB2_ProdDefTemplateNo(sec);
-    if (p <= 15 || (p >= 32 && p <= 34) || p == 60 || p == 61 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
+    if (p <= 15 || (p >= 32 && p <= 34) || p == 51 || p == 60 || p == 61 || p == 91 || p == 1000 || p == 1001 || p == 1002 || p == 1100 || p == 1101)
         return sec[4]+16;
+    if (p >= 40 && p <= 43) return sec[4]+18;
     if (p >= 44 && p <= 47) return sec[4]+29;
-    if ( p == 48 ) return sec[4]+40;
-    if (p == 70) return sec[4]+21;
+    if (p == 48 || p == 49) return sec[4]+40;
+    if (p == 52) return sec[4]+19;
+    if (p == 53 || p == 54) { np = sec[4][12]; return sec[4]+20+2*np; }
+    if (p == 55 || p == 56 || p == 59 || p == 62 || p == 63) return sec[4]+22;
+    if (p == 57 || p == 58 || p == 67 || p == 68) { np = sec[4][19]; return sec[4]+25+5*np; }
+    if (p >= 70 && p <= 73) return sec[4]+21;
     return NULL;
 }
 
@@ -346,26 +410,68 @@ int sub_missing_values(unsigned char **sec, float *missing1, float *missing2) {
  */
 
 unsigned char *stat_proc_verf_time_location(unsigned char **sec) {
-    int i, j, center, nb;
-    i = code_table_4_0(sec);
+    int pdt, center, nb, np, nc;
+    pdt = code_table_4_0(sec);
+
+    if (pdt <= 32767) {		/* WMO defined */
+        switch(pdt) {
+	case 8:
+	    return sec[4] + 34;
+	case 9:
+	    return sec[4] + 47;
+	case 10:
+	    return sec[4] + 35;
+	case 11:
+	    return sec[4] + 37;
+	case 12:
+	case 42:
+	    return sec[4] + 36;
+	case 13:
+	    return sec[4] + 68;
+	case 14:
+	    return sec[4] + 64;
+	case 34:
+    	    nb = sec[4][22];
+	    return sec[4] + 26+11*nb;
+	case 43:
+	case 72:
+	    return sec[4] + 39;
+	case 46:
+	    return sec[4] + 47;		
+	case 47:
+	    return sec[4] + 50;
+	case 61:
+	    return sec[4] + 44;
+	case 62:
+	    return sec[4] + 40;
+	case 63:
+	    return sec[4] + 43;
+	case 67:
+	case 68:
+	    np = sec[4][19];
+	    return sec[4] + 43 + 5*np;
+	case 73:
+	    return sec[4] + 42;
+	case 91:
+    	    nc = sec[4][34];
+	    return sec[4] + 47 + 12*(nc-1);
+	default: return NULL;
+	}
+    }
+    if (pdt == 65535) return NULL; /* missing */
+    /* 32768..65534 local use */
     center = GB2_Center(sec);
-    j = 0;
-    if (i == 8) j = 34;
-    else if (i == 9) j = 47;
-    else if (i == 10) j = 35;
-    else if (i == 11) j = 37;
-    else if (i == 12) j = 36;
-    else if (i == 13) j = 68;
-    else if (i == 14) j = 64;
-    else if (i == 34) { nb = sec[4][22]; j = 26+11*nb; }
-    else if (i == 42) j = 36;
-    else if (i == 43) j = 39;
-    else if (i == 46) j = 47;
-    else if (i == 47) j = 50;
-    else if (i == 61) j = 44;
-    else if (i == 50008 && (center == JMA1 || center == JMA2)) j = 34;
-    if (j == 0) return NULL;
-    return sec[4]+j;
+    if (center == JMA1 || center == JMA2) {
+        switch(pdt) {
+	case 50008:
+	case 50009:
+	case 50010:
+	case 50011:
+	case 50012:
+		return sec[4] + 34;
+	}
+    }
+    return NULL;
 }
 
 /*
@@ -375,11 +481,18 @@ unsigned char *stat_proc_verf_time_location(unsigned char **sec) {
  */
 
 int stat_proc_n_time_ranges_index(unsigned char **sec) {
-   unsigned char *ptr;
+    unsigned char *ptr;
+    int center, pdt;
 
-   ptr = stat_proc_verf_time_location(sec);
-   if (ptr == NULL) return -1;
-   return ptr - sec[4] + 7;
+    ptr = stat_proc_verf_time_location(sec);
+    if (ptr == NULL) return -1;
+    /* some JMA pdts have only 1 level of statistical processing */
+    center = GB2_Center(sec);
+    pdt = code_table_4_0(sec);
+    if (center == JMA1 || center == JMA2) {
+        if (pdt >= 50008 && pdt <= 50012) return -1;
+    }
+    return ptr - sec[4] + 7;
 }
 
 
@@ -439,7 +552,7 @@ int percentile_value(unsigned char **sec) {
 	return (int) *p;
 }
 /*
- * returns locatin of the percentile value
+ * returns location of the percentile value
  */
 unsigned char *percentile_value_location(unsigned char **sec) {
 
@@ -483,7 +596,7 @@ int scaling(unsigned char **sec, double *ref_value, int *decimal_scaling, int *b
 int number_of_mode(unsigned char **sec) {
     int pdt;
     pdt = code_table_4_0(sec);
-    if (pdt == 57) return (int) uint2(sec[4]+13);
+    if (pdt == 57 || pdt == 58 || pdt == 67 || pdt == 68) return (int) uint2(sec[4]+13);
     return -1;
 }
 
@@ -494,65 +607,198 @@ int number_of_mode(unsigned char **sec) {
 int mode_number(unsigned char **sec) {
     int pdt;
     pdt = code_table_4_0(sec);
-    if (pdt == 57) return (int) uint2(sec[4]+15);
+    if (pdt == 57 || pdt == 58 || pdt == 67 || pdt == 68) return (int) uint2(sec[4]+15);
     return -1;
 }
 
+int number_of_following_distribution_parameters_np(unsigned char **sec) {
+    unsigned char *p;
+    p = number_of_following_distribution_parameters_np_location(sec);
+    if (p) return *p;
+    return -1;
+}
+
+unsigned char *number_of_following_distribution_parameters_np_location(unsigned char **sec) {
+    int pdt;
+
+    pdt = code_table_4_0(sec);
+    switch(pdt) {
+	case 57:   
+	case 58:   
+	case 67:   
+	case 68:   
+		return sec[4]+19;
+    }
+    return NULL;
+}
 
 /*
- * returns the length of the PDT (smallest)
+ * HEADER:-1:post_processing:inv:0:type of post-processing
  */
-
-int smallest_pdt_len(int pdt) {
-    int len;
-    switch(pdt) {
-
-    case 0: len = 34; break;
-    case 1: len = 37; break;
-    case 2: len = 36; break;
-    case 3: len = 68; break;
-    case 4: len = 64; break;
-    case 5: len = 47; break;
-    case 6: len = 35; break;
-    case 7: len = 34; break;
-    case 8: len = 58; break;
-    case 9: len = 71; break;
-    case 10: len = 59; break;
-    case 11: len = 61; break;
-    case 12: len = 60; break;
-    case 13: len = 92; break;
-    case 14: len = 88; break;
-    case 15: len = 37; break;
-    case 20: len = 43; break;
-    case 30: len = 14; break;
-    case 31: len = 25; break;    	// nb=1
-    case 32: len = 34; break;    	// nb=1
-    case 33: len = 37; break;    	// nb=1
-    case 34: len = 61; break;		// nb=1 i=1
-    case 40: len = 36; break;
-    case 41: len = 39; break;
-    case 42: len = 60; break;
-    case 43: len = 63; break;
-    case 44: len = 45; break;
-    case 45: len = 50; break;
-    case 46: len = 71; break;
-    case 47: len = 74; break;
-    case 48: len = 58; break;
-    case 51: len = 47; break;    	// i=1
-    case 52: len = 31; break;    	// validation
-    case 53: len = 40; break;    	// np=1
-    case 54: len = 43; break;    	// np=1
-    case 57: len = 43; break;    	// np=1
-    case 60: len = 44; break;
-    case 61: len = 68; break;
-    case 91: len = 35; break;
-    case 254: len = 15; break;
-    case 1000: len = 22; break;
-    case 1001: len = 38; break;
-    case 1100: len = 34; break;
-    case 1101: len = 50; break;
-    default: len = -1; break;
+int f_post_processing(ARG0) {
+    int i;
+    
+    if (mode >= 0) {
+        i = type_of_post_processing(sec);
+        if (i >= 0) sprintf(inv_out,"post_processing=%d", i);
     }
-    return len;
+    return 0;
 }
+
+int type_of_post_processing(unsigned char **sec) {
+    int pdt;
+
+    pdt = code_table_4_0(sec);
+    if (pdt < 70 || pdt > 73) return -1;
+    return (int) sec[4][15];
+}
+
+/* 
+ * returns value of cluster identifier (assume unsigned char)
+ */
+int cluster_identifier(unsigned char **sec) {
+        unsigned char *p;
+        p = cluster_identifier_location(sec);
+        if (p == NULL) return -1;
+        return (int) *p;
+}
+/*
+ * returns location of cluster identifier
+ */
+unsigned char *cluster_identifier_location(unsigned char **sec) {
+
+    int pdt;
+    unsigned char *p;
+    pdt = code_table_4_0(sec);
+    switch (pdt) {
+	case 3:
+	case 4:
+	case 13:
+	case 14:
+	    p = sec[4] + 36; break;
+        default: p = NULL; break;
+    }
+    return p;
+}
+
+
+int number_of_clusters(unsigned char **sec) {
+        unsigned char *p;
+        p = number_of_clusters_location(sec);
+        if (p == NULL) return -1;
+        return (int) *p;
+}
+
+unsigned char *number_of_clusters_location(unsigned char **sec) {
+    int pdt;
+    unsigned char *p;
+    pdt = code_table_4_0(sec);
+    switch (pdt) {
+        case 3:
+        case 4:
+        case 13:
+        case 14:
+            p = sec[4] + 39; break;
+        default: p = NULL; break;
+    }
+    return p;
+}
+
+int number_of_forecasts_in_the_cluster(unsigned char **sec) {
+        unsigned char *p;
+        p = number_of_forecasts_in_the_cluster_location(sec);
+        if (p == NULL) return -1;
+        return (int) *p;
+}
+
+unsigned char *number_of_forecasts_in_the_cluster_location(unsigned char **sec) {
+    int pdt;
+    unsigned char *p;
+    pdt = code_table_4_0(sec);
+    switch (pdt) {
+        case 3:
+        case 13:
+            p = sec[4] + 57; break;
+        case 4:
+        case 14:
+            p = sec[4] + 53; break;
+        default: p = NULL; break;
+    }
+    return p;
+}
+
+unsigned char *list_of_nc_ensemble_forecast_numbers_location(unsigned char **sec) {
+    int pdt, n;
+    unsigned char *p;
+    pdt = code_table_4_0(sec);
+    switch (pdt) {
+        case 3:
+            p = sec[4] + 68; break;
+        case 4:
+            p = sec[4] + 64; break;
+        case 13:
+	    n = sec[4][75];
+            p = sec[4] + 80 + 12*n; break;
+        case 14:
+	    n = sec[4][71];
+            p = sec[4] + 76 + 12*n; break;
+        default: p = NULL; break;
+    }
+    return p;
+}
+
+
+
+
+/* also known as nb (NB) */
+int number_of_contributing_spectral_bands(unsigned char **sec) {
+        unsigned char *p;
+        p = number_of_contributing_spectral_bands_location(sec);
+        return (p != NULL) ? (int) *p : -1;
+}
+
+unsigned char *number_of_contributing_spectral_bands_location(unsigned char **sec) {
+    int pdt;
+    unsigned char *p;
+    pdt = code_table_4_0(sec);
+    switch (pdt) {
+	/* ignore 30 because different  case 30: */
+	case 31: p = sec[4] + 13; break;
+	case 32:
+	case 33:
+	case 34: p = sec[4] + 22; break;
+	case 35: p = sec[4] + 14; break;
+        default: p = NULL; break;
+    }
+    return p;
+}
+
+int number_of_categories(unsigned char **sec) {
+   unsigned char *p;
+   p = number_of_categories_location(sec);
+   return (p != NULL) ? (int) *p : -1;
+}
+
+unsigned char *number_of_categories_location(unsigned char **sec) {
+    int pdt;
+    pdt = code_table_4_0(sec);
+    return (pdt == 91) ? sec[4]+34 : NULL;
+}
+
+int number_of_partitions(unsigned char **sec) {
+   unsigned char *p;
+   p = number_of_partitions_location(sec);
+   return (p != NULL) ? (int) *p : -1;
+}
+
+unsigned char *number_of_partitions_location(unsigned char **sec) {
+    int pdt;
+    pdt = code_table_4_0(sec);
+    switch(pdt) {
+	case 53:
+	case 54:
+		return sec[4] + 12;
+    }
+    return NULL;
+}	
 

@@ -180,7 +180,7 @@ int grb2_get_lonlat(float *lon, float *lat, int ndata) {
     return err1 + err2;
 }
 
-int grb2_size_meta() {
+int grb2_size_meta(void) {
     unsigned int size;
 
     if (good == 0) {
@@ -196,7 +196,7 @@ int grb2_size_meta() {
     return (int) (size + 1);
 }
 
-int grb2_get_meta(char *meta, int nbytes) {
+int grb2_get_meta(unsigned char *meta, int nbytes) {
     size_t size;
     int err;
 
@@ -223,7 +223,7 @@ int grb2_get_meta(char *meta, int nbytes) {
     return err;
 }
 
-int grb2_size_gridmeta() {
+int grb2_size_gridmeta(void) {
     unsigned int size;
 
     if (good == 0) {
@@ -239,7 +239,7 @@ int grb2_size_gridmeta() {
     return (int) (size + 1);
 }
 
-int grb2_get_gridmeta(char *meta, int nbytes) {
+int grb2_get_gridmeta(unsigned char *meta, int nbytes) {
     size_t size;
     int err;
 
@@ -265,5 +265,3 @@ int grb2_get_gridmeta(char *meta, int nbytes) {
     if (err == 0) meta[size] = 0;	/* end the string */
     return err;
 }
-
-

@@ -26,11 +26,13 @@
  *    days_in_verf_month = number of days in the verification month
  *
  *    registers: sto_N, rcl_N, clr_N
- *               rcl_lat, rcl_lon
+ *               rcl_lat, rcl_lon, sto_lat, sto_lon
  *               rcl (data)
  *    stack: exc (swap), pop, dup, clr
  *
  *    yrev - swap grids, north <-> south
+ *    raw2 - convert from input scan mode to output scan mode
+ *    2raw - convert from output scan mode to input scan mode
  *    alt_x_scan - for Glahn packing
  *    xave, xdev
  *
@@ -42,11 +44,13 @@
 // #define N_RPN_REGS 10 moved to wgrib2.h
 #define STACK_SIZE 10
 
-extern int decode, latlon;
+extern int decode, latlon, save_translation;
 extern double *lat, *lon;
-extern int match_flag;
+extern int run_flag;
 extern const char *item_deliminator;
 extern int use_scale;
+extern unsigned int *translation;
+extern enum geolocation_type geolocation;
 
 /* note: rpn_n[N_RPN_REGS], and rpn_data[N_RPN_REG] */
 size_t rpn_n[N_RPN_REGS] = { 0 };
@@ -70,7 +74,7 @@ static void reg_wt(double *val, double *wt, float *data, int i, int j, int nx, i
  */
 
 int f_rpn(ARG1) {
-    char string[100];
+    char string[100], *endptr;
     const char *p;
     int j, n;
     unsigned int i, k, m;
@@ -89,6 +93,7 @@ int f_rpn(ARG1) {
 
     if (mode == -1) {
 	decode = latlon = 1;
+	save_translation = 1;
 	if (state == 0) {
 	    /* check compile-time configuration */
 	    if (sizeof(rpn_n)/sizeof(size_t) != N_RPN_REGS) 
@@ -138,8 +143,10 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," plus");
 	    if (top <= 0) fatal_error("rpn: bad + expression","");
 	    j = top-1;
+#pragma omp parallel for private(i) schedule(static)
 	    for (i = 0; i < ndata; i++) {
-		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) { stack[j][i] = stack[j][i] + stack[top][i];
+		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
+		    stack[j][i] = stack[j][i] + stack[top][i];
 	        }
 		else stack[j][i] = UNDEFINED;
 	    }
@@ -149,6 +156,7 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," minus");
 	    if (top <= 0) fatal_error("rpn: bad - expression","");
 	    j = top-1;
+#pragma omp parallel for private(i) schedule(static)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		    stack[j][i] = stack[j][i] - stack[top][i];
@@ -161,6 +169,7 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," times");
 	    if (top <= 0) fatal_error("rpn: bad * expression","");
 	    j = top-1;
+#pragma omp parallel for private(i) schedule(static)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		    stack[j][i] = stack[j][i] * stack[top][i];
@@ -173,6 +182,7 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," div");
 	    if (top <= 0) fatal_error("rpn: bad / expression","");
 	    j = top-1;
+#pragma omp parallel for private(i) schedule(static)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i]) && (stack[top][i] != 0.0)) {
 		    stack[j][i] = stack[j][i] / stack[top][i];
@@ -188,6 +198,7 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," merge");
 	    if (top <= 0) fatal_error("rpn: bad merge expression","");
 	    j = top-1;
+#pragma omp parallel for private(i) schedule(static)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[j][i] = stack[top][i];
@@ -230,6 +241,7 @@ int f_rpn(ARG1) {
 	else if (strcmp(string,"sqrt") == 0) {
 	    if (mode == 98) fprintf(stderr," sqrt");
 	    if (top < 0) fatal_error("rpn: bad sqrt expression","");
+#pragma omp parallel for private(i) schedule(static)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && stack[top][i] >= 0.0) {
 		    stack[top][i] = sqrtf(stack[top][i]);
@@ -241,6 +253,7 @@ int f_rpn(ARG1) {
 	else if (strcmp(string,"sq") == 0) {
 	    if (mode == 98) fprintf(stderr," sq");
 	    if (top < 0) fatal_error("rpn: bad sq expression","");
+#pragma omp parallel for private(i) schedule(static)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] *= stack[top][i];
@@ -251,6 +264,7 @@ int f_rpn(ARG1) {
 	else if (strcmp(string,"pow") == 0) {
 	    if (top <= 0) fatal_error("rpn: bad pow expression","");
 	    j = top-1;
+#pragma omp parallel for private(i)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		    stack[j][i] = powf(stack[j][i], stack[top][i]);
@@ -262,8 +276,11 @@ int f_rpn(ARG1) {
         // ln - natural log
         else if (strcmp(string,"ln") == 0) {
             if (top < 0) fatal_error("rpn: bad log expression","");
+#pragma omp parallel for private(i)
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(stack[top][i]) && stack[top][i] > 0.0) {
+// glib bug                    stack[top][i] = logf(stack[top][i]);
+//                    stack[top][i] = log(stack[top][i]);
                     stack[top][i] = logf(stack[top][i]);
                 }
                 else stack[top][i] = UNDEFINED;
@@ -273,6 +290,7 @@ int f_rpn(ARG1) {
 	// exp
 	else if (strcmp(string,"exp") == 0) {
 	    if (top < 0) fatal_error("rpn: bad exp expression","");
+#pragma omp parallel for private(i)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] = expf(stack[top][i]);
@@ -295,6 +313,7 @@ int f_rpn(ARG1) {
 	else if (strcmp(string,"1/x") == 0) {
 	    if (mode == 98) fprintf(stderr," 1/x");
 	    if (top < 0) fatal_error("rpn: bad 1/x","");
+#pragma omp parallel for private(i)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && stack[top][i] != 0.0) {
 		    stack[top][i] = 1.0 / stack[top][i];
@@ -328,6 +347,7 @@ int f_rpn(ARG1) {
 	// sin cos tan asin acos atan
 	else if (strcmp(string,"sin") == 0) {
 	    if (top < 0) fatal_error("rpn: bad sin","");
+#pragma omp parallel for private(i)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] = sinf(stack[top][i]);
@@ -336,6 +356,7 @@ int f_rpn(ARG1) {
 	}
 	else if (strcmp(string,"cos") == 0) {
 	    if (top < 0) fatal_error("rpn: bad cos","");
+#pragma omp parallel for private(i)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] = cosf(stack[top][i]);
@@ -344,6 +365,7 @@ int f_rpn(ARG1) {
 	}
 	else if (strcmp(string,"tan") == 0) {
 	    if (top < 0) fatal_error("rpn: bad tan","");
+#pragma omp parallel for private(i)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] = tanf(stack[top][i]);
@@ -352,6 +374,7 @@ int f_rpn(ARG1) {
 	}
 	else if (strcmp(string,"asin") == 0) {
 	    if (top < 0) fatal_error("rpn: bad asin","");
+#pragma omp parallel for private(i)
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    if (fabsf(stack[top][i]) > 1.0) stack[top][i] = UNDEFINED;
@@ -361,6 +384,7 @@ int f_rpn(ARG1) {
 	}
         else if (strcmp(string,"acos") == 0) {
             if (top < 0) fatal_error("rpn: bad acos","");
+#pragma omp parallel for private(i)
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(stack[top][i])) {
                     if (fabsf(stack[top][i]) > 1.0) stack[top][i] = UNDEFINED;
@@ -370,6 +394,7 @@ int f_rpn(ARG1) {
         }
 	else if (strcmp(string,"atan") == 0) {
             if (top < 0) fatal_error("rpn: bad atan","");
+#pragma omp parallel for private(i)
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(stack[top][i])) {
                     stack[top][i] = atanf(stack[top][i]);
@@ -379,6 +404,7 @@ int f_rpn(ARG1) {
         else if (strcmp(string,"atan2") == 0) {
             if (top <= 0) fatal_error("rpn: bad atan2 expression","");
             j = top-1;
+#pragma omp parallel for private(i)
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
                     stack[j][i] = atan2f(stack[j][i], stack[top][i]);
@@ -442,6 +468,26 @@ int f_rpn(ARG1) {
 	else if (strcmp(string,"rcl_lon") == 0) {
 	    if (lon == NULL) fatal_error("rpn: rcl_lon: lon not defined","");
 	    top = push(top,ndata,DBL_VEC,0.0,NULL,lon);
+	}
+	else if (strcmp(string,"sto_lat") == 0) {
+	    if (lat == NULL) {
+		lat = (double *) malloc(sizeof(double) * (size_t) ndata);
+	        if (lat == NULL) fatal_error("rpn: bad malloc for sto_lat","");
+	    }
+	    for (i = 0; i < ndata; i++) {
+		lat[i] = stack[top][i];
+	    }
+	    geolocation = external;
+	}
+	else if (strcmp(string,"sto_lon") == 0) {
+	    if (lon == NULL) {
+		lon = (double *) malloc(sizeof(double) * (size_t) ndata);
+	        if (lon == NULL) fatal_error("rpn: bad malloc for sto_lon","");
+	    }
+	    for (i = 0; i < ndata; i++) {
+		lon[i] = stack[top][i];
+	    }
+	    geolocation = external;
 	}
 
 	// max and min
@@ -624,6 +670,36 @@ int f_rpn(ARG1) {
             top--;
         }
 
+	// raw2 .. convert from scan mode of input file to current mode
+
+        else if (strcmp(string,"raw2") == 0) {
+            if (mode == 98) fprintf(stderr," raw2");
+            if (top < 0) fatal_error("rpn: raw2 needs field","");
+	    if (translation != NULL) {
+		top = push(top,ndata,VECTOR,0.0,stack[top],NULL);
+#pragma omp parallel for private(i)
+	        for (i = 0; i < ndata; i++) {
+                    stack[top-1][i] =  stack[top][translation[i]];
+		}
+                top--;
+	    }
+	}
+
+	// 2raw .. convert from current scan mode to input file scan mode
+
+        else if (strcmp(string,"2raw") == 0) {
+            if (mode == 98) fprintf(stderr," raw2");
+            if (top < 0) fatal_error("rpn: raw2 needs field","");
+	    if (translation != NULL) {
+		top = push(top,ndata,VECTOR,0.0,stack[top],NULL);
+#pragma omp parallel for private(i)
+	        for (i = 0; i < ndata; i++) {
+                    stack[top-1][translation[i]] = stack[top][i];
+		}
+                top--;
+	    }
+	}
+
 	else if (strcmp(string,"alt_x_scan") == 0) {
 	    if (top < 0) fatal_error("rpn: yrev needs field","");
             get_nxny(sec, &nx, &ny, &npnts, &res, &scan);
@@ -683,7 +759,7 @@ int f_rpn(ARG1) {
 	    }
 	}
 
-	// change to rcl-data, rcl-lat, rcl-lon
+	// change to rcl-data
 
 	// rcl:  stack(++top) = data
 	else if (strcmp(string,"rcl") == 0) {
@@ -812,6 +888,7 @@ int f_rpn(ARG1) {
 	    cos_lat = 1.0;
             sum1 = wt = 0.0;
 	    if (lat != NULL) {
+#pragma omp parallel for private(i) firstprivate(cos_lat,last_lat) reduction(+:wt,sum1) schedule(static)
                 for (i = 0; i < ndata; i++) {
 		    if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        if (last_lat != lat[i]) {
@@ -824,7 +901,7 @@ int f_rpn(ARG1) {
 	        }
             }
 	    else {
-#pragma omp parallel for private(i) reduction(+:wt,sum1)
+#pragma omp parallel for private(i) reduction(+:wt,sum1) schedule(static)
                 for (i = 0; i < ndata; i++) {
 		    if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        sum1 +=  (stack[top][i] - stack[j][i]) * (stack[top][i] - stack[j][i]);
@@ -858,7 +935,7 @@ int f_rpn(ARG1) {
                 }
             }
 	    else {
-#pragma omp parallel for private(i) reduction(+:wt,sum1)
+#pragma omp parallel for private(i) reduction(+:wt,sum1) schedule(static)
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i])) {
                         sum1 +=  stack[top][i];
@@ -901,6 +978,7 @@ int f_rpn(ARG1) {
 	    sq1 = sq2 = sq12 = 0.0;
 	    if (lat != NULL) {
 	        // find mean values
+#pragma omp parallel for private(i) firstprivate(last_lat, cos_lat) reduction(+:wt,sum1,sum2) schedule(static)
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 	  	        if (last_lat != lat[i]) {
@@ -914,6 +992,9 @@ int f_rpn(ARG1) {
 	        }
 	        sum1 = sum1 / wt;
 	        sum2 = sum2 / wt;
+	        last_lat = 0;
+	        cos_lat = 1.0;
+#pragma omp parallel for private(i) firstprivate(last_lat, cos_lat) reduction(+:sq1,sq2,sq12) schedule(static)
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        if (last_lat != lat[i]) {
@@ -928,7 +1009,7 @@ int f_rpn(ARG1) {
 	    }
 	    else {
 	        // find mean values
-#pragma omp parallel for private(i) reduction(+:wt,sum1,sum2)
+#pragma omp parallel for private(i) reduction(+:wt,sum1,sum2) schedule(static)
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        sum1 += stack[top][i];
@@ -938,7 +1019,7 @@ int f_rpn(ARG1) {
 	        }
 	        sum1 = sum1 / wt;
 	        sum2 = sum2 / wt;
-#pragma omp parallel for private(i) reduction(+:sq1,sq2,sq12)
+#pragma omp parallel for private(i) reduction(+:sq1,sq2,sq12) schedule(static)
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        sq1 += (stack[top][i]-sum1)*(stack[top][i]-sum1);
@@ -957,13 +1038,21 @@ int f_rpn(ARG1) {
         }
 
 	// number:  stack(++top) = number
-
 	else if (string[0] == '+' || string[0] == '-' || string[0] == '.' || isdigit((unsigned char) string[0])) {
-	    f = atof(string);
-	    top = push(top,ndata,SCALAR,f,NULL,NULL);
-	    if (mode == 98) fprintf(stderr," constant=%f", f);
+	    f = strtof(string, &endptr);
+	    if (endptr == NULL || endptr[0] == 0) {		/* no characters after conversion */
+	        top = push(top,ndata,SCALAR,f,NULL,NULL);
+	        if (mode == 98) fprintf(stderr," constant=%f", f);
+	    }
+	    else {
+//	       fprintf(stderr,">>(%d) (%c)\n" , (int) endptr[0], *endptr);
+	        fatal_error("rpn: bad number (%s)", string);
+	    }
 	}
-	else fatal_error("rpn: unidentified symbol %s", string);
+	else {
+//	       fprintf(stderr,">>(%d) (%c)\n" , (int) endptr[0], *endptr);
+	     fatal_error("rpn: unidentified symbol %s", string);
+	}
 	if (mode == 98) fprintf(stderr," top=%d\n", top);
     }	
     if (*p != 0) fatal_error("-rpn didn't find operatore or value before %s",p);
@@ -1003,7 +1092,7 @@ int push(int top, unsigned int ndata, int type, float f, float *ff, double *d) {
 }
 
 /*
- * HEADER:100:if_reg:misc:1:if rpn registers defined, X = A, A:B, A:B:C, etc A = register number
+ * HEADER:100:if_reg:If:1:if rpn registers defined, X = A, A:B, A:B:C, etc A = register number
  */
 int f_if_reg(ARG1) {
     int i, j, *list;
@@ -1034,9 +1123,9 @@ int f_if_reg(ARG1) {
     else if (mode >= 0) {
 	list = (int *) *local;
 	i = list[0];
-	match_flag = 0;
+	run_flag = 1;			/* should already be one */
 	for (j=1; j <= i; j++) {
-	    if (rpn_n[list[j]] == 0) match_flag = 1;
+	    if (rpn_n[list[j]] == 0) run_flag = 0;
 	}
     }
     return 0;
@@ -1047,6 +1136,7 @@ int f_if_reg(ARG1) {
  */
 int f_rpn_rcl(ARG1) {
     int reg;
+    unsigned int i;
 
     if (mode == -1) {
 	decode = 1;
@@ -1056,7 +1146,14 @@ int f_rpn_rcl(ARG1) {
 	if (reg < 0 || reg >= N_RPN_REGS) fatal_error_i("rpn_rcl: bad register %d", reg);
 	if (ndata != rpn_n[reg]) fatal_error("rpn_rcl: size mismatch","");
         use_scale = 0;
-	memcpy(data, rpn_data[reg], ndata * sizeof(float));
+	if (rpn_data[reg] == NULL) {
+	    for (i=0; i < ndata; i++) {
+		data[i] = 0.0;
+	    }
+	}
+	else {
+	   memcpy(data, rpn_data[reg], ndata * sizeof(float));
+	}
     }
     return 0;
 }
@@ -1148,4 +1245,3 @@ int wgrib2_set_reg(float *data, size_t size, int reg) {
 
     return 0;
 }
-

@@ -12,8 +12,12 @@
  *
  * set_ftime2, change forecast time
  *
- * 4/2016 rewrite of -set_ftime and -set_ave
+ * 4/2016 Public Domain Wesley Ebisuzaki
+ *        based on Public Domain codes -set_ftime and -set_ave
+ *        ftime2 is the replacement of the original ftime (fixes problems)
  *
+ *	  Ftime2.c       grib -> text version of ftime
+ *	  Set_ftime2.c   text version of ftime -> grib
  */
 
 
@@ -25,7 +29,11 @@ struct stat_proc {
 	int code_4_4b;				/* time units for sucessive fields */
 	int d_timeb;				/* length of time for sucessive fields */
 };
-	
+
+// n ― number of time ranges specifications describing the time intervals used to calculate 
+// the statistically-processed field
+// N_MAX is tn maximum number supported by code
+
 #define N_MAX 10
 
 struct stat_time {
@@ -39,11 +47,11 @@ struct stat_time {
    struct stat_proc stat_procs[N_MAX];
 };
     
-int parse_time_range(const char *tr, struct stat_time *new_stat_time, int n);
-int parse_time_range2(const char *tr, struct stat_time *new_stat_time, int n);
+static int parse_time_range(const char *tr, struct stat_time *new_stat_time, int n);
+static int parse_time_range2(const char *tr, struct stat_time *new_stat_time, int n);
 
 /*
- * HEADER:100:set_ftime2:misc:1:set ftime2 .. will be replace -set_ftime/ave in the future -- TESTING ---
+ * HEADER:100:set_ftime2:misc:1:X=forecast-time, ex '24 hour fcst', '0-24 hour ave fcst'
  */
 
 int f_set_ftime2(ARG1) {
@@ -55,6 +63,7 @@ int f_set_ftime2(ARG1) {
     char pdt_string[STRING_SIZE];
     unsigned char *code_4_4, *code_1_2, *code_1_4, *verf_time;
     int new_ftime, new_ftime_units;
+    unsigned char new_sec4[SET_PDT_SIZE];
 
     if (mode < 0) return 0;
 
@@ -79,12 +88,20 @@ int f_set_ftime2(ARG1) {
 	}
     }
 
+    /* if no forecast time like radar */
+    if (code_table_4_4_location(sec) == NULL) {
+	/* if anl or 0 hr fcst, return 0 */
+	if (new_ftime == 0 && new_ftime_units != -1) return 0;
+	return 1;
+    }
+
     /* update metadata for with a PDT for a point in time */
 
     if (new_ftime_units != -1) {
 
 	/* change PDTs with time range to to PDT with point in time */
 
+/* old
 	if (pdt == 8) f_set_pdt(call_ARG1(inv_out, NULL, "+0"));
 	else if (pdt == 9) f_set_pdt(call_ARG1(inv_out, NULL, "+5"));
 	else if (pdt == 10) f_set_pdt(call_ARG1(inv_out, NULL, "+6"));
@@ -98,7 +115,32 @@ int f_set_ftime2(ARG1) {
 	else if (pdt == 45) f_set_pdt(call_ARG1(inv_out, NULL, "+44"));
 	else if (pdt == 46) f_set_pdt(call_ARG1(inv_out, NULL, "+48"));
 	else if (pdt == 61) f_set_pdt(call_ARG1(inv_out, NULL, "+60"));
+*/
 
+	i = 1;
+        if (pdt == 8)        i = new_pdt(sec, new_sec4,  0, -1, 1, NULL);
+        else if (pdt == 9)   i = new_pdt(sec, new_sec4,  5, -1, 1, NULL);
+        else if (pdt == 10)  i = new_pdt(sec, new_sec4,  6, -1, 1, NULL);
+        else if (pdt == 11)  i = new_pdt(sec, new_sec4,  1, -1, 1, NULL);
+        else if (pdt == 12)  i = new_pdt(sec, new_sec4,  2, -1, 1, NULL);
+        else if (pdt == 13)  i = new_pdt(sec, new_sec4,  3, -1, 1, NULL);
+        else if (pdt == 14)  i = new_pdt(sec, new_sec4,  4, -1, 1, NULL);
+        else if (pdt == 34)  i = new_pdt(sec, new_sec4, 33, -1, 1, NULL);
+
+        else if (pdt == 42)  i = new_pdt(sec, new_sec4, 40, -1, 1, NULL);
+        else if (pdt == 43)  i = new_pdt(sec, new_sec4, 41, -1, 1, NULL);
+        else if (pdt == 46)  i = new_pdt(sec, new_sec4, 44, -1, 1, NULL);
+        else if (pdt == 47)  i = new_pdt(sec, new_sec4, 45, -1, 1, NULL);
+        else if (pdt == 61)  i = new_pdt(sec, new_sec4, 60, -1, 1, NULL);
+
+        else if (pdt == 72)  i = new_pdt(sec, new_sec4, 70, -1, 1, NULL);
+        else if (pdt == 73)  i = new_pdt(sec, new_sec4, 71, -1, 1, NULL);
+
+        else if (pdt == 1001)  i = new_pdt(sec, new_sec4, 1000, -1, 1, NULL);
+
+        if (i == 0) update_sec4(sec, new_sec4);
+
+	/* f_set_pdt will change pdt and code_4.4 location */
         code_4_4 = code_table_4_4_location(sec);
         if (code_4_4 == NULL) fatal_error("set_ftime2: Code Table 4.4 not present or defined","");	
 
@@ -137,22 +179,30 @@ int f_set_ftime2(ARG1) {
     if (verf_time == NULL) old_n=-1;
     else old_n = (int) verf_time[7];
     
-//fprintf(stderr,">>> test if new pdt n=%d old_n=%d\n", n,old_n);
+// fprintf(stderr,">>> test if new pdt n=%d old_n=%d\n", n,old_n);
     if (old_n != n) {
-	pdt_string[0] = '\0';
-//fprintf(stderr,">>need new change pdt\n");
-        if (pdt == 0 || pdt == 8) sprintf(pdt_string,"+8:%d", 46+12*n);
-        else if (pdt == 1 || pdt == 11) sprintf(pdt_string,"+11:%d", 49+12*n);
-	else if (pdt == 2 || pdt == 12) sprintf(pdt_string,"+12:%d", 48+12*n);
-	else if (pdt == 3 || pdt == 13) sprintf(pdt_string,"+13:%d", 80+12*n);
-	else if (pdt == 4 || pdt == 14) sprintf(pdt_string,"+14:%d", 76+12*n);
-	else if (pdt == 5 || pdt == 9) sprintf(pdt_string,"+9:%d", 59+12*n);
-	else if (pdt == 6 || pdt == 10) sprintf(pdt_string,"+10:%d", 47+12*n);
-	else if (pdt == 41 || pdt == 43) sprintf(pdt_string,"+43:%d", 51+12*n);
-	else if (pdt == 48 || pdt == 46) sprintf(pdt_string,"+46:%d", 59+12*n);
-	else if (pdt == 60 || pdt == 61) sprintf(pdt_string,"+43:%d", 56+12*n);
-//fprintf(stderr,">>pdt_string (%s)\n", pdt_string);
-	if (pdt_string[0] != 0) f_set_pdt(call_ARG1(inv_out, NULL, pdt_string));
+	sprintf(pdt_string, "n=%d", n);
+	i = 1;
+        if (pdt == 0 || pdt == 8)        i = new_pdt(sec, new_sec4,  8, -1, 1, pdt_string);
+        else if (pdt == 1 || pdt == 11)  i = new_pdt(sec, new_sec4, 11, -1, 1, pdt_string);
+        else if (pdt == 2 || pdt == 12)  i = new_pdt(sec, new_sec4, 12, -1, 1, pdt_string);
+        else if (pdt == 3 || pdt == 13)  i = new_pdt(sec, new_sec4, 13, -1, 1, pdt_string);
+        else if (pdt == 4 || pdt == 14)  i = new_pdt(sec, new_sec4, 14, -1, 1, pdt_string);
+        else if (pdt == 5 || pdt == 9)   i = new_pdt(sec, new_sec4,  9, -1, 1, pdt_string);
+        else if (pdt == 6 || pdt == 10)  i = new_pdt(sec, new_sec4, 10, -1, 1, pdt_string);
+        else if (pdt == 33 || pdt == 34) i = new_pdt(sec, new_sec4, 34, -1, 1, pdt_string);
+
+        else if (pdt == 40 || pdt == 42) i = new_pdt(sec, new_sec4, 42, -1, 1, pdt_string);
+        else if (pdt == 41 || pdt == 43) i = new_pdt(sec, new_sec4, 43, -1, 1, pdt_string);
+        else if (pdt == 44 || pdt == 46) i = new_pdt(sec, new_sec4, 46, -1, 1, pdt_string);
+        else if (pdt == 45 || pdt == 47) i = new_pdt(sec, new_sec4, 47, -1, 1, pdt_string);
+        else if (pdt == 60 || pdt == 61) i = new_pdt(sec, new_sec4, 61, -1, 1, pdt_string);
+
+        else if (pdt == 70 || pdt == 72) i = new_pdt(sec, new_sec4, 72, -1, 1, pdt_string);
+        else if (pdt == 71 || pdt == 73) i = new_pdt(sec, new_sec4, 73, -1, 1, pdt_string);
+        else if (pdt == 1000 || pdt == 1001) i = new_pdt(sec, new_sec4, 1001, -1, 1, pdt_string);
+
+        if (i == 0) update_sec4(sec, new_sec4);
     }
 
     pdt = GB2_ProdDefTemplateNo(sec);
@@ -170,7 +220,6 @@ int f_set_ftime2(ARG1) {
 
 //fprintf(stderr,">> fill in pdt n=%d\n", n);
 
-
     for (i = 0; i < n; i++) {
 	verf_time[12 + i*12] = new_stat_time.stat_procs[i].code_4_10;
 	verf_time[13 + i*12] = new_stat_time.stat_procs[i].code_4_11;
@@ -186,7 +235,7 @@ int f_set_ftime2(ARG1) {
  *  removes ",missing=N"  n should be zero
  */ 
 
-int parse_time_range(const char *arg, struct stat_time *new_stat_time, int n) {
+static int parse_time_range(const char *arg, struct stat_time *new_stat_time, int n) {
     int i, len;
     char newarg[STRING_SIZE];
     const char *s;
@@ -216,8 +265,7 @@ int parse_time_range(const char *arg, struct stat_time *new_stat_time, int n) {
         }
         s++;
     }
-    i = parse_time_range2(newarg, new_stat_time, n);
-    return i;
+    return parse_time_range2(newarg, new_stat_time, n);
 }
 
 /*
@@ -227,13 +275,16 @@ int parse_time_range(const char *arg, struct stat_time *new_stat_time, int n) {
  *     the statistical processing format is nested, stat_procs[0] is the outer definition
  */
 
-int parse_time_range2(const char *arg, struct stat_time *new_stat_time, int n) {
+static int parse_time_range2(const char *arg, struct stat_time *new_stat_time, int n) {
 
     int i, j, m, k, len, len_arg;
     int tr, tr2, code_4_10, anl_fcst;
     char string1[STRING_SIZE], string2[STRING_SIZE], string3[STRING_SIZE], newarg[STRING_SIZE];
+    int new_code_4_11, len_suffix;
 
-//    fprintf(stderr,">> parse_time_range2 [%s] n=%d\n", arg, n);
+    if (n >= N_MAX) fatal_error_i("parse_time_range2: n >= N_MAX (%d)", N_MAX);
+
+//    fprintf(stderr,">> parse_time_range2 arg=%s n=%d\n", arg, n);
     len_arg = strlen(arg);
 
     // 1-5 hour ave fcst or 1-5 hour ave anl
@@ -242,8 +293,6 @@ int parse_time_range2(const char *arg, struct stat_time *new_stat_time, int n) {
     if (len != len_arg) i = 0;
     if (i == 5 && ((tr = a2time_range(string1)) >= 0) && ((code_4_10 = a2code_4_10(string2)) >= 0) &&
         ((anl_fcst = a2anl_fcst(string3)) >= 0) ) {
-//        fprintf(stderr," >> %d %d %s(%d) %s (%d) %s(%d)\n", j,k,string1, tr, string2, code_4_10, string3, anl_fcst);
-//        fprintf(stderr,"::: n=%d\n", n);
 	new_stat_time->n = n;
 
 	if (anl_fcst == 0 && j != 0) fatal_error("set_ftime2: illegal format %s, only 0-N allowed", arg);
@@ -257,7 +306,6 @@ int parse_time_range2(const char *arg, struct stat_time *new_stat_time, int n) {
 	new_stat_time->stat_procs[n].d_timea = k-j;
 	new_stat_time->stat_procs[n].code_4_4b = 255;
 	new_stat_time->stat_procs[n].d_timeb = 0;
-//        fprintf(stderr,"::: time range units %d dt=%d \n", tr,k);
 	Add_time(&(new_stat_time->verf_time), k, tr);
         return 0;
     }
@@ -290,6 +338,7 @@ int parse_time_range2(const char *arg, struct stat_time *new_stat_time, int n) {
         return 0;
     }
 
+// fprintf(stderr,"::1 arg=%s\n", arg);
     // 4.11=1 124@6 hour ave(anl)
 
     i = sscanf(arg,"%d@%d %s %[^(](anl)%n",&j,&k,string1,string2,&len);
@@ -315,26 +364,41 @@ int parse_time_range2(const char *arg, struct stat_time *new_stat_time, int n) {
 
     // should be multiple processing
 
-    if (arg[len_arg-1] != ')') {
+    if (arg[len_arg-1] == ')') {
+	new_code_4_11 = 1;
+	len_suffix = 1;
+    }
+    else if (arg[len_arg-3] == ')' && arg[len_arg-2] == '+' && arg[len_arg-1] == '+') {
+	new_code_4_11 = 2;
+	len_suffix = 3;
+    }
+    else if (arg[len_arg-3] == ')' && arg[len_arg-2] == '-' && arg[len_arg-1] == '-') {
+	new_code_4_11 = 3;
+	len_suffix = 3;
+    }
+    else {
 	fprintf(stderr,"parse_time_range2: not recognized (%s)\n", arg);
 	return 1;
     }
 
-    // 124@6 hour ave(something)
+// fprintf(stderr,"::3 arg=%s\n", arg);
+
+    // 124@6 hour ave(time range)
 
     i = sscanf(arg,"%d@%d %s %[^(](%n",&j,&k,string1,string2,&len);
-//fprintf(stderr,"::4 n=%d nargs = i=%d j=%d k=%d\n",n,i,j,k);
+// fprintf(stderr,"::4 n=%d nargs = i=%d j=%d k=%d string2=%s\n",n,i,j,k,string2);
     if (i == 4 && ((tr = a2time_range(string1)) >= 0) && ((code_4_10 = a2code_4_10(string2)) >= 0) ) {
-	for (i = len; i < len_arg-1; i++) {
+	for (i = len; i < len_arg-len_suffix; i++) {
 	    newarg[i-len] = arg[i];
 	}
 	newarg[i-len] = '\0';
 //	fprintf(stderr, ">> recursive [%s] n=%d tr=%d (%s)\n", newarg, n,tr, string1);
 	i =  parse_time_range2(newarg, new_stat_time, n+1);
 //	fprintf(stderr, "<< recursive [%s]: n=%d i=%d j=%d k=%d tr=%d\n", newarg,n,i,j,k, tr);
-
+/// 	fprintf(stderr,"::5 9 i=%d\n",i);
 	new_stat_time->stat_procs[n].code_4_10 = code_4_10;
-	new_stat_time->stat_procs[n].code_4_11 = 1;	/* same length of forecast, start of fcst increased */
+	// new_stat_time->stat_procs[n].code_4_11 = 1;	/* same length of forecast, start of fcst increased */
+	new_stat_time->stat_procs[n].code_4_11 = new_code_4_11;
 	new_stat_time->stat_procs[n].code_4_4a = tr;
 	new_stat_time->stat_procs[n].d_timea = (j-1) * k;
 	new_stat_time->stat_procs[n].code_4_4b = tr;
@@ -344,6 +408,8 @@ int parse_time_range2(const char *arg, struct stat_time *new_stat_time, int n) {
 	/* update verf time = ref time + k */
 	return i;        
     }
+
+// fprintf(stderr,"::4 arg=%s\n", arg);
 
     // 4.11=2 1-3 hour ave@(fcst,dt=1 hour)
     i = sscanf(arg,"%d-%d %s %[^@]@(fcst,dt=%d %[^)])", &j,&k, string1, string2, &m, string3);
@@ -370,10 +436,6 @@ int parse_time_range2(const char *arg, struct stat_time *new_stat_time, int n) {
 	return 0;
     }
 
-
-
-
-
     fatal_error("set_ftime2: no match string=%s", arg);
 
 
@@ -385,8 +447,6 @@ int parse_time_range2(const char *arg, struct stat_time *new_stat_time, int n) {
    // 4.11=4 ensemble ave-4 valid 6 hour,missing=0:
    // 4.11=5 6 hour dt 738 hour124@6 hour ave,missing=0:
     // 30@1 year ave(124@6 hour ave(anl)),missing=0:
-
-
 
     return 0;
 }

@@ -20,7 +20,8 @@ int main(int argc, char **argv) {
     int i, k, count, smallest, size[4];
 
     if (argc != 5) {
-	fprintf(stderr,"bad arg: output in-1 in-2 in-3\n");
+	fprintf(stderr,"bad arg: %s output in-1 in-2 in-3\n", argv[0]);
+	fprintf(stderr,"selects the smallest grib message and writes it to output\n");
 	exit(8);
     }
     if ((out = fopen(argv[1],"wb")) == NULL) {

@@ -1,6 +1,8 @@
-    case 0: string="Meteorological Products"; break;
-    case 1: string="Hydrological Products"; break;
-    case 2: string="Land Surface Products"; break;
-    case 3: string="Space Products"; break;
-    case 10: string="Oceanographic Products"; break;
-    case 255: string="Missing"; break;
+case     0: string="Meteorological products"; break;
+case     1: string="Hydrological products"; break;
+case     2: string="Land surface products"; break;
+case     3: string="Satellite remote sensing products (formerly Space products)"; break;
+case     4: string="Space weather products"; break;
+case    10: string="Oceanographic products"; break;
+case    20: string="Health and socioeconomic impacts"; break;
+case   255: string="Missing"; break;

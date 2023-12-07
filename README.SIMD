@@ -1,0 +1,123 @@
+				SIMD
+
+OpenMP v4.0 explicitly enables SIMD code generations.  Earlier versions
+of OpenMP were concerned with using multiple cores to speed up 
+processing, SIMD allows explict generation of vector instructions. The
+current Zen 4 and p-core Xeon cpus support avx-512.  That means that
+a single instruction can support vectors of 16 single precision 
+numbers and 8 double precision numbers.  
+
+Older Zen, most current Intel client, and e-core Intel servers support
+avx-2 which has vectors that are half the width of avx-512 vectors.
+
+The current default (64-bit x86) wgrib2 build defaults to the original 
+64-bit x86 specification SSE which uses a vector of 4 single precision 
+floats.  The alignment restrictions for SSE are pretty severe which make
+the vector instructions difficult to use. So one should probably restrict 
+SIMD to cpus that support a variant of avx which allowed non-aligned 
+memory access.
+
+
+              What version of SIMD?  SSE, AVX, AVX-2, AVX-512
+
+This is not an easy question to answer.   From the wiki
+
+AVX-512
+   AMD: Zen 4 (2022)
+   Intel Xeon: Skylake (2015)
+   Intel client: Rocket Lake (2021) i11xxx
+                 The Intel Core replacements for Rocket Lake
+                 do not have support for avx-512 because it is
+                 not supported by the e-cores in Alder Lake.
+
+AVX-2
+   AMD: excavator (2015)
+   Intel server: Haswell (2013)
+   Intel client: Haswell (2013)
+          note: pentium and lower may not have avx-2
+   Intel client: Alder Lake (2021)
+          core, pentium and celeron have avx-2
+
+AVX
+   AMD: Bulldozer (2011), puma, jaguar
+   Intel: Sandy Bridge (2011)
+   from wiki:
+      "Not all CPUs from the listed families support AVX. Generally, CPUs with 
+       the commercial denomination Core i3/i5/i7/i9 support them, whereas Pentium 
+       and Celeron CPUs before Tiger Lake[12] do not."
+
+There was an effort to make AVX-2 the default for linux builds as AVX-2 was
+introduced in 2013 by Intel and copied by AMD in 2015.  However, that effort
+failed as people pointed out that some Intel cpus didn't have support.  Much
+anguish was directed towards Intel marketing.
+
+Will the future avx-10 make a difference?  No. AVX-10 has three subsets, one
+that supports 512-bit registers, another one for 256-bit registers and
+a third for 128-bit register.  This is no different from the current avx-512 vs 
+avx-2 problem.  AVX-10 does bring some new capabilities, however they are more 
+ai related (reduced precision support).
+
+Summary, there isn't a good univeral SIMD configuration.  My desktop at
+work is a 4 core Xeon with AVX-512. My desktop at home is newer but only
+has AVX-2.  Laptops in my family have SSEE (no avx), avx-2 and avx-512.
+Servers that I use are either avx-2 or avx-512. 
+
+                           Wgrib and SIMD
+
+Wgrib2 v3.1.3 adds support for OpenMP v4.0, and SIMD options were added to 
+unpk_complex.c and Ens_processing.c  The conversion was to add OpenMP simd 
+pragmas and not replace any existing threading pragmas.
+
+ran time wgrib2.v? -ens_processing x.v? 0 ensemble.grb
+
+configuration: cpu amd 5600g (6 cores, 12 threads), nmve pcie-3 
+wgrib2 v3.1.3 beta 9/2023
+
+v0
+default build no simd optimizations
+real	0m4.490s
+user	0m16.958s
+sys	0m0.442s
+
+v1
+cpu opt  (avx2) -march=native -mtune=native
+real	0m4.384s
+user	0m16.808s
+sys	0m0.458s
+
+v2
+cpu opn (avx2) + omp simd .. one loop rewritten,
+         ens_processing, unpk_complex have simd pragmas
+real	0m4.256s
+user	0m16.618s
+sys	0m0.385s
+
+
+v0 with OMP_NUM_THREADS=1
+real	0m11.077s
+user	0m10.914s
+sys	0m0.140s
+
+The "native" optimizations give about 2.5% speed improvement,
+and simd pragmas gave a 5% improvement with a huge sampling error
+
+    Should thread parallelism be replaced by SIMD?
+
+For short loops, yes. The overhead for setting up the threads is huge.  
+More testing is needed to give an answer for other instances.
+For example, consider the following
+
+  #pragma omp simd
+  for (i = 0; i<HUGE, i++) x[i] = x[i] * factor;
+
+The program will limited by how fast the system can read/write memory.
+
+  #pragma omp parallel for
+  for (i = 0; i<HUGE, i++) x[i] = x[i] * factor;
+
+Again, the loop speed will be limited by memory bandwidth.  Suppose we have 8
+threads running the above loop on server with 8 memory controllers each
+connected to a different ram stick.  The threaded loop could potentially be much
+faster than the simd loop.
+
+

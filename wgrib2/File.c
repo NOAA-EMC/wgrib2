@@ -51,6 +51,7 @@ int f_bin(ARG1) {
     else if (mode == -2) {
 	save = *local;
 	fclose_file(save);
+	free(save);
     }
     else if (mode >= 0) {
 	save = *local;
@@ -58,13 +59,15 @@ int f_bin(ARG1) {
 	    if (ndata > 4294967295U / sizeof(float))
 	        fatal_error("bin: 4-byte header overflow","");
 	    i = ndata * sizeof(float);
-            fwrite_file((void *) &i, sizeof(int), 1, save);
+            j = fwrite_file((void *) &i, sizeof(int), 1, save);
+	    if (j != 1) fatal_error("bin: write header","");
 	}
         j = fwrite_file((void *) data, sizeof(float), ndata, save);
 	if (j != ndata) fatal_error_u("bin: error writing grid point written=%u", j);
         if (header) {
 	    i = ndata * sizeof(float);
-	    fwrite_file((void *) &i, sizeof(int),1, save);
+	    j = fwrite_file((void *) &i, sizeof(int),1, save);
+	    if (j != 1) fatal_error("bin: write header","");
 	}
         if (flush_mode) fflush_file(save);
     }
@@ -90,6 +93,7 @@ int f_ieee(ARG1) {
     else if (mode == -2) {
 	save = *local;
 	fclose_file(save);
+	free(save);
     }
     else if (mode >= 0) {
 	save = *local;
@@ -131,6 +135,7 @@ int f_text(ARG1) {
     }
     else if (mode == -2) {
 	ffclose((FILE *) *local);
+	// free(*local);
     }
     else if (mode >= 0) {
         if (header == 1) {
@@ -213,6 +218,7 @@ int f_GRIB(ARG1) {
     else if (mode == -2) {
 	save = *local;
 	fclose_file(save);
+	free(save);
     }
     else if (mode >= 0) {
 	save = *local;

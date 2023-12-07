@@ -67,7 +67,6 @@ static int free_ens_proc_struct(struct ens_proc_struct *save) {
         free_sec(save->first_sec);
 	if (save->ngrids) {
 	    free(save->grids);
-	    save->ngrids=0;
 	}
     }
     free(save);
@@ -141,6 +140,7 @@ static int update_ens_proc_struct(struct ens_proc_struct *save,
 	if (save->grids == NULL) {
 	    /* if realloc fails, original memory is retained .. some memory is lost here, don't care */
 	    save->ngrids = 0;
+	    save->has_val = 0;
 	    fatal_error("ens_processing: memory allocation in update","");
 	}
     }
@@ -169,6 +169,7 @@ static int update_ens_proc_struct(struct ens_proc_struct *save,
 static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
     int pdt, pdt_ens, pdt_probability, pdt_percentile;
     unsigned int i, ndata, k, k2;
+    int j;
     float *data, *data10, *data25, *data50, *data75, *data90;
     float *datamean, *datavar, *datamin, *datamax, *dataextra, *dataextra2;
     unsigned char sec4[SET_PDT_SIZE], sec4_probability[SET_PDT_SIZE], sec4_percentile[SET_PDT_SIZE];
@@ -221,7 +222,7 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
 
     /* create new_pdt (sec4) */
 
-    if (new_pdt(save->first_sec, sec4, pdt_ens, -1, 1)) 
+    if (new_pdt(save->first_sec, sec4, pdt_ens, -1, 1, NULL)) 
         fatal_error("ens_processing: new_pdt failed","");
     /* make a new sec[][] */
     for (i = 0; i < 9; i++) new_sec[i] = save->first_sec[i];
@@ -239,7 +240,7 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
     table_4_9_probability = NULL;
     if (extra) {		/* extra .. use probability template for extras */
         /* create new_pdt for probability sec4_probability */
-        if (new_pdt(save->first_sec, sec4_probability, pdt_probability, -1, 1)) 
+        if (new_pdt(save->first_sec, sec4_probability, pdt_probability, -1, 1, NULL)) 
             fatal_error("ens_processing: new_pdt probability failed","");
         for (i = 0; i < 9; i++) new_sec_probability[i] = save->first_sec[i];
         new_sec_probability[4] = sec4_probability;
@@ -251,7 +252,7 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
     }
 
     /* creaate new_pdt_percentile */
-    if (new_pdt(save->first_sec, sec4_percentile, pdt_percentile, -1, 1)) 
+    if (new_pdt(save->first_sec, sec4_percentile, pdt_percentile, -1, 1, NULL)) 
             fatal_error("ens_processing: new_pdt percentile failed","");
     for (i = 0; i < 9; i++) new_sec_percentile[i] = save->first_sec[i];
     new_sec_percentile[4] = sec4_percentile;
@@ -303,7 +304,7 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
 
     x75 = percentile_index(75.0, save->n_ens);
     i75 = floor(x75);
-    d75 = x25-i25;
+    d75 = x75-i75;
 
     x90 = percentile_index(90.0, save->n_ens);
     i90 = floor(x90);
@@ -313,76 +314,86 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
     i95 = floor(x95);
     d95 = x95-i95;
 
-#pragma omp parallel private(i,k,sum,sq)
-    {
+#pragma omp parallel for private(i,j,k,k2,sum,sq)
+    for (i = 0; i < ndata; i++) {
 	float ens[save->n_ens];
-        int j;
-  
-#pragma omp for schedule(dynamic)
-        for (i = 0; i < ndata; i++) {
-	    /* make vector of ensemble member grid points */
-	    for (k = 0; k < save->n_ens; k++) {
-    	        if (DEFINED_VAL(save->grids[i+k*ndata])) {
-		   ens[k] = save->grids[i+k*ndata];
-		}
-		else { 
-		    break;
-		}
+        
+	/* make vector of ensemble member grid points */
+	k = 0;
+#ifdef IS_OPENMP_4_0
+#pragma omp simd reduction(+:k)
+#endif
+	for (j = 0; j < save->n_ens; j++) {
+	    ens[j] = save->grids[i+j*ndata];
+    	    if (DEFINED_VAL(save->grids[i+j*ndata])) k++;
+	}
+
+	if (k == save->n_ens) {
+	    /* sort */
+	    qsort(&(ens[0]), save->n_ens, sizeof(float), &testfloat);
+
+	    /* find the various percentiles */	    
+	    data10[i] = i10 != save->n_ens - 1 ? ens[i10]*(1.0-d10) + ens[i10+1]*d10 : ens[i10];
+            data25[i] = i25 != save->n_ens - 1 ? ens[i25]*(1.0-d25) + ens[i25+1]*d25 : ens[i25];
+            data50[i] = i50 != save->n_ens - 1 ? ens[i50]*(1.0-d50) + ens[i50+1]*d50 : ens[i50];
+            data75[i] = i75 != save->n_ens - 1 ? ens[i75]*(1.0-d75) + ens[i75+1]*d75 : ens[i75];
+            data90[i] = i90 != save->n_ens - 1 ? ens[i90]*(1.0-d90) + ens[i90+1]*d90 : ens[i90];
+	    datamin[i] = ens[0];
+	    datamax[i] = ens[save->n_ens - 1];
+
+	    sum = sq = 0.0;
+#ifdef IS_OPENMP_4_0
+#pragma omp simd reduction(+:sum)
+#endif
+	    for (j = 0; j < save->n_ens; j++) {
+		sum += ens[j];
 	    }
-	    if (k == save->n_ens) {
-	        /* sort */
-	        qsort(&(ens[0]), save->n_ens, sizeof(float), &testfloat);
+	    sum = sum / save->n_ens;
+	    datamean[i] = sum;
 
-		/* find the various percentiles */	    
-
-                data10[i] = ens[i10]*(1.0-d10) + ens[i10+1]*d10;
-                data25[i] = ens[i25]*(1.0-d25) + ens[i25+1]*d25;
-                data50[i] = ens[i50]*(1.0-d50) + ens[i50+1]*d50;
-                data75[i] = ens[i75]*(1.0-d75) + ens[i75+1]*d75;
-                data90[i] = ens[i90]*(1.0-d90) + ens[i90+1]*d90;
-		datamin[i] = ens[0];
-		datamax[i] = ens[save->n_ens - 1];
-
-		sum = sq = 0.0;
-		for (j = 0; j < save->n_ens; j++) {
-		    sum += ens[j];
-		}
-		sum = sum / save->n_ens;
-		datamean[i] = sum;
-
-		for (j = 0; j < save->n_ens; j++) {
-		    sq += (ens[j]-sum)*(ens[j]-sum);
-		}
-                datavar[i] = sqrt(sq/save->n_ens);
-
-		/* extra 1   TMP2m < 0C */
-		if (extra == 1) {
-		    for (k = j = 0; j < save->n_ens; j++) {
-		        if (ens[j] < 273.15) k++;
-		    }
-		    dataextra[i] = k / (double) save->n_ens;
-		}
-		/* extra 2   precip > 0, precip > trace */
-		else if (extra == 2) {
-		    for (k = k2 = j = 0; j < save->n_ens; j++) {
-		        if (ens[j] > 0.0) k++;
-		        if (ens[j] > TRACE) k2++;
-		    }
-		    dataextra[i] = k / (double) save->n_ens;
-		    dataextra2[i] = k2 / (double) save->n_ens;
-		}
-		/* extra 3   wind speed at 10m  95%  */
-		else if (extra == 3) {
-                    dataextra[i] = ens[i95]*(1.0-d95) + ens[i95+1]*d95;
-		}
+#ifdef IS_OPENMP_4_0
+#pragma omp simd reduction(+:sq)
+#endif
+	    for (j = 0; j < save->n_ens; j++) {
+		sq += (ens[j]-sum)*(ens[j]-sum);
 	    }
-	    else {
-		data10[i] = data25[i] = data50[i] = data75[i] = data90[i] = UNDEFINED;
-		datamean[i] = datavar[i] = datamin[i] = datamax[i] = UNDEFINED;
-		if (extra) {
-		    dataextra[i] = UNDEFINED;
-		    if (extra == 2) dataextra2[i] = UNDEFINED;
+            datavar[i] = sqrt(sq/save->n_ens);
+
+	    /* extra 1   TMP2m < 0C */
+	    if (extra == 1) {
+		k = 0;
+#ifdef IS_OPENMP_4_0
+#pragma omp simd reduction(+:k)
+#endif
+		for (j = 0; j < save->n_ens; j++) {
+		    if (ens[j] < 273.15) k++;
 		}
+		dataextra[i] = k / (double) save->n_ens;
+	    }
+	    /* extra 2   precip > 0, precip > trace */
+	    else if (extra == 2) {
+		k = k2 = 0;
+#ifdef IS_OPENMP_4_0
+#pragma omp simd reduction(+:k,k2)
+#endif
+		for (j = 0; j < save->n_ens; j++) {
+		    if (ens[j] > 0.0) k++;
+		    if (ens[j] > TRACE) k2++;
+		}
+		dataextra[i] = k / (double) save->n_ens;
+		dataextra2[i] = k2 / (double) save->n_ens;
+	    }
+	    /* extra 3   wind speed at 10m  95%  */
+	    else if (extra == 3) {
+                dataextra[i] = i95 != save->n_ens - 1 ? ens[i95]*(1.0-d95) + ens[i95+1]*d95 : ens[i95];
+	    }
+	}
+	else {
+	    data10[i] = data25[i] = data50[i] = data75[i] = data90[i] = UNDEFINED;
+	    datamean[i] = datavar[i] = datamin[i] = datamax[i] = UNDEFINED;
+	    if (extra) {
+		dataextra[i] = UNDEFINED;
+		if (extra == 2) dataextra2[i] = UNDEFINED;
 	    }
 	}
     }
@@ -496,7 +507,7 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
 
 
 /*
- * HEADER:000:ens_processing:output:2:ave/min/max/spread X=output Y=future use
+ * HEADER:000:ens_processing:output:2:ave/min/max/spread X=output Y=0/1 default/CORe
  */
 
 int f_ens_processing(ARG2) {
@@ -526,9 +537,8 @@ int f_ens_processing(ARG2) {
     }
     save = (struct ens_proc_struct *) *local;
     if (mode == -2) {
-if (mode == 98) fprintf(stderr,"ens_processing: >> cleanup wrt\n");
         wrt_ens_proc(save->first_sec, save);
-if (mode == 98) fprintf(stderr,"ens_processing: >> cleanup init\n");
+        fclose_file(&(save->out));
         free_ens_proc_struct(save);
         return 0;
     }

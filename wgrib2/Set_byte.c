@@ -32,7 +32,8 @@ int f_set_byte(ARG3) {
 
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
+
 
     k = sscanf(arg3, "%u%n", &val, &m);
     while (k == 1) {
@@ -62,7 +63,7 @@ int f_set_hex(ARG3) {
 
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
 
     /* see if there is a colon */
     str = arg3;
@@ -111,7 +112,7 @@ int f_set_int(ARG3) {
     
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
 
     k = sscanf(arg3, "%d%n", &val, &m);
     while (k == 1) {
@@ -140,7 +141,7 @@ int f_set_int2(ARG3) {
 
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
 
     k = sscanf(arg3, "%d%n", &val, &m);
     while (k == 1) {
@@ -170,7 +171,8 @@ int f_set_ieee(ARG3) {
 
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
+
 
     k = sscanf(arg3, "%f%n", &val, &m);
     while (k == 1) {
@@ -200,8 +202,9 @@ int f_set_ieee(ARG3) {
 
 int f_get_byte(ARG3) {
 
-    int i, j, k, m, seclen;
+    int i, j, k, m;
     double tot;
+    unsigned int seclen;
 
     if (mode < 0) return 0;
     i = atoi(arg1);
@@ -213,7 +216,7 @@ int f_get_byte(ARG3) {
 
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
 
     if (k+j-1 > seclen) fatal_error("get_byte - query out of range","");
 
@@ -243,8 +246,9 @@ int f_get_byte(ARG3) {
 
 int f_get_hex(ARG3) {
 
-    int i, j, k, m, seclen;
+    int i, j, k, m;
     double tot;
+    unsigned int seclen;
 
     if (mode < 0) return 0;
     i = atoi(arg1);
@@ -256,7 +260,7 @@ int f_get_hex(ARG3) {
 
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
 
     if (k+j-1 > seclen) fatal_error("get_hex - query out of range","");
 
@@ -268,7 +272,8 @@ int f_get_hex(ARG3) {
         return 0;
     }
 
-    sprintf(inv_out,"%d-%d=%d",i,j,sec[i][j-1]);
+    // 5/2022 sprintf(inv_out,"%d-%d=%d",i,j,sec[i][j-1]);
+    sprintf(inv_out,"%d-%d=%.2x",i,j,sec[i][j-1]);
     for (m = 1; m < k; m++) {
         inv_out += strlen(inv_out);
         sprintf(inv_out,",%.2x",sec[i][j+m-1]);
@@ -293,7 +298,7 @@ int f_get_int(ARG3) {
 
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
 
     if (4*k+j-1 > seclen) fatal_error("get_int - query out of range","");
     sprintf(inv_out,"%d-%d=%d",i,j,int4(sec[i]+j-1));
@@ -329,7 +334,7 @@ int f_get_int2(ARG3) {
 
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
 
     if (2*k+j-1 > seclen) fatal_error("get_int2 - query out of range","");
     sprintf(inv_out,"%d-%d=%d",i,j,int2(sec[i]+j-1));
@@ -365,7 +370,7 @@ int f_get_ieee(ARG3) {
 
     if (i == 0) seclen = GB2_Sec0_size;
     else if (i == 8)  seclen = GB2_Sec8_size;
-    else seclen = uint4(sec[i]);
+    else seclen = sec[i] ? uint4(sec[i]) : 0;
 
     if (4*k+j-1 > seclen) fatal_error("get_int - query out of range","");
     sprintf(inv_out,"%d-%d=%lf",i,j,(double) ieee2flt(sec[i]+j-1));

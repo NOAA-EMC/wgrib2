@@ -59,9 +59,9 @@ int ieee_grib_out(unsigned char **sec, float *data, unsigned int ndata, struct s
 
 
     /* data section */
-    i = (unsigned int) (4 * (size_t) n_defined);
-    if (i != (4 * (size_t) n_defined)) 
-	fatal_error("ieee_pk: grib2 data section is limited to 4G bytes","");
+    if (n_defined > 4294967295U/4) 
+	fatal_error("ieee_pk: grib2 data section is limited to 4G-1 bytes","");
+
     sec7 = (unsigned char *) malloc(5 + ((size_t) n_defined) * 4);
     if (sec7 == NULL) fatal_error("ieee_pk: memory allocation sec7","");
     uint_char(5 + 4 * (size_t) n_defined, sec7);

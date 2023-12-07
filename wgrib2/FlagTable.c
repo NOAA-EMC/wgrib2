@@ -65,7 +65,7 @@ unsigned char *flag_table_3_3_location(unsigned char **sec) {
         case 43:
 	case 140:
         case 204:
-              return gds+54; break;
+              return gds+54;
 	case 4:
         case 5:
         case 10:
@@ -75,10 +75,10 @@ unsigned char *flag_table_3_3_location(unsigned char **sec) {
         case 31:
         case 90:
         case 110:
-              return gds+46; break;
+              return gds+46;
 #ifdef WMO_VALIDATION
 	case 60:
-              return gds+71; break;
+              return gds+71;
 #endif
 	case 32768:
 		if (center == NCEP) return gds+54;
@@ -89,7 +89,6 @@ unsigned char *flag_table_3_3_location(unsigned char **sec) {
 	case 40110:
 		if ((center == JMA1) || (center == JMA2)) return gds+46; 
 		return NULL;
-		break;
         default: break;
     }
     return NULL;

@@ -5,6 +5,8 @@
 #include "fnlist.h"
 
 /*
+ * Range.c 12/2020 Public Domain  Wesley Ebisuzaki
+ *
  * for partial http transfers, you need to know start and finish of the grib message
  * this option writes out the range of the record.
  *

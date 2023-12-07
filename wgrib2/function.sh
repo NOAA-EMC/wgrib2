@@ -7,21 +7,22 @@
 # set -x
 
 # get list of all callable functions
+export LC_ALL=C
 grep "^ \* HEADER:" [A-Z]*.c | cut -f3- -d: | sort -t: -k3,3 -k2,2 >fnlist
 
 cat >fnlist.c <<EOF
 #include <stdio.h>
 #include <stdlib.h>
+#include "wgrib2.h"
 #include "fnlist.h"
 
 struct function functions[] = {
 EOF
 
+#  enum fntype {inv, output, inv_output, misc, setup, If, Else, Elseif, Endif};
 
 cat >fnlist.h <<EOF
 /* headers for wgrib callable functions */
-
-enum fntype {inv, output, inv_output, misc, setup};
 
 struct function {const char *name; int (*fn)(); enum fntype type; int nargs; const char *desc; int sort;};
 
@@ -72,5 +73,3 @@ echo "};" >>fnlist.c
 
 echo " " >> fnlist.c
 echo "int nfunctions = sizeof functions / sizeof functions[0];" >> fnlist.c
-
-

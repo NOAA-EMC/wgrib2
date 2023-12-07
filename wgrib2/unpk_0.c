@@ -7,6 +7,7 @@
 #include <omp.h>
 #else
 #define omp_get_num_threads()		1
+#define omp_get_thread_num()		0
 #endif
 
 /* 1996				wesley ebisuzaki
@@ -31,22 +32,23 @@
  * 10/15 v.1.2.5 changed n and i to unsigned
  * 3/16 v.1.2.6 OpenMP
  * 6/16 v.1.2.7 faster OpenMP and optimization
+ * 10/21 v1.2.8: flt[] = (ref0 + bin_scale_packed_int)*dec_scale for more precision
  */
 
 static unsigned int mask[] = {0,1,3,7,15,31,63,127,255};
 static double shift[9] = {1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256.0};
 
 void unpk_0(float *flt, unsigned char *bits0, unsigned char *bitmap0,
-	int n_bits, unsigned int n, double ref, double scale, double dec_scale) {
+	int n_bits, unsigned int n, double ref0, double bin_scale, double dec_scale) {
 
     unsigned char *bits, *bitmap;
 
-    int c_bits, j_bits, nthreads;
+    int c_bits, j_bits, nthreads, thread_id;
     unsigned int map_mask, bbits, i, j, k, n_missing, ndef, di;
     double jj;
 
-    ref = ref * dec_scale;
-    scale = scale * dec_scale;
+//    ref = ref0 * dec_scale;
+//    scale = bin_scale * dec_scale;
     bits = bits0;
     bitmap = bitmap0;
 
@@ -61,21 +63,20 @@ void unpk_0(float *flt, unsigned char *bits0, unsigned char *bitmap0,
 	// 1-cpu: rd_bitstream_flt(bits0, 0, flt+n_missing, n_bits, ndef);
 	// 1-cpu: for (j = 0; j < ndef; j++) flt[j+n_missing] = ref + scale*flt[j+n_missing];
 
-#pragma omp parallel private(i,j,k)
+#pragma omp parallel private(i,j,k, nthreads, thread_id)
 	{
-#pragma omp single
-	    {
-	        nthreads = omp_get_num_threads();
-	        di = (ndef + nthreads - 1) / nthreads;
-                di = ((di + 7) | 7) ^ 7;
-	    }
-#pragma omp for
-	    for (i = 0; i < ndef; i += di) {
+	    nthreads = omp_get_num_threads();
+	    thread_id = omp_get_thread_num();
+
+	    di = (ndef + nthreads - 1) / nthreads;
+            di = ((di + 7) | 7) ^ 7;
+	    i = thread_id * di;
+	    if (i < ndef) {
 	        k  = ndef - i;
 	        if (k > di) k = di;
 	        rd_bitstream_flt(bits0 + (i/8)*n_bits, 0, flt+n_missing+i, n_bits, k);
 	        for (j = i+n_missing; j < i+k+n_missing; j++) {
-		    flt[j] = ref + scale*flt[j];
+		    flt[j] = (ref0 + bin_scale*flt[j])*dec_scale;
 	        }
 	    }
 	}
@@ -96,12 +97,7 @@ void unpk_0(float *flt, unsigned char *bits0, unsigned char *bitmap0,
 	    for (i = 0; i < n; i++) {
 		/* check bitmap */
 		if ((i & 7) == 0) bbits = *bitmap++;
-		if (bbits & 128) {
-		    flt[i] = flt[j++];
-		}
-		else {
-		    flt[i] = UNDEFINED;
-		}
+		flt[i] = (bbits & 128) ?  flt[j++] : UNDEFINED;
 		bbits = bbits << 1;
 	    }
         }
@@ -141,7 +137,7 @@ void unpk_0(float *flt, unsigned char *bits0, unsigned char *bitmap0,
 	        c_bits -= j_bits;
 	        jj = (jj * shift[j_bits]) + (double) ((*bits >> c_bits) & mask[j_bits]);
 	    }
-	    *flt++ = ref + scale*jj;
+	    *flt++ = (ref0 + bin_scale*jj)*dec_scale;
         }
     }
     return;

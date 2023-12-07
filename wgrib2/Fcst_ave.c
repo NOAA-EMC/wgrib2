@@ -29,7 +29,8 @@ extern enum output_grib_type grib_type;
 
 struct ave_struct {
         double *sum;
-        int *n, n_sum;
+        int *n;
+	unsigned int n_sum;
         int has_val, n_fields, n_missing;
 	int dt, dt_unit, nx, ny;
 	int full_dt;
@@ -45,9 +46,8 @@ struct ave_struct {
 
 static int do_ave(struct ave_struct *save);
 static int free_ave_struct(struct ave_struct *save);
-static int init_ave_struct(struct ave_struct *save, int ndata);
-static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, int ndata,int missing);
-
+static int init_ave_struct(struct ave_struct *save, unsigned int ndata);
+static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, unsigned int ndata,int missing);
 
 static int free_ave_struct(struct ave_struct *save) {
 #ifdef DEBUG
@@ -63,8 +63,8 @@ printf(" free ");
     return 0;
 }
 
-static int init_ave_struct(struct ave_struct *save, int ndata) {
-    int i;
+static int init_ave_struct(struct ave_struct *save, unsigned int ndata) {
+    unsigned int i;
 #ifdef DEBUG
 printf(" init ");
 #endif
@@ -92,9 +92,9 @@ printf(" init ");
     return 0;
 }
 
-static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, int ndata,int missing) {
+static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, unsigned int ndata,int missing) {
 
-    int i;
+    unsigned int i;
 
     if (save->n_sum != ndata) fatal_error("add_to_ave: dimension mismatch","");
 
@@ -139,7 +139,8 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
 }
 
 static int do_ave(struct ave_struct *save) {
-    int i, j, n, ndata, pdt;
+    int j, n, pdt;
+    unsigned int i, ndata;
     float *data;
     unsigned char *p, *sec4;
     double factor;
@@ -338,7 +339,7 @@ if (mode == 98) fprintf(stderr,"fcst_ave: pdt=%d\n",pdt);
 
 
 	if (save->has_val == 0) {		// new data: write and save
-	    init_ave_struct(save,ndata);
+	    init_ave_struct(save, ndata);
 	    add_to_ave_struct(save, sec, data, ndata, 0);
 
 	    // copy sec

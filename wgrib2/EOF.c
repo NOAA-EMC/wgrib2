@@ -6,10 +6,10 @@
 #include "fnlist.h"
 
 FILE *err_file;
-static int err_int;
+int err_int;
 
 FILE *err_str_file;
-static char *err_str;
+char err_str[STRING_SIZE];
 
 extern int file_append;
 
@@ -45,15 +45,17 @@ void err_bin(int error) {
  */
 
 int f_err_string(ARG2) {
+    int len;
     if (mode == -1) {
 	/* fatal_error calls err_string, so don't call fatal_error */
         if ((err_str_file = (void *) ffopen(arg1, file_append ? "ab" : "wb")) == NULL)  {
             fprintf(stderr, "Could not open %s", arg1);
 	    return 1;
         }
-	err_str = malloc(strlen(arg2) + 1);
-	if (err_str == NULL) fatal_error("err_string: memory allocation","");
-	strncpy(err_str, arg2, strlen(arg2)+1);
+	len = strlen(arg2)+1;
+        if (len > STRING_SIZE) len = STRING_SIZE-1;
+	strncpy(err_str, arg2, len);
+        err_str[STRING_SIZE-1] = 0;
     }
     return 0;
 }
@@ -61,15 +63,13 @@ int f_err_string(ARG2) {
 void err_string(int error) {
     int i;
     /* this routine may called by fatal error and end of processing */
-    if (error && err_str_file != NULL && err_str != NULL) {
+    if (error && err_str_file != NULL && err_str[0] != 0) {
 	i = fwrite(err_str, strlen(err_str), 1, err_str_file);
 	if (i != 1) fprintf(stderr,"ERROR err_string: write error\n");
     }
     if (err_str_file != NULL) ffclose(err_str_file);
     return;
 }
-
-
 
 /*
  * HEADER:100:eof_bin:setup:2:send (binary) integer to file upon EOF: X=file Y=integer

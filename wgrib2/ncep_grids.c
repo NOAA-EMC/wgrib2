@@ -28,7 +28,6 @@ void ncep_grids(const char **arg1, const char **arg2, const char **arg3) {
    int grid_no;
    if (strcmp(*arg1,"ncep") == 0 && strcmp(*arg2,"grid") == 0) {
 
-
 	if (strcmp(*arg3,"t1534") == 0) {
             *arg1 = "gaussian";
             *arg2 = "0:3072:0.1171875";
@@ -53,13 +52,25 @@ void ncep_grids(const char **arg1, const char **arg2, const char **arg3) {
 	    *arg3 = "19.299:1597:2540";
 	    return;
 	}
+	if (strcmp(*arg3,"core") == 0) {
 
+	    /* this is different from T170/ncep grid 170 because different northern most
+		gaussian latitude.  Probably from a different program used to
+		calculate the latitude.  Maybe single vs double precision or different
+		method.  Anyways this is the grid to produce same sec3 using gcc/gfortran */
+
+	    *arg1 = "gaussian";
+	    *arg2 = "0:512:0.703125";
+	    *arg3 = "89.462947:256";
+	    return;
+	}
 	if (strcmp(*arg3,"t62") == 0) grid_no = 98;
 	else if (strcmp(*arg3,"t126") == 0) grid_no = 126;
 	else if (strcmp(*arg3,"t254") == 0) grid_no = 127;
 	else if (strcmp(*arg3,"t382") == 0) grid_no = 128;
 	else if (strcmp(*arg3,"t574") == 0) grid_no = 129;
 	else if (strcmp(*arg3,"t170") == 0) grid_no = 170;
+	else if (strcmp(*arg3,"core") == 0) grid_no = 170;
 	else grid_no = atoi(*arg3);
 
 	switch(grid_no) {

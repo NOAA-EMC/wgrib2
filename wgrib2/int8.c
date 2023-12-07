@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <math.h>
+#include <ctype.h>
 #include "grb2.h"
 #include "wgrib2.h"
 
@@ -148,29 +149,41 @@ int int4_comp(unsigned const char *p) {
 //
 float scaled2flt(int scale_factor, int scale_value) {
    if (scale_factor == 0) return (float) scale_value;
-   if (scale_factor < 0) return scale_value * Int_Power(10.0, -scale_factor);
-   return scale_value / Int_Power(10.0, scale_factor);
-}
-double scaled2dbl(int scale_factor, int scale_value) {
-   if (scale_factor == 0) return (float) scale_value;
-   if (scale_factor < 0) return scale_value * Int_Power(10.0, -scale_factor);
-   return scale_value / Int_Power(10.0, scale_factor);
+   return scale_value * Int_Power(10.0, -scale_factor);
 }
 
+double scaled2dbl(int scale_factor, int scale_value) {
+   if (scale_factor == 0) return (double) scale_value;
+   return scale_value * Int_Power(10.0, -scale_factor);
+}
+
+// scaled value is stored as p[0] = INT1(scale_factor), INT4(scale_value)
+void scaled_char(int scale_factor, int scale_value, unsigned char *p) {
+    // undefined value
+    if (scale_factor == 255) {
+        p[0] = 255;
+	p[1] = p[2] = p[3] = p[4] = 255;
+    }
+    else {
+        int1_char(scale_factor, p);
+        int_char(scale_value, p+1);
+    }
+    return;
+}
 //
 // inverse of scaled2flt
 //
 int flt2scaled(int scale_factor, float value) {
 	if (scale_factor == 0) return (int) value;
-	if (scale_factor > 0) return (int) (value * Int_Power(10.0,scale_factor));
-	return (int) (value / Int_Power(10.0,-scale_factor));
+	return (int) (value * Int_Power(10.0,scale_factor));
 }
 //
 // best scaled values
 //
 int best_scaled_value(double val, int *scale_factor, int *scale_value) {
 
-    int n;
+    int n, sign_val;
+    double abs_val;
 
     if (isinf(val)) {
 	fatal_error("best_scaled_value: encountered an infinite value","");
@@ -182,35 +195,31 @@ int best_scaled_value(double val, int *scale_factor, int *scale_value) {
     }
 
     n = 0;
+    abs_val = fabs(val);
+    sign_val = val < 0.0 ? -1 : 1;
 
-    // scale for large numbers
-    if (fabs(val) > INT_MAX) {
-	n = 0;
-        while (fabs(val) > INT_MAX) {
-	    val *= 0.1;
+    // negative scale for large numbers
+    if (floor(abs_val+0.5) > INT_MAX) {
+        while (floor(abs_val + 0.5) > INT_MAX && n > -126) {
+	    // -126 is used because -127 has a binary respresentation of 0xffffffff
+	    // as a signed integer, could be confused with undefined
+	    abs_val *= 0.1;
 	    n--;
 	}
 	*scale_factor = n;
-        *scale_value = floor(val + 0.5);
+        *scale_value = sign_val * floor(abs_val + 0.5);
 	return 0;
     }
 
-    while (fabs(val*10.0) < INT_MAX && (val-floor(val)) != 0.0) {
-/* removed 3/2014 WNE
-	if (fabs( floor(val+0.5) - val)  < 0.00001*fabs(val) ) {
-	    *scale_factor = n;
-            *scale_value = floor(val + 0.5);
-	    return 0;
-	}
-*/
+    // positive scaling, no loss of data when converting to integer
+    while (floor(abs_val*10.0 + 0.5) < INT_MAX && (abs_val-floor(abs_val)) != 0.0 && n < 127) {
 	n++;
-	val *= 10.0;
+	abs_val *= 10.0;
     }
     *scale_factor = n;
-    *scale_value = floor(val + 0.5);
+    *scale_value = sign_val * floor(abs_val + 0.5);
     return 0;
 }
-
 
 void uint8_char(unsigned long int i, unsigned char *p) {
     int j;
@@ -257,6 +266,12 @@ void int2_char(int i, unsigned char *p) {
     return;
 }
 
+void int1_char(int i, unsigned char *p) {
+    if (i > 127 || i < -127) fatal_error("int1_char: abs(exponent) > 127","");
+    *p = (i >= 0) ? (unsigned char) i : (unsigned char) -i | (unsigned char) 128;
+}
+
+
 /*
  * originally nx and ny were int with -1 == variable
  * with the large grib conversions, nx and ny became unsigned int
@@ -279,4 +294,34 @@ char *ny_str(unsigned int ny) {
    return string;
 }
 
+/*
+ *  return sub_angle
+ *    note: 0 -> 1
+ *          undefined -> 1e6
+ *    documentation does not say that subangle is unsigned, assumed signed
+ */
+
+
+int sub_angle(unsigned const char *p) {
+
+   /* 0 -> 1 */
+   if (p[0] == 0 && p[1] == 0 && p[2] == 0 && p[3] == 0) return 1;
+   if (p[0] == 255 && p[1] == 255 && p[2] == 255 && p[3] == 255) return 1000000;
+   return int4(p);
+
+}
+
+/*
+ * is_uint: return 1 if unsigned int, 0 if not
+ */
+
+int is_uint(const char *p) {
+
+    if (*p == '\0') return 0;
+    while (*p) {
+        if (isdigit( (int) *p) == 0) return 0;
+	p++;
+    }
+    return 1;
+}
 

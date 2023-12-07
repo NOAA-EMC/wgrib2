@@ -4,9 +4,13 @@
 #include <stddef.h>
 #include <math.h>
 #include <float.h>
+
+#ifndef DISABLE_STAT
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #include <fcntl.h>
+#endif
 
 #include "grb2.h"
 #include "wgrib2.h"
@@ -58,25 +62,35 @@ extern size_t mem_buffer_pos[N_mem_buffers];
  */
 
 int fopen_file(struct seq_file *file, const char *filename, const char *open_mode) {
+#ifndef DISABLE_STAT
     struct stat stat_buf;
-    int i;
+#endif
+    int i, j;
 
     file->unget_cnt = 0;
     file->pos = 0;
     file->buffer = NULL;
 
+    i = strlen(filename);
+    if (i == 0) fatal_error("fopen_file: missing filename", "");
+    j = i < STRING_SIZE ?  i : STRING_SIZE - 1;
+    for (i = 0; i < j; i++) file->filename[i] = filename[i];
+    file->filename[j] = 0;
+
     if (strcmp("-",filename) == 0) {
 	if (open_mode[0] == 'r') {
 	    file->cfile = stdin;
             file->file_type = PIPE;
+	    strncpy(file->filename,"(stdin)",8);
 	    return 0;
 	}
 	if (open_mode[0] == 'w') {
 	    file->cfile = stdout;
             file->file_type = PIPE;
+	    strncpy(file->filename,"(stdout)",9);
 	    return 0;
 	}
-	fatal_error("fopen_file, programming error unexpected open mode (%s)", open_mode);
+	fatal_error_ss("fopen_file, programming error unexpected open mode (%s) for file %s", open_mode,filename);
     }
 
     if (strncmp(filename,"@mem:",5) == 0) {
@@ -106,6 +120,10 @@ int fopen_file(struct seq_file *file, const char *filename, const char *open_mod
         return 0;
     }
 
+#ifdef DISABLE_STAT
+    /* treat all named files as disk files */
+    file->file_type = DISK;
+#else
     if (stat(filename, &stat_buf) != -1) {
 	if (S_ISREG(stat_buf.st_mode)) {
             file->file_type = DISK;
@@ -131,6 +149,7 @@ int fopen_file(struct seq_file *file, const char *filename, const char *open_mod
         fprintf(stderr, "stat() function did no work, assumed to be a disk file\n");
         file->file_type = DISK;
     }
+#endif
     return 0;
 }
 
@@ -151,7 +170,13 @@ void fclose_file(struct seq_file *file) {
     return;
 }
 
+#define FSEEK_BUF_SIZE 4*4096
+
 int fseek_file(struct seq_file *file, long position, int whence) {
+
+    char buffer[FSEEK_BUF_SIZE];
+    int i;
+    size_t iret;
 
     file->unget_cnt = 0;
     if (file->file_type == DISK) {
@@ -163,8 +188,17 @@ int fseek_file(struct seq_file *file, long position, int whence) {
 	if (fseek_mem(file->n_mem_buffer, position, whence) == -1) return -1;
 	file->pos = ftell_mem(file->n_mem_buffer);
     }
+    else if (file->file_type == PIPE && whence == SEEK_CUR) {
+	file->pos += position;
+	while (position > 0) {
+	    i = (position > FSEEK_BUF_SIZE ? FSEEK_BUF_SIZE : position);
+	    iret = fread_file(&(buffer[0]), (size_t) i, (size_t) 1, file);
+	    if (iret != 1) fatal_error("fseek_file: pipe read failed","");
+	    position -= i;
+	}    
+    }
     else {
-	fatal_error("fseek_file: programming error","");
+	fatal_error("fseek_file: %s cannot seek",file->filename);
     }
     return 0;
 }
@@ -203,7 +237,7 @@ size_t fread_file(void *ptr, size_t size, size_t nmemb, struct seq_file *file) {
 
     if (file->file_type == DISK || file->file_type == PIPE) {
 	iret = fread(ptr, size, nmemb, file->cfile);
-	if (ferror(file->cfile)) fprintf(stderr,"\nWARNING: file read error\n");
+	if (ferror(file->cfile)) fprintf(stderr,"\nWARNING: file read error for %s\n", file->filename);
 	return iret;
     }
     if (file->file_type == MEM) return fread_mem(ptr, size, nmemb, file->n_mem_buffer);
@@ -226,13 +260,10 @@ int fgetc_file(struct seq_file *file) {
 size_t fwrite_file(const void *ptr, size_t size, size_t nmemb, struct seq_file *file) {
     size_t iret;
 
-// fprintf(stderr,"in fwrite_file\n");
     if (file->file_type == DISK || file->file_type == PIPE) {
-// fprintf(stderr,"in fwrite_file  disk or pipe >> fwrite\n");
 	iret = fwrite(ptr, size, nmemb, file->cfile);
-// fprintf(stderr,"in fwrite_file  <<fwrite ret=%lu\n", iret);
-	if (ferror(file->cfile)) fatal_error("write error","");
-	if (feof(file->cfile)) fatal_error("write error (EOF)","");
+	if (feof(file->cfile)) fatal_error("write error (EOF) on %s",file->filename);
+	if (ferror(file->cfile)) fatal_error("write error on %s",file->filename);
 	return iret;
     }
     if (file->file_type == MEM) return fwrite_mem(ptr, size, nmemb, file->n_mem_buffer);
@@ -253,7 +284,7 @@ unsigned char *rd_grib2_msg_seq_file(unsigned char **sec, struct seq_file *input
     /* setup grib buffer */
     if (input->buffer == NULL) {
         if ((input->buffer = (unsigned char *) malloc(BUFF_ALLOC0)) == NULL) {
-            fatal_error("not enough memory: rd_grib2_msg","");
+            fatal_error("rd_grib2_msg_seq: memory allocation for %s",input->filename);
         }
         input->buffer_size = BUFF_ALLOC0;
     }
@@ -272,7 +303,7 @@ unsigned char *rd_grib2_msg_seq_file(unsigned char **sec, struct seq_file *input
         c3 = getchar_seq_file(input);
         c4 = getchar_seq_file(input);
         if (c4 == 1) {
-	    fprintf(stderr,"grib1 message ignored (use wgrib)\n");
+	    fprintf(stderr,"rd_grib2_seq_msg, grib1 message ignored for %s, use wgrib\n",input->filename);
 	    continue;
 	}
         if (c4 != 2) {
@@ -310,17 +341,19 @@ unsigned char *rd_grib2_msg_seq_file(unsigned char **sec, struct seq_file *input
     if (input->buffer_size < len_grib) {
         input->buffer_size = (len_grib*5)/4;
         input->buffer = (unsigned char *) realloc((void *) input->buffer, input->buffer_size);
+	if (input->buffer == NULL) fatal_error("rd_grib2_msg_seq_file for %s: grib message size %lu too large", 
+	    input->filename,input->buffer_size);
     }
 
     j=fread_file(input->buffer+16, sizeof (unsigned char), len_grib-16, input);
     input->pos += j;
     
-    if (j != len_grib-16) fatal_error("rd_grib2_msg_seq_file, read outside of file, bad grib file","");
+    if (j != len_grib-16) fatal_error("rd_grib2_msg_seq_file for %s, read outside of file, bad grib file",input->filename);
 
     sec[0] = input->buffer;
     sec[8] = sec[0] + len_grib - 4;
     if (sec[8][0] != 55 || sec[8][1] != 55 || sec[8][2] != 55 || sec[8][3] != 55) {
-        fatal_error("rd_grib2_msg_seq_file, missing end section ('7777')","");
+        fatal_error("rd_grib2_msg_seq_file for %s, missing end section ('7777')",input->filename);
     }
 
     /* scan message for number of submessages and perhaps for errors */
@@ -330,12 +363,12 @@ unsigned char *rd_grib2_msg_seq_file(unsigned char **sec, struct seq_file *input
     i = 0;
     while (p < sec[8]) {
         if (p[4] == 7) i++;
-	if (uint4(p) < 5) fatal_error_i("rd_grib2_msg_file: illegal grib: section length, section %i", p[4]);
+	if (uint4(p) < 5) fatal_error_i("rd_grib2_msg_file: illegal grib %s, section length, section %i", input->filename, p[4]);
         p += uint4(p);
-        if (p > end_of_msg) fatal_error("bad grib format","");
+        if (p > end_of_msg) fatal_error("rd_grib2_msg_file: bad grib format for %s",input->filename);
     }
     if (p != sec[8]) {
-        fatal_error("rd_grib2_msg: illegal format, end section expected","");
+        fatal_error("rd_grib2_msg: illegal format, end section expected for %s",input->filename);
     }
     *num_submsgs = i;
 

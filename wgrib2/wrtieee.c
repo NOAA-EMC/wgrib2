@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include "wgrib2.h"
 
-/* wesley ebisuzaki v1.3
+/* wesley ebisuzaki v1.3 7/1997 Public Domain
  *
  * write ieee file -- big endian format
  *

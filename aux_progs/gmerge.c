@@ -9,13 +9,14 @@
  *  2/2015 Wesley Ebisuzaki - can write to stdout by filename='-'
  *  1/2018 Wesley Ebisuzaki - increase N to 200, print N in description
  *  5/2018 Wesley Ebisuzaki - increase buffer size, call feof
+ *  12/2022 Wesley Ebisuzaki - better error messages, list of input files can be 1 file
  *
  * takes the input of N files or pipes containing grib2 files
  * and merges them into one file.
  *
  */
 
-#define VERSION "gmerge v1.4 5/2018"
+#define VERSION "gmerge v1.5 12/2022"
 
 unsigned long int uint8(unsigned char *);
 int rd_msg(FILE *, FILE *);
@@ -28,8 +29,13 @@ int main(int argc, char **argv) {
     int eofs[N];
     int i, n, done;
 
-    if (argc < 4) {
-	fprintf(stderr,"%s bad arg: output (list of grib-inputs) list size <= %d\n",VERSION, N);
+    if (argc < 3) {
+	fprintf(stderr,"%s combines grib files in round-robin fashion\n", VERSION);
+	fprintf(stderr,"%s (output) (list of input grib files), argc=%d\n", argv[0], argc);
+	exit(8);
+    }
+    if (argc > N +2) {
+	fprintf(stderr,"%s too many input files, max %d\n",argv[0],N);
 	exit(8);
     }
 

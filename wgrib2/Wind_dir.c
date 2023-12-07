@@ -40,7 +40,8 @@ int f_wind_dir(ARG1) {
     struct local_struct *save;
 
     unsigned int i;
-    int is_u;
+    int is_u, is_v;
+    int test_s0, test_s1, test_s3, test_s4;
     float *d1, *data_tmp;
     int discipline, mastertab, parmcat, parmnum;
 
@@ -63,6 +64,7 @@ int f_wind_dir(ARG1) {
     save = *local;
     if (mode == -2) {			// cleanup
 	if (save->has_u == 1) {
+	    fprintf(stderr,"WARNING: -wind_dir, unused UGRD\n");
 	    free(save->val);
 	    free_sec(save->clone_sec);
 	}
@@ -80,13 +82,14 @@ int f_wind_dir(ARG1) {
         parmcat = GB2_ParmCat(sec);
         parmnum = GB2_ParmNum(sec);
 
-	if (mode == 99) fprintf(stderr,"-wind_speed %d %d %d %d\n",mastertab,discipline,parmcat,parmnum);
+	if (mode == 99) fprintf(stderr,"-wind_dir %d %d %d %d\n",mastertab,discipline,parmcat,parmnum);
 
 	is_u = (mastertab != 255) && (discipline == 0) && (parmcat == 2) && (parmnum == 2);
-	if (mode == 99 && is_u) fprintf(stderr,"\n-wind_speed: is u\n");
+	if (mode == 99 && is_u) fprintf(stderr,"\n-wind_dir: is u\n");
 
 	if (is_u) {		// save data
 	    if (save->has_u) {
+	        fprintf(stderr,"WARNING: -wind_dir, unused UGRD\n");
 	        free(save->val);
 	        free_sec(save->clone_sec);
 	    }
@@ -97,14 +100,21 @@ int f_wind_dir(ARG1) {
 	    return 0;
 	}
 
-        if (save->has_u == 0) return 0;
+	is_v = (mastertab != 255) && (discipline == 0) && (parmcat == 2) && (parmnum == 3);
+	if (!is_v) return 0;
+        if (save->has_u == 0) {
+	    fprintf(stderr,"WARNING: -wind_dir, unused VGRD\n");
+	    return 0;
+	}
 
-	// check for V
+	// check for corresponding V
 
-        if (same_sec0(sec,save->clone_sec) == 1 &&
-            same_sec1(sec,save->clone_sec) == 1 &&
-            same_sec3(sec,save->clone_sec) == 1 &&
-            same_sec4(sec,save->clone_sec) == 1) {
+	test_s0 = test_s1 = test_s3 = test_s4 = 0;
+        if ((test_s0 = same_sec0(sec,save->clone_sec)) == 1 &&
+            (test_s1 = same_sec1(sec,save->clone_sec)) == 1 &&
+            (test_s3 = same_sec3(sec,save->clone_sec)) == 1 &&
+            (test_s4 = same_sec4(sec,save->clone_sec)) == 1) {
+
 
 	    // check to see if winds are earth relative
 
@@ -138,8 +148,13 @@ int f_wind_dir(ARG1) {
                 fatal_error("memory allocation - data_tmp","");
             undo_output_order(save->val, data_tmp, ndata);
 
+/*  changed WNE 4/2019
             grib_wrt(save->clone_sec, data_tmp, ndata, nx_, ny_, use_scale, dec_scale, 
 		bin_scale, wanted_bits, max_bits, grib_type, &(save->out));
+ */
+ /* direction to nearest degree */
+            grib_wrt(save->clone_sec, data_tmp, ndata, nx_, ny_, 1, 0, 
+		0, 9, 9, grib_type, &(save->out));
 
             if (flush_mode) fflush_file(&(save->out));
             free(data_tmp);
@@ -148,6 +163,13 @@ int f_wind_dir(ARG1) {
             free(save->val);
             free_sec(save->clone_sec);
 	    save->has_u = 0;
+	}
+	else {
+	    if (mode) {
+	        fprintf(stderr,"wind_dir: match failed sec0 %d sec1 %d sec3 %d sec4 %d\n", 
+		test_s0, test_s1, test_s3, test_s4);
+	    }
+	    fprintf(stderr,"WARNING: -wind_dir, unused VGRD, not corresponding -v to see more\n");
 	}
     }
     return 0;

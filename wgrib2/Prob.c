@@ -33,7 +33,7 @@ int f_prob(ARG0) {
     else if (mode >= 0) {
 	p = code_table_4_9_location(sec);
 	if (p == NULL) return 0;
-	sprintf(inv_out,"probtype=%d ",*p);
+	// sprintf(inv_out,"probtype=%d ",*p);
 	switch (*p) {
 
 	case 0: sprintf(inv_out,"prob <%g", LOWER_LIMIT); break;
@@ -46,6 +46,16 @@ int f_prob(ARG0) {
 	case 3: sprintf(inv_out,"prob >%g", LOWER_LIMIT);
 		break;
 	case 4: sprintf(inv_out,"prob <%g", UPPER_LIMIT);
+		break;
+	case 5: sprintf(inv_out,"prob =%g", LOWER_LIMIT);
+		break;
+	case 6: sprintf(inv_out, "prob above normal");
+		break;
+	case 7: sprintf(inv_out, "prob near normal");
+		break;
+	case 8: sprintf(inv_out, "prob below normal");
+		break;
+	default: sprintf(inv_out, "prob ?? (code table 4.9=%d)", *p);
 		break;
 	}
 	if (mode == 99) {

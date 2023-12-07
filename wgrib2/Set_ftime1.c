@@ -22,7 +22,7 @@ extern const char *level_table[192];
 extern int use_scale, dec_scale, bin_scale;
 
 /*
- * HEADER:100:set_ftime1:misc:1:set ftime
+ * HEADER:100:set_ftime1:misc:1:X='N hour fcst'   (deprecated)
  */
 
 int f_set_ftime1(ARG1) {

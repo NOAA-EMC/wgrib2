@@ -10,7 +10,6 @@
  Version 8 June 2009
   minor update 1/2011 replace new_GDS by GDS_change_no, WNE
  */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -452,7 +451,7 @@ fprintf(stderr,"netcdf: were added/updated %d fields, file %s\n",save->nid,save-
       fatal_error("netcdf: undefined or unsupported (reserved?) level: %s",level_buf);
 
     // WNE ok=getName(sec, mode, NULL, name, desc, unit);
-    ok=getExtName(sec, mode, NULL, name, desc, unit,".","_");
+    ok=getExtName(sec, mode, NULL, name, desc, unit);
 
 #ifdef DEBUG_NC
 fprintf(stderr,"netcdf: Start processing of %s at %s\n", name, level_buf);
@@ -1878,6 +1877,7 @@ fprintf(stderr,"netcdf: step in update_nc_ref_time\n");
   if (ok != NC_NOERR || nc_ref_time_type <= 0) update_rt = 0;
 
   update_ts = 0;
+  nc_time_step=-99999;
   if (time_step_type == 0)
   { /* try to update only for "auto" case, skip if step is user-defined */
     nc_time_step=-1;  /* variable step, do not update */
