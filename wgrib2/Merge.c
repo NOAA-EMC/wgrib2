@@ -239,6 +239,9 @@ if (mode == 99)  fprintf(stderr,"merge_fcst: save->has_val=%d\n",save->has_val);
 	    memcpy(temp_date, save->clone_sec[4]+idx+34-42,7);
 	    memcpy(save->clone_sec[4]+idx+34-42,sec[4]+idx+34-42,7);
 
+            // grib_wrt wants data in original order
+            undo_output_order(data_tmp, save->val, ndata);
+
             grib_wrt(save->clone_sec, data_tmp, save->ndata, save->nx, save->ny, save->use_scale, 
 		save->dec_scale, save->bin_scale, save->wanted_bits, save->max_bits, 
 		save->grib_type, &(save->out));

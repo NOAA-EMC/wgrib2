@@ -9,13 +9,13 @@
 /* 3/2008 Public Domain Wesley Ebisuzaki
  * 3/2008 Manfred Schwarb added -V
  * 3/2012 Wesley Ebisuzaki: added use_ext_name (extended name)
+ * 2/2021 Wesley Ebisuzaki: replaced use_ext_name by type_ext_name as many flavors of ext_name
  */
 
 extern const char *item_deliminator;
 extern int file_append, decode, latlon;
-extern int use_ext_name;
+extern unsigned int type_ext_name;
 extern int ieee_little_endian;
-extern int warn_nonzero_min_sec;
 
 /*
  * HEADER:100:s:inv:0:simple inventory
@@ -34,7 +34,7 @@ int f_s(ARG0) {
 	strcat(inv_out,item_deliminator);
 	inv_out += strlen(inv_out);
 
-        if (use_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
 	else f_ext_name(call_ARG0(inv_out,NULL));
 
 	strcat(inv_out,item_deliminator);
@@ -48,7 +48,7 @@ int f_s(ARG0) {
 	strcat(inv_out,item_deliminator);
 	inv_out += strlen(inv_out);
 
-        if (use_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
     }
     return 0;
 }
@@ -70,7 +70,7 @@ int f_s2(ARG0) {
         strcat(inv_out,item_deliminator);
         inv_out += strlen(inv_out);
 
-        if (use_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
         else f_ext_name(call_ARG0(inv_out,NULL));
 
         strcat(inv_out,item_deliminator);
@@ -84,7 +84,7 @@ int f_s2(ARG0) {
         strcat(inv_out,item_deliminator);
         inv_out += strlen(inv_out);
 
-        if (use_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
     }
     return 0;
 }
@@ -95,13 +95,12 @@ int f_s2(ARG0) {
 
 int f_S(ARG0) {
 
-    if (mode == -1) warn_nonzero_min_sec = 0;
     if (mode >= 0) {
         f_T(call_ARG0(inv_out,NULL));
         strcat(inv_out,item_deliminator);
         inv_out += strlen(inv_out);
 
-        if (use_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
 	else f_ext_name(call_ARG0(inv_out,NULL));
         strcat(inv_out,item_deliminator);
         inv_out += strlen(inv_out);
@@ -114,7 +113,7 @@ int f_S(ARG0) {
         strcat(inv_out,item_deliminator);
         inv_out += strlen(inv_out);
 
-        if (use_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
     }
     return 0;
 }
@@ -259,7 +258,7 @@ int f_verf(ARG0) {
         strcat(inv_out,item_deliminator);
         inv_out += strlen(inv_out);
 
-        if (use_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
 	else f_ext_name(call_ARG0(inv_out,NULL));
         strcat(inv_out,item_deliminator);
         inv_out += strlen(inv_out);
@@ -272,7 +271,7 @@ int f_verf(ARG0) {
         strcat(inv_out,item_deliminator);
         inv_out += strlen(inv_out);
 
-        if (use_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
     }
     return 0;
 }
@@ -306,13 +305,13 @@ int f_V(ARG0) {
         oldmode=mode;
         mode=1;
 
-        if (use_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_var(call_ARG0(inv_out,NULL));
 	else f_ext_name(call_ARG0(inv_out,NULL));
         strcat(inv_out,item_deliminator);
         inv_out += strlen(inv_out);
         mode=oldmode;
 
-        if (use_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
+        if (type_ext_name == 0) f_misc(call_ARG0(inv_out,NULL));
         strcat(inv_out,"\n    ");
         inv_out += strlen(inv_out);
 

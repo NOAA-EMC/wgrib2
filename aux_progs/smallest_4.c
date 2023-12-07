@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     int i, k, count, smallest, size[5];
 
     if (argc != 6) {
-	fprintf(stderr,"bad arg: output in-1 in-2 in-3 in-4\n");
+	fprintf(stderr,"bad arg: %s output-file in-1 in-2 in-3 in-4\n", argv[0]);
 	fprintf(stderr," selects smallest grib message: 1 of 4\n");
 	fprintf(stderr," for optimal grib compression\n");
 	exit(8);

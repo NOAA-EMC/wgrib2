@@ -16,7 +16,7 @@
  */
 
 extern int match_fs;
-extern int match_flag;
+extern int run_flag;
 int match_count_fs;
 
 int fgrep, fgrep_flag, fgrep_count;
@@ -80,7 +80,7 @@ int f_not_fs(ARG1)  {
 }
 
 /*
- * HEADER:100:if_fs:misc:1:if X (fixed string) matches, conditional execution up to next output/fi
+ * HEADER:100:if_fs:If:1:if X (fixed string), conditional execution on match
  */
 int f_if_fs(ARG1) {
     struct local_struct {
@@ -103,13 +103,13 @@ int f_if_fs(ARG1) {
     }
     else if (mode >= 0) {
         save = (struct local_struct *) *local;
-        match_flag = match_fs_val[save->match_cnt];
+        run_flag = match_fs_val[save->match_cnt] == 0;
     }
     return 0;
 }
 
 /*
- * HEADER:100:not_if_fs:misc:1:if X (fixed string) does not match, conditional execution up to next output/fi
+ * HEADER:100:not_if_fs:If:1:if X (fixed string) does not match, conditional execution up to next output/fi
  */
 int f_not_if_fs(ARG1) {
     struct local_struct {
@@ -132,7 +132,7 @@ int f_not_if_fs(ARG1) {
     }
     else if (mode >= 0) {
         save = (struct local_struct *) *local;
-        match_flag = (match_fs_val[save->match_cnt] == 0);
+        run_flag = (match_fs_val[save->match_cnt] != 0);
     }
     return 0;
 }

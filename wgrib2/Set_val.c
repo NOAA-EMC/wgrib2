@@ -69,7 +69,7 @@ int f_set_ijval(ARG3) {
 }
 
 /*
- * HEADER:100:set_ival:misc:2:sets grid point value X=i1:i2:.. Y=va1:val2:.. grid[i1] = val1,etc
+ * HEADER:100:set_ival:misc:2:sets grid point value X=i1:i2:.. Y=va1:val2:.. grid[i1] = val1,etc  i>0
  */
 
 int f_set_ival(ARG2) {

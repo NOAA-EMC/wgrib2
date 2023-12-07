@@ -17,12 +17,15 @@
  * HEADER:400:Sec4:inv:0:Sec 4 values (Product definition section)
  */
 int f_Sec4(ARG0) {
-    int pdtsize;
+    int calc_pdtsize, vert_coor, pdtsize;
     if (mode >= 0) {
-	pdtsize =  prod_def_temp_size(sec);
-	sprintf(inv_out,"Sec4 len=%u #vert coordinate=%u Product Defn Template=4.%d size=%d free=%d", 
-          uint4(&(sec[4][0])), uint2(&(sec[4][5])),GB2_ProdDefTemplateNo(sec),
-	  pdtsize, uint4(&(sec[4][0])) - pdtsize - 8*uint2(&(sec[4][5])));
+
+	vert_coor = number_of_coordinate_values_after_template(sec);
+	calc_pdtsize = pdt_len(sec, -1);
+        pdtsize =  GB2_Sec4_size(sec);
+
+	sprintf(inv_out,"Sec4 len=%u #vert coordinate=%u Product Defn Template=4.%d size=%d expected size=%d", 
+          pdtsize, vert_coor, GB2_ProdDefTemplateNo(sec), pdtsize, calc_pdtsize);
 	inv_out += strlen(inv_out);
     }
     return 0;

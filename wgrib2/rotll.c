@@ -28,7 +28,18 @@ extern enum output_order_type output_order;
 #endif
 
 
-/* adapted from grib2ctl.pl */
+/* adapted from grib2ctl.pl
+ *
+ * as of 7/2021, this routine is not used by wgrib2
+ *
+ * However, want code that goes from (i,j) -> (lon, lat) and (lon, lat) -> (i,j)
+ * for all the projections. This is good for 
+ *
+ * 1) speedup closest()   - find nearest neighbor
+ * 2) future interpolation that doesn't depend on ipolates
+ *
+ * 7/2021 added OpenMP
+ */
 
 int rot_regular2ij(unsigned char **sec, double **lat, double **lon, int n) {
 
@@ -59,7 +70,6 @@ int rot_regular2ij(unsigned char **sec, double **lat, double **lon, int n) {
     // inverse transformation, reverse rotation angle
     angle_rot = -angle_rot;
 
-
     a = (M_PI/180.0) * (90.0+sp_lat);
     b = (M_PI/180.0) * sp_lon;
     r = (M_PI/180.0) * angle_rot;
@@ -69,16 +79,17 @@ int rot_regular2ij(unsigned char **sec, double **lat, double **lon, int n) {
 
     tlat = *lat;
     tlon = *lon;
+
+#pragma omp parallel for private(i,pr,gr,pm,gm,glat,glon)
     for (i = 0; i < n; i++) {
-        pr = (M_PI/180.0) * *tlat;
-        gr = -(M_PI/180.0) * *tlon;
+        pr = (M_PI/180.0) * tlat[i];
+        gr = -(M_PI/180.0) * tlon[i];
         pm = asin(cos(pr)*cos(gr));
         gm = atan2(cos(pr)*sin(gr),-sin(pr));
         glat = (180.0/M_PI)*(asin(sin_a*sin(pm)-cos_a*cos(pm)*cos(gm-r)));
         glon = -(180.0/M_PI)*(-b+atan2(cos(pm)*sin(gm-r),sin_a*cos(pm)*cos(gm-r)+cos_a*sin(pm)) );
-        *tlat++ = glat;
-        *tlon++ = glon;
+        tlat[i] = glat;
+        tlon[i] = glon;
     }
    return 0;
 }
-

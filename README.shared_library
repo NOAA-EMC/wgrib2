@@ -1,0 +1,16 @@
+             Shared Library
+
+Channge grib2/makefile from
+
+   MAKE_SHARED_LIB=0
+
+to
+
+   MAKE_SHARED_LIB=1
+
+Then compile the library by (bash version)
+
+   $ export CC=(your C compiler)
+   $ export FC=(your fortran compiler .. if used)
+   $ export COMP_SYS=(whatever)    this is usually optional
+   $ make lib

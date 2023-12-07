@@ -1,0 +1,54 @@
+                    Jpeg2000 Compressed Grib
+
+
+Jpeg2000 produces one of the smallest grib files. The problem with
+jpeg2000 is that the open source libraries are single threaded and
+the algorithm is involved.  As a result, encoding and decoding
+jpeg2000 is slow. NCEP has adopted complex-packing for most of its
+models output because of the speed of decoding.  Parallelized decoders
+can by up to 20 times faster.
+
+Support for jpeg2000 compressed grib files can be enabled by compiling 
+wgrib2 with either the Japser or OpenJPEG library.  Currently the
+default is the Jasper library.
+
+Jasper:     Pro:  long-term use by wgrib2
+                  no need for CMake
+                  similar perforance to OpenJPEG
+                  most people use Jasper
+
+                  compiles on my linux box at work (no cmake)
+                  Jasper is used by NCEP operational codes
+
+            Con:  support is not as good as OpenJPEG (subjective)
+                  doesn't work on clang, icc, arm (?)
+
+		  default up to wgrib2 v3.1.2
+
+OpenJPEG:   Pro:  better suport than Jasper (subjective)
+                  similar performance to Jasper
+                  haven't found a C compiler that can't compile
+
+            Con:  fewer builds using OpenJPEG
+		  minor: requires CMake
+
+                  default for wgrib2 v3.1.3+
+		  the AEC library used by ECMWF requires CMake,
+		  so using CMake for OpenJPEG is not a big deal.
+
+
+Wgrib2 v3.1.3+ transitions from Jasper to OpenJPEG for jpeg2000 support.
+My automated testing says that Jasper and OpenJPEG produce files that have
+the same decoded values.
+
+
+                         To Compile With OpenJPEG                  
+
+
+requires cmake v3.9+ and g++ to be installed
+wgrib2/decenc_jpeg.c is based on ECMWF code and licensed under 
+   the terms of the Apache Licence Version 2.0
+
+To enable, edit grib2/makefile
+   USE_JASPER=0
+   USE_OPENJPEG=1

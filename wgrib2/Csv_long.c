@@ -84,7 +84,7 @@ int f_csv_long(ARG1) {
 
     if (strcmp(new_inv_out, "reserved")==0) return 0;
 //    getName(sec, mode, NULL, name, desc, unit);
-    getExtName(sec, mode, NULL, name, desc, unit,".","_");
+    getExtName(sec, mode, NULL, name, desc, unit);
 //	fprintf(stderr,"Start processing of %s at %s\n", name, new_inv_out);
 //	fprintf(stderr,"Gridpoints in data: %d\n", ndata);
 //	fprintf(stderr,"Description: %s, Unit %s\n", desc,unit);

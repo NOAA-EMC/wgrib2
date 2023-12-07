@@ -18,10 +18,11 @@
 
 static unsigned int ones[]={0, 1,3,7,15, 31,63,127,255};
 
-void rd_bitstream(unsigned char *p, int offset, int *u, int n_bits, int n) {
+void rd_bitstream(unsigned char *p, int offset, int *u, int n_bits, unsigned int n) {
 
     unsigned int tbits;
-    int i, t_bits, new_t_bits;
+    int t_bits, new_t_bits;
+    unsigned int i;
 
     // not the best of tests
 
@@ -31,6 +32,9 @@ void rd_bitstream(unsigned char *p, int offset, int *u, int n_bits, int n) {
     if (offset < 0 || offset > 7) fatal_error_i("rd_bitstream: illegal offset %d",offset);
 
     if (n_bits == 0) {
+#ifdef IS_OPENMP_4_0
+#pragma omp simd
+#endif
         for (i = 0; i < n; i++) {
             u[i] = 0;
         }
@@ -70,11 +74,11 @@ void rd_bitstream(unsigned char *p, int offset, int *u, int n_bits, int n) {
  *   rd_bitstream_flt() is like rd_bitstream() except that returns a float instead of int
  */
 
-void rd_bitstream_flt(unsigned char *p, int offset, float *u, int n_bits, int n) {
+void rd_bitstream_flt(unsigned char *p, int offset, float *u, int n_bits, unsigned int n) {
 
     unsigned int tbits;
-    int i, t_bits, new_t_bits;
-
+    int t_bits, new_t_bits;
+    unsigned int i;
     // not the best of tests
 
     if (INT_MAX <= 2147483647 && n_bits > 31)
@@ -83,6 +87,9 @@ void rd_bitstream_flt(unsigned char *p, int offset, float *u, int n_bits, int n)
     if (offset < 0 || offset > 7) fatal_error_i("rd_bitstream_flt: illegal offset %d",offset);
 
     if (n_bits == 0) {
+#ifdef IS_OPENMP_4_0
+#pragma omp simd
+#endif
         for (i = 0; i < n; i++) {
             u[i] = 0.0;
         }
@@ -151,9 +158,9 @@ void add_bitstream(int t, int n_bits) {
     }
     return;
 }
-void add_many_bitstream(int *t, int n, int n_bits) {
+void add_many_bitstream(int *t, unsigned int n, int n_bits) {
     unsigned int jmask, tt;
-    int i;
+    unsigned int i;
 
     if (n_bits > 25) fatal_error_i("add_many_bitstream: n_bits = (%d)",n_bits);
     jmask = (1 << n_bits) - 1;

@@ -21,6 +21,23 @@ int same_sec0(unsigned char **sec_a, unsigned char **sec_b) {
     return 1;
 }
 
+/* test if same sec0 .. not grib variable */
+
+int same_sec0_not_var(int mode, unsigned char **sec_a, unsigned char **sec_b) {
+    unsigned char *a, *b;
+    int i;
+    a = sec_a[0];
+    b = sec_b[0];
+    for (i = 0; i < 8; i++) {
+	if (i == 6) continue;
+	if (*a++ != *b++) {
+	    if (mode) fprintf(stderr,"same_sec0_not_var:i=%d\n", i);
+	    return 0;
+	}
+    }
+    return 1;
+}
+
 int same_sec1(unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int i;
@@ -58,6 +75,28 @@ int same_sec1_not_time(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     return 1;
 }
 
+/* see if same sec1 except for grib variable */
+
+int same_sec1_not_var(int mode, unsigned char **sec_a, unsigned char **sec_b) {
+    unsigned char *a, *b;
+    unsigned int i, j;
+
+    i = GB2_Sec1_size(sec_a);
+    if (GB2_Sec1_size(sec_b) != i) return 0;
+    a = sec_a[1];
+    b = sec_b[1];
+    for (j = 0; j < 12; j++) {
+	if (j == 9 || j == 10) continue;	// mastertable or local table
+	if (a[j] != b[j]) {
+	    if (mode) fprintf(stderr,"same_sec1_not_var: sec 1 octet %d = %u vs %u\n", j+1, a[j],b[j]);
+	    return 0;
+	}
+    }
+    return 1;
+}
+
+// test for same sec2 (local)
+
 int same_sec2(unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int i;
@@ -71,6 +110,7 @@ int same_sec2(unsigned char **sec_a, unsigned char **sec_b) {
     return 1;
 }
 
+// test for same sec3 (grid)
 
 int same_sec3(unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
@@ -84,6 +124,8 @@ int same_sec3(unsigned char **sec_a, unsigned char **sec_b) {
     }
     return 1;
 }
+
+// test for same sec3 (pdt)
 
 int same_sec4(unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
@@ -287,12 +329,15 @@ int same_sec4_for_merge(int mode, unsigned char **sec_a, unsigned char **sec_b) 
 // v2: support for LAF ensembles
 //     code that calls must check for same verification time
 //     true if same except for ensemble member number or forecast time
+//
+// v3: support for different types of ensemble forecasts (code_table 4.4)
+//     can include perturbed members as well as control run
 
 
 int same_sec4_but_ensemble(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     unsigned int i, size;
     unsigned char *p, *fcst_time, *f1, *f2, *f3, *f4, *pert;
-    unsigned char *code_4_4;
+    unsigned char *code_4_4, *code_4_6;
     int fcst_size;
 
     if (GB2_Sec4_size(sec_b) != (size = GB2_Sec4_size(sec_a)) ) return 0;
@@ -300,6 +345,8 @@ int same_sec4_but_ensemble(int mode, unsigned char **sec_a, unsigned char **sec_
 
     pert = perturbation_number_location(sec_a);
     code_4_4 = code_table_4_4_location(sec_a);
+    code_4_6 = code_table_4_6_location(sec_a);
+
     fcst_time =  forecast_time_in_units_location(sec_a, &fcst_size);
     f1 = f2 = f3 = f4 = NULL;
     if (fcst_time) {
@@ -319,7 +366,7 @@ int same_sec4_but_ensemble(int mode, unsigned char **sec_a, unsigned char **sec_
 
     for (i = 0; i < size; i++) {
         p = sec_a[4]+i;
-        if (p != pert && p != code_4_4 && p != f1 && p != f2 && p != f3 && p != f4) {
+        if (p != pert && p != code_4_4 && p != code_4_6 && p != f1 && p != f2 && p != f3 && p != f4) {
 	    if (*p != sec_b[4][i]) {
 	        if (mode) fprintf(stderr,"same_sec4_but_ensemble: i=%d", i);
 		return 0;
@@ -328,3 +375,79 @@ int same_sec4_but_ensemble(int mode, unsigned char **sec_a, unsigned char **sec_
 	}
     } return 1;
 }
+
+// test sec4 .. do not test for variable
+
+int same_sec4_not_var(int mode, unsigned char **sec_a, unsigned char **sec_b) {
+    unsigned int i, j;
+    unsigned char *code_4_1, *code_4_2, *a, *b;
+
+    i = GB2_Sec4_size(sec_a);
+    if (GB2_Sec4_size(sec_b) != i) return 0;
+    if (GB2_ProdDefTemplateNo(sec_a) != GB2_ProdDefTemplateNo(sec_b) ) return 0;
+
+    code_4_1 = code_table_4_1_location(sec_a);
+    code_4_2 = code_table_4_2_location(sec_a);
+    a = sec_a[4];
+    b = sec_b[4];
+
+    for (j = 0; j < i; j++) {
+	if (a+j == code_4_1 || a+j == code_4_2) continue;
+	if (a[j] != b[j]) {
+	    if (mode) fprintf(stderr,"same_sec4_not_var: i=%d", j);
+	    return 0;
+	}
+    }
+    return 1;
+}
+
+/*
+ *  check to see if sec4 for -update
+ *  1) must be statistically processed PDT else return 0
+ *  2) must have same start time
+ *  3) must have same fcst time
+ */
+
+int same_sec4_unmerge_fcst(int mode, unsigned char **sec_a, unsigned char **sec_b) {
+
+    unsigned char *verf_time, *a, *b;
+    int i, size, offset, offset2;
+    if (GB2_ProdDefTemplateNo(sec_a) != GB2_ProdDefTemplateNo(sec_b) ) {
+        if (mode) fprintf(stderr,"same_sec4_unmerge_fcst: diff pdt ");
+	return 0;
+    }
+
+    /* number of time ranges must be 1 */
+    offset = stat_proc_n_time_ranges_index(sec_a);
+    if (offset < 0 || sec_a[4][offset] != 1) {
+        if (mode) fprintf(stderr,"same_sec4_unmerge_fcst: n!=1 offset=%d n=%u ",offset, sec_a[4][offset]);
+	return 0;
+    }
+    /* number of time ranges must be 1 .. same pdt .. same offset  */
+    if (sec_b[4][offset] != 1) {
+        if (mode) fprintf(stderr,"same_sec4_unmerge_fcst: n!=1 offset=%d n=%u ",offset, sec_b[4][offset]);
+	return 0;
+    }
+
+    verf_time = stat_proc_verf_time_location(sec_a);
+    size = 46 + 12;
+
+    a = sec_a[4];
+    b = sec_b[4];
+
+    /* verf times must differ */
+    offset = verf_time - a;
+    /* length of time range */
+    offset2 = verf_time - a + 15;
+
+    for (i = 0; i < size; i++) {
+        if (i >= offset && i <= offset + 5) continue;
+        if (i >= offset2 && i <= offset2 + 3) continue;
+	if (a[i] != b[i]) {
+	    if (mode) fprintf(stderr,"same_sec4_unmerge_fcst: i=%d val_a %u val_b %u ", i,a[i],b[i]);
+	    return 0;
+	}
+    }
+    return 1;
+}
+

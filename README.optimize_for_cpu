@@ -1,0 +1,62 @@
+8/2021, 5/2023       Optimize for a specific CPU
+
+The wgrib2's makefile assumes a generic CPU.  For 64-bit AMD or Intel 
+cpus on a 64-bit OS, that means wgrib2 will be compiled for the 64-bit 
+instruction set first introduced by AMD in 1999.  That means the latest 
+instructions like AVX-2 and AVX-512 will not be used.  The advantage of 
+using the older instruction set is that the executable doesn't need to
+be recompiled for different flavors of the processor assuming compatible
+flavors of the OS.  The disadvangtage is that the code may run slightly
+slower.
+
+Historically I didn't recommend optimizing wgrib2 to the new instructions
+(typically SIMD) because the speed increases were limited by disk speeds 
+and SIMD vectorization was limited in the code.  (Wgrib2 required OpenMP
+3.1 which doesn't support SIMD.)  Wgrib2 v3.1.3 supports the SIMD and
+GPU (not used) features of OpenMP if the compiler supports them. So
+my stance towards cpu optimization is changing.
+
+1) OpenMP SIMD is useful
+    a) double loops
+         for (...) {      /* parallelize by threading */
+           for (...) {    /* parallelize by SIMD */
+            stuff
+           }
+         }
+    b) overhead for threading parallelization is large
+       overhead for SIMD parallelization is small
+       therefore SIMD is better for short loops
+
+2) File systems can be fast.
+   I have NMVE storage at home (PCIe-3 speeds, fast).
+   I have lustre storage on my HPC (hard disks)
+   I have network storage on my workstation (1GB/s network speed limited, slow)
+   So SIMD can have real speed ups on some systems.
+
+3) Optimizing to the CPU is useful for SIMD because
+    a) original vector length was 128 bits. AVX-2 is 256 bits and AVX-512
+        is 512 bits. Bigger is faster.  
+    b) AVX-2 and AVX-512 eliminate the requirement for memory alignment.
+        This, in my opinion, is more important.  
+
+4) Optimize for AVX-512?
+   AVX-512 is the fastest but has limited support.  For Intel, the
+   support is limited to servers and 11th generation chips (12th and
+   current 13th generation does not support AVX-512). For AMD, the 
+   support is limited to Zen4 chips (5/2023). Intel defined many 
+   AVX-512 subsets, so you have to specify the subsets of AVX-512
+   that are required. 
+5) Optimize for AVX-2?
+   AVX-2 is available for every modern x86 CPU for a long time.  The
+   only excepsions are the older low-end Atom/Celeron/Pentium (10th,
+   11th gen?) from Intel. For AMD, you have to piledriver chips.
+   These non-AVX-2 cpus exist, I use a Gemini-Lake notebook for travel.
+
+
+If you want to try optimizing wgrib2, add the following before compiling
+
+
+export CPPFLAGS='-march=native -mtune=native'
+export FFLAGS='-march=native -mtune=native'
+export CC=gcc
+export FC=gfortran

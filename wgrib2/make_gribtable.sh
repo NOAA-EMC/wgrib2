@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Script to convert grib2 table information from the
-# "gribtab" format to the "gribtable.dat" format.
+# "gribtable" format to the "gribtable.dat" format.
 #
 # Usage:
-#   - Zero arguments:                        "gribtab" --> "gribtable.dat"
+#   - Zero arguments:                        "gribtable" --> "gribtable.dat"
 #   - One argument "mytab":                  "mytab"   --> "mytable.dat"
 #   - Two arguments "mytab" "mytab.custom":  "mytab"   --> "mytab.custom"
 #
@@ -15,12 +15,12 @@
 if [ $# -ge 1 ]; then
   infile="$1"
 else
-  infile="gribtab"
+  infile="gribtable"
 fi
 if [ $# -ge 2 ]; then
   outfile="$2"
 else
-  outfile="${infile}le.dat"
+  outfile="${infile}.dat"
 fi
 
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi

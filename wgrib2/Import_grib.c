@@ -11,7 +11,8 @@
  * Import_grib.c
  *
  * 12/2014: Public Domain: Wesley Ebisuzaki
-  *
+ * 8/2021: fix ncep scaling problem: Wesley Ebisuzaki
+ *
  */
 
 extern int decode, use_g2clib;
@@ -75,11 +76,12 @@ int f_import_grib(ARG1) {
         if (use_g2clib == 1) {  // introduce g2clib constant field error
             /* g2clib ignores decimal scaling for constant fields make internal decoders look like g2clib*/
             center = GB2_Center(save->sec);
+
             j = code_table_5_0(save->sec);            // type of compression
-            if ( (j == 0 && sec[5][19] == 0) || ((j == 2 || j == 3) && int4(sec[5] + 31) == 0) ||
-                 (j == 40 && sec[5][19] == 0) || (j == 41 && sec[5][19] == 0) ||
-                 (center == NCEP && j == 40000 && sec[5][19] == 0) ||
-                 (center == NCEP && j == 40010 && sec[5][19] == 0)  ) {
+            if ( (j == 0 && save->sec[5][19] == 0) || ((j == 2 || j == 3) && int4(save->sec[5] + 31) == 0) ||
+                 (j == 40 && save->sec[5][19] == 0) || (j == 41 && save->sec[5][19] == 0) ||
+                 (center == NCEP && j == 40000 && save->sec[5][19] == 0) ||
+                 (center == NCEP && j == 40010 && save->sec[5][19] == 0)  ) {
                         save->sec[5][17] = save->sec[5][18] = 0;
             }
         }

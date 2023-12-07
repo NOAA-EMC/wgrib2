@@ -62,7 +62,7 @@ int f_fix_CFSv2_fcst(ARG3) {
 	else fatal_error("fix_CFSv2_fcst: bad arg %s, wanted daily,00,06,12 or 18",arg1);
 
 	save->pert = atoi(arg2);
-	save->num_ensemble_members = atoi(arg2);
+	save->num_ensemble_members = atoi(arg3);
 
     }
     save = *local;
@@ -217,7 +217,7 @@ int f_fix_CFSv2_fcst(ARG3) {
         new_sec4[34] = 3;
         new_sec4[35] = save->pert;
     }
-    new_sec4[35] = save->num_ensemble_members;
+    new_sec4[36] = save->num_ensemble_members;
    
     sec[4] = new_sec4;
  

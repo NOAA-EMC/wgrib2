@@ -31,6 +31,20 @@ Converted automatically wgrib-beta parameter names with
 g2lib-1.0.3/params.f conversion table (as amended by Wesley
 Ebisuzaki).
 
+2021-01-07
+Wesley Ebisuzaki
+Added ECMWF grib table
+Now have two types of grib table
+
+   Primary:
+    has the names for WMO defined variables
+    has the names for its locally defined variables
+    as of 1/2021, only ncep and ecmwf can be primary
+
+  Secondary:
+    has the names for its locally defined variables
+    The WMO defined variables are specified by the primary grib tables
+
 */
 
 #include "wgrib2.h"
@@ -49,24 +63,40 @@ Ebisuzaki).
   const char *unit;
 */
 
-struct gribtable_s gribtable[] = {
-
-#include "gribtable.dat"
-#include "misc_gribtable.dat"
-#include "NDFD_gribtable.dat"
-#include "MRMS_gribtable.dat"
-#include "BOM_gribtable.dat"
-
+struct gribtable_s NCEP_gribtable[] = {
+#include "gribtables/ncep/gribtable.dat"
   /* END MARKER */
   { -1, -1, -1, -1, -1, -1, -1, -1, NULL, NULL, NULL }
+};
 
+struct gribtable_s ECMWF_gribtable[] = {
+#include "gribtables/ecmwf/ECMWF_gribtable.dat"
+  /* END MARKER */
+  { -1, -1, -1, -1, -1, -1, -1, -1, NULL, NULL, NULL }
+};
+
+struct gribtable_s DWD1_gribtable[] = {
+#include "gribtables/dwd/dwd_gribtable.dat"
+  /* END MARKER */
+  { -1, -1, -1, -1, -1, -1, -1, -1, NULL, NULL, NULL }
+};
+
+
+struct gribtable_s local_gribtable[] = {
+#include "gribtables/ndfd/NDFD_gribtable.dat"
+#include "gribtables/mrms/MRMS_gribtable.dat"
+#include "gribtables/bom/BOM_gribtable.dat"
+#include "gribtables/kma/KMA_gribtable.dat"
+#include "gribtables/misc/misc_gribtable.dat"
+  /* END MARKER */
+  { -1, -1, -1, -1, -1, -1, -1, -1, NULL, NULL, NULL }
 };
 
 #ifdef USE_TIGGE
 
 struct gribtable_s tigge_gribtable[] = {
 
-#include "tigge_gribtable.dat"
+#include "gribtables/tigge/tigge_gribtable.dat"
   /* END MARKER */
   { -1, -1, -1, -1, -1, -1, -1, -1, NULL, NULL, NULL }
 

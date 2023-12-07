@@ -148,6 +148,11 @@ int aec_grib_out(unsigned char ** sec, float *data, unsigned int ndata, int use_
 		}
 
 		size_t outbuflen = 10240 + nbytes * (size_t) n_defined;
+
+		/* bug fix ECMWF Shahram Najm */
+		outbuflen += outbuflen/20 + 256;
+
+
 		sec7 = (unsigned char *) malloc(outbuflen + 5);
 		if (sec7 == NULL) fatal_error("aes_pk: memory allocation","");
 

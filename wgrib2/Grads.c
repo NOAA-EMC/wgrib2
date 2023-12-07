@@ -27,8 +27,6 @@ extern enum output_order_type output_order;
 extern double *lat, *lon;
 
 //extern int file_append;
-extern int use_ext_name;
-
 
 /*
  * HEADER:-1:ctl_inv:inv:0:ctl inventory dump for g2ctl/GrADS
@@ -352,6 +350,9 @@ int f_lev0(ARG0) {
        case 151: sprintf(inv_out,"soil%d",RINT(val1)); break;     
        case 160: sprintf(inv_out,"bsl%dm",RINT(val1)); break;
        case 161: sprintf(inv_out,"bwl%dm",RINT(val1)); break;
+       case 166: strcpy(inv_out,"mixl"); break;
+       case 167: strcpy(inv_out,"broot"); break;
+       case 168: strcpy(inv_out,"ocnmdl"); break;
        case 174: strcpy(inv_out,"icet"); break;
        case 175: strcpy(inv_out,"sice"); break;
        case 176: strcpy(inv_out,"iceb"); break;

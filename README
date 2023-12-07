@@ -1,4 +1,4 @@
-                                 wgrib2           revised 7.2016
+                                 wgrib2           revised 7.2016, 2.2021
 
 wgrib2 is a program to read/write grib2 files.
 
@@ -29,22 +29,25 @@ Default makefile options
 	USE_REGEX=1
 	USE_TIGGE=1
 	USE_MYSQL=0
-	USE_IPOLATES=0
+	USE_IPOLATES=3
+        USE_SPECTRAL=1
 	USE_UDF=0
 	USE_OPENMP=1
 	USE_PROJ4=0
 	USE_WMO_VALIDATION=0
 	DISABLE_TIMEZONE=0
 	MAKE_FTN_API=0
+        MAKE_SHARED_LIB=0
 
 	USE_G2CLIB=0
 	USE_PNG=1
 	USE_JASPER=1
+	USE_OPENJPEG=1
 	USE_AEC=1
 
 To compile without netcdf,    set USE_NETCDF3=0 and USE_NETCDF4=0
-To compile without netcdf v3, set USE_NETCDF3=1 and USE_NETCDF4=0
-To compile without netcdf v4, set USE_NETCDF3=0 and USE_NETCDF4=1
+To compile with netcdf v3, set USE_NETCDF3=1 and USE_NETCDF4=0
+To compile with netcdf v4, set USE_NETCDF3=0 and USE_NETCDF4=1
 
 For netcdf4, the netcdf4 and hdf5 libraries are usually not included 
   in the wgrib2.tgz file to save space.  The makefile suggests
@@ -59,11 +62,12 @@ Support for Mysql is an option.  You have to modify the makefile to indicate
 the locations of the mysql includes and libraries and set USE_MYSQL=1
 
 The option -new_grid uses the ipolates library to do the interpolation.
-The required libraries are written in fortran and a few compilers are
-already supported in the makefile.  For other compilers, you are on
-your own.  The source code and makefile will have to be modified to use 
-the ipolates option.  Consult a local expert if you want to install this 
-optional package.  No help is available from NCEP for installing the package.
+The default is to USE_IPOLATES=3, and USE_SPECTRAL=1.  The interpolation
+libraries are written in fortran and work with the supported compilers.
+For other compilers, you are on your own.  The source code and makefile 
+will have to be modified to use the ipolates option.  Consult a local 
+expert if you want to install this optional package.  No help is available 
+from NCEP for installing the package.
 
 User Defined Functions (UDF) allow you to run shell commands from
 within wgrib2. UDF are not available on windows machines unless
@@ -95,14 +99,22 @@ or supports time zones in a non-POSIX manner, then you have to set
 DISABLE_TIMEZONE to 1.
 
 Wgrib2 is both a stand alone utility and a library that is callable
-from both C and Fortran.  To enable the making the wgrib2 library, you
-have to set
+from both C, Fortran and python.  To enable the making the wgrib2 library, 
+you have to set
 
 	MAKE_FTN_API=1
 
+For use with python, you have to make a shared library using
+
+        MAKE_SHARED_LIB=1
+
+To make a library, you have tocompile by
+
+        $ make lib
+
 In older versions of wgrib2, the g2clib was the default decoder of grib files.
 In the current version, you can use g2clib as an optional decoder.  The main 
-use of compiling wgrib2 with g2clib is for testing g2clib.   
+use of compiling wgrib2 with g2clib is for testing g2clib.
 
 	USE_G2CLIB=1
 
@@ -111,12 +123,9 @@ the following options.
 
 	USE_PNG=0
 	USE_JASPER=0
+        USE_OPENJPEG=0
         USE_AEC=0
 
-
-You might want to turn off the various compressions because
-
-   1) libraries do not compile correctly (icc and pgcc have problems with Jasper)
-   2) reduce the executable size and compile time
-   3) problems with cross-compiling
+Some of the optional libraries require CMake.  Some of the optional libraries will
+run a configure script.  Both features can make cross compiling difficult.
 

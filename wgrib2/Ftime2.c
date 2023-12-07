@@ -6,11 +6,14 @@
 #include "fnlist.h"
 
 // #define OLD_MODE
+/* Ftime2.c 12/2020 Public Domain Wesley Ebisuzaki */
 
 int ftime2(unsigned char **sec, char *inv_out, int mode);
 int ftime2_tr(unsigned char **sec, char *inv_out, unsigned char *verf_time, int fcst_time, int fcst_unit, int n, 
 	int mode, int *prt_missing);
 static void print_ftime2 (int unit1, int value1, int unit2, int value2, int format, char *inv_out);
+extern unsigned int last_message;
+extern int ftime_mode;
 
 /*
  * HEADER:440:ftime2:inv:0:timestamp -- will replace -ftime in the future TESTING
@@ -61,9 +64,10 @@ int ftime2(unsigned char **sec, char *inv_out, int mode) {
     /* forecast time */
     if ((fcst_unit = code_table_4_4(sec)) < 0) return -1;
     fcst_time = forecast_time_in_units(sec);
-    verf_time = stat_proc_verf_time_location(sec);
 
-    if (verf_time== NULL) {			/* point in time */
+    verf_time = stat_proc_verf_time_location(sec);
+    if (mode == 99) fprintf(stderr,"ftime2: is stat_proc_verf_time %d\n", verf_time != NULL);
+    if (verf_time == NULL) {			/* point in time */
         if (fcst_time == 0) {
             sprintf(inv_out,"anl");
         }
@@ -98,22 +102,33 @@ int ftime2(unsigned char **sec, char *inv_out, int mode) {
 int ftime2_tr(unsigned char **sec, char *inv_out, unsigned char *verf_time, int fcst_time, int fcst_unit, int n, 
 	int mode, int *prt_missing) {
     int n_max, i, code_4_10, code_4_11, code_4_4a, code_4_4b, timea, timeb;
-    int tmp_value, tmp_unit;
+    int tmp_value, tmp_unit, center, pdt;
     const char *left, *right;
 
+    center = GB2_Center(sec);
+    center = center == JMA2 ? JMA1 : center;	// treat JMA2 the same as JMA1
+
+    pdt = GB2_ProdDefTemplateNo(sec);
+
+    n_max = verf_time[7];
+    if ((center == JMA1 || center == JMA2) && (pdt == 50008 || pdt == 50009 || pdt == 50011 || pdt == 50012)) {
+        if (n_max != 1) fatal_error("JMA pdt %d n_max != 1 (%d)", pdt, n_max);
+    }
+    
     n_max = verf_time[7];
     if (mode == 99) fprintf(stderr," n=%d nmax=%d ", n, n_max);
     // if (n_max == 0) fatal_error("Statistical processing bad n=0","");
     if (n_max <= 0) {
-	fprintf(stderr,"** WARNING bad grib message: Statistical Processing bad n=%d **\n", n_max);
+	fprintf(stderr,"** ERROR bad grib message: Statistical Processing bad n=%d **\n", n_max);
+        last_message |= DELAYED_FTIME_ERR;
 	return 0;
     }
-    if (n == 0 && (GB2_Sec4_size(sec) < verf_time - sec[4] + 7 + 5 + n_max*12)) {
-	fprintf(stderr,"** WARNING bad grib message: sec4 len (Statistical Processing): found %u .. needs at least %ld **\n",
-	    GB2_Sec4_size(sec), verf_time - sec[4] + 7 + 5 + n_max*12);
+    if (n_max == 255) {
+	fprintf(stderr,"** ERROR bad grib message: Statistical Processing n is undefined **\n");
+        last_message |= DELAYED_FTIME_ERR;
 	return 0;
     }
-	
+
     code_4_10  = verf_time[12 + n*12];
     code_4_11  = verf_time[13 + n*12];
     code_4_4a  = verf_time[14 + n*12];
@@ -257,9 +272,16 @@ int ftime2_tr(unsigned char **sec, char *inv_out, unsigned char *verf_time, int 
 
     // multi-level definition
 
-    if (timeb == 0) fatal_error("ftime2: time increment is zero","");
-    if (code_4_4a == 255 || code_4_4b == 255) fatal_error("ftime2: code table 4.4 is undefined","");
-
+    if (timeb == 0) {
+	fprintf(stderr,"\n*** FATAL ERROR ftime2: time increment is zero ***\n");
+        last_message |= DELAYED_FTIME_ERR;  
+        return 0;
+    }
+    if (code_4_4a == 255 || code_4_4b == 255) {
+	fprintf(stderr,"\n*** FATAL ERROR ftime2: code table 4.4 is undefined ***\n");
+        last_message |= DELAYED_FTIME_ERR;  
+	return 0;
+    }
     if (code_4_11 >= 1 && code_4_11 <= 5) {
 	if (code_4_11 == 1) {
 	    left  = "(";
@@ -356,20 +378,27 @@ static void print_ftime2 (int unit1, int value1, int unit2, int value2, int form
 	unit2 = unit1;
     }
     if (unit1 == unit2) {
-        if (unit1 ==  0 && (value1 % 60 == 0) && (value2 % 60 == 0)) {		// minutes
-	    value1 /= 60;
-	    value2 /= 60;
-            unit1=1;								// hours
-	}
-        if (unit1 ==  1 && (value1 % 24 == 0) && (value2 % 24 == 0)) {		// hours
-	    value1 /= 24;
-	    value2 /= 24;
-            unit1=2;								// days
-	}
-        if (unit1 ==  3 && (value1 % 12 == 0) && (value2 % 12 == 0)) {		// months
-	    value1 /= 12;
-	    value2 /= 12;
-            unit1=4;								// years
+	if ((ftime_mode & 1) == 0) {
+            if (unit1 ==  13 && (value1 % 60 == 0) && (value2 % 60 == 0)) {		// seconds -> minutes
+	        value1 /= 60;
+	        value2 /= 60;
+                unit1=0;								// hours
+	    }
+            if (unit1 ==  0 && (value1 % 60 == 0) && (value2 % 60 == 0)) {		// minutes -> hours
+	        value1 /= 60;
+	        value2 /= 60;
+                unit1=1;								// hours
+	    }
+            if (unit1 ==  1 && (value1 % 24 == 0) && (value2 % 24 == 0)) {		// hours -> days
+	        value1 /= 24;
+	        value2 /= 24;
+                unit1=2;								// days
+	    }
+            if (unit1 ==  3 && (value1 % 12 == 0) && (value2 % 12 == 0)) {		// months -> years
+	        value1 /= 12;
+	        value2 /= 12;
+                unit1=4;								// years
+	    }
 	}
         sprintf(inv_out,"%d%c%d %s",value1,dash_colon,value1+value2,time_range2a(unit1));
     }

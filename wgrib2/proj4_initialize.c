@@ -23,8 +23,8 @@ int proj4_initialize(unsigned char **sec, struct proj4_struct *projection) {
     gds = sec[3];
     center = GB2_Center(sec);
 
-    axes_earth(sec, &r_maj, &r_min);
-    projection->radius_minor = r_min;
+    axes_earth(sec, &r_maj, &r_min, NULL);
+    projection->radius_major = r_maj;
     projection->radius_minor = r_min;
 
     if (gdt == 0) {

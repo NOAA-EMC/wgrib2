@@ -1,0 +1,66 @@
+My changes from splib v2.0.2
+  .F -> .f
+
+  old code:  Linux
+             or non-Linux  - AIX type code, BLAS library
+
+             IBM4 and IBM8 - BLAS 
+
+  removed all these types and made it all linux.
+
+  removed CDIR$ directives
+     These are old directives from the Cray vector machines (cray-XP days)
+     These directives have never been maintained because compilers have been
+       ignoring them.  However, found a recent intel compiler that used
+       them!  Better to remove them.
+
+   ncpus.F: opn version requires OpenMP to be enabled
+
+Change the makefile to make it simpler.  The old "make" system would
+make libraries in different precisions.
+
+Move to netlib routines to solve a matrix equation in splat
+   The netlib routines are double precision, so this library has 
+   to be compiled with real=8 bytes and double prec=8 bytes (NOP)
+
+To compile this version of splib at single precision, you need
+to change decomp.f and solve.f to use single precision.  Not done
+because I prefer to redistribute original sources.
+
+
+Old Code:
+   error:
+lapack_gen.f
+        call ludcmp(awork,jho,jhe,ipvt)
+        call ludcmp(awork,jho,jhe,ipvt,d)
+
+Note: lapack_gen.f has been replaced by decomp.f and solve.f (netlib)
+
+9/2020: New changes
+
+	  ** remove ESSL calls and ESSL->fftpack conversion routines **
+	removed non-fftpack routines from fftpack.f (netlib)
+	spfft, spfft1 removed from makefile
+	old version of spffte.f is now called spffte_essl.f
+	changed spffte to directly call fftpack.f
+	no longer has any ESSL calls
+	The essl->fftpack routines of unknown origin were removed.
+
+	small modification of fftpack.f
+	old: used old fortran convention of dimension array(1)
+	new: uses newer fortran convention of dimension array(*)
+	gfortran 10.3 was giving errors when using array(2)
+
+	makefile: remove references to spfft1.o spfft.o
+	added ${FTN_LEGACY} flag when compiling fftpack.f so the warnings
+	  from compiling fftpack with modern compilers are not produced.  
+	  The warnings are not indications of bad code.  There is only
+	  an implicit restriction 
+		pointer so reals and intergers are compatible
+		size of reals >= size of integers.
+
+	warning: spfft.f and spfft1.f may be called by existing code,
+	so this version of the spectral library may not be compatible
+	with existing code.  You need to convert spfft and spfft1 to
+	not to use the essl->fftpack routines to provide origins
+	for all codes.

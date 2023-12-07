@@ -1,0 +1,7 @@
+case     0: string="Confidence index"; break;
+case     1: string="Quality indicator"; break;
+case     2: string="Correlation of product with used calibration product"; break;
+case     3: string="Standard deviation"; break;
+case     4: string="Random error"; break;
+case     5: string="Probability"; break;
+case   255: string="Missing"; break;

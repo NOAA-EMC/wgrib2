@@ -202,6 +202,12 @@ int get_nxny_(unsigned char **sec, unsigned int *nx, unsigned int *ny, unsigned 
     else if (*nx > 0 && *ny > 0) npoints = (unsigned) *nx * *ny;
     *npnts = GB2_Sec3_npts(sec);
 
+#ifdef WMO_VALIDATION
+    /* if global cubed sphere */
+    if (grid_template == 60 && GDS_Gnom_tile(gds) == 0) npoints *= 6;
+#endif
+
+
     if ((*nx != 0 || *ny != 0) && GB2_Sec3_npts(sec) != npoints && GDS_Scan_staggered_storage(*scan) == 0) {
         fprintf(stderr,"two values for number of points %u (GDS) %u (calculated)\n",
                       GB2_Sec3_npts(sec), npoints);
@@ -320,10 +326,10 @@ int f_grid(ARG0) {
 	center = GB2_Center(sec);
         grid_template = code_table_3_1(sec);
 	no_dx = no_dy = 0;
+	flag_3_3 = flag_table_3_3(sec);
 
 	if (grid_template != 20 && grid_template != 30 &&
 		grid_template != 31) {
-	    flag_3_3 = flag_table_3_3(sec);
 	    if (flag_3_3 != -1) {
 	        if ((flag_3_3 & 0x20) == 0) no_dx = 1;
 	        if ((flag_3_3 & 0x10) == 0) no_dy = 1;
@@ -522,13 +528,13 @@ int f_grid(ARG0) {
 
                 sprintf(inv_out,"Lat1 %lf Lon1 %lf LoV %lf%sLatD %lf "
                     "Latin1 %lf Latin2 %lf%sLatSP %lf LonSP %lf%s"
-                    "%s (%d x %d) Dx %lf m Dy %lf m mode %d",
+                    "%s (%d x %d) Dx %lf m Dy %lf m ",
                     GDS_Lambert_La1(gds), GDS_Lambert_Lo1(gds),
                     GDS_Lambert_Lov(gds), nl, GDS_Lambert_LatD(gds),
                     GDS_Lambert_Latin1(gds), GDS_Lambert_Latin2(gds), nl,
                     GDS_Lambert_LatSP(gds), GDS_Lambert_LonSP(gds), nl,
                     GDS_Lambert_NP(gds) ? "North Pole": "South Pole",
-                    nx, ny, dlon, dlat, res);
+                    nx, ny, dlon, dlat);
                 inv_out += strlen(inv_out);
                 print_stagger(scan, inv_out);
 
@@ -545,13 +551,13 @@ int f_grid(ARG0) {
 
                 sprintf(inv_out,"Lat1 %lf Lon1 %lf LoV %lf%sLatD %lf "
                     "Latin1 %lf Latin2 %lf%sLatSP %lf LonSP %lf%s"
-                    "%s (%d x %d) Dx %lf m Dy %lf m mode %d",
+                    "%s (%d x %d) Dx %lf m Dy %lf m ",
                     GDS_Lambert_La1(gds), GDS_Lambert_Lo1(gds),
                     GDS_Lambert_Lov(gds), nl, GDS_Lambert_LatD(gds),
                     GDS_Lambert_Latin1(gds), GDS_Lambert_Latin2(gds), nl,
                     GDS_Lambert_LatSP(gds), GDS_Lambert_LonSP(gds), nl,
                     GDS_Lambert_NP(gds) ? "North Pole": "South Pole",
-                    nx, ny, dlon, dlat, res);
+                    nx, ny, dlon, dlat);
                 inv_out += strlen(inv_out);
                 print_stagger(scan, inv_out);
                 break;
@@ -670,16 +676,32 @@ int f_grid(ARG0) {
                       ieee2flt(gds+40), ieee2flt(gds+44),ieee2flt(gds+48));
                   break;
 #ifdef WMO_VALIDATION
-            case 60: sprintf(inv_out,"%sCubed Sphere grid: (%s x %s) tile:%d Square:%dx%d cells SP-Lat %lf SP-Lon %lf SP-Rot %lf input %s output %s res %d%s",nl,
-                        nx_str(nx_), ny_str(ny_), GDS_Gnom_tile(gds), GDS_Gnom_face_size(gds), GDS_Gnom_face_size(gds), 
-                        GDS_Gnom_SP_Lat(gds), GDS_Gnom_SP_Lon(gds), GDS_Gnom_SP_Rot(gds),
-                        scan_order[scan>>4],output_order_name(),res,nl);
+            case 60: sprintf(inv_out,"%sCubed Sphere grid: face C%d:", nl, GDS_Gnom_face_size(gds));
+			inv_out += strlen(inv_out);
+		        if (GDS_Gnom_tile(gds) == 0) {
+			    sprintf(inv_out, "1-6");
+			}
+			else {
+			    sprintf(inv_out, "%d", GDS_Gnom_tile(gds));
+			}
+			inv_out += strlen(inv_out);
+		        sprintf(inv_out," (%s x %s) offset (%d,%d) input %s output %s res %d",
+				nx_str(nx_), ny_str(ny_),
+				GDS_Gnom_i_offset(gds), GDS_Gnom_j_offset(gds),
+                        	scan_order[scan>>4],output_order_name(),res);
 			inv_out += strlen(inv_out);
                         print_stagger(scan, inv_out);
+			inv_out += strlen(inv_out);
+			sprintf(inv_out,"%sPole of rotation: lat %lf lon %lf Angle of rotation: %lf %s",
+                        nl,GDS_Gnom_SP_Lat(gds), GDS_Gnom_SP_Lon(gds), GDS_Gnom_SP_Rot(gds),nl);
+			inv_out += strlen(inv_out);
+			sprintf(inv_out, "Stretching factor %lf  Gnomonic grid spacing factor %lf", GDS_Gnom_Stretch(gds),
+				GDS_Gnom_B(gds));
+			inv_out += strlen(inv_out);
 		  break;
 #endif
             case 90: 
-		sprintf(inv_out,"%sSpace view perspective or orographic grid (%d x %d)",nl,nx,ny);
+		sprintf(inv_out,"%sSpace view perspective or orthographic grid (%d x %d)",nl,nx,ny);
                 inv_out += strlen(inv_out);
 \
      		basic_ang = GDS_LatLon_basic_ang(gds);
@@ -717,11 +739,11 @@ int f_grid(ARG0) {
 			if (j == 255) j = -1;
 			sprintf(inv_out, "grid=%d ref_grid=%d uuid=",i,j);
 			inv_out += strlen(inv_out);
-			sprintf(inv_out,"%.2x%.2x%.2x%.2x-%.2x%.2x-%.2x%.2x-%.2x%.2x-%.2x%.2x%.2x%.2x%.2x%.2x\n",
+			sprintf(inv_out,"%.2x%.2x%.2x%.2x-%.2x%.2x-%.2x%.2x-%.2x%.2x-%.2x%.2x%.2x%.2x%.2x%.2x #points=%u\n",
 				sec[3][19+0], sec[3][19+1], sec[3][19+2], sec[3][19+3],
 				sec[3][19+4], sec[3][19+5], sec[3][19+6], sec[3][19+7],
 				sec[3][19+8], sec[3][19+9], sec[3][19+10], sec[3][19+11], 
-				sec[3][19+12], sec[3][19+13], sec[3][19+14], sec[3][19+15] );
+				sec[3][19+12], sec[3][19+13], sec[3][19+14], sec[3][19+15], npnts );
                   break;
 
 	    case 40110:

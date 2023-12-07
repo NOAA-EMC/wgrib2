@@ -1,69 +1,25 @@
 #!/bin/sh
 
-tab=3.2
-no=`echo $tab | sed 's/-/./'`
-tab=`echo $tab | sed 's/\./-/'`
+urlbase="https://github.com/wmo-im/GRIB2"
 
-out="CodeTable_${no}.dat"
+outfile="CodeTable_3.2.dat"
+if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
-# set -x
-
-tmp=/tmp/junk.dat
-
-urlbase="http://www.nco.ncep.noaa.gov/pmb/docs/grib2"
-url="$urlbase/grib2_table$tab.shtml"
-
-lc=0
-[ $no == '4.4' ] && lc=1
-[ $no == '5.0' ] && lc=1
-[ $no == '5.1' ] && lc=1
-[ $no == '6.0' ] && lc=1
-[ $no == '4.5' ] && no='4.5_ncep'
-[ $no == '4.9' ] && no='4.9_need_to_edit'
-[ $no == '4.10' ] && no='4.10_need_to_edit'
-
-out="CodeTable_$no.dat"
-
-if [ 1 -eq 1 ] ; then
-
-wget -q -O "$tmp" "$url"
-if [ $? -ne 0 ]; then
-  echo "Download of $url failed, exit."
-  exit
-fi
-
-no_lf <$tmp  >$tmp.1
-
-fi
-
-cat $tmp.1 | sed -e 's=<\([a-zA-Z]*\) [^>]*>=<\1>=g' -e 's=</body>.*==' -e 's=.*<body>==' \
-    -e 's=<br>==g' -e 's=<big>==g' -e 's=</big>==g' -e 's=<center>==g' -e 's=</td>==g' -e 's=</tr>==g' \
-    -e 's=</center>==g' -e 's/<span>//g' -e 's=</span>==g' -e 's=<tbody>==g' -e 's=</tbody>==g' >$tmp.2
-
-cat $tmp.2 | sed -e 's/ *</</g' -e 's=> *=>=g' | sed -e 's=.*<th>Number</th>==' -e 's=<\/table.*==' >$tmp.3
-
-#  <tr> -> LF
-cat $tmp.3 | sed -e 's=<tr>=\n=g'  >$tmp.4
-
-
-cat $tmp.4 | sed -e 's/ *<td>/<td>/g' -e '/<th>/d' -e '/^ *$/d' -e 's/(see [^)])//g' \
-  -e 's=<a>.*</a>==g' -e '/^<td>[0-9]*-/d' -e 's/(see)//g' -e 's/(See)//g' -e 's/   */ /' \
-  -e 's/&nbsp;/ /g' -e 's=</div>==g' -e 's=<div>= =g'  \
-  -e 's=<b>Note.*==' >$tmp.5
-
-cat $tmp.5 | sed -e 's/ *$//' | \
-  sed 's/<td>\(.*\)<td>\(.*\)/    case \1: string=\"\2\"; break;/' >$tmp.6
-echo >> $tmp.6
-
-if [ $lc -eq 1 ] ; then
-  cat $tmp.6 | sed -e y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/ >$out
-else
-  cat $tmp.6 > $out
-fi
-cat $out
-
-echo "diff:"
-diff $out ~/grib2/wgrib2/$out
-
+#---GRIB2 Code Table 3.2: Shape of the reference system
+wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_3_2_CodeTable_en.csv" -O- | sed '{
+    s/695,990,000/695 990 000/g
+    s/; /# /g
+    s/, /# /g
+    s/,/;/g
+    s/# /, /g
+    s/"//g
+    s/\([0-9]\) \([0-9]\)/\1\2/g
+  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT | awk -F";" '
+  {
+    num=$3; name=$5
+    if (num !="" && num !~ "-" && num !~ "Code") {
+      printf "case %5d: string=\"%s\"; break;\n",num,name
+    }
+  }' > "$outfile"
 
 exit

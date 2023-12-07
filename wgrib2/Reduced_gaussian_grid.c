@@ -46,7 +46,7 @@ int f_reduced_gaussian_grid(ARG3) {
         struct seq_file out;
         int conversion;
         unsigned char sec3[72];
-	enum interpol {linear, linear_extrapolate, neighbor, neighbor_extrapolate} interpolation;
+	enum interpol interpolation;
     };
     struct local_struct *save;
 

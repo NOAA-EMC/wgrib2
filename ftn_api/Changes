@@ -10,3 +10,4 @@
                   grb2_wrt, grb2_inq, added optional parameter debug
 	grb_inq: added copy=file
 	1/2018: added real, parameter :: grb2_UNDEFINED
+	11/2019: added optional parameter  use_ncep_table=logical_value

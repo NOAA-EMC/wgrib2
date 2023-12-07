@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifndef DISABLE_STAT
+#include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>
+#endif
+
 #include "wgrib2.h"
 
 /*
@@ -22,6 +28,7 @@
  *
  *  v1.3 4/2015 WNE added @tmp:XXXX  temporary files, added for callable wgrib2
  *                        @mem:N
+ v  v1.4 7/2020 WNE, George Trojan, fixed ffopen()
  */
 
 extern int flush_mode;
@@ -45,16 +52,22 @@ static struct opened_file *opened_file_start = NULL;
 FILE *ffopen(const char *filename, const char *mode)
 {
     struct opened_file *ptr;
+#ifndef DISABLE_STAT
     struct stat stat_buf;  /* test for pipes */
-    int is_read_file, i;
+#endif
+    int is_read_file, is_write_file, is_append_file, i, len;
     const char *p;
 
     /* see if is a read/write file */
-    is_read_file = 0;
+    is_read_file = is_write_file = is_append_file = 0;
     p = mode;
     while (*p) {
-	if (*p++ == 'r') is_read_file = 1;
+	if (*p == 'r') is_read_file = 1;
+	if (*p == 'w') is_write_file = 1;
+	if (*p++ == 'a') is_append_file = 1;
     }
+    if (is_read_file + is_write_file + is_append_file != 1) 
+        fatal_error("ffopen: mode is bad %s", mode);
 
     if (strcmp(filename,"-") == 0) {
 	if (is_read_file) return stdin;
@@ -63,7 +76,7 @@ FILE *ffopen(const char *filename, const char *mode)
     }
 
     if (strncmp(filename,"@mem:",5) == 0) {
-	fatal_error("option does not suport memory files %s", filename);
+	fatal_error("ffopen option does not suport memory files %s", filename);
     }
 
     /* see if file has already been opened */
@@ -71,18 +84,35 @@ FILE *ffopen(const char *filename, const char *mode)
     ptr = opened_file_start;
     while (ptr != NULL) {
 	if (strcmp(filename,ptr->name) == 0) {
-	    if (ptr->usage_count == 0) {			/* reuse of opened file */
-		if (is_read_file && !ptr->is_read_file) {	/* was write, now read */
-		     i = fflush(ptr->handle);
-		     if (i) fprintf(stderr,"WARNING: wgrib2 could not flush %s in write->read\n", ptr->name);
-                     fseek(ptr->handle, 0L, SEEK_SET);		/* rewind file */
-		}
-		ptr->is_read_file = is_read_file;
+	    
+            /* ptr->usage_count   should be zero at start of wgrib2 call
+               ptr->is_read_flag, file was opened in read mode
+               have to check if the open was for previous wgrib2 call
+            */
+
+	    /* already open in r/r or (aw)/(aw) modes */
+            if (is_read_file == ptr->is_read_file) {
+	        (ptr->usage_count)++;
+	        return ptr->handle;
+            }
+
+	    /* already being used in incompatible mode do not allow r+ w+ or a+ modes */
+            if (ptr->usage_count > 0) {
+		fatal_error("ffopen: file %s cannot be used for for read and write at same time", ptr->name);
 	    }
-	    if (is_read_file != ptr->is_read_file)  {
-		fatal_error("ffopen: file can only read or write not both: %s", ptr->name);
-	    }
-	    (ptr->usage_count)++;
+
+            /* open a file that has been opened before but not in use */
+	    /*
+	    ptr->handle = freopen(NULL,mode, ptr->handle);
+	    if (!ptr->handle) fatal_error("ffopen: wgrib2 could not freopen %s", ptr->name);
+	    */
+ 	    /* brute force. close file first. Since not in use, can change ptr->handle */
+	    i = fclose(ptr->handle);
+	    if (i) fprintf(stderr,"Warning ffopen(%s): closing used file, fclose() failed fclose err=%d\n",ptr->name, i);
+	    ptr->handle = fopen(ptr->name, mode);
+	    if (ptr->handle == NULL) fatal_error("ffopen: failed to reopen %s\n", ptr->name);
+	    ptr->is_read_file = is_read_file;
+	    ptr->usage_count = 1;
 	    return ptr->handle;
 	}
 	ptr = ptr->next;
@@ -90,10 +120,11 @@ FILE *ffopen(const char *filename, const char *mode)
 
     ptr = (struct opened_file *) malloc( sizeof(struct opened_file) );
     if (ptr == NULL) fatal_error("ffopen: memory allocation problem (%s)", filename);
-    ptr->name = (char *) malloc(strlen(filename) + 1);
+    len = strlen(filename) + 1;
+    ptr->name = (char *) malloc(len);
     if (ptr->name == NULL) fatal_error("ffopen: memory allocation problem (%s)", filename);
 
-    strncpy(ptr->name, filename, strlen(filename)+1);
+    strncpy(ptr->name, filename, len);
     ptr->is_read_file = is_read_file;
     ptr->usage_count = 1;
     ptr->do_not_close_flag = 1;		// default is not to close file file
@@ -129,6 +160,8 @@ FILE *ffopen(const char *filename, const char *mode)
     }
 
     /* check if output is to a pipe */
+    /* if no stat(), assume worst (slowest) case, files are pipes  */
+#ifndef DISABLE_STAT
     if (is_read_file == 0) {
 	if (stat(filename, &stat_buf) == -1) {
 	    /* remove ptr */
@@ -140,6 +173,9 @@ FILE *ffopen(const char *filename, const char *mode)
 	    flush_mode  = 1;
 	}
     }
+#else
+    flush_mode  = 1;
+#endif
 
     /* add ptr to linked list */
     ptr->next = opened_file_start;
@@ -214,35 +250,48 @@ int mk_file_transient(const char *filename) {
 
 /*
  * remove file from ffopen() linked lists
+ * old: delete file not in use
+ * 5/2020 close file
+ * 6/2020 reset memory file
+ *
+ * NOTE: must mever be called by wgrib2 when file is in use
+ *  should only be called by external program (not reentrent)
  */
 
 int wgrib2_free_file(const char *filename) {
     struct opened_file *ptr, *last_ptr;
+    int i;
+
+    /* if valid @mem:XX file */
+    if (strncmp(filename,"@mem:",5) == 0) {
+        i = atoi(filename+5);
+        if (i == 0 && filename[5] != '0') i = -1;
+        if (i >= 0 && i < N_mem_buffers) {
+            new_mem_buffer(i, 0);
+            return 0;
+        }
+    }
 
     // status_ffopen();
     ptr = opened_file_start;
     last_ptr = NULL;
     while (ptr != NULL) {
 	if (strcmp(filename,ptr->name) == 0) {
-	    if (ptr->usage_count == 0) {		/* can close file */
-		if (last_ptr == NULL)
-		    opened_file_start = ptr->next;
-		else {
-		    last_ptr->next = ptr->next;
-		}
-		fclose(ptr->handle);
-		free(ptr->name);
-		free(ptr);
-	    }
+	    /* delete file entry */
+	    if (last_ptr == NULL)	// ptr is first entry
+		opened_file_start = ptr->next;
 	    else {
-    		fprintf(stderr,"Warning: wgrib2_free_file %s usage count %d\n", filename, ptr->usage_count);
+		last_ptr->next = ptr->next;
 	    }
+	    fclose(ptr->handle);
+	    free(ptr->name);
+	    free(ptr);
 	    return 0;
 	}
 	last_ptr = ptr;
 	ptr = ptr->next;
     }
-    fprintf(stderr,"Warning wgrib2_free_file: %s not closed\n", filename);
+    // fprintf(stderr,"Warning wgrib2_free_file: %s not found\n", filename);
     return 1;
 }
 

@@ -51,7 +51,7 @@ int parse_level1(unsigned char **sec, const char *string, int *table_4_5, int *s
         if (n_percent == 0) {
             if (strcmp(string, level_table[i]) == 0) {
                 *table_4_5 = i;
-		*scale_factor = *scale_value = 255;
+		*scale_factor = 255;
                 return 0;
             }
         }
@@ -67,7 +67,7 @@ int parse_level1(unsigned char **sec, const char *string, int *table_4_5, int *s
                  if (i == 100 || i == 108) dval = dval * 100; // convert mb to Pa
 
                  best_scaled_value(dval, &n, &ival);
-                 *scale_factor = INT1(n);
+                 *scale_factor = n;
 		 *scale_value = ival;
                  return 0;
              }
@@ -93,7 +93,7 @@ int parse_level1(unsigned char **sec, const char *string, int *table_4_5, int *s
             if (n_percent == 0) {
                 if (strcmp(string, ncep_level_table[i]) == 0) {
                     *table_4_5 = i + 192;
-		    *scale_factor = *scale_value = 255;
+		    *scale_factor = 255;
                     return 0;
                 }
             }
@@ -109,12 +109,26 @@ int parse_level1(unsigned char **sec, const char *string, int *table_4_5, int *s
                     if (i + 192 == 235) dval = dval * 10; // convert C to 1/10C
 
                     best_scaled_value(dval, &n, &ival);
-                    *scale_factor = INT1(n);
+                    *scale_factor = n;
 		    *scale_value = ival;
                     return 0;
 		}
             }
         }
+    }
+    /* check for local level type 200 0 */
+    if (n = -1, sscanf(string,"local level type %d %lf%n",&i, &dval, &n), n == len_string) {
+        *table_4_5 = i;
+        best_scaled_value(dval, &n, &ival);
+        *scale_factor = n;
+        *scale_value = ival;
+        return 0;
+    }
+    /* check for local level type 200 */
+    if (n = -1, sscanf(string,"local level type %d%n",&i, &n), n == len_string) {
+        *table_4_5 = i;
+        *scale_factor = 255;
+        return 0;
     }
 
     return 1;
@@ -136,14 +150,18 @@ int f_set_lev(ARG1) {
     if (mode < 0) return 0;
 
     len_arg1 = strlen(arg1);
-    if (len_arg1 > STRING_SIZE+1) fatal_error("set_lev: time string too long","");
+    if (len_arg1 == 0) return 0;	// if empty string, NOP
+    if (len_arg1 > STRING_SIZE+1) fatal_error("set_lev: arg1 too long","");
 
 if (mode == 99) fprintf(stderr,"set_lev: arg=%s\n", arg1);
 
     /* get fixed surface pointers */
     p1 = code_table_4_5a_location(sec);
     p2 = code_table_4_5b_location(sec);
-    if (p1 == NULL) fatal_error("set_lev: PDT does not have fixed surfaces","");
+    if (p1 == NULL) {
+	if (strcmp("no_level", arg1) == 0) return 0;
+	fatal_error("set_lev: PDT does not have fixed surfaces","");
+    }
 
     /* set fixed surface to undefined */
 
@@ -157,8 +175,7 @@ if (mode == 99) fprintf(stderr,"set_lev: arg=%s\n", arg1);
 
     if (parse_level1(sec, arg1, &table_4_5, &scale_factor, &scale_value) == 0) {
 	p1[0] = table_4_5;
-        p1[1] = INT1(scale_factor);
-        int_char(scale_value, p1+2);
+	scaled_char(scale_factor, scale_value, p1 + 1);
         return 0;
     }
 
@@ -174,15 +191,13 @@ if (mode == 99) fprintf(stderr,"set_lev: arg=%s\n", arg1);
 	    string[dash] = 0;
             if (parse_level1(sec, string, &table_4_5, &scale_factor, &scale_value) == 0) {
 	        p1[0] = table_4_5;
-                p1[1] = INT1(scale_factor);
-                int_char(scale_value, p1+2);
+	        scaled_char(scale_factor, scale_value, p1 + 1);
                 for (i = dash+3; i <= len_arg1; i++) {
 	            string[i-dash-3] = arg1[i];
 	        }
                 if (parse_level1(sec, string, &table_4_5, &scale_factor, &scale_value) == 0) {
 	            p2[0] = table_4_5;
-                    p2[1] = INT1(scale_factor);
-                    int_char(scale_value, p2+2);
+	            scaled_char(scale_factor, scale_value, p2 + 1);
 		    return 0;
 	        }
 	        else {
@@ -195,7 +210,7 @@ if (mode == 99) fprintf(stderr,"set_lev: arg=%s\n", arg1);
 if (mode == 99) fprintf(stderr,"in set_lev arg1=%s\n", arg1);
 
     // n-n (string) layer
-    if (n=-1, sscanf(arg1,"%g-%g %20s layer%n",&val1,&val2, layer_type1, &n), n == len_arg1) {
+    if (n=-1, sscanf(arg1,"%g-%g %19s layer%n",&val1,&val2, layer_type1, &n), n == len_arg1) {
        layer_type1[19] = 0;
        i = -1;
        if (strncmp(layer_type1,"sigma",20) == 0)  i = 104;
@@ -204,19 +219,15 @@ if (mode == 99) fprintf(stderr,"in set_lev arg1=%s\n", arg1);
        if (i != -1) {
 	    p1[0] = p2[0] = i;
             best_scaled_value(val1, &n, &ival);
-            p1[1] = INT1(n);
-            int_char(ival, p1+2);
-
+	    scaled_char(n, ival, p1 + 1);
             best_scaled_value(val2, &n, &ival);
-            p2[1] = INT1(n);
-            int_char(ival, p2+2);
-
+	    scaled_char(n, ival, p2 + 1);
             return 0;
         }
     }
 
     // n-n (string) (string) layer
-    if (n=-1, sscanf(arg1,"%g-%g %20s %20s layer%n",&val1,&val2, layer_type1, layer_type2, &n), n == len_arg1) {
+    if (n=-1, sscanf(arg1,"%g-%g %19s %19s layer%n",&val1,&val2, layer_type1, layer_type2, &n), n == len_arg1) {
        layer_type1[19] = layer_type2[19] = 0;
        i = -1;
        if (strncmp(layer_type1,"sigma",20) == 0 && strncmp(layer_type2,"height",20) == 0)  i = 115;
@@ -226,13 +237,9 @@ if (mode == 99) fprintf(stderr,"in set_lev arg1=%s\n", arg1);
        if (i != -1) {
 	    p1[0] = p2[0] = i;
             best_scaled_value(val1, &n, &ival);
-            p1[1] = INT1(n);
-            int_char(ival, p1+2);
-
+	    scaled_char(n, ival, p1 + 1);
             best_scaled_value(val2, &n, &ival);
-            p2[1] = INT1(n);
-            int_char(ival, p2+2);
-
+	    scaled_char(n, ival, p2 + 1);
             return 0;
         }
     }
@@ -242,10 +249,10 @@ if (mode == 99) fprintf(stderr,"in set_lev arg1=%s\n", arg1);
 	val1 *= 100.0;
 	val2 *= 100.0;
 	p1[0] = p2[0] = 108;
-	p1[1] = 0;
-	int_char((int) val1, p1+2);
-	p2[1] = 0;
-	int_char((int) val2, p2+2);
+        best_scaled_value(val1, &n, &ival);
+	scaled_char(n, ival, p1 + 1);
+        best_scaled_value(val2, &n, &ival);
+	scaled_char(n, ival, p2 + 1);
         return 0;
     }
     if (n=-1, sscanf(arg1,"%g-%g mb%n",&val1,&val2,&n), n == len_arg1) {
@@ -253,37 +260,28 @@ if (mode == 99) fprintf(stderr,"in set_lev arg1=%s\n", arg1);
 	val1 *= 100.0;
 	val2 *= 100.0;
 	p1[0] = p2[0] = 100;
-	p1[1] = 0;
-	int_char((int) val1, p1+2);
-	p2[1] = 0;
-	int_char((int) val2, p2+2);
+        best_scaled_value(val1, &n, &ival);
+	scaled_char(n, ival, p1 + 1);
+        best_scaled_value(val2, &n, &ival);
+	scaled_char(n, ival, p2 + 1);
         return 0;
     }
     if (n=-1, sscanf(arg1,"%g-%g m below ground%n",&val1,&val2,&n), n == len_arg1) {
 	if (p2 == NULL) fatal_error("set_lev: PDT has only 1 fixed surface, set_lev needs 2","");
 	p1[0] = p2[0] = 106;
-
 	best_scaled_value(val1, &n, &ival);
-	p1[1] = INT1(n);
-	int_char(ival, p1+2);
-
+	scaled_char(n, ival, p1 + 1);
 	best_scaled_value(val2, &n, &ival);
-	p2[1] = INT1(n);
-	int_char(ival, p2+2);
+	scaled_char(n, ival, p2 + 1);
         return 0;
     }
     if (n=-1, sscanf(arg1,"%g-%g m above ground%n",&val1,&val2,&n), n == len_arg1) {
 	if (p2 == NULL) fatal_error("set_lev: PDT has only 1 fixed surface, set_lev needs 2","");
 	p1[0] = p2[0] = 103;
-
         best_scaled_value(val1, &n, &ival);
-        p1[1] = INT1(n);
-        int_char(ival, p1+2);
-
+	scaled_char(n, ival, p1 + 1);
         best_scaled_value(val2, &n, &ival);
-        p2[1] = INT1(n);
-        int_char(ival, p2+2);
-
+	scaled_char(n, ival, p2 + 1);
         return 0;
     }
     if (n=-1, sscanf(arg1,"%g-%g m below sea level%n",&val1,&val2,&n), n == len_arg1) {
@@ -291,15 +289,22 @@ if (mode == 99) fprintf(stderr,"in set_lev arg1=%s\n", arg1);
 	p1[0] = p2[0] = 160;
 
         best_scaled_value(val1, &n, &ival);
-        p1[1] = INT1(n);
-        int_char(ival, p1+2);
-
+	scaled_char(n, ival, p1 + 1);
         best_scaled_value(val2, &n, &ival);
-        p2[1] = INT1(n);
-        int_char(ival, p2+2);
-
+	scaled_char(n, ival, p2 + 1);
         return 0;
     }
+    if (n=-1, sscanf(arg1,"%g-%g generalized vertical height coordinate%n",&val1,&val2,&n), n == len_arg1) {
+	if (p2 == NULL) fatal_error("set_lev: PDT has only 1 fixed surface, set_lev needs 2","");
+	p1[0] = p2[0] = 150;
+
+        best_scaled_value(val1, &n, &ival);
+	scaled_char(n, ival, p1 + 1);
+        best_scaled_value(val2, &n, &ival);
+	scaled_char(n, ival, p2 + 1);
+        return 0;
+    }
+
     if (strcmp("atmos col", arg1) == 0 ||	// wgrib2 compatible
             strcmp("Entire atmosphere (considered as a single layer)", arg1) == 0) {
 	if (p2 == NULL) fatal_error("set_lev: PDT has only 1 fixed surface, set_lev needs 2","");
@@ -313,7 +318,7 @@ if (mode == 99) fprintf(stderr,"in set_lev arg1=%s\n", arg1);
 }
 
 
-extern struct gribtable_s gribtable[], *user_gribtable;
+extern struct gribtable_s NCEP_gribtable[], *user_gribtable, ECMWF_gribtable[], DWD1_gribtable[], local_gribtable[];
 
 /*
  * HEADER:100:set_var:misc:1:changes variable name
@@ -326,9 +331,10 @@ extern struct gribtable_s gribtable[], *user_gribtable;
  *                 var discipline=0 center=34 local_table=1 parmcat=1 parm=203
  *                 var discipline=10 master_table=2 parmcat=0 parm=11
  *                 var10_2_1_7_0_11
+ * 1.3 1/2021 WNE: added ecmwf tables
  */
 
-
+int names;
 
 int f_set_var(ARG1) {
     struct gribtable_s *p;
@@ -370,7 +376,6 @@ int f_set_var(ARG1) {
             sec[4][10] = parmnum;
 	    return 0;
 	}
-fprintf(stderr,">>> i = %d\n",i);
     }
 
 
@@ -391,7 +396,10 @@ fprintf(stderr,">>> i = %d\n",i);
 
         /* search for non-local table match first */
 	if (p == NULL || p->disc == -1) {
-	    p = gribtable;
+	    if (names == ECMWF) p = ECMWF_gribtable;
+	    else if (names == DWD1) p = DWD1_gribtable;
+	    else if (names == DWD2) p = DWD1_gribtable;
+	    else  p = NCEP_gribtable;
             while (p->disc != -1) {
 	        if (p->disc < 192 && p->pcat < 192 && p->pnum < 192 && strcmp(arg1,p->name) == 0) {
                     break;
@@ -402,8 +410,12 @@ fprintf(stderr,">>> i = %d\n",i);
 
         /* try local tables */
         if (p->disc == -1) {
-            p = gribtable;
 	    center = GB2_Center(sec);
+	    if (center == ECMWF) p = ECMWF_gribtable;
+            else if (center == NCEP) p = NCEP_gribtable;
+            else if (center == DWD1) p = DWD1_gribtable;
+            else if (center == DWD2) p = DWD1_gribtable;
+            else p = local_gribtable;
             while (p->disc != -1) {
                 if (center == p->cntr && strcmp(arg1,p->name) == 0) {
 		    break;
@@ -443,18 +455,19 @@ int f_set_center(ARG1) {
  * HEADER:100:set:misc:2:set X = Y, X=local_table,etc (help: -set help help)
  */
 
-static const char *set_options="discipline, center, subcenter, master_table, local_table, background_process_id, "
-        "analysis_or_forecast_process_id, model_version_date, chemical, table_1.2, table_1.3, table_1.4, "
+const char *set_options="discipline, center, subcenter, master_table, local_table, background_process_id, "
+        "analysis_or_forecast_process_id, aerosol_size, aerosol_wavelength, process, model_version_date, "
+	"chemical, aerosol, table_1.2/type_reftime, table_1.3, table_1.4, "
         "table_3.0, table_3.1/GDT, table_3.2, " 
 	"table_3.3, table_3.4, table_4.0/PDT, table_4.1, table_4.2, table_4.3, table_4.5a, table_4.5b, table_4.6, "
         "table_4.7, table_4.8, table_4.10, "
-        "table_4.11, table_4.230, table_5.0/DRT, table_6.0, %";
+        "table_4.11, table_4.230, table_4.233, table_5.0/DRT, table_6.0, %, cluster";
 extern struct codetable_4_230  codetable_4_230_table[];
 
 
 int f_set(ARG2) {
-    int i, j;
-    double val;
+    int i, j, scale_factor, scale_value, prob_type, pdt;
+    double val, val1, val2;
     int year,mon,day,hr,minute,second;
     unsigned char *p;
     char *endptr;
@@ -469,8 +482,7 @@ int f_set(ARG2) {
     }
 
     if (mode >= 0) {
-
-
+  	pdt = GB2_ProdDefTemplateNo(sec);
 	if (strcmp(arg1,"data_*") == 0) {
 	    val = strtod(arg2, &endptr);
 	    if (*endptr == 0) {
@@ -559,7 +571,20 @@ int f_set(ARG2) {
             }
 	    return 0;
         }
-	if (strcmp(arg1,"table_1.2") == 0) {
+	if (strcmp(arg1,"type_reftime") == 0 || strcmp(arg1,"table_1.2") == 0) {
+	    /* check if number */
+	    if (is_uint(arg2)) {
+	        sec[1][11] = (unsigned char) i;
+		return 0;
+	    }
+	    i = -1;
+	    if (strcmp(arg2, "analysis") == 0) i = 0;
+	    if (strcmp(arg2, "start of forecast") == 0) i = 1;
+	    if (strcmp(arg2, "verifying time of forecast") == 0) i = 2;
+	    if (strcmp(arg2, "observation time") == 0) i = 3;
+	    if (strcmp(arg2, "local time") == 0) i = 4;
+	    if (strcmp(arg2, "unknown") == 0) i = 255;
+	    if (i == -1) fatal_error_ss("set: bad arg %s %s", arg1, arg2);
 	    sec[1][11] = (unsigned char) i;
 	    return 0;
 	}
@@ -602,7 +627,7 @@ int f_set(ARG2) {
 	    sec[4][10] = (unsigned char) i;
 	    return 0;
 	}
-	if (strcmp(arg1,"table_4.3") == 0) {
+	if (strcmp(arg1,"table_4.3") == 0 || strcmp(arg1,"process") == 0) {
 	    p = code_table_4_3_location(sec);
 	    if (p) *p = (unsigned char) i;
 	    return 0;
@@ -642,25 +667,45 @@ int f_set(ARG2) {
 	    if (p) *p = (unsigned char) i;
 	    return 0;
 	}
-	if (strcmp(arg1,"table_4.230") == 0 || strcmp(arg1, "chemical") == 0) {		// chemical
+	if (strcmp(arg1,"table_4.230") == 0 || strcmp(arg1, "chemical") == 0) {
 	    p = code_table_4_230_location(sec);
-	    if (p) {
-		j = 0;
-		while (codetable_4_230_table[j].no != 65535) {
-		    if (strcmp(arg2, codetable_4_230_table[j].name) == 0) {
-		        uint2_char(codetable_4_230_table[j].no, p);
-			return 0;
-		    }
-		    j++;
-		}
-		if (i == 0 && arg2[0] != '0') fatal_error("set table_4.230/chemical wrong chemical=%s\n", arg2);
+            if (p == NULL) return 0; /* non-chemical template */
+	    /* check if number */
+	    if (is_uint(arg2)) {
 		uint2_char(i, p);
 		return 0;
 	    }
-	    /* could not change chemical type */
-	    fatal_error("set table_4.230/chemical wrong template chemical=%s\n", arg2);
-	    return 0;
+	    /* must be a name */
+	    j = 0;
+	    while (codetable_4_230_table[j].no != 65535) {
+		if (strcmp(arg2, codetable_4_230_table[j].name) == 0) {
+		    uint2_char(codetable_4_230_table[j].no, p);
+	 	    return 0;
+		}
+		j++;
+	    }
+            fatal_error("set table_4.230/chemical unrecognized chemical %s", arg2);
 	}
+        if (strcmp(arg1,"table_4.233") == 0 || strcmp(arg1, "aerosol") == 0) {
+            p = code_table_4_233_location(sec);
+	    if (p == NULL) return 0; /* non-aerosol template */
+
+            /* check if number */
+            if (is_uint(arg2)) {
+               uint2_char(i, p);
+               return 0;
+            }
+            /* must be a name, table 4.233 is the same as 4.230 */
+            j = 0;
+            while (codetable_4_230_table[j].no != 65535) {
+                if (strcmp(arg2, codetable_4_230_table[j].name) == 0) {
+                    uint2_char(codetable_4_230_table[j].no, p);
+                    return 0;
+                }
+                j++;
+	    }
+	    fatal_error("set table_4.233/aerosol unrecognized aerosol %s", arg2);
+        }
 	if (strcmp(arg1,"table_5.0") == 0 || strcmp(arg1,"DRT") == 0) {
             uint2_char(i, sec[5]+9);
 	    return 0;
@@ -672,12 +717,64 @@ int f_set(ARG2) {
 	if (strcmp(arg1,"%") == 0) {
 	    p = percentile_value_location(sec);
 	    if (p) *p = (unsigned char) i;
+            return 0;
+	}
+	if (strcmp(arg1,"cluster") == 0) {
+	    p = cluster_identifier_location(sec);
+	    if (p) *p = (unsigned char) i;
 	    return 0;
 	}
-
-	fatal_error("set: allowed values: %s", set_options);
-
-	return 1;
+	if (strcmp(arg1,"aerosol_size") == 0) {
+	    if (pdt != 44 && pdt != 45 && pdt != 46 && pdt != 48 && pdt != 49) return 0;
+	    p = code_table_4_91_location(sec);
+	    if (p == NULL) return 0;
+	    i = scan_code_table_4_91(&prob_type, &val1, &val2, arg2);
+	    if (i == 0) {
+		p[0] = prob_type;
+		if (DEFINED_VAL(val1)) {
+		    best_scaled_value(val1, &scale_factor, &scale_value);
+		    scaled_char(scale_factor, scale_value, p+1);
+		}
+		else {
+		    p[1] = p[2] = p[3] = p[4] = p[5] = 255;
+		}
+		if (DEFINED_VAL(val2)) {
+		    best_scaled_value(val2, &scale_factor, &scale_value);
+		    scaled_char(scale_factor, scale_value, p+6);
+		}
+		else {
+		    p[6] = p[7] = p[8] = p[9] = p[10] = 255;
+		}
+	    }
+	    else fatal_error("set aerosol_size bad size: %s", arg2);
+	    return 0;
+	}
+	if (strcmp(arg1,"aerosol_wavelength") == 0) {
+	    if (pdt != 44 && pdt != 45 && pdt != 46 && pdt != 48 && pdt != 49) return 0;
+	    p = code_table_4_91b_location(sec);
+	    if (p == NULL) return 0;
+	    i = scan_code_table_4_91(&prob_type, &val1, &val2, arg2);
+	    if (i == 0) {
+		p[0] = prob_type;
+		if (DEFINED_VAL(val1)) {
+		    best_scaled_value(val1, &scale_factor, &scale_value);
+		    scaled_char(scale_factor, scale_value, p+1);
+		}
+		else {
+		    p[1] = p[2] = p[3] = p[4] = p[5] = 255;
+		}
+		if (DEFINED_VAL(val2)) {
+		    best_scaled_value(val2, &scale_factor, &scale_value);
+		    scaled_char(scale_factor, scale_value, p+6);
+		}
+		else {
+		    p[6] = p[7] = p[8] = p[9] = p[10] = 255;
+		}
+	    }
+	    else fatal_error("set aerosol_wavelength bad size: %s", arg2);
+	    return 0;
+	}
+	fatal_error("set %s, allowed values: %s", arg1, set_options);
     }
     return 0;
 }
@@ -1041,7 +1138,6 @@ int f_set_ave(ARG1) {
 
     if (len != len_arg1) i = 0;
     if (i == 7) {
-fprintf(stderr,">>> need to check out climo1\n");
         tr = a2time_range(string);
         if (tr == -1) fatal_error("set_ave: bad time range %s", string);
         tr2 = a2time_range(string2);
@@ -1053,7 +1149,6 @@ fprintf(stderr,">>> need to check out climo1\n");
         add_time(&year, &month, &day, &hour, &minute, &second, (j-1)*k, tr);
         add_time(&year, &month, &day, &hour, &minute, &second, (j2-1)*k2, tr2);
         save_time(year, month, day, hour, minute, second, new_sec4+34);
-        
 
         uint_char(58, new_sec4);                // length of section
         uint2_char(8, new_sec4+7);              // pdt = 8

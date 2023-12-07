@@ -56,6 +56,7 @@ extern double *lat, *lon;
 extern int  scan, nx, ny;
 extern int *variable_dim;
 extern enum output_order_type output_order;
+extern enum geolocation_type geolocation;
 
 // static double toradians(double x) { return x * (M_PI/180.0); }
 static double todegrees(double x) { return x * (180.0/M_PI); }
@@ -674,11 +675,11 @@ double *gauss2lats(int nlat, double *ylat) {
 
     double g, gm, gp, gt, delta, d;
 
+
+#pragma omp parallel for private(i,g,gm,gp,gt,delta)
   for (i = 1; i <= nzero; i++) {
     cosc[i] = sin((i - 0.5)*M_PI/nlat + M_PI*0.5);
-  }
   
-  for (i = 1; i <= nzero; i++) {
     g = gord(nlat, cosc[i]);
     gm = gord(nlat - 1, cosc[i]);
     gp = gord(nlat + 1, cosc[i]);
@@ -696,13 +697,10 @@ double *gauss2lats(int nlat, double *ylat) {
       
     } /* end while */
     
-  } /* end for */
-  
-  for (i = 1; i <= nzero; i++) {
     colat[i] = acos(cosc[i]);
     sinc[i] = sin(colat[i]);
   }
-  
+
   /*
    * ... deal with equator if odd number of points
    */
@@ -724,6 +722,7 @@ double *gauss2lats(int nlat, double *ylat) {
     sinc[i]  = sinc[nlat + 1 - i];
   } /* end for(i) */
   
+#pragma omp parallel for private(i)
   for (i = 1; i <= nlat; i++) {
     ylat[i-1] = todegrees(acos(sinc[i]));
     if ( i > (nlat / 2) ) ylat[i-1] = -ylat[i-1];
@@ -899,16 +898,9 @@ int gauss2ll(unsigned char **sec, double **llat, double **llon) {
 } /* end gauss2ll() */
 
 
-/* find the closest grid point to (plat, plon) */
-
-/* this code needs to be rewritten. too slow */
-
-
-
 /* closest_init:  location of grid point in x-y-z space, assume r=1 */ 
 
 static double *x = NULL, *y = NULL, *z = NULL;
-extern int use_gctpc;
 
 int closest_init(unsigned char **sec) {
 
@@ -916,19 +908,24 @@ int closest_init(unsigned char **sec) {
     double s, c;
     int grid_type;
 
-
-    if (use_gctpc && output_order == wesn && nx > 0 && ny > 0) {
+    /* if using gctpc: use gctpc routines to find closest point */
+    if  (!GDS_Scan_staggered(scan) && nx > 0 && ny > 0 && output_order == wesn && geolocation == gctpc) {
        if (gctpc_ll2xy_init(sec, lon, lat) == 0) return 0;
     }
 
+    /* could use proj routines in future */
+
     grid_type = code_table_3_1(sec);
 
-    if  (!GDS_Scan_staggered(scan) && nx > 0 && ny > 0) {
-        /* if grids with (lat,lon) -> (i,j) insert code here */
-        if (grid_type == 0 && output_order == wesn) return latlon_init(sec, nx, ny);
-        if (grid_type == 90 && output_order == wesn) return space_view_init(sec);
+    /* special routine that find the cloest point */
+    if  (!GDS_Scan_staggered(scan) && nx > 0 && ny > 0 && output_order == wesn) {
+        if (grid_type == 0) return latlon_init(sec, nx, ny);
+        if (grid_type == 40 && 2*GDS_Gaussian_nlat(sec[3]) == ny) return gaussian_init(sec, nx, ny);
+        if (grid_type == 90) return space_view_init(sec);
     }
 
+    /* brute force method */
+    /* find (x,y,z) assuming spherical earth */
     nnpts = GB2_Sec3_npts(sec);
     if (x) {
         free(x);
@@ -973,16 +970,21 @@ long int closest(unsigned char **sec, double plat, double plon) {
     double t, xx, yy, zz, small;
     unsigned int k;
 
-    if (use_gctpc && output_order == wesn && nx > 0 && ny > 0) {
+    /* if gctpc: use gctpc routines */
+    if  (!GDS_Scan_staggered(scan) && nx > 0 && ny > 0 && output_order == wesn && geolocation == gctpc) {
 	/* will fix it so that everything is 0 for out of bounds */
 	if (gctpc_ll2i(1, &plon, &plat, &k) == 0) return ((long int) k) - 1;
     }
 
-    grid_type = code_table_3_1(sec);
+    /* could use proj routines in future */
 
-    // if grid with (lat,lon) -> (i,j) /l.. insert code here
-    if (grid_type == 0 && nx > 0 && ny > 0 && output_order == wesn) return latlon_closest(sec, plat, plon);
-    if (grid_type == 90 && nx > 0 && ny > 0 && output_order == wesn) return space_view_closest(sec, plat, plon);
+    grid_type = code_table_3_1(sec);
+    
+    if  (!GDS_Scan_staggered(scan) && nx > 0 && ny > 0 && output_order == wesn) {
+        if (grid_type == 0) return latlon_closest(sec, plat, plon);
+        if (grid_type == 40 && 2*GDS_Gaussian_nlat(sec[3]) == ny) return gaussian_closest(sec, plat, plon);
+        if (grid_type == 90) return space_view_closest(sec, plat, plon);
+    }
 
     nnpts = GB2_Sec3_npts(sec);
     if (x == NULL) return -1l;
@@ -1004,7 +1006,6 @@ long int closest(unsigned char **sec, double plat, double plon) {
     if (j == -1) return j;
     i0 = j;
 
-
 #pragma omp parallel private(i)
 {
     double s, small_thread;
@@ -1013,8 +1014,8 @@ long int closest(unsigned char **sec, double plat, double plon) {
     small_thread = small;
     j_thread = j;
 
-#pragma omp for nowait
-    for (i = i0; i < nnpts; i++) {
+#pragma omp for nowait 
+    for (i = i0+1; i < nnpts; i++) {
 	if (x[i] >= 999.0) continue;
         s = (x[i]-xx)*(x[i]-xx)+(y[i]-yy)*(y[i]-yy)+(z[i]-zz)*(z[i]-zz);
         if (s < small_thread) {

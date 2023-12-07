@@ -16,9 +16,8 @@
  */
 
 /*
- * want memory buffers defined before wgrib2 is run
- * so with callable wgrib2, program could initialize
- * a memory buffer before calling wgrib2
+ * want memory buffers defined before wgrib2 is run because of callable wgrib2.
+ * A program could setup a memory buffer, and then call wgrib2().
  *   ex. set @mem:0 to a grib message
  *       call wgrib2 to decode grib message
  *       get @mem:1 with the decoded grib message
@@ -37,6 +36,7 @@
  * to reduce calls to realloc/malloc, more memory is allocated than needed for the write
  */
 
+
 unsigned char *mem_buffer[N_mem_buffers] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
@@ -49,6 +49,21 @@ size_t mem_buffer_pos[N_mem_buffers] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 extern int file_append;
+
+/* 
+   When we allocate or reallocate memory, want to request more than the 
+   minimal needed memory so that we can avoid some reallocs. Also
+   try to make it a multiple of because that is the page size on many machines.
+
+   Probably better to make size slightly smaller than a N*4096 to account
+   for malloc using some of page for its internal use.  Maybe later.
+ */
+
+static size_t calc_new_size(size_t size)
+{
+    size_t n = size / 4096;
+    return (n + 1 + n/10)*4096 + 16*4096;
+}
 
 void init_mem_buffers(void) {
     if (sizeof(mem_buffer) / sizeof (unsigned char *) != N_mem_buffers) 
@@ -76,20 +91,19 @@ unsigned char *new_mem_buffer(int n, size_t size) {
     size_t new_size;
 
     if (n < 0 || n >= N_mem_buffers) return NULL;
-    if (size <= mem_buffer_allocated[n]) {
+
+    /* use already allocated buffer */
+    if (mem_buffer[n] != NULL && size <= mem_buffer_allocated[n]) {
 	mem_buffer_size[n] = size;
 	mem_buffer_pos[n] = 0;
 	return mem_buffer[n];
     }
-    if (mem_buffer[n] == NULL) {
-	new_size = size / 4096;
-	new_size = (new_size + 1 + new_size/10)*4096 + 16*4096;
-    }
-    else {
-	new_size = size / 4096;
-	new_size = (new_size + 1 + new_size/10)*4096 + 16*4096;
+
+    /* find new size and allocate memory for buffer */
+    if (mem_buffer[n] != NULL) {
         free(mem_buffer[n]);
     }
+    new_size = calc_new_size(size);
     mem_buffer[n] = (unsigned char *) malloc(new_size);
     if (mem_buffer[n]) {
 	mem_buffer_size[n] = size;
@@ -112,9 +126,8 @@ unsigned char *realloc_mem_buffer(int n, size_t size) {
     size_t new_size;
     unsigned char *p;
     if (n < 0 || n >= N_mem_buffers) return NULL;
+    new_size = calc_new_size(size);
     if (mem_buffer[n] == NULL) {
-	new_size = size / 4096;
-	new_size = (new_size + 1 + new_size/10)*4096 + 16*4096;
         mem_buffer[n] = (unsigned char *) malloc(new_size);
         if (mem_buffer[n]) {
 	    mem_buffer_size[n] = size;
@@ -125,9 +138,7 @@ unsigned char *realloc_mem_buffer(int n, size_t size) {
         }
     }
     else {
-	new_size = size / 4096;
-	new_size = (new_size + 1 + new_size/10)*4096 + 16*4096;
-        if ((p = realloc(mem_buffer[n], size)) == NULL) {
+        if ((p = realloc(mem_buffer[n], new_size)) == NULL) {
 	    free(mem_buffer[n]);		
 	    mem_buffer_pos[n] = mem_buffer_size[n] = mem_buffer_allocated[n] = 0;
 	}
@@ -150,20 +161,19 @@ unsigned char *realloc_mem_buffer(int n, size_t size) {
  * fwrite for memory file n
  */
 size_t fwrite_mem(const void *ptr, size_t size, size_t nmemb, int n) {
-    size_t nwrite, old_size, new_size;
+    size_t nwrite, new_size;
 
     if (n < 0 || n >= N_mem_buffers) return 0;
 
     nwrite = size * nmemb;
-    old_size = mem_buffer_size[n];
     new_size = mem_buffer_pos[n] + nwrite;
 
-    if (new_size > old_size) {
+    if (new_size > mem_buffer_allocated[n]) {
         realloc_mem_buffer(n, new_size);
     }
     if (mem_buffer[n] == NULL) return (size_t) 0;
     memcpy(mem_buffer[n] + mem_buffer_pos[n], ptr, nwrite);
-    mem_buffer_size[n] = mem_buffer_pos[n] += nwrite;
+    mem_buffer_size[n] = mem_buffer_pos[n] = new_size;
     return nmemb;
 }
 
@@ -258,7 +268,7 @@ int wgrib2_get_mem_buffer(unsigned char *my_buffer, size_t size, int n) {
  *         1  :  bad memory file number
  *         3  :  memory allocation problem
  */
-int wgrib2_set_mem_buffer(unsigned char *my_buffer, size_t size, int n) {
+int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n) {
     if (n < 0 || n >= N_mem_buffers) return 1;
     if (size == 0) {
         mem_buffer_size[n] = 0;

@@ -7,6 +7,8 @@
  * time range: ascii to int, int to ascii
  */
 
+extern int ftime_mode;
+
 static struct tr_table_struct {
 	const char *name; const int val;
 } tr_table [] = {
@@ -79,17 +81,19 @@ void simple_time_range(int *tr, int *val) {
 	*val *= 12;
     }
 
-    if (*tr == 13 && (*val % 60 == 0) && (*val != 0)) {		// seconds
-	*val /= 60;
-	*tr = 0;						// minutes
-    }
-    if (*tr == 0 && (*val % 60 == 0) && (*val != 0)) {		// minutes
-	*val /= 60;
-	*tr = 1;						// hours
-    }
-    if (*tr == 1 && (*val % 24 == 0) && (*val != 0)) {		// hours
-	*val /= 24;
-	*tr = 2;						// days
+    if ((ftime_mode & 1) == 0) {
+	if (*tr == 13 && (*val % 60 == 0) && (*val != 0)) {		// seconds
+	    *val /= 60;
+	    *tr = 0;						// minutes
+        }
+        if (*tr == 0 && (*val % 60 == 0) && (*val != 0)) {		// minutes
+	    *val /= 60;
+	    *tr = 1;						// hours
+        }
+        if (*tr == 1 && (*val % 24 == 0) && (*val != 0)) {		// hours
+	    *val /= 24;
+	    *tr = 2;						// days
+        }
     }
 }
 

@@ -214,15 +214,23 @@ contains
 !        grb2_mk_inv
 !        writes the match inventory to a file
 !
-        integer function grb2_mk_inv(grbfile, invfile)
+        integer function grb2_mk_inv(grbfile, invfile, use_ncep_table)
 
 	use wgrib2lowapi
         implicit none
         character (len=*), intent(in):: grbfile, invfile
+        logical, optional, intent(in):: use_ncep_table
         character (len=300) :: cmd(10)
 	integer :: n, i
 
 	n = 0
+        if (present(use_ncep_table)) then
+	    if (use_ncep_table) then
+                i = add_line(cmd,n,'-set')
+                i = add_line(cmd,n,'center')
+                i = add_line(cmd,n,'7')
+            endif
+        endif
         i = add_line(cmd,n,grbfile)
         i = add_line(cmd,n,'-rewind_init')
         i = add_line(cmd,n,grbfile)
@@ -258,7 +266,7 @@ contains
 !        i = add_line(cmd,n,'-grib')
 !        i = add_line(cmd,n,outgrbfile)
 !        i = add_line(cmd,n,'-inv')
-!!       ** this is linux/unix
+!       ** this is linux/unix
 !        i = add_line(cmd,n,'/dev/null')
 !       ** this is for windows
 !       i = add_line(cmd,n,'NUL')

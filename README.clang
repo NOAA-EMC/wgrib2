@@ -1,0 +1,51 @@
+Clang:        9/2019, revised 4/2022
+
+                  Clang, gfortran/dragonegg:
+
+The original wgrib2 support for Clang was for Ubuntu 12.04, using 
+gfortran with dragonegg.  When Ubuntu 12.04 lost support, dragonegg
+no longer worked (gcc v4 vs v10).  As a result, support for 
+clang+gfortran-dragonegg had ended.
+
+                    Clang, Flang and AOCC:
+
+When I last checked (2018), flang was available from github with compile 
+directions.  It was not simple to install.
+
+AMD released AOCC (AMD Optimizing C Compiler) suite which is based on clang
+and flang with optional optimizations for Zen 1 to Zen 3. The included wgrib2
+makefile has been tested with AOCC and a Ryzen 5600G on Ubuntu 20.04LTS.
+
+AOCC uses modified versions of clang and flang (LLVM). AMD modifications 
+get sent to LLVM for inclusion of future clang and flang versions.  AOCC 
+is quite easy to install if you have one of the supported systems.  If 
+you are using an old version of RedHat or Ubuntu, it is probably time to 
+update to a newer version.  AOCC will work on intel cpus.
+
+
+    https://developer.amd.com/amd-aocc/
+
+To compile with AOCC
+  export CC=clang
+  export FC=flang
+  make
+
+To compile for Zen3 with AOCC
+  export CC=clang
+  export FC=flang
+  export CFFLAGS=-march=znversion3
+  export FFLAGS=-march=znversion3
+  make
+
+AOCC: Jasper does not compile correctly.  Use OpenJPEG to support jpeg2000.
+      OpenJPEG requires Cmake
+
+   USE_JASPER=0
+   USE_OPENJPEG=1
+
+Netcdf4 does not compile correctly. Must use
+
+   USE_NETCDF3=1
+   USE_NETCDF4=0
+
+Shared libraries work on linux (Ubuntu 20.04LTS)

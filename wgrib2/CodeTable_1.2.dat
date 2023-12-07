@@ -1,5 +1,6 @@
-    case 0: string="Analysis"; break;
-    case 1: string="Start of Forecast"; break;
-    case 2: string="Verifying Time of Forecast"; break;
-    case 3: string="Observation Time"; break;
-    case 255: string="Missing"; break;
+case     0: string="Analysis"; break;
+case     1: string="Start of forecast"; break;
+case     2: string="Verifying time of forecast"; break;
+case     3: string="Observation time"; break;
+case     4: string="Local time"; break;
+case   255: string="Missing"; break;

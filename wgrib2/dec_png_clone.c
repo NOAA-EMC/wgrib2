@@ -1,4 +1,27 @@
 #include "wgrib2.h"
+#include "config.h"
+
+/* dec_png_clone()
+ * based on dec_png() from g2clib (public domain)  by Steve Gilbert NCO/NCEP/NWS
+ *
+ * enc_png() from g2clib is limited to bit depth of 8, 16, 24, 32
+ *   and automnatically coverts bit_depth = ((int) (bit_depth + 7) / 8 ) * 8
+ * dec_png() assumes a bit depth of 8, 16, 24, 32, and nbytes=bit_depth/8
+ *
+ * the WMO grib2 specifications mention bit depth of 1, 2, 4, 8, 24, 32.
+ *    so that is why dep_png() will fail for bit_depth of 1, 2 and 4
+ *
+ * v1.0:  copied dec_png() from g2clib, called it dep_png_clone() to avoid name
+ *        conflict if also use g2clib
+ *
+ * 4/2021: v1.1  modification W. Ebisuzaki
+ *        need to check if grib2 definition of bit_depth is the same as from
+ *          decoding the png stream, otherwise silent bad decode
+ *        if differs, then delayed error
+ *	  changed char *cout to unsigned char *cout to be consistent with wgrib2
+ *        Now handles bit_depth of 1, 2 and 4 as well as 8, 16, 24 and 32.
+ *
+ */
 
 #ifdef USE_PNG
 
@@ -6,6 +29,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <png.h>
+
+extern unsigned int last_message;
 
 struct png_stream {
    unsigned char *stream_ptr;     /*  location to write PNG stream  */
@@ -34,10 +59,11 @@ void user_read_data_clone(png_structp png_ptr,png_bytep data, png_size_t length)
 
 
 
-int dec_png_clone(unsigned char *pngbuf,int *width,int *height,char *cout)
+int dec_png_clone(unsigned char *pngbuf,int *width,int *height, unsigned char *cout, int *grib2_bit_depth, unsigned int ndata)
 {
     int interlace,color,compres,filter,bit_depth;
-    int j,k,n,bytes,clen;
+    int j,k, rowlen, tmp;
+    long int rowlen_bits;
     png_structp png_ptr;
     png_infop info_ptr,end_info;
     png_bytepp row_pointers;
@@ -105,6 +131,7 @@ int dec_png_clone(unsigned char *pngbuf,int *width,int *height,char *cout)
 
     *height = h32;
     *width = w32;
+    if ((unsigned int) h32 * (unsigned int) w32 > ndata) fatal_error("png decode: size of png grid too large","");
 
 /*     Check if image was grayscale      */
 
@@ -119,16 +146,47 @@ int dec_png_clone(unsigned char *pngbuf,int *width,int *height,char *cout)
     else if ( color == PNG_COLOR_TYPE_RGB_ALPHA ) {
        bit_depth=32;
     }
+
+    if (bit_depth != *grib2_bit_depth) {
+	fprintf(stderr, "** DELAYED ERROR: png bit depth error: Sec 5 octet 20 is %d, png lib value (%d) is used **\n",
+	    *grib2_bit_depth, bit_depth);
+	fprintf(stderr, "** file will be read incorrectly by some grib libraries such as NCEPlib\n");
+	fprintf(stderr, "** add -reset_delayed_error option to continue processing\n");
+	*grib2_bit_depth = bit_depth;
+	last_message |= DELAYED_MISC;
+    }
+
 /*     Copy image data to output string   */
 
-    n=0;
-    bytes=bit_depth/8;
-    clen=(*width)*bytes;
-    for (j=0;j<*height;j++) {
-      for (k=0;k<clen;k++) {
-        cout[n]=*(row_pointers[j]+k);
-        n++;
-      }
+    /* get number of bytes per row used to store packed numbers */
+    rowlen =  png_get_rowbytes(png_ptr, info_ptr);
+
+    rowlen_bits = w32 * bit_depth;
+
+    // to test bitstream code:  if (bit_depth == 32) {
+    // if (rowlen_bits % 8 == 0) {
+    // if (bit_depth == 32) {
+    if (rowlen_bits % 8 == 0) {
+#pragma omp parallel for private(j,k) schedule(static)
+        for (j = 0; j < h32; j++) {
+            for (k = 0; k < rowlen; k++) {
+                cout[j*rowlen+k]=*(row_pointers[j]+k);
+            }
+        }
+    }
+    else {
+	/* bitstream is set to *cout */
+	init_bitstream(cout);
+	for (j = 0; j < h32; j++) {
+	    rowlen_bits = w32 * bit_depth;
+	    k = 0;
+	    while (rowlen_bits > 0) {
+		tmp = (int) *(row_pointers[j] + k++);
+		add_bitstream(tmp, rowlen_bits > 8 ? 8: rowlen_bits);
+		rowlen_bits -= 8;
+	    }
+	}
+	finish_bitstream();
     }
 
 /*      Clean up   */
@@ -137,5 +195,4 @@ int dec_png_clone(unsigned char *pngbuf,int *width,int *height,char *cout)
     return 0;
 
 }
-
 #endif   /* USE_PNG */

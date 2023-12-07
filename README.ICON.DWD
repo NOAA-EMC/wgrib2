@@ -1,0 +1,133 @@
+              Using the DWD's ICON forecast grib files with wgrib2	updated 12/2019, 4/2020
+
+
+
+The DWD is making global forecasts using the ICON model.  This model uses a triangular
+mesh, and the forecast quantities are valid for the center of the triangles.  The DWD
+opendata server is distributing data in grib format for the forecast values from
+the center of the triangles.  This note shows how to process the grib data using
+wgrib2.
+
+
+Basics that DWD may change:
+
+https://opendata.dwd.de/weather/nwp/icon/grib/HH
+
+    HH = 00, 06, 12 or 18
+
+          Step 1. Download the CLAT and CLON file
+
+             CLAT=latitude of the center of the triangles
+             CLON=longitude of the center of the triangles
+
+https://opendata.dwd.de/weather/nwp/icon/grib/00/clat/icon_global_icosahedral_time-invariant_YYYYMMDDHH_CLAT.grib2.bz2
+https://opendata.dwd.de/weather/nwp/icon/grib/00/clon/icon_global_icosahedral_time-invariant_YYYYMMDDHH_CLON.grib2.bz2
+
+          Step 2: Download some forecast files
+
+Example
+
+https://opendata.dwd.de/weather/nwp/icon/grib/00/t_2m/icon_global_icosahedral_single-level_YYYYMMDDHH_000_T_2M.grib2.bz2
+https://opendata.dwd.de/weather/nwp/icon/grib/00/t_2m/icon_global_icosahedral_single-level_YYYYMMDDHH_001_T_2M.grib2.bz2
+..
+https://opendata.dwd.de/weather/nwp/icon/grib/00/t_2m/icon_global_icosahedral_single-level_YYYYMMDDHH_180_T_2M.grib2.bz2
+
+          Step 3: Uncompress the data
+	 	bunzip2:
+
+          Step 4: Combining the files
+  Bash:
+		cat icon_global_icosahedral_time-invariant_YYYYMMDDHH_CLAT.grib2 \
+		icon_global_icosahedral_time-invariant_YYYYMMDDHH_CLON.grib2 \
+		icon_global_icosahedral_single-level_YYYYMMDDHH_006_TMAX_2M.grib2 >icon.grb
+
+  Windows:
+		copy /b icon_global_icosahedral_time-invariant_YYYYMMDDHH_CLAT.grib2 +
+		icon_global_icosahedral_time-invariant_YYYYMMDDHH_CLON.grib2 +
+		icon_global_icosahedral_single-level_YYYYMMDDHH_006_TMAX_2M.grib2 icon.grb
+
+                    (all of above on one line)
+
+	Contents of icon.grb
+$ wgrib2 icon.grb
+1:0:d=2019040900:GEOLON:surface:anl:
+2:5898409:d=2019040900:GEOLAT:surface:anl:
+3:11796818:d=2019040900:TMP:2 m above ground:0-360 min max fcst:
+
+           Comment:
+
+Regridding takes a long time for the first field because wgrib2 searches
+each grid point to find the nearest neighbor. The rest of the fields 
+is much faster because wgrib2 retains a list of the nearest neighbors.
+So processing is faster if all the fields that need regridding are put
+into one file.  (The unix cat command works for grib files.)  This
+slow first field behavior also works for the -lon option.  The
+nearest neighbor search is faster when using multiple cores and the 
+OpenMP version of wgrib2.
+
+
+          Example 1: Obtaining values for (10E, 20N) and (10W, 30S)
+
+wgrib2 v2.0.9  (in development)
+   v2.0.9 adds -else, -elseif and -endif
+   v2.0.9 updates -grid_def to use GEOLAT and GEOLON
+
+$ wgrib2 icon.grb -if "^(1|2):" -grid_def -else -s -lon 10 20 -lon 15 -30 -endif
+1:0
+2:5898409
+3:11796818:d=2019040900:TMP:2 m above ground:0-6 hour max fcst::lon=9.968750,lat=20.012680,
+val=296.588:lon=15.078125,lat=-30.069351,val=290.953
+
+
+
+wgrib2 v2.0.6 - v2.0.8   (earlier versions of wgrib2 had a bug in -grid_def)
+
+$ wgrib2 icon.grb \
+  -if ":GEOLAT:" -set center 7 -set_var NLAT -fi \
+  -if ":GEOLON:" -set center 7 -set_var ELON -fi \
+  -grid_def -s \
+  -not_if "^(1|2):"  -lon 10 20 -lon 15 -30 -fi
+1:0:d=2019040900:ELON:surface:anl:
+2:5898409:d=2019040900:NLAT:surface:anl:
+3:11796818:d=2019040900:TMP:2 m above ground:0-360 min max fcst::lon=9.968750,lat=20.012680,val=296.588:
+lon=15.078125,lat=-30.069351,val=290.953
+
+
+          Example 2: a 1x1 degree global grid by nearest neighbor interpolation
+
+
+wgrib2 v2.0.9  (in development)
+
+$ wgrib2 icon.grb -if "^(1|2):" -grid_def -else -s -lola 0:360:1 -90:181:1 1x1.grb grib -endif
+1:0
+2:5898409
+3:11796818:d=2019040900:TMP:2 m above ground:0-6 hour max fcst:
+
+wgrib2 v2.0.6 - v2.0.8 (earlier versions of wgrib2 had a bug in -grid_def)
+
+$ wgrib2 icon.grb \
+  -if ":GEOLAT:" -set center 7 -set_var NLAT -fi \
+  -if ":GEOLON:" -set center 7 -set_var ELON -fi \
+  -grid_def -s \
+  -not_if "^(1|2):"  -lola 0:360:1 -90:181:1 1x1.grb grib
+1:0:d=2019040900:ELON:local level type 1 0:anl:
+2:5898409:d=2019040900:NLAT:local level type 1 0:anl:
+3:11796818:d=2019040900:TMP:local level type 103 2:0-6 hour max fcst:
+
+
+        Example 3: Making a netcdf file
+
+The raw ICON grib files do not have latitude and longitude information.  By prepending
+the CLON and CLAT files, the file has the longitude and latitude information.  However,
+the wgrib2 cannot make a netcdf file because the data are not on a lat-lon grid.  One
+could update the netcdf converter to output the ICON data on a trianglular mesh, but 
+how many visualization codes could read that netcdf file and make a plot?
+
+The suggested method to make a netcdf file using wgrib2 is by making a lat-lon grib
+file.  See example 2.  Once you have made the lat-lon file, you can make a netcdf
+file using the grib2->netcdf utility of your choice.
+
+The conversion from the trianglar mesh to a lat-lon grid is slow because a linear search 
+is used to find the nearest neighbor.  The conversion can be made faster by using more cores 
+and setting the appropriate number of cores to use (export OMP_NUM_THREADS=n).  This is why
+you want more cores! 

@@ -20,7 +20,7 @@
 
 
 /*
- * HEADER:100:ndate:misc:2:X=date Y=dt print date + dt
+ * HEADER:100:ndate:setup:2:X=date Y=dt print date + dt
  */
 
 int f_ndate(ARG2) {
@@ -48,6 +48,9 @@ int f_ndate(ARG2) {
         if (strlen_arg1 % 2 == 1 || strlen_arg1 < 4 || strlen_arg1 > 14) 
 	   fatal_error("ndates: (YYYY|YYYYMM|YYYYMMDD|YYYYMMDDHH|YYYYMMDDHHmm|YYYYMMDDHHmmss)","");
 	sscanf(arg1, "%4d%2d%2d%2d%2d%2d", &year, &month, &day, &hour, &minute, &second);
+
+	if (check_time(year, month, day, hour, minute, second))
+		fatal_error("ndate: bad initial date code","");
 
 	/* get dt */
 

@@ -1,0 +1,82 @@
+6/2021   Notes on installing cygwin on Windows 10
+
+go to cygwin.com
+run setup-x86-64.exe  (need system admin)  
+  (64-bits is needed for wgrib2 to process files > 2GB)
+  (I installed from the internet)
+  (I installed all recommended packages)
+  (I installed icons in both locations)
+
+The rest is run from cygwin's bash (click on Cygwin Terminal icon)
+
+
+See if you have gcc, gfortran, g++, and make installed.
+
+   gcc
+     (if you see gcc: command not found, you need to download gcc and gfortran)
+       (go to cygwin.com, run setup-x86-64.exe)
+       (select packages: view:full search: gcc-fortran, I selected the latest version)
+
+   gfortran
+     (if you see gfortran: command not found, you need to download gfortran, see above)
+       (go to cygwin.com, run setup-x86-64.exe)
+       (select packages: view:full search: gcc-fortran, I selected the latest version)
+
+   make
+     (if you see make: command not found, you need to download make, if nothing happens, 
+       type control-c to quit the make program)
+       (go to cygwin.com, run setup-x86-64.exe)
+       (select packages: view:full search: make, I selected latest version)
+
+   g++
+     (if you see g++: command not found, you need to download gcc-g++)
+       (go to cygwin.com, run setup-x86-64.exe)
+       (select packages: view:full search: gcc-g++, I selected latest version)
+
+
+Get wgrib2 source code and install.
+
+get wgrib2.tgz from ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz
+If you use a browser to download wgrib2.tgz, you can find the download in
+
+   /cygdrive/c/Users/YourName/Downloads/wgrib2.tgz
+   (copy to home directory using bash)
+   mv /cygdrive/c/Users/YourName/Downloads/wgrib2.tgz  ~
+
+
+Of course "/cygdrive/c" could be replaced by "/cygdrive/d" if your
+windows home directory is on "d:".
+
+The rest is run from cygwin's bash (run Cygwin Terminal icon)
+
+   cd
+   (cd to your home directory)
+
+   tar -xzvf wgrib2.tgz
+   (expand wgrib2.tgz, now you should see the grib2 directory)
+
+   cd grib2
+
+
+Compile
+
+   export CC=gcc
+   export FC=gfortran
+   (you may want to alter the "makefile" to make a custom configuration)
+   make
+   (this should make wgrib2/wgrib2.exe)
+
+
+2/23/2021: wgrib2 v3.0.1+ Cygwin and zlib
+
+The makefile can make a shared wgrib2 library which is used to run pywgrib2.
+However, zlib creates an unresolved reference to the symbol _wopen.  This 
+provents the shared library from being used with pywgrib2.  So for a shared 
+library, you cannot use png or jpeg2000 compression. To build the shared
+library you must set
+
+   USE_JASPER=0
+   USE_OPENJPEG=0
+   USE_PNG=0
+
+Pywgrib2 has no support for jpeg2000 or png compression.

@@ -60,7 +60,7 @@ static int find_nbits(unsigned int i) {
 
 struct section {
         int mn, mx, missing;    	// stats
-        int i0, i1;                     // pointers to data[]
+        unsigned int i0, i1;                     // pointers to data[]
         struct section *head, *tail;
 };
 
@@ -84,19 +84,21 @@ static int sizeofsection2(int mn, int mx, int n, int ref_bits, int width_bits, i
 }
 
 static int size_all(struct section *s, int ref_bits, int width_bits, int has_undef) {
-        int bits;
+	unsigned int bytes, bits;
 
-        bits = 0;
+        bytes = bits = 0;
         while (s) {
             bits += sizeofsection(s, ref_bits, width_bits, has_undef);
+	    bytes += (bits / 8);
+	    bits = bits % 8;
             s = s->tail;
         }
-        return (bits+7)/8;
+        return (int) (bytes + (bits != 0));
 }
 
 static void move_one_left(struct section *s, int *v) {
     struct section *t;
-    int val, i, j, k;
+    int val, i;
 
     t = s->tail;
     s->i1 += 1;
@@ -130,31 +132,37 @@ static void move_one_left(struct section *s, int *v) {
 	return;
     }
     if (val == t->mx) {
+	t->mx = int_max_array(v+t->i0, t->i1 - t->i0+1);
+/*
 	k = INT_MAX;
 	for (j = 0, i = t->i0; i <= t->i1; i++) {
 	    if (v[i] !=  INT_MAX) {
-	    if (j == 0)  {
-		k = v[i];
-		j++;
-	    }	
-	    else k = k < v[i] ? v[i] : k;
+		if (j == 0)  {
+		    k = v[i];
+		    j++;
+	        }	
+	        else k = k < v[i] ? v[i] : k;
 	    }
 	}
 	t->mx = k;
+*/
 	return;
     }
     if (val == t->mn) {
+	t->mn = int_min_array(v+t->i0, t->i1 - t->i0+1);
+/*
 	k = INT_MAX;
 	for (j = 0, i = t->i0; i <= t->i1; i++) {
 	    if (v[i] !=  INT_MAX) {
-	    if (j == 0)  {
-		k = v[i];
- 		j++;
-	    }	
-	    else k = k > v[i] ? v[i] : k;
+	        if (j == 0)  {
+		    k = v[i];
+ 		    j++;
+	        }	
+	        else k = k > v[i] ? v[i] : k;
 	    }
 	}
 	t->mn = k;
+*/
 	return;
     }
     return;
@@ -162,7 +170,7 @@ static void move_one_left(struct section *s, int *v) {
 
 static void move_one_right(struct section *s, int *v) {
     struct section *t;
-    int val, i, j, k;
+    int val, i, j;
 
     t = s->tail;
     s->i1 -= 1;
@@ -210,31 +218,37 @@ static void move_one_right(struct section *s, int *v) {
 	return;
     }
     if (val == s->mx) {
+	s->mx = int_max_array(v+s->i0, s->i1 - s->i0+1);
+/* 
 	k = INT_MAX;
 	for (j = 0, i = s->i0; i <= s->i1; i++) {
 	    if (v[i] !=  INT_MAX) {
-	    if (j == 0)  {
-		k = v[i];
-		j++;
-	    }	
-	    else k = k < v[i] ? v[i] : k;
+	        if (j == 0)  {
+		    k = v[i];
+		    j++;
+	        }	
+	        else k = k < v[i] ? v[i] : k;
 	    }
 	}
 	s->mx = k;
+*/
 	return;
     }
     if (val == s->mn) {
+	s->mn = int_min_array(v+s->i0, s->i1-s->i0+1);
+/*
 	k = INT_MAX;
 	for (j = 0, i = s->i0; i <= s->i1; i++) {
 	    if (v[i] !=  INT_MAX) {
-	    if (j == 0)  {
-		k = v[i];
- 		j++;
-	    }	
-	    else k = k > v[i] ? v[i] : k;
+	        if (j == 0)  {
+		    k = v[i];
+ 		    j++;
+	        }	
+	        else k = k > v[i] ? v[i] : k;
 	    }
 	}
 	s->mn = k;
+*/
 	return;
     }
     return;
@@ -411,12 +425,12 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
     double max_val, min_val, ref, frange, dec_factor, scale;
     float mn, mx;
     struct section start, *list, *list_backup,  *s;
-    int ngroups, grefmx, glenmn, glenmx, gwidmn, gwidmx, len_last;
+    int grefmx, glenmn, glenmx, gwidmn, gwidmx, len_last;
     int size_sec7;
     int *refs, *lens, *widths, *itmp, *itmp2;
     // int est_group_width = 12;
     int est_group_width = 6;
-    unsigned int ndef, nndata, nstruct;
+    unsigned int ndef, nndata, nstruct, ngroups, *uitmp;;
 
      int LEN_SEC_MAX = 127;
      int LEN_BITS = 7;
@@ -479,8 +493,11 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
         free(sec6);
         free(sec7);
 	return k;
-    }	
+    }
 
+    /* error if ndef < packing_mode */
+    if (ndef <= 3) packing_mode = 1;
+    
     /* compute bitmap section */
     if (use_bitmap == 0 || ndef == ndata) {
         // no bitmap is used
@@ -503,14 +520,17 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
      */
 
     nndata = use_bitmap ? ndef : ndata;
-    has_undef = use_bitmap ? 0 : ndata != ndef;
+    has_undef = nndata != ndef;
 
     v = (int *) malloc( ((size_t) nndata) * sizeof(int));
     sec5 = (unsigned char *) malloc(packing_mode == 1 ? 47 : 49);
  
     if (v == NULL || sec5 == NULL) fatal_error("complex_grib_out memory allocation v","");
 
-    if (min_max_array(data, ndata, &mn, &mx) != 0) fatal_error("complex_pk: min max error","");
+    if (has_undef) i = min_max_array(data, nndata, &mn, &mx);
+    else i = min_max_array_all_defined(data, nndata, &mn, &mx);
+    if (i != 0) fatal_error("complex_pk: min max error","");
+
     min_val = (double) mn;
     max_val = (double) mx;
 
@@ -616,14 +636,13 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
 
     vmx = vmn = 0;
     extra_0 = extra_1 = 0;		// turn off warnings
-
     if (packing_mode == 3) {
-//        delta_delta(v, nndata, &vmn, &vmx, &extra_0, &extra_1);
 
 	// single core version
 
 	{
         int last, last0, penultimate;
+	last = penultimate = 0;		// turn off warnings 
 	for (i = 0; i < nndata; i++) {
             if (v[i] != INT_MAX) {
                 extra_0 = penultimate = v[i];
@@ -638,9 +657,20 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
 		break;
 	    }
 	}
-
-	for ( ; i < nndata; i++) {
-            if (v[i] != INT_MAX) {
+	if (has_undef) {
+	    for ( ; i < nndata; i++) {
+                if (v[i] != INT_MAX) {
+		    last0 = v[i];
+                    v[i] = v[i] - 2*last + penultimate;
+                    penultimate = last;
+                    last = last0;
+                    vmn = vmn > v[i] ? v[i] : vmn;
+                    vmx = vmx < v[i] ? v[i] : vmx;
+		}
+	    }
+	}
+	else {
+	    for ( ; i < nndata; i++) {
 		last0 = v[i];
                 v[i] = v[i] - 2*last + penultimate;
                 penultimate = last;
@@ -653,12 +683,11 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
     }
     else if (packing_mode == 2) {
 
-//        delta(v, nndata, &vmn, &vmx, &extra_0);
-
 	// single core version
         {
              int last, last0;
 
+	last = 0;	// turn off warnings
 	for (i = 0; i < nndata; i++) {
             if (v[i] != INT_MAX) {
                 extra_0 = last = v[i];
@@ -666,8 +695,19 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
 		break;
 	   }
 	}
-	for ( ; i < nndata; i++) {
-            if (v[i] != INT_MAX) {
+	if (has_undef) {
+	    for ( ; i < nndata; i++) {
+                if (v[i] != INT_MAX) {
+		    last0 = v[i];
+                    v[i] = v[i] - last;
+		    last = last0;
+                    vmn = vmn > v[i] ? v[i] : vmn;
+                    vmx = vmx < v[i] ? v[i] : vmx;
+		}
+	    }
+	}
+	else {
+	    for ( ; i < nndata; i++) {
 		last0 = v[i];
                 v[i] = v[i] - last;
 		last = last0;
@@ -679,7 +719,7 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
     }
     else if (packing_mode == 1) {
 	// find min/max
-	int_min_max_array(v, nndata, &vmn, &vmx);
+	if (int_min_max_array(v, nndata, &vmn, &vmx) != 0) fatal_error("complex_pk: int_min_max error","");
     }
 
 //fprintf(stderr , "\n pre process v[i] data extri_0 %d extra_1 %d\n",extra_0, extra_1);
@@ -692,10 +732,19 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
 printf("2: vmx %d vmn %d nbits %d\n", vmx, vmn, find_nbits(vmx-vmn+has_undef));
 #endif
 
+    if (has_undef) {
 #pragma omp parallel for private(i)
-    for (i = 0; i < nndata; i++) {
-	v[i] = (v[i] != INT_MAX) ? v[i] - vmn : INT_MAX;
+	for (i = 0; i < nndata; i++) {
+	    v[i] = (v[i] != INT_MAX) ? v[i] - vmn : INT_MAX;
+        }
     }
+    else {
+#pragma omp parallel for private(i)
+	for (i = 0; i < nndata; i++) {
+	    v[i] = v[i] - vmn;
+        }
+    }
+
     vmx = vmx-vmn;
     vbits = find_nbits(vmx+has_undef);
 
@@ -831,18 +880,21 @@ printf("2: vmx %d vmn %d nbits %d\n", vmx, vmn, find_nbits(vmx-vmn+has_undef));
     refs = (int *) malloc(((size_t) ngroups) * sizeof(int));
     itmp = (int *) malloc(((size_t) ngroups) * sizeof(int));
     itmp2 = (int *) malloc(((size_t) ngroups) * sizeof(int));
+    uitmp = (unsigned int *) malloc(((size_t) ngroups) * sizeof(int));
 
-    if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL) 
+    if (lens == NULL || widths == NULL || refs == NULL || itmp == NULL || itmp2 == NULL || uitmp == NULL) 
 	fatal_error("complex grib_out: memory allocation","");
-// printf("linked list ngroups=%d\n", ngroups);
+#ifdef DEBUG
+fprintf(stderr,"complex_pk: linked list ngroups=%u\n", ngroups);
+#endif
 /*
-    for (i = k = 0, s = start.tail; k < ngroups; k++, s=s->tail) {
-       lens[k] = s->i1 - s->i0 + 1;
-       i += lens[k];
-       refs[k] = s->mn;
-       if (s->mn == INT_MAX) widths[k] = 0;
-       else if (s->mn == s->mx) widths[k] = s->missing;
-       else widths[k] = find_nbits(s->mx-s->mn+has_undef);
+    for (i = ii = 0, s = start.tail; ii < ngroups; ii++, s=s->tail) {
+       lens[ii] = s->i1 - s->i0 + 1;
+       i += lens[ii];
+       refs[ii] = s->mn;
+       if (s->mn == INT_MAX) widths[ii] = 0;
+       else if (s->mn == s->mx) widths[ii] = s->missing;
+       else widths[ii] = find_nbits(s->mx-s->mn+has_undef);
     }
 */
 
@@ -870,40 +922,14 @@ printf("2: vmx %d vmn %d nbits %d\n", vmx, vmn, find_nbits(vmx-vmn+has_undef));
     gwidmx = gwidmn = widths[0];
     grefmx = refs[0] != INT_MAX ? refs[0] : 0;
 
-/*
-    for (k = 1; k < ngroups; k++) {
-        glenmx = glenmx >= lens[k] ? glenmx : lens[k];
-        glenmn = glenmn <= lens[k] ? glenmn : lens[k];
-        gwidmx = gwidmx >= widths[k] ? gwidmx : widths[k];
-        gwidmn = gwidmn <= widths[k] ? gwidmn : widths[k];
-	if (refs[k] != INT_MAX && refs[k] > grefmx) grefmx = refs[k];
+#pragma omp parallel for private(ii) reduction(max:glenmx, gwidmx, grefmx) reduction(min:glenmn, gwidmn)
+    for (ii = 1; ii < ngroups; ii++) {
+        glenmx = glenmx >= lens[ii] ? glenmx : lens[ii];
+        glenmn = glenmn <= lens[ii] ? glenmn : lens[ii];
+        gwidmx = gwidmx >= widths[ii] ? gwidmx : widths[ii];
+        gwidmn = gwidmn <= widths[ii] ? gwidmn : widths[ii];
+	grefmx = (refs[ii] != INT_MAX && refs[ii] > grefmx) ? refs[ii] : grefmx;
     }
-*/
-
-#pragma omp parallel private(i)
-{
-    int glenmn_thread, glenmx_thread, gwidmx_thread, gwidmn_thread, grefmx_thread;
-    glenmn_thread = glenmx_thread = lens[0];
-    gwidmn_thread = gwidmx_thread = widths[0];
-    grefmx_thread = refs[0] != INT_MAX ? refs[0] : 0;
-
-#pragma omp for nowait
-    for (i = 1; i < ngroups; i++) { 
-        glenmx_thread = glenmx_thread >= lens[i] ? glenmx_thread : lens[i];
-        glenmn_thread = glenmn_thread <= lens[i] ? glenmn_thread : lens[i];
-        gwidmx_thread = gwidmx_thread >= widths[i] ? gwidmx_thread : widths[i];
-        gwidmn_thread = gwidmn_thread <= widths[i] ? gwidmn_thread : widths[i];
-	if (refs[i] != INT_MAX && refs[i] > grefmx_thread) grefmx_thread = refs[i];
-    }
-#pragma omp critical
-    {
-	glenmx = glenmx >= glenmx_thread ? glenmx : glenmx_thread;
-	glenmn = glenmn <= glenmn_thread ? glenmn : glenmn_thread;
-        gwidmx = gwidmx >= gwidmx_thread ? gwidmx : gwidmx_thread;
-        gwidmn = gwidmn <= gwidmn_thread ? gwidmn : gwidmn_thread;
-        grefmx = grefmx >= grefmx_thread ? grefmx : grefmx_thread;
-    }
-}
 
     sec5[19] = find_nbits(grefmx+has_undef);
 
@@ -932,9 +958,11 @@ printf("2: vmx %d vmn %d nbits %d\n", vmx, vmn, find_nbits(vmx-vmn+has_undef));
 
     sec5[35] = gwidmn;                           // group width reference
     sec5[36] = find_nbits(gwidmx-gwidmn+has_undef);  // group width bits
+
 #ifdef DEBUG
 printf("group widthmn = %d, gwidmx %d, width bits max %d\n", gwidmn, gwidmx, sec5[36]);
 #endif
+
     uint_char(glenmn,sec5+37);	 	         // group length ref
     sec5[41] = 1;  		                 // inc
     uint_char(len_last,sec5+42);                  // len of last group
@@ -962,19 +990,31 @@ printf("group widthmn = %d, gwidmx %d, width bits max %d\n", gwidmn, gwidmx, sec
 
     // size of packed grid points
 
+/* 5/2019
     for (i = k = 0; i < ngroups; i++) {
 	j  = lens[i] * widths[i] + k;
         size_sec7 += (j >> 3);
 	k = (j & 7);
     }
     size_sec7 += k ? 1 : 0;
-
-#pragma omp parallel for private(i)
-    for (i = 0; i < ngroups; i++) {
-	refs[i] = (refs[i] != INT_MAX) ? refs[i] :  ONES;
-        itmp[i] = widths[i] - gwidmn;
-        itmp2[i] = lens[i] - glenmn;
+*/
+    k = 0;
+#pragma omp parallel private(i,j)
+    {
+	j = 0;
+#pragma omp for reduction(+:size_sec7)
+        for (i = 0; i < ngroups; i++) {
+	    j += lens[i] * widths[i];
+            size_sec7 += (j >> 3);
+	    j = (j & 7);
+	    refs[i] = (refs[i] != INT_MAX) ? refs[i] :  ONES;
+            itmp[i] = widths[i] - gwidmn;
+            itmp2[i] = lens[i] - glenmn;
+        }
+#pragma omp atomic
+	k += j;
     }
+    size_sec7 += (k >> 3) + ( (k & 7) ? 1 : 0);
 
     sec7 = (unsigned char *) malloc(size_sec7);
     if (sec7 == NULL) fatal_error("complex_grib_out memory allocation sec7","");
@@ -1013,6 +1053,11 @@ printf("group widthmn = %d, gwidmx %d, width bits max %d\n", gwidmn, gwidmx, sec
 
     // write the data
 
+
+#ifdef DEBUG
+fprintf(stderr,"complex_pk: ngroups=%u\n", ngroups);
+#endif
+
 /*
     s = start.tail;
     for (ii = 0; ii < ngroups; ii++, s=s->tail) {
@@ -1026,29 +1071,41 @@ printf("group widthmn = %d, gwidmx %d, width bits max %d\n", gwidmn, gwidmx, sec
 	}
     }
 */
-    
+
     s = start.tail;
     for (i = 0; i < ngroups; i++, s=s->tail) {
-	itmp[i] = s->i0;
+	uitmp[i] = s->i0;
 	refs[i] = s->mn;
     }
 #pragma omp parallel for private(i,j)
     for (i = 0; i < ngroups; i++) {
 	if (widths[i]) {
 	    for (j = 0; j < lens[i]; j++) {
-		v[j+itmp[i]] = (v[j+itmp[i]] == INT_MAX) ? ONES : v[j+itmp[i]] - refs[i];
+		v[j+uitmp[i]] = (v[j+uitmp[i]] == INT_MAX) ? ONES : v[j+uitmp[i]] - refs[i];
 	    }
 	}
     }
     for (i = 0; i < ngroups; i++) {
 	if (widths[i]) {
-            add_many_bitstream(v+itmp[i], lens[i], widths[i]);
+            add_many_bitstream(v+uitmp[i], lens[i], widths[i]);
 	}
     }  
 
+#ifdef DEBUG
+fprintf(stderr,"complex_pk: to finish_bitstream()\n");
+#endif
+
     finish_bitstream();
 
+#ifdef DEBUG
+fprintf(stderr,"complex_pk: to wrt_sec()\n");
+#endif
+
     j = wrt_sec(sec0, sec1, sec2, sec3, sec4, sec5, sec6, sec7, out);
+
+#ifdef DEBUG
+fprintf(stderr,"complex_pk: from wrt_sec_()\n");
+#endif
 
     free(sec5);
     free(sec6);
@@ -1060,6 +1117,8 @@ printf("group widthmn = %d, gwidmx %d, width bits max %d\n", gwidmn, gwidmx, sec
     free(widths);
     free(refs);
     free(itmp);
+    free(itmp2);
+    free(uitmp);
 
     return j;
 }

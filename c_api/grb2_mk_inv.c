@@ -15,5 +15,5 @@ int grb2_mk_inv(char *grb, char *inv) {
     argv[5] = inv;
     argv[6] = "-Match_inv";
    
-    return wgrib2(7, argv);
+    return wgrib2(7, (const char **) argv);
 }

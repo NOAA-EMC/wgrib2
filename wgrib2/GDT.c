@@ -56,6 +56,7 @@ int f_gdt(ARG0) {
        }
        if (igds != NULL) free(igds);
        if (igdstmpl != NULL) free(igdstmpl);
+       if (list_opt != NULL) free(list_opt);
    }
    return 0;
 }

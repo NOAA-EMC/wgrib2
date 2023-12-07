@@ -119,7 +119,7 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
     }
     else if (gdt == 10 && (GDS_Mercator_ori_angle(gds) == 0.0) ) {            // mercator no rotation
         /* get earth axis */
-        axes_earth(sec, &r_maj, &r_min);
+        axes_earth(sec, &r_maj, &r_min, NULL);
 
 	dx = GDS_Mercator_dx(gds);
 	dy = GDS_Mercator_dy(gds);
@@ -149,7 +149,7 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
     else if (gdt == 20) {            // polar stereographic
 
         /* get earth axis */
-        axes_earth(sec, &r_maj, &r_min);
+        axes_earth(sec, &r_maj, &r_min, NULL);
         dy      = GDS_Polar_dy(gds);
         dx      = GDS_Polar_dx(gds);
         inv_dx = 1.0 / dx;
@@ -177,7 +177,7 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
     else if (gdt == 30) {            // lambert conformal conic
 
         /* get earth axis */
-        axes_earth(sec, &r_maj, &r_min);
+        axes_earth(sec, &r_maj, &r_min, NULL);
         dx      = GDS_Lambert_dx(gds);
         dy      = GDS_Lambert_dy(gds);
         inv_dx = 1.0 / dx;
@@ -209,7 +209,7 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
     else if (gdt == 140) {            // lambert azimuthal equal area
 
 	/* get earth axis */
-	axes_earth(sec, &r_maj, &r_min);
+	axes_earth(sec, &r_maj, &r_min, NULL);
 	r_maj = 0.5 * (r_maj + r_min);
 
         dx      = GDS_Lambert_Az_dx(gds);

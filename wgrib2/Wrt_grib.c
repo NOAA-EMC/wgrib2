@@ -21,7 +21,8 @@
 int grib_ieee(unsigned char **sec, float *data, unsigned int ndata, FILE *out, FILE *head, FILE *tail, FILE *c);
 static int output_c(FILE *c, unsigned char *s, unsigned int n);
 
-extern int decode, nx, ny, scan, last_message;
+extern int decode, nx, ny, scan;
+extern unsigned int last_message;
 extern int flush_mode;
 extern enum output_order_type output_order;
 

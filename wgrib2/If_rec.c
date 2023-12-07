@@ -14,10 +14,10 @@
  */
 
 /*
- * HEADER:100:if_rec:misc:1:if (record numbers in range),  X=(start:end:step)
+ * HEADER:100:if_rec:If:1:if (record numbers in range),  X=(start:end:step)
  */
 
-extern int msg_no, match_flag;
+extern int msg_no, run_flag;
 
 int f_if_rec(ARG1)  {
     struct local_struct {
@@ -42,8 +42,8 @@ int f_if_rec(ARG1)  {
     if (mode >= 0) {
 	save = (struct local_struct *) *local;
 	if (msg_no >= save->start && msg_no <= save->end && ((msg_no - save->start) % save->step) 
-		== 0) match_flag=0;
-	else match_flag = 1;
+		== 0) run_flag=1;
+	else run_flag = 0;
         return 0;
     }
     return 0;

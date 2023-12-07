@@ -1,6 +1,5 @@
 #
 # this makefile is for gnu-make on a linux box
-# wgrib2 rerequires grib2c (NCEP C grib2), jasper (jpeg), z and png libraries
 #
 #  REQUIRES GNU make
 # mod 1/07 M. Schwarb
@@ -14,23 +13,24 @@ SHELL=/bin/sh
 
 all:=$(patsubst %.c,%.o,$(wildcard *.c))
 code:=$(filter-out fnlist.o,$(all))
+gribtables=$(wildcard gribtables/*/*gribtable.dat)
 o=$(wildcard *.o)
-h:=grb2.h  wgrib2.h fnlist.h config.h
+h:=grb2.h  wgrib2.h config.h
 options=$(wildcard [A-Z]*.c)
 CODE_TABLE_DAT=$(wildcard CodeTable_[0-9].[0-9]*.dat)
 FLAGS:=${CPPFLAGS} ${CFLAGS}
 ARFLAGS=-ruv
 
-wgrib2: $h ${all} fnlist.c
+wgrib2: $h fnlist.c fnlist.h ${all}
 	${CC} -o wgrib2 ${FLAGS} ${all} ${LDFLAGS}
 	rm Config.o
 
 fast:	${code}
-	touch fnlist.o fnlist.c fnlist.h
+	touch fnlist.o fnlist.c
 	${CC} -o wgrib2 ${FLAGS} ${all} ${LDFLAGS}
 	rm Config.o
 
-lib:	$h ${all} fnlist.c
+lib:	$h fnlist.c fnlist.h ${all}
 	touch libwgrib2.a ; rm libwgrib2.a
 	${CC} -c ${FLAGS} -DCALLABLE_WGRIB2 wgrib2.c
 	${CC} -c ${FLAGS} -DCALLABLE_WGRIB2 fatal_error.c
@@ -38,11 +38,8 @@ lib:	$h ${all} fnlist.c
 	ar ${ARFLAGS} libwgrib2.a *.o
 	rm wgrib2.o fatal_error.o wgrib2_api.o
 
-fnlist.c:	${options}
+fnlist.c fnlist.h:	${options}
 	./function.sh 
-
-fnlist.h:	${options}
-	./function.sh
 
 Help.o:	Help.c wgrib2.h
 	${CC} -c ${FLAGS} Help.c
@@ -50,16 +47,16 @@ Help.o:	Help.c wgrib2.h
 CodeTable.o:	CodeTable.c ${CODE_TABLE_DAT}
 	${CC} -c ${FLAGS} CodeTable.c
 
-cname.o:	cname.c
+cname.o:	cname.c gribtab.c
 	${CC} -c ${FLAGS} cname.c
 
 Sec1.o:	Sec1.c code_table0.dat ncep_tableC.dat
 	${CC} -c ${FLAGS} Sec1.c
 
-gribtab.o:	gribtab.c gribtab.dat misc_gribtab.dat NDFD_gribtab.dat
+gribtab.o:	gribtab.c ${gribtables}
 	${CC} -c ${FLAGS} gribtab.c
 
-.c.o:	$(*).c
+.c.o:	$(*).c $h fnlist.c
 	$(CC) -c ${FLAGS}  $*.c
 
 clean:

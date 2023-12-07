@@ -40,22 +40,22 @@ const char *level_table[192] = {
 /* 14 */ "level of free convection",
 /* 15 */ "convection condensation level",
 /* 16 */ "level of neutral buoyancy",
-/* 17 */ "reserved",
-/* 18 */ "reserved",
+/* 17 */ "Departure level of most unstable parcel of air (MUDL)",
+/* 18 */ "Departure level of mixed layer parcel of air with specified layer depth %g (Pa)",
 /* 19 */ "reserved",
 /* 20 */ "%g K level",
 /* 21 */ "lowest level > %g kg/m^3",
 /* 22 */ "highest level > %g kg/m^3",
 /* 23 */ "lowest level > %g Bq/m^3",
 /* 24 */ "highest level > %g Bg/m^3",
-/* 25 */ "reserved",
-/* 26 */ "reserved",
-/* 27 */ "reserved",
+/* 25 */ "highest level > %g dBZ",
+/* 26 */ "convective cloud layer base",
+/* 27 */ "convective clout layer top",
 /* 28 */ "reserved",
 /* 29 */ "reserved",
-/* 30 */ "reserved",
-/* 31 */ "reserved",
-/* 32 */ "reserved",
+/* 30 */ "specified radius from center of sun",
+/* 31 */ "ionosphere D-region level",
+/* 32 */ "ionosphere E-region level",
 /* 33 */ "reserved",
 /* 34 */ "reserved",
 /* 35 */ "reserved",
@@ -175,7 +175,7 @@ const char *level_table[192] = {
 /* 149 */ "reserved",
 /* 150 */ "%g generalized vertical height coordinate",
 /* 151 */ "soil level %g",
-/* 152 */ "reserved",
+/* 152 */ "sea-ice level",
 /* 153 */ "reserved",
 /* 154 */ "reserved",
 /* 155 */ "reserved",
@@ -191,11 +191,11 @@ const char *level_table[192] = {
 /* 165 */ "bottom of sediment layer penetrated by thermal wave",
 /* 166 */ "maxing layer",
 /* 167 */ "bottom of root zone",
-/* 168 */ "reserved",
-/* 169 */ "reserved",
-/* 170 */ "reserved",
-/* 171 */ "reserved",
-/* 172 */ "reserved",
+/* 168 */ "ocean model level %g",
+/* 169 */ "ocean level %g (kg*m-3) density difference to near surface",
+/* 170 */ "ocean level %g (K) pot. temperature difference to near surface",
+/* 171 */ "ocean level %g (m*m/s) vertical eddy diffusivity difference from near surface",
+/* 172 */ "mixed layer depth (delta rho=%g)",
 /* 173 */ "reserved",
 /* 174 */ "top surface of ice on sea, lake or river",
 /* 175 */ "top surface of ice, und snow on sea, lake or river",
@@ -227,6 +227,74 @@ const char *ncep_level_table[64] = {
 /* 197 */ "reserved",
 /* 198 */ "reserved",
 /* 199 */ "reserved",
+/* 200 */ "entire atmosphere (considered as a single layer)",
+/* 201 */ "entire ocean (considered as a single layer)",
+/* 202 */ "reserved",
+/* 203 */ "reserved",
+/* 204 */ "highest tropospheric freezing level",
+/* 205 */ "reserved",
+/* 206 */ "grid scale cloud bottom level",
+/* 207 */ "grid scale cloud top level",
+/* 208 */ "reserved",
+/* 209 */ "boundary layer cloud bottom level",
+/* 210 */ "boundary layer cloud top level",
+/* 211 */ "boundary layer cloud layer",
+/* 212 */ "low cloud bottom level",
+/* 213 */ "low cloud top level",
+/* 214 */ "low cloud layer",
+/* 215 */ "cloud ceiling",
+/* 216 */ "effective layer top level %gm",
+/* 217 */ "effective layer bottom level %gm",
+/* 218 */ "effective layer %gm",
+/* 219 */ "reserved",
+/* 220 */ "planetary boundary layer",
+/* 221 */ "layer between two hybrid levels",
+/* 222 */ "middle cloud bottom level",
+/* 223 */ "middle cloud top level",
+/* 224 */ "middle cloud layer",
+/* 225 */ "reserved",
+/* 226 */ "reserved",
+/* 227 */ "reserved",
+/* 228 */ "reserved",
+/* 229 */ "reserved",
+/* 230 */ "reserved",
+/* 231 */ "reserved",
+/* 232 */ "high cloud bottom level",
+/* 233 */ "high cloud top level",
+/* 234 */ "high cloud layer",
+/* 235 */ "%gC ocean isotherm",
+/* 236 */ "layer between two depths below ocean surface",
+/* 237 */ "bottom of ocean mixed layer",
+/* 238 */ "bottom of ocean isothermal layer",
+/* 239 */ "layer ocean surface and 26C ocean isothermal level",
+/* 240 */ "ocean mixed layer",
+/* 241 */ "%g in sequence",
+/* 242 */ "convective cloud bottom level",
+/* 243 */ "convective cloud top level",
+/* 244 */ "convective cloud layer",
+/* 245 */ "lowest level of the wet bulb zero",
+/* 246 */ "maximum equivalent potential temperature level",
+/* 247 */ "equilibrium level",
+/* 248 */ "shallow convective cloud bottom level",
+/* 249 */ "shallow convective cloud top level",
+/* 250 */ "reserved",
+/* 251 */ "deep convective cloud bottom level",
+/* 252 */ "deep convective cloud top level",
+/* 253 */ "lowest bottom level of supercooled liquid water layer",
+/* 254 */ "highest top level of supercooled liquid water layer",
+/* 255 */ "missing"
+};
+
+// 192..255
+const char *kma_level_table[64] = {
+/* 192 */ "reserved",
+/* 193 */ "reserved",
+/* 194 */ "reserved",
+/* 195 */ "hybrid sigma pressure",
+/* 196 */ "Height from ground KFT",
+/* 197 */ "canopy",
+/* 198 */ "ICAO convective cloud top level",
+/* 199 */ "ICAO convective cloud base level",
 /* 200 */ "entire atmosphere (considered as a single layer)",
 /* 201 */ "entire ocean (considered as a single layer)",
 /* 202 */ "reserved",
@@ -284,7 +352,6 @@ const char *ncep_level_table[64] = {
 /* 254 */ "highest top level of supercooled liquid water layer",
 /* 255 */ "missing"
 };
-
 
 int level1(int mode, int type, int undef_val, float value, int center, int subcenter, char *inv_out);
 int level2(int mode, int type1, int undef_val1, float value1, int type2, int undef_val2, 
@@ -362,6 +429,9 @@ int level2(int mode, int type1, int undef_val1, float value1, int type2, int und
     else if (type1 == 119 && type2 == 119) {
 	sprintf(inv_out,"%g-%g hybrid pressure layer",value1,value2);
     }
+    else if (type1 == 150 && type2 == 150) {
+	sprintf(inv_out,"%g-%g generalized vertical height coordinate",value1,value2);
+    }
     else if (type1 == 160 && type2 == 160) {
 	sprintf(inv_out,"%g-%g m below sea level",value1,value2);
     }
@@ -416,6 +486,11 @@ int level1(int mode, int type, int undef_val, float val, int center, int subcent
     if (center == NCEP && type >= 192 && type <= 254) {
         if (type == 235) val *= 0.01;  // C -> 0.1C
 	sprintf(inv_out,ncep_level_table[type-192], val);
+    }
+
+    else if (center == KMA && type >= 192 && type <= 254) {
+        if (type == 235) val *= 0.01;  // C -> 0.1C
+	sprintf(inv_out,kma_level_table[type-192], val);
     }
 
     else {
