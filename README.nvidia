@@ -1,0 +1,8 @@
+12/2020 nvc and nvfortran (Nvidia, replaces Portland Group brand)
+
+Wgrib2 will compile with nvc and nvfortran.  The makefile (v3.0.1)
+includes support for the Nvidia compilers.  The Nvidia compilers
+will also build the wgrib2 shared library.  
+
+   Tested version: x86_linux, Nvidia HPC SDK 20.11
+

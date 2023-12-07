@@ -69,6 +69,7 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
     gdt = code_table_3_1(sec);
     gds = sec[3];
     center = GB2_Center(sec);
+//fprintf(stderr,"proj4_init started gdt=%d\n", gdt);
 
     get_nxny(sec, &nx, &ny, &npnts, &nres, &nscan);
     get_nxny_(sec, &nx_, &ny_, &npnts, &nres, &nscan);
@@ -80,20 +81,11 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
 
     x_0 = y_0 = x00 = xN = 0.0;
 
-    if (gdt == 0) {     /* lat-lon grid */
-        dx = grid_lon[1] - grid_lon[0];
-        dy = grid_lat[nx] - grid_lat[0];
-        x_0 = grid_lon[0];
-        x00 = grid_lon[0] - 0.5*dx;
-        xN = grid_lon[nx-1] + 0.5*dx;
-        y_0 = grid_lat[0];
-        return 0;
-    }
-    else if (gdt == 10 && (GDS_Mercator_ori_angle(gds) == 0.0) ) {            // mercator no rotation
+    if (gdt == 10 && (GDS_Mercator_ori_angle(gds) == 0.0) ) {            // mercator no rotation
         /* get earth axis */
-        axes_earth(sec, &r_maj, &r_min);
-        dx = abs(GDS_Mercator_dx(gds));
-        dy = abs(GDS_Mercator_dy(gds));
+        axes_earth(sec, &r_maj, &r_min, NULL);
+        dx = fabs(GDS_Mercator_dx(gds));
+        dy = fabs(GDS_Mercator_dy(gds));
 
         /* central point */
         c_lon = 0.0;
@@ -102,10 +94,10 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
         sprintf(proj4_def,"+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +a=%lf +b=%lf", 
 	    c_lat, r_maj, r_min);
 
-        if ((pj_grid = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ((pj_grid = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4 GDT=10 a: pj_init_plus %s failed", proj4_def);
 
         sprintf(proj4_def,"+proj=latlong +a=%lf +b=%lf",r_maj, r_min);
-        if ( (pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ( (pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4 GDT=10 b: pj_init_plus %s failed", proj4_def);
 
         /* longitude, latitude of first grid point */
         lat1 = GDS_Mercator_lat1(gds);
@@ -115,12 +107,12 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
         y_0 = lat1 * DEG_TO_RAD;
 
         if ( pj_transform(pj_latlon, pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) 
-                  fatal_error("proj4_init: Proj4 transform to lat-lon","");
+                  fatal_error("Proj4 GDT=10 c","");
     }
     else if (gdt == 20) {            // polar stereographic
 
         /* get earth axis */
-        axes_earth(sec, &r_maj, &r_min);
+        axes_earth(sec, &r_maj, &r_min, NULL);
         dy      = fabs(GDS_Polar_dy(gds));
         dx      = fabs(GDS_Polar_dx(gds));
 
@@ -134,10 +126,10 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
         sprintf(proj4_def,"+proj=stere +lat_ts=%lf +lat_0=%s +lon_0=%lf +k_0=1 +x_0=0 +y_0=0 +a=%lf +b=%lf", 
 		c_lat, has_np ? "90" : "-90", c_lon, r_maj,r_min);
 
-        if ((pj_grid = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ((pj_grid = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4 GDT=20 a: pj_init_plus %s failed", proj4_def);
 
         sprintf(proj4_def,"+proj=latlong +a=%lf +b=%lf",r_maj, r_min);
-        if ( (pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ( (pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4 GDT=20 b: pj_init_plus %s failed", proj4_def);
 
         /* longitude, latitude of first grid point */
         lon1 = GDS_Polar_lon1(gds);
@@ -147,13 +139,12 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
         y_0 = lat1 * DEG_TO_RAD;
 
         if ( pj_transform(pj_latlon, pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) 
-                     fatal_error("proj4_init: Proj4 transform to lat-lon","");
-
+                     fatal_error("Proj4 GDT=20 c","");
     }
     else if (gdt == 30) {            // lambert conformal conic
 
         /* get earth axis */
-        axes_earth(sec, &r_maj, &r_min);
+        axes_earth(sec, &r_maj, &r_min, NULL);
         dx      = fabs(GDS_Lambert_dx(gds));
         dy      = fabs(GDS_Lambert_dy(gds));
 
@@ -168,11 +159,11 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
         sprintf(proj4_def,"+proj=lcc +lon_0=%lf +lat_0=%lf +lat_1=%lf +lat_2=%lf +a=%lf +b=%lf",c_lon,
                    c_lat,latsp1,latsp2,r_maj,r_min);
 
-        if ((pj_grid = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ((pj_grid = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4 GDT=30 a: pj_init_plus %s failed", proj4_def);
 
  
         sprintf(proj4_def,"+proj=latlong +a=%lf +b=%lf",r_maj, r_min);
-        if ((pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ((pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4 GDT=30 b: pj_init_plus %s failed", proj4_def);
 
         /* longitude, latitude of first grid point */
         lon1 = GDS_Lambert_Lo1(gds);
@@ -180,11 +171,11 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
 
         x_0 = lon1 * DEG_TO_RAD;
         y_0 = lat1 * DEG_TO_RAD;
-        if ( pj_transform(pj_latlon, pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) fatal_error("proj4_init: Proj4 transform to lat-lon","");
+        if ( pj_transform(pj_latlon, pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) fatal_error("Proj4 GDT=30 c","");
     }
     else if (gdt == 140) {            // lambert azimuthal equal area
         /* get earth axis */
-        axes_earth(sec, &r_maj, &r_min);
+        axes_earth(sec, &r_maj, &r_min, NULL);
         dx      = fabs(GDS_Lambert_Az_dx(gds));
         dy      = fabs(GDS_Lambert_Az_dy(gds));
 
@@ -193,10 +184,10 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
         c_lat = GDS_Lambert_Az_Std_Par(gds);
 
         sprintf(proj4_def,"+proj=laea +lon_0=%lf +lat_0=%lf +a=%lf +b=%lf",c_lon,c_lat,r_maj,r_min);
-        if ((pj_grid = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ((pj_grid = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4 GDT=140 a: pj_init_plus %s failed", proj4_def);
 
         sprintf(proj4_def,"+proj=latlong +a=%lf +b=%lf",r_maj, r_min);
-        if ((pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ((pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4 GDT=140 b: pj_init_plus %s failed", proj4_def);
 
         /* longitude, latitude of first grid point */
         lon1 = GDS_Lambert_Az_Lo1(gds);
@@ -204,13 +195,12 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
 
         x_0 = lon1 * DEG_TO_RAD;
         y_0 = lat1 * DEG_TO_RAD;
-        if ( pj_transform(pj_latlon, pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) 
-		fatal_error("proj4_init: Proj4 transform to lat-lon","");
+        if ( pj_transform(pj_latlon, pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) fatal_error("Proj4 GDT=140 c","");
     }
     else if (center == NCEP && gdt == 32769) {         // ncep rotated latlon Non-E 
 
         /* get earth axis */ 
-        axes_earth(sec, &r_maj, &r_min);
+        axes_earth(sec, &r_maj, &r_min, NULL);
 
         /* dx, dy */
         dx = fabs(GDS_NCEP_B_LatLon_dlon(gds) * 0.000001);
@@ -226,21 +216,20 @@ int proj4_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
         lat1 = GDS_NCEP_B_LatLon_lat1(gds) * 0.000001;
 
         sprintf(proj4_def,"+proj=ob_tran +o_proj=latlon +o_lon_p=%f +o_lat_p=%f",c_lon,90.0+c_lat);
-        if ((pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ((pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4 GDT=32769 a: pj_init_plus %s failed", proj4_def);
 
         sprintf(proj4_def,"+proj=latlon");
-        if ((pj_grid = pj_init_plus(proj4_def)) == NULL ) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
+        if ((pj_grid = pj_init_plus(proj4_def)) == NULL ) fatal_error("Proj4: GDT=32769 c:pj_init_plus %s failed", proj4_def);
 
         x_0 = lon1 * DEG_TO_RAD;
         y_0 = lat1 * DEG_TO_RAD;
-        if ( pj_transform(pj_latlon, pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) fatal_error("proj4_init: Proj4 transform to lat-lon","");
+        if ( pj_transform(pj_latlon, pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) fatal_error("Proj4 GDT=32689 c","");
  
     }
     else {
        return 1;
     }
     return 0;
-
 }
 
 int Proj4_ll2xy(int n, double *lon, double *lat, double *x, double *y) {
@@ -250,19 +239,6 @@ int Proj4_ll2xy(int n, double *lon, double *lat, double *x, double *y) {
 
     inv_dx = 1.0 / dx;
     inv_dy = 1.0 / dy;
-    if (gdt == 0) {             // lat-lon 
-#pragma omp parallel for schedule(static) private(i,rlon,rlat)
-        for (i = 0; i < n; i++) {
-            rlon = lon[i]; 
-            if (rlon > xN) rlon -= 360.0;
-            if (rlon < x00) rlon += 360.0;
-            rlat = lat[i];
-            x[i] = (rlon - x_0) * inv_dx;
-            y[i] = (rlat - y_0) * inv_dy;
-        }
-        return 0;
-    }
-
 
 #pragma omp parallel for schedule(static) private(i,rlon,rlat)
     for (i = 0; i < n; i++) {
@@ -287,26 +263,6 @@ int Proj4_ll2i(int n, double *lon, double *lat, unsigned int *ipnt) {
 
     inv_dx = 1.0 / dx;
     inv_dy = 1.0 / dy;
-    if (gdt == 0) {             // lat-lon
-#pragma omp parallel for schedule(static) private(i,rlon,rlat,x,y)
-        for (i = 0; i < n; i++) {
-            rlon = lon[i];
-            if (rlon > xN) rlon -= 360.0;
-            if (rlon < x00) rlon += 360.0;
-            rlat = lat[i];
-	    
-            x = floor((rlon - x_0) * inv_dx + 0.5);
-            y = floor((rlat - y_0) * inv_dy + 0.5);
-
-            if (x < 0 || x >= nx || y < 0 || y >= ny) {
-                ipnt[i] = 0;
-            }   
-            else {
-                ipnt[i] = (unsigned int) x + nx* ((unsigned int) y) + 1;
-            }
-        }
-        return 0;
-    }
 
     error = 0;
 
@@ -359,6 +315,7 @@ int Proj4_ij2ll(unsigned char **sec, int n, double *x, double *y, double *lon, d
     int i, error;
     double xx, yy;
 
+    error = 0;
     if (gdt == 0) {
 #pragma omp parallel for schedule(static)
         for (i = 0; i < n; i++) {
@@ -366,9 +323,9 @@ int Proj4_ij2ll(unsigned char **sec, int n, double *x, double *y, double *lon, d
             lat[i] = dy * y[i] + y_0;
 	    if (lon[i] < 0.0) lon[i] += 360.0;
 	}
-        return 0;
+        return error;
     }
-    error = 0;
+    
 
 #pragma omp parallel for schedule(static) private(i,xx,yy)
     for (i = 0; i < n; i++) {
@@ -444,9 +401,6 @@ int f_proj4_ij2ll(ARG2) {
     return 0;
 }
 
-
-
-
 /*
  * HEADER:100:proj4_ll2i:inv:2:x=lon y=lat, converts to (i) using proj.4  (experimental) 1..ndata
  */
@@ -491,12 +445,7 @@ int proj4_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
     llat = *lat;
     llon = *lon;
-
-    if (proj4_init(sec, llon, llat) != 0) return 1;
-
     get_nxny(sec, &nnx, &nny, &nnpnts, &nres, &nscan);
-
-    /* potentially staggered */
 
     if (llat != NULL) {
         free(llat);
@@ -511,21 +460,12 @@ int proj4_get_latlon(unsigned char **sec, double **lon, double **lat) {
         fatal_error("proj4_get_latlon memory allocation failed","");
     }
 
+    if (proj4_init(sec, llon, llat) != 0) {
+	return 1;
+    }
+
     /* put x[] and y[] values in lon and lat */
     if (stagger(sec, nnpnts, llon, llat)) fatal_error("proj4: stagger problem","");
-
-    /* handle lat-lon grid differently */
-
-    if (gdt == 0) {
-#pragma omp parallel for private(i)
-        for (i = 0; i < nnpnts; i++) {
-            llon[i] = dx * llon[i] + x_0;
-            llat[i] = dy * llat[i] + y_0;
-            if (llon[i] < 0.0) llon[i] += 360.0;
-            if (llon[i] > 360.0) llon[i] -= 360.0;
-        }
-        return 0;
-    }
 
     /* proj4 projections */
 

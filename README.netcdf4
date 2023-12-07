@@ -1,0 +1,55 @@
+		     Compiling wgrib2 with netcdf-4
+
+9/2022: wgrib2 v3.1.2beta3
+        compiles in Ubuntu 20.04LTS gcc 9.4.0
+        compiles in RedHat release 7.9 gcc 4.8.5
+        does not compile (hdf5) with AMD clang version 13.0.0
+
+4/2022: netcdf4 seems to be working gcc v9.4.0. clang is a no go.
+I am trying to compile on cygwin but it has been compiling for 3 hours.
+
+8/2020:
+
+NetCDF4 support has been in shambles for many years.  The good news,
+Redhat with its vintage compilers has been working fine. If you
+are using the Intel compilers, it compiles and probably works.
+
+
+Support:  There is no way to support using XYZ compiler in ABC operating
+system.  The user has to test whether their copy of wgrib2 with the NetCDF4 
+options works.  Don't assume that "it compiled" means "it worked". I have
+seen "it compiled" but "it doesn't work".  The NetCDF4 code seems to be
+robust but the hdf5 library is sensitive to the version of the compiler.
+
+Configuration:
+
+In the makefile, change the configuration to 
+
+USE_NETCDF3=0
+USE_NETCDF4=1
+
+
+Then you have to set the environment variables to the C and F90 compilers
+and run gnu make.
+
+(bash example)
+
+export CC=gcc               (set the C compiler)
+export FC=gfortran          (set the f90 compiler)
+make                        (on some machines this gnu make could be called gmake)
+
+The make will respond with an error message that you need to get the netcdf4 source code.
+You can get the source code using wget.
+
+make                        (on some machines this gnu make could be called gmake)
+
+The make will respond with another error message that you need to get the hdf5 source code.
+You can get the source code using wget.
+
+make                        (third time is a charm)
+
+
+This has been tested with gcc/gfortran and clang/gfortran on Ubuntu 12.04 (64 bits) and
+with gcc/fortran on Redhat 5 and 6 (64-bits).
+
+Notes: UCAR has a web page with help in compiling netcdf.

@@ -6,25 +6,40 @@
 #include "fnlist.h"
 
 /*
- * HEADER:400:hybrid:inv:0:shows vertical coordinate parameters from Sec4
+ * HEADER:400:hybrid:inv:0:shows vertical coordinate parameters from Sec4 (assuming 2 var per level
  */
 
 int f_hybrid(ARG0) {
-    int pdtsize, n, secsize, k;
+    int calc_pdtsize, pdtsize, n, k;
     if (mode >= 0) {
-	pdtsize =  prod_def_temp_size(sec);     // size of PDT with no extra vert coordinates
-	secsize = GB2_Sec4_size(sec);		// size of PDT + vert coordinatese + extras
         n = uint2(&(sec[4][5]));                // number of vert coordinate values
-	if (n % 2 != 0) fatal_error_i("vertical coordinate parameters should be in pairs, n=%d", n);
 	if (n == 0) return 0;
-	if (pdtsize + 4*n > secsize) 
-	    fatal_error("not enough space allocated for vertical coordinate data","");
-	sprintf(inv_out,"Hybrid levels=%d", n/2);
+
+	calc_pdtsize = pdt_len(sec, -1);	// calculated size of PDT
+	pdtsize = GB2_Sec4_size(sec);		// size of PDT + vert coordinatese + extras
+
+	if (calc_pdtsize <= 0) return 0;		// no calculated pdt size
+	if (calc_pdtsize > pdtsize) 
+	    fatal_error_i("not enough space allocated for vertical coordinate data, vert_cordinate values=%d", n);
+	if (calc_pdtsize != pdtsize) return 0;
+
+	sprintf(inv_out,"vertical coordinate parameters ");
 	inv_out += strlen(inv_out);
-	for (k = 1; k <= n/2; k++) {
-	    sprintf(inv_out," %d=(%9.6f,%9.6f)", k, (double) ieee2flt(sec[4]+pdtsize+k*8-8),
-		(double) ieee2flt(sec[4]+pdtsize+k*8-4));
-	    inv_out += strlen(inv_out);
+	if (n % 2 != 0) {
+	    for (k = 0; k < n; k++) {
+	        sprintf(inv_out," %d=%9.6f", k+1, 
+		(double) ieee2flt(sec[4]+pdtsize-n*4+k));
+	        inv_out += strlen(inv_out);
+	    }
+	    return 0;
+	}
+	else {
+	    for (k = 0; k < n/2; k++) {
+		sprintf(inv_out," %d=(%9.6f,%9.6f)", k+1, 
+		    (double) ieee2flt(sec[4]+pdtsize-n*4+k*2),
+		    (double) ieee2flt(sec[4]+pdtsize-n*4+k*2+4));
+	        inv_out += strlen(inv_out);
+	    }
 	}
     }
     return 0;

@@ -1,3 +1,7 @@
+Updating the gribtable 12/2019
+ run get_gribtab.sh -> gribtab
+ run make_gribtable.sh
+
 Updating the gribtable 11/2018
  run get_gribtab.sh -> gribtab
     new variables

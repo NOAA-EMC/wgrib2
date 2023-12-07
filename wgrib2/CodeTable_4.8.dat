@@ -1,3 +1,3 @@
-    case 0: string="Anomoly Correlation"; break;
-    case 1: string="Root Mean Square"; break;
-    case 255: string="Missing"; break;
+case     0: string="Anomaly correlation"; break;
+case     1: string="Root mean square"; break;
+case   255: string="Missing"; break;

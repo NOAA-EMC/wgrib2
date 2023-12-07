@@ -80,8 +80,8 @@ int f_ijsmall_grib(ARG3) {
 static unsigned int idx(int ix, int iy, int nx, int ny, int cyclic_grid) {
     int i;
     
-    if (iy <= 0) fatal_error("index: iy <= 0","");
-    if (iy > ny) fatal_error_i("index: iy = %d",iy);
+    if (iy <= 0) fatal_error("idx(..) iy <= 0","");
+    if (iy > ny) fatal_error_i("idx(..) iy = %d",iy);
 
     i = ix-1;
     if (cyclic_grid) {
@@ -89,8 +89,8 @@ static unsigned int idx(int ix, int iy, int nx, int ny, int cyclic_grid) {
 	i = i % nx;
     }
     else {
-       if (ix <= 0) fatal_error_i("index: ix=%d <= 0",ix);
-       if (i >= nx) fatal_error_i("index: ix = %d",ix);
+       if (ix <= 0) fatal_error_ii("idx(..) ix=%d <= 0, iy=%d",ix,iy);
+       if (i >= nx) fatal_error_ii("idx(..) ix = %d, iy=%d",ix,iy);
     }
 
     return (unsigned int) (i + (iy-1)*nx);
@@ -114,6 +114,7 @@ int small_grib(unsigned char **sec, int mode, float *data, double *lon, double *
     double units;
     int basic_ang, sub_ang, cyclic_grid;
     float *new_data;
+    double *tmp_lat, *tmp_lon;
 
     get_nxny(sec, &nx, &ny, &npnts, &res, &scan);        /* get nx, ny, and scan mode of grid */
     grid_template = code_table_3_1(sec);
@@ -147,7 +148,12 @@ int small_grib(unsigned char **sec, int mode, float *data, double *lon, double *
         cyclic_grid = cyclic(sec);
 
 	// lat-lon grid - no thinning
-        if ((grid_template == 0 && sec3_len == 72) || (grid_template == 1 && sec3_len == 04)) {
+        if ((grid_template == 0 && sec3_len == 72) || (grid_template == 1 && sec3_len == 84)) {
+	    if (grid_template == 1) {
+		/* need *lat, and *lon in rotated coordinates */
+		i =  regular2ll(sec, &tmp_lat, &tmp_lon);
+		if (i != 0) fatal_error("small_grib: regulat2ll failed");
+	    }
 	    uint_char(new_nx,sec3+30);		// nx
 	    uint_char(new_ny,sec3+34);		// ny
 
@@ -159,14 +165,29 @@ int small_grib(unsigned char **sec, int mode, float *data, double *lon, double *
 	    else {
 	        units = 0.000001;
 	    }
-	    i = lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lat1
+	    if (grid_template == 1) {
+	        i = tmp_lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lat1
+	        j = tmp_lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lon1
+	    } else {
+	        i = lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lat1
+	        j = lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lon1
+	    }
 	    int_char(i,sec3+46);
-	    i = lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lon1
-	    int_char(i,sec3+50);
-	    i = lat[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lat2
+	    int_char(j,sec3+50);
+
+	    if (grid_template == 1) {
+	        i = tmp_lat[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lat2
+	        j = tmp_lon[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lon2
+	    } else {
+		i = lat[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lat2
+	        j = lon[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lon2
+	    }
 	    int_char(i,sec3+55);
-	    i = lon[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lon2
-	    int_char(i,sec3+59);
+	    int_char(j,sec3+59);
+	    if (grid_template == 1) {
+	        free(tmp_lon);
+	        free(tmp_lat);
+	    }
         }
 
         else if ((grid_template == 40 && sec3_len == 72)) { // full Gaussian grid

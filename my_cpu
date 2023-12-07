@@ -1,0 +1,4 @@
+export CPPFLAGS='-march=native -mtune=native'
+export FFLAGS='-march=native -mtune=native'
+export CC=gcc
+export FC=gfortran

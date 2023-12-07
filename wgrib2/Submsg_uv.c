@@ -9,6 +9,7 @@
  * U and V must be adjacent
  *
  * 1/2015 Public Domain Wesley Ebisuzaki
+ * 10/2019    Wesley Ebisuzaki, added fflush_file()
  *
  */
 
@@ -19,7 +20,7 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-extern int file_append;
+extern int file_append, flush_mode;
 extern const char **vectors;
 
 /*
@@ -79,6 +80,7 @@ int f_submsg_uv(ARG1) {
 	if (save->vname != NULL) {		// write out cached field
 	   i = wrt_sec(save->sec[0], save->sec[1], save->sec[2], save->sec[3], 
 		save->sec[4], save->sec[5], save->sec[6], save->sec[7], &(save->out));
+	   if (flush_mode) fflush_file(&(save->out));
 	   if (i) fatal_error_i("submsg_uv: last record problem %i",i);
            free_sec(save->sec);
 	}
@@ -98,6 +100,8 @@ int f_submsg_uv(ARG1) {
             if (same_sec1(sec,save->sec) == 0) is_v = 0;
             if (same_sec2(sec,save->sec) == 0) is_v = 0;
             if (same_sec3(sec,save->sec) == 0) is_v = 0;
+
+	    /* PDT must be same except of name parameters */
 
 	    i = GB2_ParmNum(sec);
 	    j = GB2_ParmCat(sec);
@@ -125,32 +129,43 @@ int f_submsg_uv(ARG1) {
 	    (save->sec[6] ? uint4(save->sec[6]) : 0) +
 	    (save->sec[7] ? uint4(save->sec[7]) : 0);
 
+	    /* write out sec[0] for combined grib message */
 	    for (i = 0; i < 8; i++) s[i] = sec[0][i];
             uint8_char(size, s+8);
-            fwrite_file((void *) s, sizeof(char), 16, &(save->out));
-
-	    for (j = 1; j <= 3; j++) {
-                if (sec[j]) {
-                    i = uint4(sec[j]);
-                    if (fwrite_file((void *)sec[j], sizeof(char), i, &(save->out)) != i) return 1;
-                }
+            if (fwrite_file((void *) s, sizeof(char), 16, &(save->out)) != 16) {
+		if (flush_mode) fflush_file(&(save->out));
+		return 1;
 	    }
-	    for (j = 4; j <= 7; j++) {
+
+	    /* write out sec[1] .. sec[7] for 1st message */
+	    for (j = 1; j <= 7; j++) {
                 if (save->sec[j]) {
                     i = uint4(save->sec[j]);
-                    if (fwrite_file((void *)save->sec[j], sizeof(char), i, &(save->out)) != i) return 1;
-                }
-	    }
-	    for (j = 4; j <= 7; j++) {
-                if (sec[j]) {
-                    i = uint4(sec[j]);
-                    if (fwrite_file((void *)sec[j], sizeof(char), i, &(save->out)) != i) return 1;
+                    if (fwrite_file((void *)save->sec[j], sizeof(char), i, &(save->out)) != i) {
+			if (flush_mode) fflush_file(&(save->out));
+			return 1;
+		    }
                 }
 	    }
 
+	    /* write out sec[4] .. sec[7] for 2nd message */
+	    for (j = 4; j <= 7; j++) {
+                if (sec[j]) {
+                    i = uint4(sec[j]);
+                    if (fwrite_file((void *)sec[j], sizeof(char), i, &(save->out)) != i) {
+			if (flush_mode) fflush_file(&(save->out));
+			return 1;
+		    }
+                }
+	    }
+
+	    /* write out sec[8] .. end of grib message */
             s[0] = s[1] = s[2] = s[3] = 55; /* s = "7777" */
-            if (fwrite_file((void *) s, sizeof(char), 4, &(save->out)) != 4)
+            if (fwrite_file((void *) s, sizeof(char), 4, &(save->out)) != 4) {
+		   if (flush_mode) fflush_file(&(save->out));
 	           fatal_error("submsg_uv: write record problem","");
+	    }
+	    if (flush_mode) fflush_file(&(save->out));
 
 	    save->vname = NULL;
             free_sec(save->sec);
@@ -162,10 +177,14 @@ int f_submsg_uv(ARG1) {
 	if (save->vname != NULL) {
 	   i = wrt_sec(save->sec[0], save->sec[1], save->sec[2], save->sec[3], 
 		save->sec[4], save->sec[5], save->sec[6], save->sec[7], &(save->out));
-	   if (i) fatal_error_i("submsg_uv: write record problem %i",i);
+	   if (flush_mode) fflush_file(&(save->out));
+	   if (i) fatal_error_i("submsg_uv: write record problem %d",i);
 	   free_sec(save->sec);
+	   fprintf(stderr,"submsg_uv: not paired, missing %s\n", save->vname);
 	   save->vname = NULL;
 	}
+
+	/* at this point, U is empty and data in sec[] */
 
 	/* check to see if new field is a U */
 
@@ -179,6 +198,7 @@ int f_submsg_uv(ARG1) {
 
 	/* not U, write it out */
 	i = wrt_sec(sec[0], sec[1], sec[2], sec[3], sec[4], sec[5], sec[6], sec[7], &(save->out));
+	if (flush_mode) fflush_file(&(save->out));
 	if (i) fatal_error_i("submsg_uv: write problem %i",i);
 	return 0;
     }

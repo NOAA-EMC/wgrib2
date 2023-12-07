@@ -92,8 +92,6 @@ typedef struct {     /* default */
    Function declarations (defined in the Netcdf_sup.c)
    that would not be added to the fnlist.h by fnlist.sh script
 */
-double get_unixtime(int year, int month, int day, int hour,
-                    int minute, int second, int * err_code);
 char * get_unixdate(double utime, char * date_str);
 int match_str(const char *s, const char *match);
 void fix_units(char *s, int n);

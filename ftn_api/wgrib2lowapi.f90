@@ -70,14 +70,14 @@ module wgrib2lowapi
             USE ISO_C_BINDING
             integer (C_INT), value :: n
             integer (C_SIZE_T), value :: size_buffer
-	    character (kind=c_char) :: buffer(*)
+	    character (kind=c_signed_char) :: buffer(*)
         end function wgrib2_get_mem_buffer
 
 	integer (C_INT) function wgrib2_set_mem_buffer(buffer, size_buffer, n) bind(C)
             USE ISO_C_BINDING
             integer (C_INT), value :: n
             integer (C_SIZE_T), value :: size_buffer
-	    character (kind=c_char) :: buffer(*)
+	    character (kind=c_signed_char) :: buffer(*)
         end function wgrib2_set_mem_buffer
 
         integer (C_INT) function wgrib2_free_file(string) bind(C)

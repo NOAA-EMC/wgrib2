@@ -1,0 +1,57 @@
+How do I configure the makefile to support the ncep local defined rotated lat-lon grid
+edit grib2/makefile
+   USE_IPOLATES=1
+   USE_SPECTRAL=0
+
+How do I configure the makefile to support the WMO defined rotated lat-lon grid
+edit grib2/makefile  (default)
+   USE_IPOLATES=3
+   USE_SPECTRAL=1
+
+How do I configure the makefile to support netcdf4?
+edit grib2/makefile
+   USE_NETCDF3=0
+   USE_NETCDF4=1
+Note: you will be prompted to download the netcdf4 and hdf5 libraries
+in order to complete the make.
+
+
+How do I compile on NCEP's WCOSS2 system
+
+export CC=icc
+export FC=ifort
+export COMP_SYS=intel_linux
+make 
+(fails)
+cp lib64/*.a lib/
+make
+
+comment: WCOSS2 has altered how libraries are compiled using configure.
+Normally libraries are built in lib/; however, a local routine puts the
+libraries in lib64/.  Since this behavor has only been observed in
+WCOSS2, no fixes to the makefile ar planned.
+
+
+How do I compile on NCEP's workstations
+
+edit grib2/makefile
+cd (whatever)/grib2
+vi makefile
+change 
+USE_AEC=1
+to
+USE_AEC=0
+change
+USE_JASPER=0
+to
+USE_JASPER=1
+change
+USE_OPENJPEG=1
+to
+USE_OPENJPEG=0
+
+(from bash)
+export CC=gcc
+export FC=gfortran
+make 
+

@@ -22,34 +22,36 @@ int version_ftime = 1;
 int version_ftime = DEFAULT_FTIME;
 #endif
 /*
- * HEADER:440:ftime:inv:0:either ftime1 or ftime2 dep on version_ftime
+ * HEADER:440:ftime:inv:0:same as ftime2
  */
 
 int f_ftime(ARG0) {
     if (mode < 0) return 0;
-    if (version_ftime == 1) return f_ftime1(call_ARG0(inv_out,NULL));
-    if (version_ftime == 2) return f_ftime2(call_ARG0(inv_out,NULL));
-    return 1;
+    return f_ftime2(call_ARG0(inv_out,NULL));
+    // if (version_ftime == 1) return f_ftime1(call_ARG0(inv_out,NULL));
+    // if (version_ftime == 2) return f_ftime2(call_ARG0(inv_out,NULL));
+    // return 1;
 }
 
 /*
- * HEADER:100:set_ftime:misc:1:either set_ftime1 or set_ftime2 dep on version_ftime
+ * HEADER:100:set_ftime:misc:1:same as set_ftime2
  */
 
 int f_set_ftime(ARG1) {
     if (mode < 0) return 0;
-    if (version_ftime == 1) return f_set_ftime1(call_ARG1(inv_out,NULL,arg1));
-    if (version_ftime == 2) return f_set_ftime2(call_ARG1(inv_out,NULL,arg1));
-    return 1;
+    return f_set_ftime2(call_ARG1(inv_out,NULL,arg1));
+    // if (version_ftime == 1) return f_set_ftime1(call_ARG1(inv_out,NULL,arg1));
+    // if (version_ftime == 2) return f_set_ftime2(call_ARG1(inv_out,NULL,arg1));
+    // return 1;
 }
 
 
-/*
- * HEADER:440:set_version_ftime:setup:1:set version of ftime X=1, 2
- */
-int f_set_version_ftime(ARG1) {
-   if (mode != -1) return 0;
-   version_ftime = atoi(arg1);
-   if (version_ftime < 1 || version_ftime > 2) fatal_error_i("set_version_ftime: %d not valid version", version_ftime);
-   return 0;
-}
+// /*
+//  * HEADER:440:set_version_ftime:setup:1:set version of ftime X=1 (deprecated), 2
+//  */
+// int f_set_version_ftime(ARG1) {
+//    if (mode != -1) return 0;
+//   version_ftime = atoi(arg1);
+//    if (version_ftime < 1 || version_ftime > 2) fatal_error_i("set_version_ftime: %d not valid version", version_ftime);
+//    return 0;
+// }

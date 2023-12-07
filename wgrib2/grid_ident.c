@@ -27,7 +27,7 @@ int grid_id(GRID_ID_ARGS) {
     int gdt, res, scan, nx, ny;
     unsigned int npnts;
 
-    if (axes_earth(sec, r_major, r_minor)) fatal_error("grid_id: axes undefined","");
+    if (axes_earth(sec, r_major, r_minor, NULL)) fatal_error("grid_id: axes undefined","");
 
     gdt = code_table_3_1(sec);
     switch (gdt) {

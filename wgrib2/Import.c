@@ -29,12 +29,12 @@ int f_import_text(ARG1) {
     float t;
 
     if (mode == -1) {
-        if ((*local = (void *) ffopen(arg1, "r")) == NULL) 
+        if ((*local = (void *) fopen(arg1, "r")) == NULL) 
             fatal_error("import_text: Could not open %s", arg1);
         decode = 1; 
     }
     else if (mode == -2) {
-	ffclose((FILE *) *local);
+	fclose((FILE *) *local);
     }
     else if (mode >= 0) {
 	if (header) {

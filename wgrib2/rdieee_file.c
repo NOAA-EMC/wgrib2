@@ -8,19 +8,17 @@
  * 10/2008 Public domain Wesley Ebisuzaki
  */
 
-/* BSIZ must be a multiple of 4 - sizeof(ieee float) */
-#define BSIZ (1024*4)
+/* BSIZ number of floats to process at one time */
+#define BSIZ 4096
 
 extern int ieee_little_endian;
 
 int rdieee_file(float *array, unsigned int n, int header, struct seq_file *input) {
 
-    int i, j;
-    unsigned int l;
+    unsigned int i, j, l;
     size_t nbytes;
-    unsigned char buff[BSIZ];
+    unsigned char buff[BSIZ*4];
     unsigned char h4[4],t4[4];
-    float *p;
 
     nbytes = n*4;
 
@@ -35,15 +33,15 @@ int rdieee_file(float *array, unsigned int n, int header, struct seq_file *input
 	if (l != nbytes) fatal_error("rdieee: bad header","");
     }
 
-    p = array;
-    while (nbytes > 0) {
-	j =  nbytes < BSIZ ? nbytes : BSIZ;
-	if (fread_file(buff,1,j,input) != j) fatal_error("rdieee: data read","");
-	if (ieee_little_endian) swap_buffer(buff, j);
-	for (i = 0; i < j; i += 4) {
-	    *p++ = ieee2flt(buff + i);
+    while (n > 0) {
+	j =  n < BSIZ ? n : BSIZ;
+	if (fread_file(buff,1,4*j,input) != 4*j) fatal_error("rdieee: data read","");
+	if (ieee_little_endian) swap_buffer(buff, 4*j);
+#pragma omp parallel for private(i) schedule(static)
+	for (i = 0; i < j; i++) {
+	    array[i] = ieee2flt(buff + 4*i);
 	}
-	nbytes = nbytes - j;
+	n = n - j;
     }
 
     if (header) {

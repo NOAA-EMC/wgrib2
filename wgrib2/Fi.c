@@ -8,7 +8,7 @@
 /* 2/2008 in public domain Wesley Ebisuzaki */
 
 /*
- * HEADER:100:fi:output:0:null output operation
+ * HEADER:100:fi:output:0:depreceated, used in old IF structure
  */
 
 int f_fi(ARG0) {

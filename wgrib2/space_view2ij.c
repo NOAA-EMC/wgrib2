@@ -77,7 +77,7 @@ fprintf(stderr,"ALPHA: experimental space_view2ij\n");
 //printf("space_view_init >>>> table 3.1 %d\n", code_table_3_1(sec));
 
     get_nxny_(sec, &nnx, &nny, &nnpnts, &nres, &nscan);
-    axes_earth(sec, &major, &minor);
+    axes_earth(sec, &major, &minor, NULL);
 //fprintf(stderr,">> axes %lf minor %lf\n", major,minor);
 
     r_eq = major * 0.001;

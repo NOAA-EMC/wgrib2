@@ -67,7 +67,7 @@ int space_view2ll(unsigned char **sec, double **lat, double **lon) {
 
 //fprintf(stderr,"ALPHA: experimental space_view2ll scan=%d\n", nscan >> 4);
 
-    axes_earth(sec, &major, &minor);
+    axes_earth(sec, &major, &minor, NULL);
 //fprintf(stderr,">> axes %lf minor %lf\n", major,minor);
 
     r_eq = major * 0.001;

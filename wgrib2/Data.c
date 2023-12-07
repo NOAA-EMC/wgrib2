@@ -14,7 +14,7 @@
  *
  * 2006: Public Domain: Wesley Ebisuzaki
  * 1/2007 cleanup M. Schwarb
-  *
+ *
  */
 
 extern int decode, latlon;
@@ -26,14 +26,12 @@ extern double *lat, *lon;
  */
 
 int f_stats(ARG0) {
-    double sum, sum_wt, wt, t, sum_thread, sum_wt_thread, wt_thread, last_t, last_lat;
+    double sum, sum_wt, wt, last_coslat, last_lat;
     int do_wt;
-    unsigned int n, n_thread, first, i;
-    float mn, mx, min_thread, max_thread;
+    unsigned int n, first, i;
+    float mn, mx;
 
-    if (mode == -1) {
-        latlon = decode = 1;
-    }
+    if (mode == -1) latlon = decode = 1;
     if (mode < 0) return 0;
 
     sum = wt = sum_wt = 0.0;
@@ -50,45 +48,25 @@ int f_stats(ARG0) {
     mn = mx = data[first];
     do_wt = (lat != NULL);
     n = 0;
-    sum = wt = sum_wt = 0.0;
+    last_lat = 0.0;
+    last_coslat = 1.0;
 
-#pragma omp parallel private(min_thread, max_thread, n_thread, sum_thread, t, wt_thread, sum_wt_thread, last_t, last_lat)
-    {
-        min_thread = max_thread = mx;
-	n_thread = 0;
-	sum_thread = wt_thread = sum_wt_thread = 0.0;
-        last_t = 1.0;
-	last_lat = 0.0;
-#pragma omp for private(i) schedule(static) nowait
-        for (i = first; i < ndata; i++) {
-            if (DEFINED_VAL(data[i])) {
-                min_thread = (min_thread > data[i]) ? data[i] : min_thread;
-                max_thread = (max_thread < data[i]) ? data[i] : max_thread;
-		sum_thread += data[i];
-		n_thread++;
-		if (do_wt) {
-		    if (lat[i] == last_lat) {
-			t = last_t;
-		    }
-		    else {
-		        last_t = t = cosf((float) CONV*lat[i]);
-			last_lat = lat[i];
-		    }
-		    wt_thread += t;
-		    sum_wt_thread += data[i]*t;
+#pragma omp parallel for firstprivate(last_coslat, last_lat) private(i) reduction(+:n,sum,wt,sum_wt) reduction(min:mn) reduction(max:mx)
+    for (i = first; i <	ndata; i++) {
+        if (DEFINED_VAL(data[i])) {
+	    n += 1;
+	    sum += data[i];
+	    mx = data[i] > mx ? data[i] : mx;
+	    mn = data[i] < mn ? data[i] : mn;
+	    if (do_wt) {
+		if (lat[i] != last_lat) {
+		    last_coslat = cosf((float) CONV*lat[i]);
+		    last_lat = lat[i];
 		}
-            }
-        }
-
-#pragma omp critical
-        {
-            if (min_thread < mn) mn = min_thread;
-            if (max_thread > mx) mx = max_thread;
-	    sum += sum_thread;
-	    n += n_thread;
-	    wt += wt_thread;
-	    sum_wt += sum_wt_thread;
-        }
+		wt += last_coslat;
+		sum_wt += last_coslat * data[i];
+	    }
+	}
     }
     sum /= n;
     sprintf(inv_out,"ndata=%u:undef=%u:mean=%lg:min=%g:max=%g", ndata, ndata-n, sum, mn, mx);

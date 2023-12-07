@@ -1,0 +1,23 @@
+The original library comes from NCEP/NOAA sp_v2.0.2
+
+Changes for the wgrib2 distribution:  See README.WNE
+
+fftpack.f is from netlib (public domain)
+decomp.f is from netlib (public domain)
+solve.f is from netlib (public domain)
+
+The splib is primarily the work of Mark Iredell (federal employee, EMC/NCEP/NWS/NOAA)
+and is in the public domain.  Modifications were done by employees of EMC/NCEP/NWS/NOAA,
+CPC/NCEP/NWS/NOAA and perhaps NCO/NCEP/NWS/NOAA.  (Some of the people worked for both 
+NCO and EMC.)  The files authored by Mark Iredell include:
+
+spanaly.f spdz2uv.f speps.f spfft1.f spffte_essl.f spffte.f spfft.f spfftpt.f spgradq.f spgradx.f
+spgrady.f splaplac.f splat.f splegend.f sppad.f spsynth.f sptezd.f sptez.f sptezmd.f sptezm.f
+sptezmv.f sptezv.f sptgpmd.f sptgpm.f sptgpmv.f sptgpsd.f sptgps.f sptgpsv.f sptgptd.f sptgpt.f
+sptgptsd.f sptgptvd.f sptgptv.f sptrand.f sptran.f sptranf0.f sptranf1.f sptranf.f sptranfv.f sptranv.f
+sptrund.f sptrun.f sptrung.f sptrungv.f sptrunl.f sptrunm.f sptrunmv.f sptruns.f sptrunsv.f
+sptrunv.f spuv2dz.f spvar.f spwget.f ncpus.F
+
+Wesley Ebisuzaki 9/18/2020
+Climate Prediction Center
+NCEP

@@ -75,12 +75,16 @@ int f_help(ARG1) {
         j = j < 0 ? 0 : j;
         while (j--) *l++ = ' ';
 
-        if (functions[i].type == output)         	sprintf(l," out  ");
-        else if (functions[i].type == inv)       	sprintf(l," inv  ");
-        else if (functions[i].type == misc)      	sprintf(l," misc ");
-        else if (functions[i].type == setup)     	sprintf(l," init ");
-        else if (functions[i].type == inv_output)       sprintf(l," inv> ");
-        else                                     sprintf(l," ???  ");
+        if (functions[i].type == output)         	sprintf(l," out   ");
+        else if (functions[i].type == inv)       	sprintf(l," inv   ");
+        else if (functions[i].type == misc)      	sprintf(l," misc  ");
+        else if (functions[i].type == setup)     	sprintf(l," init  ");
+        else if (functions[i].type == inv_output)       sprintf(l," inv>  ");
+        else if (functions[i].type == If)               sprintf(l," if    ");
+        else if (functions[i].type == Else)             sprintf(l," else  ");
+        else if (functions[i].type == Elseif)           sprintf(l," elif  ");
+        else if (functions[i].type == Endif)            sprintf(l," endif ");
+        else                                     sprintf(l," ???   ");
 	l += strlen(l);
 
         switch(functions[i].nargs) {

@@ -8,9 +8,6 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-#define IPOLATES ipolates_
-#define IPOLATEV ipolatev_
-
 /*
  * New_grid
  *
@@ -42,6 +39,8 @@ const char **vectors;
 const char *default_vectors[] = {"UGRD", "VGRD", "VUCSH", "VVCSH","UFLX", "VFLX",
 	"UGUST","VGUST","USTM","VSTM","VDFUA", "VDFVA", "MAXUW", "MAXVW",
 	"UOGRD","VOGRD", "UICE", "VICE", "U-GWD", "V-GWD", "USSD", "VSSD", NULL };
+
+enum new_grid_format_type new_grid_format;
 
 /* new_grid_vectors can be called submsg_uv, should not require ipolates to be installed */
 
@@ -132,18 +131,13 @@ int f_new_grid_vectors(ARG1) {
  *  (3) spectral support was removed
  */
 
-void IPOLATES(int *interpol, int *ipopt, int *kgds, int *kgds_out, int *npnts, int *n_out0, 
-		int *km, int *ibi, unsigned char *bitmap, float *data_in, int *n_out, 
-		float *rlat, float *rlon, int *ibo, unsigned char *bitmap_out, 
-		float *data_out, int *iret);
+#ifndef _IPOLATES_H
+#define _IPOLATES_H
+#include "ipolates.h"
+#endif
 
-void IPOLATEV(int *interpol, int *ipopt, int *kgds, int *kgds_out, int *npnts, int *n_out0, 
-		int *km, int *ibi, unsigned char *bitmap, float *u_in, float *v_in, 
-		int *n_out, float *rlat, float *rlon, float *crot, float *srot, int *ibo,
-		unsigned char *bitmap_out, float *u_out, float *v_out, int *iret);
-
-
-extern unsigned int npnts,nx,ny;
+extern unsigned int npnts;
+extern int nx,ny;
 extern double *lat, *lon;
 extern int decode, latlon, file_append, flush_mode;
 extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
@@ -156,7 +150,7 @@ static int interpol_type = 0;
 static int ipopt[20] = {-1,-1,0, 0,0,0, 0,0,0, 0};
 
 /*
- * HEADER:111:new_grid_interpolation:misc:1:new_grid interpolation X=bilinear,bicubic,neighbor,budget
+ * HEADER:111:new_grid_interpolation:misc:1:new_grid interpolation X=bilinear,bicubic,neighbor,budget,neighbor-budget
  */
 
 int f_new_grid_interpolation(ARG1) {
@@ -191,12 +185,25 @@ int f_new_grid_ipopt(ARG1) {
     return 0;
 }
 
+/*
+ * HEADER:111:new_grid_format:misc:1:new_grid output format  X=bin,ieee,grib
+ */
+
+
+int f_new_grid_format(ARG1) {
+    if (mode == -1) {
+	if (strcmp(arg1,"grib") != 0) {
+	    fatal_error("new_grid_format: for IPOLATES=iplib, only grib is supported","");
+	}
+    }
+    return 0;
+}
 
 /*
  * HEADER:111:new_grid_winds:misc:1:new_grid wind orientation: X = grid, earth (no default)
  */
 
-static enum {grid, earth, undefined} wind_rotation  = undefined;
+enum wind_rotation_type wind_rotation;
 
 int f_new_grid_winds(ARG1) {
     int *save;
@@ -433,12 +440,14 @@ int f_new_grid(ARG4) {
         for (j = 0; j < i; j++) save->sec3[j] = s[j];
 
 	// apply wind rotation .. change flag 3.3
-	if (wind_rotation == undefined) { fprintf(stderr,"Warning: -new_grid wind orientation undefined, "
-		"use \"-new_grid_winds (grid|earth)\", earth used (N=North Pole)\n");
+	if (wind_rotation == undefined && strncmp(arg1,"grib",4) != 0) {
+	    fprintf(stderr,"Warning: -new_grid wind orientation undefined, "
+                "use \"-new_grid_winds (grid|earth)\", earth used\n");
+            wind_rotation = earth;
 	}
 	if ((p = flag_table_3_3_location(new_sec)) != NULL) {
 	    if (wind_rotation == grid) *p = *p | 8;
-	    else *p = *p & (255 - 8);
+	    else if (wind_rotation == earth) *p = *p & (255 - 8);
 	}
 
         if (mk_kgds(new_sec, save->kgds_out)) fatal_error("new_grid: encoding output kgds","");
@@ -491,7 +500,7 @@ int f_new_grid(ARG4) {
             // set by the input grib file
 
 	    /* read earth radius */
-	    i = axes_earth(sec, &r_maj, &r_min);
+	    i = axes_earth(sec, &r_maj, &r_min, NULL);
 	    if (i) fatal_error_i("axes_earth: error code %d", i);
 
 	    if (save->radius_major != r_maj || save->radius_minor != r_min) {
@@ -720,25 +729,19 @@ int f_new_grid(ARG4) {
  * spectral restored (removed from grib1 version because I didn't want to support it)
  */
 
-void IPOLATES(int *interpol, int *ipopt, int *gdt_in, int *gdttmpl_in, int *gdttmpl_size_in,
-  int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
-  int *ibi, unsigned char *bitmap, double *data_in, int *n_out, double *rlat, double *rlon,
-   int *ibo, unsigned char *bitmap_out, double *data_out, int *iret);
+#ifndef _IPOLATES_H
+#define _IPOLATES_h
+#include "ipolates.h"
+#endif
 
-void IPOLATEV(int *interpol, int *ipopt, int *gdt_in, int *gdttmpl_in, int *gdttmpl_size_in,
-  int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
-  int *ibi, unsigned char *bitmap, double *u_in, double *v_in, int *n_out, double *rlat, double *rlon,
-   double *crot, double *srot, int *ibo, unsigned char *bitmap_out,
-   double *u_out, double *v_out, int *iret);
-
-
-extern int decode, latlon, file_append, flush_mode;
+extern int decode, latlon, file_append, flush_mode, header;
 extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
 extern enum output_grib_type grib_type;
 extern enum output_order_type output_order;
-extern int save_translation;
+extern int scan, save_translation;
+extern unsigned int nx_, ny_;
 extern enum output_order_type output_order_wanted, output_order;
-static enum {grid, earth, undefined} wind_rotation  = undefined;
+enum wind_rotation_type wind_rotation;
 
 int f_new_grid_winds(ARG1) {
     int *save;
@@ -782,11 +785,20 @@ int f_new_grid_interpolation(ARG1) {
 	    interpol_type = 4;
        }
 #endif
-//     turned off neighbor-budget - poorly explained in documentation
-//     else if (strcmp(arg1,"neighbor-budget") == 0) { interpol_type = 6; ipopt[0] = -1; }
+      else if (strcmp(arg1,"neighbor-budget") == 0) { interpol_type = 6; ipopt[0] = -1; }
       else fatal_error("new_grid_interpolation: unknown type %s", arg1);
    }
    return 0;
+}
+
+int f_new_grid_format(ARG1) {
+    if (mode >= -1) {
+	if (strcmp(arg1,"grib") == 0) new_grid_format = grib;
+	else if (strcmp(arg1,"bin") == 0) new_grid_format = bin;
+	else if (strcmp(arg1,"ieee") == 0) new_grid_format = ieee;
+	else fatal_error("new_grid_format: unknown type (%s)", arg1);
+    }
+    return 0;
 }
 
 int f_new_grid_ipopt(ARG1) {
@@ -830,13 +842,14 @@ struct local_struct {
 
         // interpolation
         int npnts_out;          // must be integer .. fortran call requires int
+	int defined_lat_lon;	// most grids have lat-lon defined by iplib
         double *rlat, *rlon, *crot, *srot, *data_out;
 	float *data_wrt;
         unsigned char *bitmap_out;
         unsigned char *sec3;
         double radius_major, radius_minor;
         int gdtnum_out, gdt_out[200], gdt_out_size;
-
+	int output_latlon;
         // output file
         struct seq_file out;
 };
@@ -848,12 +861,14 @@ unsigned char blank_sec1[21] = { 0,0,0,21,1,
                 255, 255, 255, 255, 255, // month .. second
                 255, 255};
 
+/* is is for IPOLATES equal 3 */
+
 int f_new_grid(ARG4) {
     struct local_struct *save;
 
     unsigned int i;
     int is_u, is_v, ftn_npnts, ftn_nout;
-    int km;
+    int km, itmp;
     double *data_in;
     int gdtnum_in, gdt_in[200], gdt_in_size;
     double x0, y0, dx, dy, xn, yn;
@@ -861,6 +876,21 @@ int f_new_grid(ARG4) {
     int proj;                                   // projection: for LC 0 = NP, 128 = SP
     double sp_lat, sp_lon, sp_rot;
     char name[NAMELEN];
+
+    /* grib2 grid definitions */
+    struct seq_file input;
+    unsigned char *input_sec[10];	/* sec[9] = last valid bitmap */
+    unsigned char *msg;
+    long int pos;
+    unsigned long int len;
+    int num_submsg;
+
+    /* unstructured grid: location */
+    unsigned char unstruct_grid_sec3[35];
+    unsigned char sec4_latlon[34], *g;
+    int discipline;
+    unsigned char *p_discipline;
+
     int j, ibi, ibo, iret, nnx, nny, n_out, tmp_interpol_type;
     unsigned char *new_sec[8], *s, *bitmap, *p;
 
@@ -886,10 +916,11 @@ int f_new_grid(ARG4) {
         }
 
         save->has_u = 0;
+	save->output_latlon = 0;
         save->radius_major = save->radius_minor = 0.0;
         init_sec(save->clone_sec);
         s = NULL;
-
+        save->defined_lat_lon = 0;
         // parse NCEP grids -- if ncep_grid, replace arg1, arg2, arg3
         ncep_grids(&arg1, &arg2, &arg3);
 
@@ -1025,6 +1056,68 @@ int f_new_grid(ARG4) {
             // make a new section 3
             s = sec3_polar_stereo(lov, lad, proj, nnx, x0, dx, nny, y0, dy, sec);
         }
+
+        else if (strncmp(arg1,"grib",4) == 0) {
+
+	    /* read grib file, get grid definition */
+            j = fopen_file(&input, arg2, "rb");
+            if (j != 0) fatal_error("new_grid: %s could not be opened", arg2);
+            msg = rd_grib2_msg_seq_file(input_sec, &input, &pos, &len, &num_submsg);
+            if (msg == NULL) fatal_error("new_grid: grib record not found","");
+            if (parse_1st_msg(input_sec) != 0) fatal_error("new_grid: grib not parsed correctly","");
+	    i = GB2_Sec3_size(input_sec);
+            save->npnts_out = n_out = GB2_Sec3_npts(input_sec);
+            save->nx = n_out;
+            save->ny = 1;
+	    s = input_sec[3];
+	}
+
+        else if (strncmp(arg1,"location",4) == 0) {
+
+	    /* read lat-lon  values */
+            n_out = read_latlon(arg2, &(save->rlon) , &(save->rlat)) ;
+	    if (n_out == 0) fatal_error("new_grid: bad set of locations","");
+
+            save->npnts_out = save->nx = n_out;
+            save->ny = 1;
+	    save->output_latlon = 1;
+            /*i save->rlon and save->rlat memory allocated in read_latlon */
+            save->crot = (double *) malloc(sizeof(double) * (size_t) n_out);
+            save->srot = (double *) malloc(sizeof(double) * (size_t) n_out);
+	    for (i=0; i < n_out; i++) {
+		save->crot[i] = 1.0;
+		save->srot[i] = 0.0;
+	    }
+	    save->defined_lat_lon = 1;
+
+	    /* setup sec3 */
+	    
+	    int_char(35, unstruct_grid_sec3 + 0);	/* size of sec 3 */
+	    unstruct_grid_sec3[4] = 3;			/* this is sec 3 */
+	    unstruct_grid_sec3[5] = 0;
+	    int_char(n_out, unstruct_grid_sec3 + 6);	/* number of grid points */
+	    unstruct_grid_sec3[10] = 0;
+	    unstruct_grid_sec3[11] = 0;
+	    int2_char(101, unstruct_grid_sec3+12);
+	    unstruct_grid_sec3[14] = 0;
+	    int_char(0, unstruct_grid_sec3 + 15);
+
+	    /* UUID read from arg3 */
+	    for (i = 19; i <= 34; i++)  unstruct_grid_sec3[i] = 0;
+	    /* UUID */
+	    g = unstruct_grid_sec3 + 19;
+	    if (strcmp(arg3,"0") == 0) {                /* nill UUID */
+	        for (i = 19; i <= 34; i++)  unstruct_grid_sec3[i] = 0;
+	    }
+	    else {
+		i = sscanf(arg3, "%2hhx%2hhx%2hhx%2hhx-%2hhx%2hhx-%2hhx%2hhx-%2hhx%2hhx-%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx",
+                g+0, g+1, g+2, g+3, g+4, g+5, g+6, g+7, g+8, g+9, g+10, g+11, g+12, g+13, g+14, g+15);
+		if (i != 16) fatal_error("new_grid: bad uuid %s",arg3);
+	    }
+	    /* grid template has NO rotated wind */
+	    s = &(unstruct_grid_sec3[0]);
+
+	}
         else fatal_error("new_grid: unsupported output grid %s", arg1);
 
         new_sec[1] = blank_sec1;        // add center info
@@ -1033,31 +1126,45 @@ int f_new_grid(ARG4) {
         new_sec[3] = save->sec3 = (unsigned char *) malloc(i * sizeof(unsigned char));
         for (j = 0; j < i; j++) save->sec3[j] = s[j];
 
+        /* s[*] points to buffer owned by input .. can close input now */
+	if (strncmp(arg1,"grib",4) == 0) fclose_file(&input);
+
         // apply wind rotation .. change flag 3.3
-        if (wind_rotation == undefined) { fprintf(stderr,"Warning: -new_grid wind orientation undefined, "
-                "use \"-new_grid_winds (grid|earth)\", earth used (N=North Pole)\n");
-        }
-	if ((p = flag_table_3_3_location(new_sec)) != NULL) {
-	    if (wind_rotation == grid) *p = *p | 8;
-	    else *p = *p & (255 - 8);
+
+	if (wind_rotation == undefined) {
+	   if (strncmp(arg1,"grib",4) != 0 && strncmp(arg1,"location",8) != 0) {
+		fprintf(stderr,"Warning: -new_grid_winds set to earth\n");
+		wind_rotation = earth;
+	   }
+	}
+	if (wind_rotation != undefined) {
+	    if ((p = flag_table_3_3_location(new_sec)) != NULL) {
+	        if (wind_rotation == grid) *p = *p | 8;
+	        else if (wind_rotation == earth) *p = *p & (255 - 8);
+	    }
 	}
 
         save->gdt_out_size = sizeof(save->gdt_out) / sizeof(save->gdt_out[0]);
         if (mk_gdt(new_sec, &(save->gdtnum_out), &(save->gdt_out[0]), &(save->gdt_out_size) ))
-                fatal_error("new_grid: encoding output gdt","");
+                fatal_error("new_grid: encoding output gdt failed","");
 
-        /* some vectors need by interpolation routines */
-        save->rlat = (double *) malloc(sizeof(double) * (size_t) n_out);
-        save->rlon = (double *) malloc(sizeof(double) * (size_t) n_out);
-        save->crot = (double *) malloc(sizeof(double) * (size_t) n_out);
-        save->srot = (double *) malloc(sizeof(double) * (size_t) n_out);
+	if (save->defined_lat_lon == 0) {		// use grib
+            /* some vectors need by interpolation routines */
+            save->rlat = (double *) malloc(sizeof(double) * (size_t) n_out);
+            save->rlon = (double *) malloc(sizeof(double) * (size_t) n_out);
+            save->crot = (double *) malloc(sizeof(double) * (size_t) n_out);
+            save->srot = (double *) malloc(sizeof(double) * (size_t) n_out);
+	}
+	else {		// lat-lon are defined .. do not use grib output grid, rlat, rlon, crot, srot already defined
+	    save->gdtnum_out = -1;
+	}
+
         save->data_out = (double *) malloc(2 * sizeof(double) * (size_t) n_out);
         save->data_wrt = (float *) malloc(sizeof(double) * (size_t) n_out);
         save->bitmap_out = (unsigned char *) malloc(sizeof(char) * (size_t) n_out);
 	if (save->rlat == NULL || save->rlon == NULL || save->crot == NULL || save->srot == NULL || 
 		save->data_out == NULL || save->data_wrt == NULL || save->bitmap_out == NULL) 
                 fatal_error("new_grid memory allocation","");
-
         return 0;
     }
 
@@ -1087,10 +1194,24 @@ int f_new_grid(ARG4) {
     }
     if (mode >= 0) { /* processing grid */
 
+        if (output_order != raw) fatal_error("new_grid: must be in raw output order","");
+	if (nx_ == 0 || ny_ == 0) {
+	    fprintf(stderr,"new_grid: does not work with thinned or non-grids (nx=%u, ny=%u)\n", nx_, ny_);
+	    return 0;
+	}
+	if (scan & 16) {
+	    fprintf(stderr,"new_grid: rows must scan in same direction\n");
+	    return 0;
+	}
+	if (scan & 31) {
+	    fprintf(stderr,"new_grid: staggered\n");
+	    return 0;
+	}
+
         /* The kgds of some output grids will change depending on input grid */
         /* for example, radius of earth is not known until grib file is read, */
         /*   and mass vs wind fields */
-        /* right nowm, only affects lambertc */
+        /* right now, only affects lambertc and location */
 
         if (strncmp(arg1,"lambertc:",8) == 0) {
 
@@ -1098,7 +1219,7 @@ int f_new_grid(ARG4) {
             // set by the input grib file
 
             /* read earth radius */
-            i = axes_earth(sec, &r_maj, &r_min);
+            i = axes_earth(sec, &r_maj, &r_min, NULL);
             if (i) fatal_error_i("axes_earth: error code %d", i);
 
             if (save->radius_major != r_maj || save->radius_minor != r_min) {
@@ -1147,10 +1268,36 @@ int f_new_grid(ARG4) {
                 // save radius of earth, to show sec3 and kgds has been done
                 save->radius_major = r_maj;
                 save->radius_minor = r_min;
+
+        	// apply wind rotation .. change flag 3.3
+
+        	if (save->defined_lat_lon == 1) wind_rotation = earth;
+        	if (wind_rotation == undefined && strncmp(arg1,"grib",4) != 0) {
+                    fprintf(stderr,"Warning: -new_grid wind orientation undefined, "
+                        "use \"-new_grid_winds (grid|earth)\", earth used\n");
+            	    wind_rotation = earth;
+        	}
+        	if ((p = flag_table_3_3_location(new_sec)) != NULL) {
+            	    if (wind_rotation == grid) *p = *p | 8;
+            	    else if (wind_rotation == earth) *p = *p & (255 - 8);
+		}
             }
         }
-
-        if (output_order != raw) fatal_error("new_grid: must be in raw output order","");
+        else if (strncmp(arg1,"location",8) == 0) {
+	    i = code_table_3_2(sec);
+	    if (i == 0 || i == 2 || i == 4 || i == 5 || i == 6 || i == 8 || i == 9) {
+		save->sec3[14] = i;
+	    }
+	    else {
+		save->sec3[14] = 255;
+	    }
+	    /* the gdt may change because of radius, but no need to update */
+	}
+	/* 3/2021: update shape of earth */
+        p = code_table_3_2_location(sec);
+	/* new_grid will only interpolate to grid with shape of earth in 16 bytes*/
+        if (p) for (i = 0; i < 16; i++)  save->sec3[14+i] = p[i];
+ 
         i = getName(sec, mode, NULL, name, NULL, NULL);
 
         is_u = is_v = 0;
@@ -1163,6 +1310,7 @@ int f_new_grid(ARG4) {
         }
 
         // check if V matches expectation
+	// could cause a problem as record is ignored */
 
         if (is_v && (save->has_u == 0  || (same_sec0(sec,save->clone_sec) != 1 ||
             same_sec1(sec,save->clone_sec) != 1 ||
@@ -1189,12 +1337,61 @@ int f_new_grid(ARG4) {
             return 0;
         }
 
-        // at this point will call polates with either a scalar or vector
+
+	/* if grib output and output_latlon == 1, write out grib lat/lon */
+	
+	if (save->output_latlon == 1 && new_grid_format == grib ) {
+            n_out = save->npnts_out;
+            nnx = save->nx;
+            nny = save->ny;
+	    p_discipline = code_table_0_0_location(sec);
+	    discipline = *p_discipline;
+	    *p_discipline = 0;
+
+	    for (i = 0; i < 34; i++) sec4_latlon[i] = 0;
+	    sec4_latlon[3] = 34;
+	    sec4_latlon[4] = 4;
+	    sec4_latlon[9] = 191;	// Misc
+	    sec4_latlon[10] = 1;	// 1 = lat 2 = lon
+	    sec4_latlon[11] = 0;	// analysis
+	    for (i = 12; i <= 16; i++) sec4_latlon[i] = 255;
+	    sec4_latlon[17] = 0;
+	    sec4_latlon[18] = 0;
+	    sec4_latlon[19] = 0;
+	    sec4_latlon[20] = 0;
+	    sec4_latlon[22] = 1;	// surface
+	    for (i = 23; i <= 33; i++) sec4_latlon[i] = 255;
+
+            for (i = 0; i < 8; i++) new_sec[i] = sec[i];
+            new_sec[3] = save->sec3;
+	    new_sec[4] = sec4_latlon;
+            new_sec[4][10] = 2;
+
+	    for (i = 0; i < n_out; i++) {
+		itmp = floor(save->rlon[i] * 1000.0 + 0.5);
+		save->data_wrt[i] = itmp * 0.001;
+	    }
+            grib_wrt(new_sec, save->data_wrt, n_out, nnx, nny, 1, -3, 0,
+                18, 18, complex1, &(save->out));
+	    for (i = 0; i < n_out; i++) {
+		itmp = floor(save->rlat[i] * 1000.0 + 0.5);
+		save->data_wrt[i] = itmp * 0.001;
+	    }
+            new_sec[4][10] = 1;
+            grib_wrt(new_sec, save->data_wrt, n_out, nnx, nny, 1, -3, 0,
+                18, 18, complex1, &(save->out));
+	    *p_discipline = discipline;
+	    save->output_latlon = 0;
+	}
+
+
+        /* at this point will call polates with either a scalar or vector depending on is_v */
 
         n_out = save->npnts_out;
         nnx = save->nx;
         nny = save->ny;
         km = 1;                 // only one scalar or vector field
+
 
         gdt_in_size = sizeof(gdt_in) / sizeof(gdt_in[0]);
         if (mk_gdt(sec, &gdtnum_in, &(gdt_in[0]), &gdt_in_size ))
@@ -1255,42 +1452,40 @@ int f_new_grid(ARG4) {
 
         ftn_npnts = (int) ndata;
         ftn_nout = (int) n_out;
+
         if (is_v) {
             IPOLATEV(&tmp_interpol_type, ipopt, &gdtnum_in, &(gdt_in[0]), &gdt_in_size,
-                &(save->gdtnum_out), &(save->gdt_out[0]), &(save->gdt_out_size),
+                &(save->gdtnum_out), 
+		&(save->gdt_out[0]), &(save->gdt_out_size),
                 &ftn_npnts, &ftn_nout, &km, &ibi, bitmap, data_in, data_in+ndata, &n_out,
                 save->rlat,save->rlon,save->crot,save->srot, &ibo, save->bitmap_out, save->data_out, 
                 save->data_out + n_out, &iret);
         }
         else {
             IPOLATES(&tmp_interpol_type, ipopt, &gdtnum_in, &(gdt_in[0]), &gdt_in_size,
-                &(save->gdtnum_out), &(save->gdt_out[0]), &(save->gdt_out_size),
+                &(save->gdtnum_out), 
+		&(save->gdt_out[0]), &(save->gdt_out_size),
                 &ftn_npnts, &ftn_nout, &km, &ibi, bitmap, data_in, &n_out,
                 save->rlat,save->rlon, &ibo, save->bitmap_out, save->data_out, &iret);
         }
+	free(data_in);
+	free(bitmap);
 
         if (iret != 0) {
-            if (iret == 2) fatal_error("IPOLATES failed, unrecognized input grid or no grid point of output grid is in input grid","");
+            if (iret == 2) fatal_error("IPOLATES failed, unrecognized input grid or no grid point of output grid is in input grid"
+                 ,"");
             if (iret == 3) fatal_error("IPOLATES failed, unrecognized output grid","");
 	    if (iret == 41 && tmp_interpol_type == 4) fatal_error("IPOLATES failed, non-global grid for spectral interpolation","");
 
             fatal_error_i("IPOLATES failed, error %d",iret);
         }
 
-        // now to write out the grib file
+        // save datda to data_wrt[]
 
-        for (i = 0; i < 8; i++) new_sec[i] = sec[i];
-        new_sec[3] = save->sec3;
-
-	// write scalar or U
-
-        if (is_v == 1) {		// change V -> U
-            GB2_ParmNum(new_sec) = GB2_ParmNum(new_sec) - 1;
-	}
 	if (ibo == 1) {		// has a bitmap
 #pragma omp parallel for private(i)
             for (i = 0; i < n_out; i++) {
-		save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i];
+	        save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i];
 	    }
 	}
 	else {
@@ -1299,32 +1494,92 @@ int f_new_grid(ARG4) {
 	        save->data_wrt[i] = save->data_out[i];
 	    }
 	}
-        grib_wrt(new_sec, save->data_wrt, n_out, nnx, nny, use_scale, dec_scale, bin_scale,
-                wanted_bits, max_bits, grib_type, &(save->out));
 
-	// write V if necessary
+	if (new_grid_format == grib) {
+            for (i = 0; i < 8; i++) new_sec[i] = sec[i];
+            new_sec[3] = save->sec3;
+	    // write scalar or U
 
-        if (is_v == 1) {		// vector
-            GB2_ParmNum(new_sec) = GB2_ParmNum(new_sec) + 1;
-	    if (ibo == 1) {		// has a bitmap
-#pragma omp parallel for private(i)
-                for (i = 0; i < n_out; i++) {
-		    save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i+n_out];
-		}
+            if (is_v == 1) {		// change V -> U
+                GB2_ParmNum(new_sec) = GB2_ParmNum(new_sec) - 1;
 	    }
-	    else {
-#pragma omp parallel for private(i)
-                for (i = 0; i < n_out; i++) {
-	            save->data_wrt[i] = save->data_out[i+n_out];
-	        }
-	    }
+
             grib_wrt(new_sec, save->data_wrt, n_out, nnx, nny, use_scale, dec_scale, bin_scale,
                 wanted_bits, max_bits, grib_type, &(save->out));
+
+	    // write V if necessary
+
+            if (is_v == 1) {		// vector
+                GB2_ParmNum(new_sec) = GB2_ParmNum(new_sec) + 1;
+	        if (ibo == 1) {		// has a bitmap
+#pragma omp parallel for private(i)
+                    for (i = 0; i < n_out; i++) {
+		        save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i+n_out];
+		    }
+	        }
+	        else {
+#pragma omp parallel for private(i)
+                    for (i = 0; i < n_out; i++) {
+	                save->data_wrt[i] = save->data_out[i+n_out];
+	            }
+	        }
+                grib_wrt(new_sec, save->data_wrt, n_out, nnx, nny, use_scale, dec_scale, bin_scale,
+                    wanted_bits, max_bits, grib_type, &(save->out));
+            }
+	}
+	else if (new_grid_format == ieee) {
+            wrtieee(&(save->data_wrt[0]), n_out, header, &(save->out));
+            if (is_v == 1) {		// vector
+	        if (ibo == 1) {		// has a bitmap
+#pragma omp parallel for private(i)
+                    for (i = 0; i < n_out; i++) {
+		        save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i+n_out];
+		    }
+	        }
+	        else {
+#pragma omp parallel for private(i)
+                    for (i = 0; i < n_out; i++) {
+	                save->data_wrt[i] = save->data_out[i+n_out];
+	            }
+	        }
+                wrtieee(&(save->data_wrt[0]), n_out, header, &(save->out));
+	    }
+	}
+	else if (new_grid_format == bin) {
+	    if (header) {
+                if (n_out > 4294967295U / sizeof(float))
+                    fatal_error("new_grid: 4-byte header overflow bin header","");
+            	i = n_out * sizeof(float);
+                fwrite_file((void *) &i, sizeof(int), 1, &(save->out));
+            }
+	    j = fwrite_file((void *) &(save->data_wrt[0]), sizeof(float), n_out, &(save->out));
+            if (j != n_out) fatal_error("new_grid: error in write", "");
+            if (header) fwrite_file((void *) &i, sizeof(int), 1, &(save->out));
+
+            if (is_v == 1) {		// vector
+	        if (ibo == 1) {		// has a bitmap
+#pragma omp parallel for private(i)
+                    for (i = 0; i < n_out; i++) {
+		        save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i+n_out];
+		    }
+	        }
+	        else {
+#pragma omp parallel for private(i)
+                    for (i = 0; i < n_out; i++) {
+	                save->data_wrt[i] = save->data_out[i+n_out];
+	            }
+	        }
+
+            	i = n_out * sizeof(float);
+                if (header) fwrite_file((void *) &i, sizeof(int), 1, &(save->out));
+	        j = fwrite_file((void *) &(save->data_wrt[0]), sizeof(float), n_out, &(save->out));
+                if (j != n_out) fatal_error("new_grid: error in write", "");
+                if (header) fwrite_file((void *) &i, sizeof(int), 1, &(save->out));
+	    }
         }
 
-        if (flush_mode) fflush_file(&(save->out));
-        free(data_in);
-        free(bitmap);
+	if (flush_mode) fflush_file(&(save->out));
+	/* cleanup for u/v case */    
         if (is_v != 0) {
             save->has_u = 0;
             free(save->u_val);
@@ -1351,6 +1606,10 @@ int f_new_grid(ARG4) {
 }
 int f_new_grid_winds(ARG1) {
     fprintf(stderr,"IPOLATES package is not installed\n");
+    return 1;
+}
+int f_new_grid_format(ARG1) {
+    fprintf(stderr,"IPOLATES (ip2lib_d) package is not installed\n");
     return 1;
 }
 #endif

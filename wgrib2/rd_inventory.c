@@ -50,7 +50,7 @@ int rd_inventory(int *rec_num, int *submsg, long int *pos, struct seq_file *in) 
 	while (*p == ' ') p++;
         if (*p == 0) return 1;
 
-        if (!isdigit(*p)) fatal_error("bad inventory: missing record number","");
+        if (!isdigit((unsigned char) *p)) fatal_error("bad inventory: missing record number","");
 
         /* record number */
 	i = 0;
@@ -63,7 +63,7 @@ int rd_inventory(int *rec_num, int *submsg, long int *pos, struct seq_file *in) 
         if (*p == '.') {
             p++;
             i = 0;
-	    while (isdigit(*p) ) {
+	    while (isdigit((unsigned char) *p) ) {
 	        i = 10*i + *p++ - '0';
 	    }
 	    *submsg = i;
@@ -76,7 +76,7 @@ int rd_inventory(int *rec_num, int *submsg, long int *pos, struct seq_file *in) 
 
         if (*p++ != ':') fatal_error_i("bad inventory on line: %d",*rec_num);
         tmp = 0;
-        while (isdigit(*p)) {
+        while (isdigit((unsigned char) *p)) {
             tmp = 10*tmp + *p++ - '0';
         }
         *pos = tmp;

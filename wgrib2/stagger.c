@@ -88,6 +88,15 @@ int stagger(unsigned char **sec, unsigned int assumed_npnts, double *x, double *
     // number of grid points
     n = (ny/2)*nx_even + ((ny+1)/2)*nx_odd;
 
+#ifdef WMO_VALIDATION
+    if (code_table_3_1(sec) == 60) {		/* cubed sphere */
+	if (GDS_Gnom_tile(sec[3]) == 0) {	/* global - 6 faces */
+	    n = n*6;
+	}
+	fprintf(stderr,"stagger: n=%d assume %d sec3 %d\n", n,assumed_npnts, GB2_Sec3_npts(sec));
+    }
+#endif
+
     // check to number of points
     if (assumed_npnts != n) 
 	fatal_error_ii("stagger: program error think npnts=%d assumed npnts=%d",n, (int) assumed_npnts);
@@ -113,6 +122,20 @@ int stagger(unsigned char **sec, unsigned int assumed_npnts, double *x, double *
 	    y[i + ix] = y0 + dy_offset + iy;
 	}
     }
+
+#ifdef WMO_VALIDATION
+    if (code_table_3_1(sec) == 60) {			/* cubed sphere */
+	if (GDS_Gnom_tile(sec[3]) == 0) {		/* global - 6 faces */
+	    /* calculated X, Y for one face, duplicate for all 8 faces */
+	    n = n / 6;
+#pragma omp parallel for private(i)
+	    for (i = 0; i < n; i++) {
+		x[i+n] = x[i+2*n] = x[i+3*n] = x[i+4*n] = x[i+5*n] = x[i];
+		y[i+n] = y[i+2*n] = y[i+3*n] = y[i+4*n] = y[i+5*n] = y[i];
+	    }
+	}
+    }
+#endif
 
     return 0;
 }

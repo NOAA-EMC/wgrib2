@@ -67,7 +67,7 @@ int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char
     unsigned char *p;
     unsigned int i, k, di;
 
-    int nthreads;
+/*    int nthreads; */
 
     binary_scale = bin_scale;
     if (n == 0) {				// all undefined
@@ -144,12 +144,27 @@ int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char
 
     if (n != 0) {
 //      single thread version
-//      flist2bitstream(data,p + 5,n,nbits);
+//        flist2bitstream(data,p + 5,n,nbits);
 
 //      flist2bitstream can run in parallel if the loop has
 //      increments of 8.  Then each conversion to a bitstream
 //      starts on a byte boundary.  
+//
 
+	/* can parallized if di is a multiple of 8,  large di reduces flist2bits overhead
+	 * schedule static in order to reduce false sharing
+	 * di should be long to reduce subroutine overhead
+	 */
+	di = 128;		/* multiple of 8 */
+#pragma omp parallel for private(i,k) schedule(static)
+ 	for (i = 0; i < n; i+= di) {
+	     k  = n - i;
+	     if (k > di) k = di;
+             flist2bitstream(data + i, p + 5 + (i/8)*nbits, k, nbits);
+	}
+
+
+/* this version has problems with oneAPI
 #pragma omp parallel private(i,k)
         {
 #pragma omp single
@@ -165,6 +180,7 @@ int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char
                 flist2bitstream(data + i, p + 5 + (i/8)*nbits, k, nbits);
 	    }
         }
+*/
     }
 
     // section 5

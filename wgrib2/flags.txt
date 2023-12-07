@@ -1,0 +1,17 @@
+These flags have to be set in mode == -1 to get certain actions
+
+decode = 1		decode grib grid point values and save to *data
+         0  (default)
+
+output_order_wanted = raw
+                      wens  (default)
+                      wesn
+
+
+latlon = 1              calculate lat-lon of grid points and save to *lat , *lon
+        -0  (default)
+
+save_translation = 1    save the translation vector to go from input -> output scan order
+                        translation vector is only good if output_order_wanted != raw
+                            if (*translation == NULL) input_order == output_order_wanted
+                   0  (default)

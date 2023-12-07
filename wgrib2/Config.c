@@ -22,7 +22,8 @@
 
 extern const char *default_vectors[];
 extern int version_ftime;
-
+extern int names;
+extern const char *set_options;
 /*
  * HEADER:100:config:misc:0:shows the configuration
  */
@@ -46,7 +47,8 @@ int f_config(ARG0) {
     strcat(inv_out, "Netcdf package is not installed\n");
 #endif
 #if defined USE_NETCDF4
-    strcat(inv_out, "hdf5 package: " HDF5 " is installed\n");
+    strcat(inv_out, "netcdf4: " USE_NETCDF4 "\n");
+    strcat(inv_out, "hdf5: " USE_HDF5 "\n");
 #endif
 #ifdef USE_AEC
     strcat(inv_out, USE_AEC " is installed\n" );
@@ -58,7 +60,10 @@ int f_config(ARG0) {
     inv_out += strlen(inv_out);
 //    sprintf(inv_out,"JAS_VERSION_MAJOR=%d\n", JAS_VERSION_MAJOR);
 #endif
-
+#ifdef USE_OPENJPEG
+    strcat(inv_out,USE_OPENJPEG " is installed\n");
+    inv_out += strlen(inv_out);
+#endif
 
 #ifdef USE_MYSQL
     strcat(inv_out, "mysql package is installed\n");
@@ -72,7 +77,11 @@ int f_config(ARG0) {
 #else
     strcat(inv_out, "regex package is not installed\n");
 #endif
-
+#ifdef DISABLE_STAT
+    strcat(inv_out, "flush_mode=1\n");
+#else
+    strcat(inv_out, "flush_mode determined by stat()\n");
+#endif
 
 #ifdef USE_TIGGE
     strcat(inv_out, "tigge package is installed\n");
@@ -101,18 +110,21 @@ int f_config(ARG0) {
     strcat(inv_out, "\n");
 
 strcat(inv_out, "Geolocation library status (by search order)\n");
-#ifdef USE_PROJ4
-#if (DEFAULT_PROJ4 == 0)
-    strcat(inv_out, "  Proj4 geolocation is installed but not enabled\n");
-#else
-    strcat(inv_out, "  Proj4 geolocation is installed and is primary geolocation library\n");
-#endif
-#endif
+
 #if (DEFAULT_GCTPC == 1)
-    strcat(inv_out, "  gctpc geolocation is enabled\n"); 
+    strcat(inv_out, "  gctpc geolocation (-lambert azimuthal equal area non-spherical) is enabled by default\n"); 
 #else
-    strcat(inv_out, "  gctpc geolocation is disabled\n");
+    strcat(inv_out, "  gctpc geolocation (-lambert azimuthal equal area non-spherical) is disabled by default\n");
 #endif
+
+#ifdef USE_PROJ4
+  #if (DEFAULT_PROJ4 == 1)
+    strcat(inv_out, "  Proj4 geolocation is enabled by default\n");
+  #else
+    strcat(inv_out, "  Proj4 geolocation is disabled by default\n");
+  #endif
+#endif
+
 strcat(inv_out, "  spherical geolocation is enabled\n"); 
 
 
@@ -169,7 +181,16 @@ strcat(inv_out, "  spherical geolocation is enabled\n");
 #ifdef USE_PNG
     strcat(inv_out, ", png");
 #endif
-#ifdef USE_JASPER
+#if defined USE_JASPER || defined USE_OPENJPEG
+    strcat(inv_out, ", jpeg2000");
+#endif
+#ifdef USE_AEC
+    strcat(inv_out, ", CCSDS AEC");
+#endif
+    strcat(inv_out, "\n");
+
+    strcat(inv_out,"Supported encoding: simple, complex, ieee");
+#if defined USE_JASPER || defined USE_OPENJPEG
     strcat(inv_out, ", jpeg2000");
 #endif
 #ifdef USE_AEC
@@ -185,12 +206,25 @@ strcat(inv_out, "  spherical geolocation is enabled\n");
     sprintf(inv_out, "user gribtable: %s\n", input == NULL ? "(none)" : filename);
     if (input) fclose(input);
 
+#if USE_NAMES == NCEP
+    sprintf(inv_out,"default WMO names: NCEP\n");
+#endif
+#if USE_NAMES == ECMWF
+    sprintf(inv_out,"default WMO names: ECMWF\n");
+#endif
+#if USE_NAMES == DWD1
+    sprintf(inv_out,"default WMO names: DWD\n");
+#endif
+    inv_out += strlen(inv_out);
+
 #ifdef CC
     strcat(inv_out,"C compiler: " CC "\n");
+    strcat(inv_out,"  CPPFLAGS=" CPPFLAGS "\n");
 #endif
 
 #ifdef FORTRAN
     strcat(inv_out,"Fortran compiler: " FORTRAN "\n");
+    strcat(inv_out,"  FFLAGS=" FFLAGS "\n");
 #endif
 #ifdef USE_OPENMP
     strcat(inv_out,"OpenMP: control number of threads with environment variable OMP_NUM_THREADS\n");
@@ -202,10 +236,12 @@ strcat(inv_out, "  spherical geolocation is enabled\n");
     sprintf(inv_out, "INT_MAX:   %d\n", INT_MAX);
     inv_out += strlen(inv_out);
     sprintf(inv_out, "ULONG_MAX: %lu\n", ULONG_MAX);
+    inv_out += strlen(inv_out);
+    sprintf(inv_out, "-set options: %s\n", set_options);
 
     return 1;
 }
 
 const char *wgrib2api_info(void) {
-  return WGRIB2_VERSION "  " BUILD_COMMENTS;
+  return WGRIB2_VERSION "  " BUILD_COMMENTS " " CC;
 }

@@ -9,12 +9,14 @@ int main() {
         int i, ndata;
         float new_data[1679];
 
-        grb = "../examples/merc.g2";
+        grb = "../../grib2_examples/merc.g2";
         inv = "merc.inv";
         i = grb2_mk_inv(grb,inv);
         printf("mk_inv=  i=%i\n",i);
+        // if (i) return 1;
         ndata = grb2_inq(grb,inv,DATA|LATLON,"TMP");
         printf("ndata=%i\n",ndata);
+        if (ndata == 0) return 1;
 
         data = (float *) malloc(ndata*4);
         lat = (float *) malloc(ndata*4);

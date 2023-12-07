@@ -1,0 +1,24 @@
+                          Intel oneAPI compilers
+
+Support for the new Intel LLVM-based compilers starts with wgrib2 v3.1.2.
+Prior versions may compile but will have problems with the simple unpacking.
+Wgrib2 v3.1.2 changed the code for simple unpacking so that it works with
+all compilers including oneAPI. Wgrib2 v3.1.3 fixes openmp compile.
+
+To compile wgrib2 using bash and linux
+
+export CC=icx
+export FC=ifx
+export COMP_SYS=oneapi_linux           optional on linux
+make clean
+make                                   optional, generate wgrib2 executable
+make lib                               optional, generate wgrib2 library
+
+
+The oneAPI compilers have not been tested with Windows. Currently support
+or windows is limited to the cygwin gcc/gfortran compilers.
+
+The "COMP_SYS=oneapi_linux" may not work in windows because the compiler
+options may differ between windows and linux.
+
+

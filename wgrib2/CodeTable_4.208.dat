@@ -1,6 +1,6 @@
-    case 0: string="None"; break;
-    case 1: string="Light"; break;
-    case 2: string="Moderate"; break;
-    case 3: string="Severe"; break;
-    case 4: string="Extreme"; break;
-    case 255: string="Missing"; break;
+case     0: string="None (smooth)"; break;
+case     1: string="Light"; break;
+case     2: string="Moderate"; break;
+case     3: string="Severe"; break;
+case     4: string="Extreme"; break;
+case   255: string="Missing"; break;

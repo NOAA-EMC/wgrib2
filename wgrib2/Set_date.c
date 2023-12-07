@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <math.h>
+#include <time.h>
 #include <string.h>
 #include "grb2.h"
 #include "wgrib2.h"
@@ -19,14 +20,17 @@
 
 
 /*
- * HEADER:100:set_date:misc:1:changes date code, X=(+|-)N(hr|dy|mo|yr), YYYYMMDDHHmmSS
+ * HEADER:100:set_date:misc:1:changes date code, X=(+|-)N(hr|dy|mo|yr), YYYYMMDDHHmmSS, u(UNIX TIME)
  */
 
 int f_set_date(ARG1) {
 
     int year, month, day, hour, minute, second, i, j, units, n;
+    double unix_time;
     int code_4_11,idx;
     int dtime, dt_unit;
+    struct tm *tmp_tm;
+    time_t unix_time_code;
     char string[10];
 
     if (mode < 0) return 0;
@@ -36,19 +40,32 @@ int f_set_date(ARG1) {
     if (arg1[0] == '+' || arg1[0] == '-') {
         i = sscanf(arg1+1, "%d%2s", &dtime, string);
         if (i != 2 || dtime < 0) fatal_error("set_date: delta-time: (+|-)(int)(hr|dy|mo|yr)","");
-        dt_unit = -1;
-        if (strcmp(string,"hr") == 0) dt_unit = 1;
-        else if (strcmp(string,"dy") == 0) dt_unit = 2;
-        else if (strcmp(string,"mo") == 0) dt_unit = 3;
-        else if (strcmp(string,"yr") == 0) dt_unit = 4;
-        else if (strcmp(string,"mn") == 0) dt_unit = 0;
+        dt_unit = string2time_unit(string);
         if (dt_unit == -1) fatal_error("set_date: unsupported time unit %s", string);
 	if (arg1[0] == '+')
     		i = add_dt(&year, &month, &day, &hour, &minute, &second, dtime, dt_unit);
 	else
     		i = sub_dt(&year, &month, &day, &hour, &minute, &second, dtime, dt_unit);
     }
+    else if (arg1[0] == 'u') {
+	/* reading unix time into double precision rather than time_t  or long long */
+	/* long long is C99 and double precision is good enough */
+	i = sscanf(arg1+1, "%lf", &unix_time);
+	if (i == 0) fatal_error("set_date: u(unix_time)","");
 
+        /* convert unix time to standard time, and set date */
+        /* this is C89 code, not thread safe */
+	unix_time_code = (time_t) unix_time;
+        tmp_tm = gmtime(&unix_time_code);
+	if (tmp_tm == NULL) fatal_error("set_date: u(unix_time) failed","");
+
+	year = tmp_tm->tm_year + 1900;
+	month = tmp_tm->tm_mon + 1;
+	day = tmp_tm->tm_mday;
+	hour = tmp_tm->tm_hour;
+	minute = tmp_tm->tm_min;
+	second = tmp_tm->tm_sec;
+    }
     else {
         i=strlen(arg1);
         if (i < 4 || i > 14 || i % 2 == 1) fatal_error("set_date: bad date code %s",arg1); 

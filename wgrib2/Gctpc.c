@@ -60,8 +60,6 @@ int f_gctpc(ARG1) {
  * step 4  find lat-lon of (x,y)
  */
 
-static int warning_LamAZ = 0;
-
 int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
     int gdt;
@@ -80,7 +78,7 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
     long int (*inv_fn)();
     double *llat, *llon, rlon, rlat;
 
-    int nnx, nny, nres, nscan;
+    int nnx, nny, nres, nscan, is_spherical;
     unsigned int i, nnpnts;
     long g_error;
 
@@ -91,6 +89,8 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
     if (gdt != 10 && gdt != 20 && gdt != 30 && gdt != 31 && gdt != 140) return 1;
     get_nxny(sec, &nnx, &nny, &nnpnts, &nres, &nscan);
+    /* get earth axis */
+    axes_earth(sec, &r_maj, &r_min, &is_spherical);
 
     /* potentially staggered */
 // 8/2014    if (nnx < 1 || nny < 1) return 1;
@@ -109,8 +109,6 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
     if (gdt == 10) {            // mercator
 
-       /* get earth axis */
-       axes_earth(sec, &r_maj, &r_min);
        dy      = GDS_Mercator_dy(gds);
        dx      = GDS_Mercator_dx(gds);
 
@@ -122,26 +120,24 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
        false_east = false_north = 0.0;
        g_error = merforint(r_maj,r_min,c_lon,c_lat,false_east,false_north);
-       if (g_error) fatal_error_i("merforint %d", g_error);
+       if (g_error) fatal_error_i("merforint %ld", g_error);
 
        rlon   = GDS_Mercator_lon1(gds) * (M_PI/180.0);
        rlat   = GDS_Mercator_lat1(gds) * (M_PI/180.0);
 
        g_error = merfor(rlon, rlat, &x0, &y0);
-       if (g_error) fatal_error_i("merfor %d", g_error);
+       if (g_error) fatal_error_i("merfor %ld", g_error);
 
        /* initialize for 1st grid point */
        x0 = -x0;
        y0 = -y0;
        g_error = merinvint(r_maj,r_min,c_lon,c_lat,x0,y0);
-       if (g_error) fatal_error_i("merinvint %d", g_error);
+       if (g_error) fatal_error_i("merinvint %ld", g_error);
        inv_fn = &merinv;
     }
 
     else if (gdt == 20) {            // polar stereographic
 
-       /* get earth axis */
-       axes_earth(sec, &r_maj, &r_min);
        dy      = GDS_Polar_dy(gds);
        dx      = GDS_Polar_dx(gds);
 
@@ -153,26 +149,24 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
        false_east = false_north = 0.0;
        g_error = psforint(r_maj,r_min,c_lon,c_lat,false_east,false_north);
-       if (g_error) fatal_error_i("psforint %d", g_error);
+       if (g_error) fatal_error_i("psforint %ld", g_error);
 
        rlon   = GDS_Polar_lon1(gds) * (M_PI/180.0);
        rlat   = GDS_Polar_lat1(gds) * (M_PI/180.0);
 
        g_error = psfor(rlon, rlat, &x0, &y0);
-       if (g_error) fatal_error_i("psfor %d", g_error);
+       if (g_error) fatal_error_i("psfor %ld", g_error);
 
        /* initialize for 1st grid point */
        x0 = -x0;
        y0 = -y0;
        g_error = psinvint(r_maj,r_min,c_lon,c_lat,x0,y0);
-       if (g_error) fatal_error_i("psinvint %d", g_error);
+       if (g_error) fatal_error_i("psinvint %ld", g_error);
        inv_fn = &psinv;
     }
 
     else if (gdt == 30) {            // lambert conformal conic
 
-       /* get earth axis */
-       axes_earth(sec, &r_maj, &r_min);
        dy      = GDS_Lambert_dy(gds);
        dx      = GDS_Lambert_dx(gds);
 //printf(">>> gctpc dx %lf, dy %lf\n", dx, dy);
@@ -188,24 +182,22 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
        false_east = false_north = 0.0;
        g_error = lamccforint(r_maj,r_min,lat1,lat2,c_lon,c_lat,false_east,false_north);
-       if (g_error) fatal_error_i("lamccforint %d", g_error);
+       if (g_error) fatal_error_i("lamccforint %ld", g_error);
 
        rlon   = GDS_Lambert_Lo1(gds) * (M_PI/180.0);
        rlat   = GDS_Lambert_La1(gds) * (M_PI/180.0);
 
        g_error = lamccfor(rlon, rlat, &x0, &y0);
-       if (g_error) fatal_error_i("lamccfor %d", g_error);
+       if (g_error) fatal_error_i("lamccfor %ld", g_error);
 
        /* initialize for 1st grid point */
        x0 = -x0;
        y0 = -y0;
        g_error = lamccinvint(r_maj,r_min,lat1,lat2,c_lon,c_lat,x0,y0);
-       if (g_error) fatal_error_i("lamccinvint %d", g_error);
+       if (g_error) fatal_error_i("lamccinvint %ld", g_error);
        inv_fn = &lamccinv;
     }
     else if (gdt == 31) {			// albers equal area
-       /* get earth axis */
-       axes_earth(sec, &r_maj, &r_min);
        dy      = GDS_Albers_dy(gds);
        dx      = GDS_Albers_dx(gds);
 
@@ -221,31 +213,22 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
        false_east = false_north = 0.0;
        g_error = alberforint(r_maj,r_min,lat1,lat2,c_lon,c_lat,false_east,false_north);
-       if (g_error) fatal_error_i("alberforint %d", g_error);
+       if (g_error) fatal_error_i("alberforint %ld", g_error);
 
        rlon   = GDS_Albers_Lo1(gds) * (M_PI/180.0);
        rlat   = GDS_Albers_La1(gds) * (M_PI/180.0);
 
        g_error = alberfor(rlon, rlat, &x0, &y0);
-       if (g_error) fatal_error_i("alberfor %d", g_error);
+       if (g_error) fatal_error_i("alberfor %ld", g_error);
 
        /* initialize for 1st grid point */
        x0 = -x0;
        y0 = -y0;
        g_error = alberinvint(r_maj,r_min,lat1,lat2,c_lon,c_lat,x0,y0);
-       if (g_error) fatal_error_i("alberinvint %d", g_error);
+       if (g_error) fatal_error_i("alberinvint %ld", g_error);
        inv_fn = &alberinv;
     }
-    else if (gdt == 140) {            // lambert azimuthal equal area
-
-       /* get earth axis */
-       axes_earth(sec, &r_maj, &r_min);
-       if (r_maj != r_min && warning_LamAZ< 3) {
-	    warning_LamAZ++;
-	    fprintf(stderr,"**WARNING gctpc only does spherical Lambert Azimuthal Equal Area.\n"
-		"**WARNING wgrib2 with Proj4 does aspherical earth:  -proj4 1\n");
-       }
-       r_maj = (r_maj + r_min)/2.0;		/* only for spherical earth */
+    else if (gdt == 140 && is_spherical) {            // lambert azimuthal equal area
 
        dy      = GDS_Lambert_Az_dy(gds);
        dx      = GDS_Lambert_Az_dx(gds);
@@ -258,18 +241,18 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
        false_east = false_north = 0.0;
        g_error = lamazforint(r_maj,c_lon,c_lat,false_east,false_north);
-       if (g_error) fatal_error_i("lamazforint %d", g_error);
+       if (g_error) fatal_error_i("lamazforint %ld", g_error);
 
        rlon  = GDS_Lambert_Az_Lo1(gds) * (M_PI/180.0);
        rlat  = GDS_Lambert_Az_La1(gds) * (M_PI/180.0);
        g_error = lamazfor(rlon, rlat, &x0, &y0);
-       if (g_error) fatal_error_i("lamazfor %d", g_error);
+       if (g_error) fatal_error_i("lamazfor %ld", g_error);
 
        /* initialize for 1st grid point */
        x0 = -x0;
        y0 = -y0;
        g_error = lamazinvint(r_maj,c_lon,c_lat,x0,y0);
-       if (g_error) fatal_error_i("lamazinvint %d", g_error);
+       if (g_error) fatal_error_i("lamazinvint %ld", g_error);
        inv_fn = &lamazinv;
     }
 

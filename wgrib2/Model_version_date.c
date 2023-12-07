@@ -4,7 +4,10 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-extern int decode, last_message;
+/* Model_version_date.c  12/2020 Public Domain Wesley Ebisuzaki */
+
+extern int decode;
+extern unsigned int last_message;
 
 /*
  * HEADER:100:model_version_date:inv:0:prints model date code

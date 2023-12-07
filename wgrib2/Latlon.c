@@ -133,10 +133,12 @@ int f_ijlat(ARG2) {
 int f_ilat(ARG1) {
 
     struct local_struct {
-        int ix, last_GDS_change_no;
+        int last_GDS_change_no;
+        unsigned int ix;
     };
+
     struct local_struct *save;
-    int i;
+    unsigned int i;
 
     if (mode == -1) {
         WxText = decode = latlon = 1;
@@ -163,7 +165,7 @@ int f_ilat(ARG1) {
             fatal_error("no lat/lon in ilat","");
         }
         if (i < 1 || i > (int) npnts) {
-            fatal_error_i("ilat: invalid i = %d", i);
+            fatal_error_i("ilat: invalid i = %u", i);
         }
     }
 //vsm_fmt    sprintf(inv_out,"grid pt %d,lon=%g,lat=%g,val=%lg",i,
@@ -269,6 +271,11 @@ int get_latlon(unsigned char **sec, double **lon, double **lat) {
     else if (grid_template == 40) {
         err = gauss2ll(sec, lat, lon);
     }
+#ifdef WMO_VALIDATION
+    else if (grid_template == 60) {
+        err = cubed_sphere2ll(sec, lat, lon);
+    }
+#endif
     else if (grid_template == 90) {
         err = space_view2ll(sec, lat, lon);
     }

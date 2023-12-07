@@ -1,3 +1,6 @@
+/*
+ * Last.c Public Domain 2015 Wesley Ebisuzaki
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -31,8 +34,8 @@ int f_last(ARG1) {
     else if (mode >= 0) {
 	save = *local;
 	i = strlen(last_inv_out);
-	// fseek_file(save, 0L, SEEK_SET);
 	fwrite_file(last_inv_out, sizeof(char), i, save);	/* i+1 .. for \0 */
+	repeat_inv_out();
     }
     return 0;
 }
@@ -62,6 +65,7 @@ int f_last0(ARG1) {
 	i = strlen(last_inv_out);
 	fseek_file(save, 0L, SEEK_SET);
 	fwrite_file(last_inv_out, sizeof(char), i, save);	/* i+1 .. for \0 */
+	repeat_inv_out();
     }
     return 0;
 }
