@@ -62,7 +62,7 @@ jobs:
         cd sp
         mkdir build
         cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/sp -D..
+        cmake -DCMAKE_INSTALL_PREFIX=~/sp ..
         make -j2
         make install
 
@@ -90,7 +90,4 @@ jobs:
     - name: build
       run: |
         cd wgrib2
-        mkdir build 
-        cd build
-        cmake .. -DCMAKE_PREFIX_PATH=$HOME -DJasper_ROOT=$HOME/Jasper
-        make -j2
+        make VERBOSE=1
