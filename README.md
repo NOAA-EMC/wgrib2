@@ -1,11 +1,5 @@
 # WGRIB 2
 
-**This repository is deprecated and will no longer be updated.**
-
-Users are advised to seek other tools due to difficulties building and
-maintaining wgrib2. Wgrib2 should not be used in new operational code
-at NOAA EMC.
-
 Provides functionality for interacting with, reading, writing, and
 manipulating grib2 files, with a CMake build.
 

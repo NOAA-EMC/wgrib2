@@ -1,3 +1,6 @@
+# This is the first working workflow for the wgrib2 project.
+#
+# Kyle Gerheiser, Ed Hartnett
 name: Build
 on:
   push:
@@ -52,14 +55,14 @@ jobs:
       with:
         repository: NOAA-EMC/NCEPLIBS-sp
         path: sp
-        ref: develop
+        ref: v2.3.3
 
     - name: build-sp
       run: |
         cd sp
         mkdir build
         cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/sp -DBUILD_8=ON ..
+        cmake -DCMAKE_INSTALL_PREFIX=~/sp ..
         make -j2
         make install
 
