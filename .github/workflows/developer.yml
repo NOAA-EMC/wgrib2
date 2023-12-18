@@ -21,20 +21,12 @@ jobs:
 
     steps:
 
-    - name: install-netcdf
+    - name: install
       run: |
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
+        sudo apt-get install libpng-dev autotools-dev autoconf
 
-    - name: install-png
-      run: |
-        sudo apt-get install libpng-dev
-    
-    - name: install-autotools
-      run: |
-        sudo apt-get install autotools-dev
-        sudo apt-get install autoconf
-  
     - name: checkout-jasper
       uses: actions/checkout@v2
       with:
