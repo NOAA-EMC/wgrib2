@@ -47,14 +47,14 @@ jobs:
       with:
         repository: NOAA-EMC/NCEPLIBS-sp
         path: sp
-        ref: v2.3.3
+        ref: develop
 
     - name: build-sp
       run: |
         cd sp
         mkdir build
         cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/sp ..
+        cmake -DCMAKE_INSTALL_PREFIX=~/sp -DBUILD_8=ON ..
         make -j2
         make install
 
