@@ -5,11 +5,9 @@ name: developer
 on:
   push:
     branches:
-      - feature/cmake
       - develop
   pull_request:
     branches:
-      - feature/cmake
       - develop
 
 jobs:
