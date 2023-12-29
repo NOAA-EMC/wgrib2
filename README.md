@@ -24,11 +24,16 @@ Wgrib2 is used by the following projects:
   files.
 * [Rapid Refresh Forecast System
   (RRFS)](https://gsl.noaa.gov/focus-areas/unified_forecast_system/rrfs).
-* CPC uses wgrib2 extensively to process GRIB2 files in their real-time applications.
-* The MET/METplus software uses wgrib2 to extract information from GRIB2 files.
-* The GFS post-processing of the atmosphere component has been using
-  wgrib2 to interplate the UPP output master files in Gaussian grid
-  into pgrb2/pgrb2b files in lat-lon grid.
+* [The Climate Prediction Center
+  (CPC)[(https://www.cpc.ncep.noaa.gov/) uses wgrib2 extensively to
+  process GRIB2 files in their real-time applications.
+* The [MET/METplus](https://dtcenter.org/community-code/metplus)
+  software uses wgrib2 to extract information from GRIB2 files.
+* The [Global Forecast System
+  (GFS)](https://www.ncei.noaa.gov/products/weather-climate-models/global-forecast)
+  post-processing of the atmosphere component has been using wgrib2 to
+  interplate the UPP output master files in Gaussian grid into
+  pgrb2/pgrb2b files in lat-lon grid.
 
 ### Authors
 
