@@ -9,10 +9,26 @@ See wgrib2 documentation and release page
 This release of the wgrib2 package, with CMake build capability, is
 part of the [NCEPLIBS](https://github.com/NOAA-EMC/NCEPLIBS) project.
 
-The CMake build provided here supports most build options (NetCDF,
-PNG, Jasper, spectral, and ipolates), but not certain features such as
-MySQL. If those features are necessary please use the makefile build
-provided in the link above.
+# Users
+
+Wgrib2 is used by the following projects:
+* [NOMADS](nomads.ncep.noaa.gov) uses wgrib2 in grib_filter (a wrapper for
+   wgrib2) wgrib2 is used to create the *.idx files for random access.
+* [global-workflow](https://github.com/NOAA-EMC/global-workflow/),
+  including post-processing and downstream products. Downstream jobs
+  use wgrib2 to regrid GRIB2 files and extract variables. The new
+  ocean/ice components will use wgrib2 to convert netCDF files to
+  GRIB2 files.
+* [Ensemble Verification
+  System(EVS)](https://github.com/NOAA-EMC/EVS), for processing GRIB2
+  files.
+* [Rapid Refresh Forecast System
+  (RRFS)](https://gsl.noaa.gov/focus-areas/unified_forecast_system/rrfs).
+* CPC uses wgrib2 extensively to process GRIB2 files in their real-time applications.
+* The MET/METplus software uses wgrib2 to extract information from GRIB2 files.
+* The GFS post-processing of the atmosphere component has been using
+  wgrib2 to interplate the UPP output master files in Gaussian grid
+  into pgrb2/pgrb2b files in lat-lon grid.
 
 ### Authors
 
@@ -25,6 +41,12 @@ Kyle Gerheiser (CMake build) - NOAA/EMC
 Building wgrib2 requires, CMake, a C compiler, a Fortran compiler
 (optional), and various 3rd party libraries depending on build
 configuration.
+
+The CMake build provided here supports most build options (NetCDF,
+PNG, Jasper, spectral, and ipolates), but not certain features such as
+MySQL. If those features are necessary please use the makefile build
+provided in the link above.
+
 
 ```
 mkdir build && cd build
