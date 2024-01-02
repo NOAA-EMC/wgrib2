@@ -105,6 +105,11 @@ wgrib2::wgrib2_api (fortran target)
 
 * USE_AEC = OFF (not yet supported in CMake)
 
+### References
+
+[Wesley Ebisuzaki 20170214 EMC seminar on
+wgrib2api](https://www.youtube.com/watch?v=udbxfC1V2DI).
+
 ## Disclaimer
 
 The United States Department of Commerce (DOC) GitHub project code is
