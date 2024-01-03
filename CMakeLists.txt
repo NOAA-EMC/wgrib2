@@ -1,9 +1,12 @@
+# This is the make cmake file for wgrib2.
+#
+# Kyle Gerheiser, Edward Hartnett
 cmake_minimum_required(VERSION 3.12)
-project(wgrib2 VERSION 2.0.8 LANGUAGES Fortran C)
+project(wgrib2 VERSION 3.2.0 LANGUAGES Fortran C)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-#set default install path if not provided
+# Set default install path if not provided.
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX
     "${CMAKE_BINARY_DIR}/install"
@@ -12,6 +15,7 @@ endif()
 
 include(GNUInstallDirs)
 
+# Set compiler flags.
 if(CMAKE_C_COMPILER_ID MATCHES "^(Intel)$")
   set(CMAKE_C_FLAGS "-g -traceback ${CMAKE_C_FLAGS}")
   set(CMAKE_C_FLAGS_DEBUG "-O0")
@@ -28,6 +32,7 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   set(CMAKE_Fortran_FLAGS_DEBUG "-ggdb -O0")
 endif()
 
+# Handle build options.
 option(USE_NETCDF3 "Use NetCDF-3?" off)
 option(USE_NETCDF4 "Use NetCDF-4?" off)
 option(USE_REGEX "Use Regex?" on)
@@ -49,7 +54,6 @@ option(USE_AEC "Use AEC?" off)
 
 option(BUILD_LIB "Build wgrib2 library?" on)
 option(BUILD_SHARED_LIB "Build shared library?" off)
-
 
 if(USE_G2CLIB) 
   if(USE_PNG) 
@@ -134,10 +138,11 @@ if(USE_WMO_VALIDATION)
   list(APPEND definitions_list -DUSE_WMO_VALIDATION)
 endif()
 
+# Build these subdirectories.
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
 
-
+# Build the wgrib2 library if desired.
 if(BUILD_LIB)
   add_subdirectory(ftn_api)
 
