@@ -4,6 +4,9 @@
  *               5/2016 G. Schnee
  */
 
+#ifndef _WGRIB2_H_
+#define _WGRIB2_H_
+
 #include <stdio.h>
 
 #ifndef _CONFIG_H
@@ -692,3 +695,5 @@ double get_unixtime(int year, int month, int day, int hour, int minute, int seco
 
 int JMA_Nb(unsigned char **sec);
 int JMA_Nr(unsigned char **sec);
+
+#endif /* _WGRIB2_H_ */
