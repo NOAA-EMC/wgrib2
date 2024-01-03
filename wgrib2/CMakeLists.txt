@@ -39,11 +39,7 @@ wrtieee.c wxtext.c )
 
 # prod_def_temp_size.c 
 
-set(callable_src
-  wgrib2.c
-  fatal_error.c
-  wgrib2_api.c
-  )   
+set(callable_src wgrib2.c fatal_error.c wgrib2_api.c)
 
 # This subdirectory no longer present!
 #add_subdirectory(gctpc)
