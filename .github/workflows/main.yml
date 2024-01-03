@@ -91,3 +91,5 @@ jobs:
       run: |
         cd wgrib2
         make VERBOSE=1
+        cd grib2_verify
+        ls -l
