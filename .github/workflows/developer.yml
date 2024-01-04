@@ -82,5 +82,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        cmake ..
+        cmake -DCMAKE_PREFIX_PATH="~/Jenkins" ..
         make VERBOSE=1
+
+
