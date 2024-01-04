@@ -36,7 +36,7 @@ jobs:
       if: steps.cache-jasper.outputs.cache-hit != 'true'
       run: |
         cd jasper
-        ./configure --prefix=$HOME/Jasper
+        ./configure --prefix=$HOME/jasper
         make
         make install
 
@@ -82,7 +82,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        cmake -DCMAKE_PREFIX_PATH="~/Jenkins" ..
+        cmake -DCMAKE_PREFIX_PATH="~/jasper ..
         make VERBOSE=1
 
 
