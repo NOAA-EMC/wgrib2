@@ -42,7 +42,7 @@ wrtieee.c wxtext.c )
 set(callable_src wgrib2.c fatal_error.c wgrib2_api.c)
 
 # This subdirectory no longer present!
-#add_subdirectory(gctpc)
+add_subdirectory(gctpc)
 
 # make this an object lib so we can re-use most of object files
 # The only files that differ are ${callable_src} which are compiled
@@ -51,16 +51,11 @@ add_library(obj_lib OBJECT ${lib_src})
 target_compile_definitions(obj_lib PUBLIC ${definitions_list}) 
 
 if(BUILD_LIB)
-  # with -DCALLABLE_WGRIB2 for the lib
-  # if(BUILD_SHARED_LIB)
-  #   add_library(wgrib2_lib SHARED ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
-  # else()
-  #   add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
-  # endif()
+  with -DCALLABLE_WGRIB2 for the lib
   if(BUILD_SHARED_LIB)
-    add_library(wgrib2_lib SHARED ${lib_src} ${callable_src})
+    add_library(wgrib2_lib SHARED ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
   else()
-    add_library(wgrib2_lib STATIC ${lib_src} ${callable_src})
+    add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
   endif()
 
   # library and executable have same name (wgrib2) but different target names
@@ -106,15 +101,15 @@ if(USE_IPOLATES EQUAL 3)
   
 endif()
 
-#target_link_libraries(obj_lib PUBLIC gctpc -lm)
+target_link_libraries(obj_lib PUBLIC gctpc -lm)
 
 # Link to gctpc directly because oobject libraries do not link transitively
-#target_link_libraries(wgrib2_exe PRIVATE gctpc)
+target_link_libraries(wgrib2_exe PRIVATE gctpc)
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
 if(BUILD_LIB)
   set(headers wgrib2_api.h wgrib2.h)
-#  target_link_libraries(wgrib2_lib PUBLIC gctpc)
+  target_link_libraries(wgrib2_lib PUBLIC gctpc)
   set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
 
   install(
