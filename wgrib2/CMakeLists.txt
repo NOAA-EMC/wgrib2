@@ -51,7 +51,7 @@ add_library(obj_lib OBJECT ${lib_src})
 target_compile_definitions(obj_lib PUBLIC ${definitions_list}) 
 
 if(BUILD_LIB)
-  with -DCALLABLE_WGRIB2 for the lib
+  # with -DCALLABLE_WGRIB2 for the lib
   if(BUILD_SHARED_LIB)
     add_library(wgrib2_lib SHARED ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
   else()
