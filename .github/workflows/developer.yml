@@ -82,7 +82,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        cmake -DCMAKE_PREFIX_PATH="~/jasper ..
+        cmake -DCMAKE_PREFIX_PATH="~/jasper" ..
         make VERBOSE=1
 
 
