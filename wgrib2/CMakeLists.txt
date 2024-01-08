@@ -74,6 +74,7 @@ endif()
 if(USE_JASPER)
   target_include_directories(obj_lib PUBLIC ${JASPER_INCLUDE_DIR})
   target_link_libraries(obj_lib PUBLIC ${JASPER_LIBRARIES})
+  message(STATUS "JASPER_INCLUDE_DIR ${JASPER_INCLUDE_DIR} JASPER_LIBRARIES ${JASPER_LIBRARIES}")
 endif()
 
 if(USE_PNG)
