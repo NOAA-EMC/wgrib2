@@ -20,6 +20,7 @@
 //#define USE_MYSQL
 #define CC "gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18)"
 #define FORTRAN "GNU Fortran (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18)"
+#define FFLAGS ""
 #define BUILD_COMMENTS "stock build"
 #define USE_PNG
 //#define WMO_VALIDATION
