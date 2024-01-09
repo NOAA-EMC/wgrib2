@@ -18,7 +18,7 @@
 //#define USE_SPECTRAL 1
 //#define USE_NETCDF3
 //#define USE_MYSQL
-//#define CC "gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18)"
+#define CC "gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18)"
 #define FORTRAN "GNU Fortran (GCC) 8.5.0 20210514 (Red Hat 8.5.0-18)"
 #define BUILD_COMMENTS "stock build"
 #define USE_PNG
