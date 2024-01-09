@@ -68,6 +68,7 @@ add_executable(wgrib2_exe ${callable_src})
 set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
 if(USE_NETCDF4)
+  message(STATUS "linking to netCDF")
   target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
 endif()
 
