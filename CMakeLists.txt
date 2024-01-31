@@ -43,8 +43,8 @@ option(DISABLE_TIMEZONE "Disable Timezone?" off)
 option(DISABLE_ALARM "Disable Alarm?" off)
 
 option(USE_G2CLIB "Use g2c lib?" off)
-option(USE_PNG "Use PNG?" on)
-option(USE_JASPER "Use Jasper?" on)
+option(USE_PNG "Use PNG?" off)
+option(USE_JASPER "Use Jasper?" off)
 option(USE_AEC "Use AEC?" off)
 
 option(BUILD_LIB "Build wgrib2 library?" on)
