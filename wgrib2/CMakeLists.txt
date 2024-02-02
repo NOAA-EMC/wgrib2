@@ -1,38 +1,235 @@
 
 # sets lib_src
-set(lib_src AAIG.c AAIGlong.c Aerosol.c Alarm.c Alias.c Ave_test.c
-Ave_var.c Bbox.c Box_ave.c Checksum.c CodeTable.c Code_Values.c
-Config.c Cress_lola.c Csv.c Csv_long.c Cyclic.c Data.c Dump.c EOF.c
-Earth.c End.c Ens_processing.c Ensemble.c ExtName.c Fcst_ave.c Fi.c
-File.c Fix_CFSv2_fcst.c Fix_ncep.c Fix_ncep_2.c Fix_ncep_3.c
-Fix_ncep_4.c FlagTable.c Flush.c For.c Ftime.c Ftime1.c Ftime2.c
-Ftn_api.c GDT.c Gctpc.c Grads.c Grib.c Grib_out_irr.c Grib_out_irr2.c
-Grid_def.c Grid_id.c Gridout.c Help.c Hybrid.c If_rec.c Import.c
-Import_grib.c Import_netcdf.c Inv.c Inv_no.c Irr_grids.c JMA.c Last.c
-Latlon.c Level.c Limit.c Lola.c Macro.c Match.c Match_fs.c
-Mem_buffer.c Merge.c Misc.c Mod_grib.c Model_version_date.c Mysql.c
-Mysql_dump.c Mysql_speed.c NCEP_norm.c NCEP_uv.c Ncpu.c Ndate.c
-Ndates.c Netcdf.c Netcdf_sup.c New_grid.c Precision.c Prob.c Proj4.c
-RPN.c Range.c Reduced_gaussian_grid.c Scaling_0001.c Scan.c Sec0.c
-Sec1.c Sec3.c Sec4.c Sec5.c Sec6.c Sec_len.c Set_byte.c Set_date.c
-Set_ens_num.c Set_ensm_derived_fcst.c Set_ftime1.c Set_ftime2.c
-Set_metadata.c Set_pdt.c Set_percentile.c Set_prob.c Set_sec_size.c
-Set_ts_dates.c Set_val.c Small_grib.c SpatialProcessing.c
-Spectral_bands.c Status.c Submsg_uv.c Summary.c Tigge.c
-Time_processing.c Tosubmsg.c UDF.c Undefine.c Unix_time.c VerfTime.c
-Warn_old_g2lib.c Waves.c Wind_dir.c Wind_speed.c Wrt_grib.c addtime.c
-aec_pk.c bitstream.c cname.c codetable_4_230.c complex_pk.c copy.c
-crc32.c dec_png_clone.c enc_jpeg2000_clone.c ffopen.c flt2ieee.c
-flt2ieee_nan.c fnlist.c gctpc_ll2xy.c geo.c gribtab.c grid_ident.c
-ieee2flt.c ieee2flt_nan.c ieee_pk.c init.c int8.c intpower.c
-itoshort_a.c jpeg_pk.c lat2ij.c manage_inv_out.c missing.c mk_gdt.c
-mk_kgds.c ncep_grids.c new_grid_lambertc.c openmp_util.c parse_loop.c
-parse_msg.c prod_def_temp_size.c proj4_initialize.c proj4_transform.c
-rd_inventory.c rd_seq_grib.c rdieee_file.c rotll.c save_string.c
-sec3_grids.c setup_user_gribtable.c simple_pk.c space_view.c
-space_view2ij.c stagger.c subtime.c swap_buffer.c test_sec.c units.c
-unpk.c unpk_0.c unpk_complex.c unpk_run_length.c update_sec4.c
-wrtieee.c wxtext.c )
+set(
+AAIG.c
+AAIGlong.c
+addtime.c
+aec_pk.c
+Aerosol.c
+Alarm.c
+Alias.c
+Ave_test.c
+Ave_var.c
+Bbox.c
+bitstream.c
+Box_ave.c
+Check_pdt_size.c
+Checksum.c
+Cluster.c
+cname.c
+codetable_4_230.c
+CodeTable.c
+Code_Values.c
+Code_Values_JMA.c
+complex_pk.c
+Config.c
+copy.c
+crc32.c
+Cress_lola.c
+Csv.c
+Csv_long.c
+cubed_sphere2ll.c
+CubeFace2global.c
+Cyclic.c
+Data.c
+decenc_openjpeg.c
+dec_png_clone.c
+Dump.c
+Earth.c
+Else.c
+enc_jpeg2000_clone.c
+End.c
+Endif.c
+Ensemble.c
+Ens_processing.c
+Ens_qc.c
+EOF.c
+Export_lonlat.c
+ExtName.c
+fatal_error.c
+Fcst_ave.c
+ffopen.c
+Fi.c
+File.c
+Fix_CFSv2_fcst.c
+Fix_ncep_2.c
+Fix_ncep_3.c
+Fix_ncep_4.c
+Fix_ncep.c
+Fix_undef.c
+FlagTable.c
+flt2ieee.c
+flt2ieee_nan.c
+Flush.c
+fnlist.c
+For.c
+Ftime1.c
+Ftime2.c
+Ftime.c
+Ftn_api.c
+gaussian2ij.c
+Gctpc.c
+gctpc_ll2xy.c
+GDT.c
+geo.c
+Geolocation.c
+get_unixtime.c
+Grads.c
+Grib.c
+Grib_out_irr2.c
+Grib_out_irr.c
+gribtab.c
+Gribtable_used.c
+Grid_def.c
+Grid_id.c
+grid_ident.c
+Gridout.c
+Help.c
+Hybrid.c
+ieee2flt.c
+ieee2flt_nan.c
+ieee_pk.c
+If_delayed_error.c
+If_rec.c
+Import.c
+Import_grib.c
+Import_grib_fs.c
+Import_lonlat.c
+Import_netcdf.c
+init.c
+int8.c
+intpower.c
+Inv.c
+Inv_no.c
+Irr_grids.c
+itoshort_a.c
+JMA.c
+jpeg_pk.c
+Last.c
+lat2ij.c
+Latlon.c
+Level.c
+Limit.c
+Lola.c
+Lvl.c
+Macro.c
+manage_inv_out.c
+Match.c
+Match_fs.c
+Match_inv.c
+Mem_buffer.c
+Merge.c
+Misc.c
+missing.c
+mk_gdt.c
+mk_kgds.c
+Model_version_date.c
+Mod_grib.c
+Mysql.c
+Mysql_dump.c
+Mysql_speed.c
+Names.c
+ncep_grids.c
+NCEP_norm.c
+NCEP_uv.c
+Ncpu.c
+Ndate.c
+Ndates.c
+Netcdf.c
+Netcdf_sup.c
+New_grid.c
+new_grid_lambertc.c
+New_grid_order.c
+openmp_util.c
+parse_loop.c
+parse_msg.c
+pdt_len.c
+Precision.c
+Prob.c
+Proj4.c
+proj4_initialize.c
+proj4_transform.c
+PyInv.c
+Range.c
+rdieee_file.c
+rd_inventory.c
+rd_seq_grib.c
+read_latlon.c
+Reduced_gaussian_grid.c
+Reset_delayed_error.c
+rotll.c
+RPN.c
+save_string.c
+Scaling_0001.c
+Scan.c
+Sec0.c
+Sec1.c
+Sec3.c
+sec3_grids.c
+Sec4.c
+Sec5.c
+Sec6.c
+Sec_len.c
+Set_byte.c
+Set_date.c
+Set_ensm_derived_fcst.c
+Set_ens_num.c
+Set_ftime1.c
+Set_ftime2.c
+Set_ftime_mode.c
+Set_gds.c
+Set_metadata.c
+Set_pdt.c
+Set_percentile.c
+Set_prob.c
+Set_sec_size.c
+Set_ts_dates.c
+setup_user_gribtable.c
+Set_val.c
+simple_pk.c
+Small_grib.c
+space_view2ij.c
+space_view.c
+SpatialProcessing.c
+Spectral_bands.c
+stagger.c
+Status.c
+string2time_unit.c
+Submsg_uv.c
+subtime.c
+Summary.c
+swap_buffer.c
+test_sec.c
+Tigge.c
+Time_processing.c
+Timer.c
+Tosubmsg.c
+Type_reftime.c
+UDF.c
+Undefine.c
+units.c
+Unix_time.c
+Unmerge_fcst.c
+unpk_0.c
+unpk.c
+unpk_complex.c
+unpk_run_length.c
+update_sec3.c
+update_sec4.c
+v1_v2_if.c
+VerfTime.c
+Warn_old_g2lib.c
+Waves.c
+wgrib2_api.c
+wgrib2.c
+Wind_dir.c
+Wind_speed.c
+Wind_uv.c
+Write_sec.c
+Wrt_grib.c
+wrtieee.c
+wxtext.c
+)
 
 set(callable_src
   wgrib2.c
