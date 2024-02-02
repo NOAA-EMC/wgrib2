@@ -16,7 +16,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "^(Intel)$")
   set(CMAKE_C_FLAGS "-g -traceback ${CMAKE_C_FLAGS}")
   set(CMAKE_C_FLAGS_DEBUG "-O0")
 elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU)$")
-  set(CMAKE_C_FLAGS "-g -fbacktrace ${CMAKE_C_FLAGS}")
+  set(CMAKE_C_FLAGS "-g ${CMAKE_C_FLAGS}")
   set(CMAKE_C_FLAGS_DEBUG "-O0")
 endif()
 
