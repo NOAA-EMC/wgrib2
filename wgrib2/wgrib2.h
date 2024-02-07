@@ -30,7 +30,7 @@ Niklas Sondell, Sam Trahan, George Trojan, Sergey Varlamov"
 #endif
 
 #ifndef BUILD_COMMENTS
-#define BUILD_COMMENTS ""
+#define BUILD_COMMENTS "unknown build"
 #endif
 
 /* define level of OpenMP support minimum level is v3.1 */
