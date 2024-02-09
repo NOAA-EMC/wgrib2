@@ -230,6 +230,10 @@ Wrt_grib.c
 wrtieee.c
 wxtext.c
 )
+if(MAKE_FTN_API)
+  list(APPEND lib_src
+    ftn_api/fort_wgrib2.c ftn_api/wgrib2api.f90  ftn_api/wgrib2lowapi.f90 )
+endif()
 
 add_subdirectory(gctpc)
 # make this an object lib so we can re-use most of object files
@@ -248,7 +252,7 @@ if(BUILD_LIB)
 
   # library and executable have same name (wgrib2) but different target names
   set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
-  target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2 USE_REGEX)
+  target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
 endif()
 
 

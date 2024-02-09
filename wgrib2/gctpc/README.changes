@@ -1,0 +1,4 @@
+Changes added to gctpc after retrieving gctpc from USGS
+
+cproj.c  somfor.c  sominv.c proj.h
+2/2024 br_gctp.c

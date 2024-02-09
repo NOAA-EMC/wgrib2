@@ -720,8 +720,8 @@ else
 endif
 
 # gctpc library
-gctpcdir:=${cwd}/gctpc
-gctpcsrc:=gctpc20a.tgz
+gctpcdir:=${cwd}/wgrib2/gctpc
+#gctpcsrc:=gctpc20a.tgz
 gctpclib:=${lib}/libgeo.a
 wLDFLAGS+=-lgeo
 # wCPPFLAGS+=-I${gctpc}/source
@@ -1031,10 +1031,10 @@ ${gctpcdir}/source/makefile.gctpc:
 	rm tmpgctpc.tar
 	cp makefile.gctpc proj.h cproj.c sominv.c somfor.c ${gctpcdir}/source/
 
-${gctpclib}:	${gctpcdir}/source/makefile.gctpc
-	cd "${gctpcdir}/source" && export CPPFLAGS="${wCPPFLAGS}" && ${MAKE} -f makefile.gctpc
+${gctpclib}:
+	cd ${gctpcdir}/source && export CPPFLAGS="${wCPPFLAGS}" && ${MAKE} -f makefile.gctpc
 	cp ${gctpcdir}/source/libgeo.a ${lib}
-	cp ${gctpcdir}/source/proj.h ${cwd}/include/
+	cp ${gctpcdir}/source/include/proj.h ${cwd}/include/
 
 ${proj4lib}:
 	cp ${proj4src}  tmpproj4.tar.gz
@@ -1122,7 +1122,6 @@ clean:
 	cd ${cwd}/aux_progs && ${MAKE} clean -f smallest_4.make
 
 deep-clean:
-	[ -f ${gctpcdir}/source/makefile.gctpc ] && rm -r ${gctpcdir} || true
 	[ -f ${zdir}/Makefile ] && rm -r ${zdir} || true
 	[ -f ${pngdir}/Makefile ] && rm -r ${pngdir} || true
 	[ -f ${jasperdir}/Makefile ] && rm -r ${jasperdir} || true

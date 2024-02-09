@@ -19,7 +19,7 @@ objs=gctp.o alberfor.o alberinv.o alconfor.o alconinv.o azimfor.o aziminv.o eqco
 
 
 .c.o:
-	$(CC) -c $(CPPFLAGS) $(CFLAGS) ${DEFS} $<
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) ${DEFS} -Iinclude $<
 
 $(LIB): $(objs)
 	ar $(ARFLAGS) ${LIB} $(objs)

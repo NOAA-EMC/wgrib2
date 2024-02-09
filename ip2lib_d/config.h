@@ -1,1 +1,1 @@
-#define USE_SPECTRAL 1
+! config.h

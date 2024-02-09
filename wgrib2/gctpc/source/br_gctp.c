@@ -22,7 +22,9 @@ double *outparm;
 long *outunit;
 long *outspheroid;
 long *iflg;
-
+/* 2/2024 Wesley Ebisuzaki added 2 lines */
+char *fn27;
+char *fn83;
 {
 gctp(incoor,insys,inzone,inparm,inunit,inspheroid,ipr,efile,jpr,pfile,outcoor,
      outsys,outzone,outparm,outunit,outspheroid,fn27,fn83,iflg);
