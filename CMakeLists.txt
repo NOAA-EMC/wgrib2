@@ -1,3 +1,6 @@
+# this is the main CMake file for wgrib2
+# 3/2024 wesley ebisuzaki, kyle gerheiser, 
+
 cmake_minimum_required(VERSION 3.12)
 project(wgrib2 VERSION 3.1.4 LANGUAGES Fortran C)
 
