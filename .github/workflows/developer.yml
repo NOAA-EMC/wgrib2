@@ -80,4 +80,7 @@ jobs:
     - name: build
       run: |
         cd wgrib2
+        mkdir b
+        cd b
+        cmake ..
         make VERBOSE=1

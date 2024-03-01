@@ -1,5 +1,4 @@
 #include "wgrib2.h"
-#include "config.h"
 
 /* dec_png_clone()
  * based on dec_png() from g2clib (public domain)  by Steve Gilbert NCO/NCEP/NWS

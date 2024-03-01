@@ -12,7 +12,6 @@
  * virtue of its status as an intergovernmental organisation nor does it submit to any jurisdiction.
  */
 #include "wgrib2.h"
-#include "config.h"
 
 #ifdef USE_OPENJPEG
 

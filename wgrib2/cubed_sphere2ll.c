@@ -5,7 +5,6 @@
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
-#include "config.h"
 
 #ifdef WMO_VALIDATION
 
