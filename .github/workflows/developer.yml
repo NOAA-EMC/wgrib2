@@ -84,3 +84,4 @@ jobs:
         cd b
         cmake ..
         make VERBOSE=1
+        make test
