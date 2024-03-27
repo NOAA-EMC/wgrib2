@@ -28,7 +28,7 @@ jobs:
       matrix:
         config:
         - {
-            options: "-DUSE_IPOLATES"
+            options: "-DUSE_IPOLATES=1"
           }
           
     steps:
