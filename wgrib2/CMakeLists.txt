@@ -120,7 +120,8 @@ if(BUILD_LIB)
   set(headers wgrib2_api.h wgrib2.h)
   target_link_libraries(wgrib2_lib PUBLIC gctpc)
   set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
-
+  target_compile_definitions(wgrib2_lib PUBLIC ${definitions_list})
+  
   install(
     TARGETS wgrib2_lib
     EXPORT wgrib2_exports
