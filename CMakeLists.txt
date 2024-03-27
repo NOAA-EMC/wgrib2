@@ -186,3 +186,9 @@ if(BUILD_LIB)
     DESTINATION ${CONFIG_INSTALL_DESTINATION})
 endif()
 
+# Turn on unit testing.
+include(CTest)
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
+
