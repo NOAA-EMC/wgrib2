@@ -1,10 +1,15 @@
 # This is the main CMake build file for the wgrib2 project.
 #
 # Kyle Gerheiser, Edward Hartnett, Wesley Ebisuzaki
+cmake_minimum_required(VERSION 3.15)
 
-cmake_minimum_required(VERSION 3.12)
-project(wgrib2 VERSION 3.1.4 LANGUAGES Fortran C)
+# Read the current version number from file VERSION.
+file(STRINGS "VERSION" pVersion)
 
+# Set up project with version number from VERSION file.
+project(wgrib2 VERSION ${pVersion} LANGUAGES Fortran C)
+
+# Handle user build options.
 option(USE_NETCDF3 "Use NetCDF-3?" off)
 option(USE_NETCDF4 "Use NetCDF-4?" off)
 option(USE_HDF5 "Use HDF5?" off)
