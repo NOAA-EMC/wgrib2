@@ -81,6 +81,11 @@ elseif(USE_IPOLATES EQUAL 3)
   find_package(ip2 CONFIG REQUIRED)
 endif()
 
+if(NOT USE_IPOLATES EQUAL 0)
+  list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib")
+endif()
+list(APPEND definitions_list -DUSE_IPOLATES=${USE_IPOLATES})
+
 if(USE_NETCDF4)
   find_package(NetCDF MODULE REQUIRED COMPONENTS C)
   list(APPEND definitions_list -DUSE_NETCDF4 -DUSE_HDF5 -DHDF5="hdf5")
