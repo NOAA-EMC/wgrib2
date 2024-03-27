@@ -59,7 +59,7 @@ jobs:
       with:
         repository: NOAA-EMC/NCEPLIBS-sp
         path: sp
-        ref: develop
+        ref: v2.3.3
 
     - name: build-sp
       run: |
@@ -70,6 +70,31 @@ jobs:
         make -j2
         make install
 
+    - name: cache-ip
+      id: cache-ip
+      uses: actions/cache@v3
+      with:
+        path: ~/ip
+        key: ip-${{ runner.os }}-${{ matrix.ip-version }}
+
+    - name: checkout-ip
+      if: steps.cache-ip.outputs.cache-hit != 'true'
+      uses: actions/checkout@v3
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip
+        path: ip
+        ref: v3.3.3
+
+    - name: build-ip
+      if: steps.cache-ip.outputs.cache-hit != 'true'
+      run: |
+        cd ip
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
+        make -j2
+        make install
+          
     - name: checkout-ip2
       uses: actions/checkout@v2
       with:
@@ -96,5 +121,5 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
-        cmake ${{ matrix.config.options }} ..
+        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/sp;~/ip;~/ip2" ..
         make VERBOSE=1
