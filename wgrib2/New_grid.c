@@ -7,6 +7,7 @@
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
+#include "ipolates.h"
 
 /*
  * New_grid

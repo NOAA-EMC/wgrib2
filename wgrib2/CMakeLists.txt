@@ -96,6 +96,21 @@ endif()
 if(USE_G2CLIB)
 endif()
 
+if(USE_IPOLATES EQUAL 1)
+  target_link_libraries(obj_lib PUBLIC ip::ip_d)
+  target_link_libraries(obj_lib PUBLIC sp::sp_d)
+
+  # Link to the Fortran runtime library for each compiler if using ip2.
+  # The wgrib2 exectuable is created using the C compiler and
+  # doesn't link the necessary Fortran library required for ip2.
+  if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel)$")
+    target_link_libraries(wgrib2_exe PRIVATE "-lifcore")
+  elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
+    target_link_libraries(wgrib2_exe PRIVATE "-lgfortran")
+  endif()
+  
+endif()
+
 if(USE_IPOLATES EQUAL 3)
   target_link_libraries(obj_lib PUBLIC ip2::ip2_d)
 
@@ -119,6 +134,9 @@ target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 if(BUILD_LIB)
   set(headers wgrib2_api.h wgrib2.h)
   target_link_libraries(wgrib2_lib PUBLIC gctpc)
+  # if(USE_IPOLATES EQUAL 1)
+  #   target_link_libraries(wgrib2_lib PRIVATE ip:ip_4 sp:sp_4)
+  # endif()
   set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
   target_compile_definitions(wgrib2_lib PUBLIC ${definitions_list})
   
