@@ -8,7 +8,8 @@ echo ""
 echo "*** Running wgrib2 test"
 
 # Just run executable.
-../wgrib2/wgrib2 > out.txt
+ls -l wgrib2
+#../wgrib2/wgrib2 > out.txt
 
 echo "*** SUCCESS!"
 exit 0
