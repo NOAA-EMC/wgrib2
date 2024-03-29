@@ -30,7 +30,15 @@ jobs:
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
         sudo apt-get install libpng-dev autotools-dev autoconf gcovr
 
+    - name: cache-jasper
+      id: cache-jasper
+      uses: actions/cache@v3
+      with:
+        path: ~/jasper
+        key: jasper-${{ runner.os }}-1.900.1
+        
     - name: checkout-jasper
+      if: steps.cache-jasper.outputs.cache-hit != 'true'
       uses: actions/checkout@v4
       with:
         repository: jasper-software/jasper
