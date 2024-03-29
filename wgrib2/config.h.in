@@ -23,9 +23,9 @@
 #cmakedefine MAKE_FTN_API
 #cmakedefine USE_AEC
 
-#define BUILD_COMMENTS "stock build"
-#define CC "/usr/bin/cc GNU"
-#define FORTRAN "/usr/bin/f95 GNU"
-#define CPPFLAGS "-g  -DGFORTRAN"
-#define FFLAGS "-g -fbacktrace "
+#define BUILD_COMMENTS @BUILD_COMMENTS@
+#define CC @CC@
+#define FORTRAN @FORTRAN@
+#define CPPFLAGS @CPPFLAGS@
+#define FFLAGS @FFLAGS
 #endif
