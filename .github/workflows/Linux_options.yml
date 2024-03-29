@@ -30,6 +30,9 @@ jobs:
         - {
             options: "-DUSE_IPOLATES=1"
           }
+        - {
+            options: "-DUSE_NETCDF4=ON"
+          }
           
     steps:
 
