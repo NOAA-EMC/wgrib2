@@ -10,6 +10,11 @@ on:
     branches:
       - develop
 
+# Cancel in-progress workflows when pushing to a branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   developer:
     runs-on: ubuntu-latest
@@ -23,7 +28,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
-        sudo apt-get install libpng-dev autotools-dev autoconf
+        sudo apt-get install libpng-dev autotools-dev autoconf gcovr
 
     - name: checkout-jasper
       uses: actions/checkout@v2
@@ -80,8 +85,20 @@ jobs:
     - name: build
       run: |
         cd wgrib2
-        mkdir b
-        cd b
+        mkdir build
+        cd build
+        export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
+        export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
+        export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         cmake ..
         make VERBOSE=1
-        make test
+        ctest --verbose --output-on-failure --rerun-failed
+        gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
+        
+    - name: upload-test-coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: wgrib2-test-coverage
+        path: |
+          wgrib2/build/*.html
+          wgrib2/build/*.css
