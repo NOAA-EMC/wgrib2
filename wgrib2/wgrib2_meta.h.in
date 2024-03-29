@@ -1,0 +1,16 @@
+/* This header file may be used by other packages to learn about this
+ * wgrib2 build.
+ *
+ * Edward Hartnett 3/29/24 */
+#ifndef _WGRIB2_META_H
+#define _WGRIB2_META_H
+
+#define WGRIB2_VERSION "@CMAKE_PROJECT_VERSION@"
+#define BUILD_COMMENTS "@BUILD_COMMENTS@"
+#define CC "@CMAKE_C_COMPILER@ @CMAKE_C_COMPILER_ID@"
+#define FORTRAN "@CMAKE_Fortran_COMPILER@ @CMAKE_Fortran_COMPILER_ID@"
+#define CPPFLAGS "@CMAKE_C_FLAGS@"
+#define FFLAGS "@CMAKE_Fortran_FLAGS@"
+#define WGRIB2_VERSION "@CMAKE_PROJECT_VERSION@"
+
+#endif
