@@ -28,4 +28,5 @@
 #define FORTRAN "@CMAKE_Fortran_COMPILER@ @CMAKE_Fortran_COMPILER_ID@"
 #define CPPFLAGS "@CMAKE_C_FLAGS@"
 #define FFLAGS "@CMAKE_Fortran_FLAGS@"
+#define WGRIB2_VERSION "@CMAKE_PROJECT_VERSION@"
 #endif

@@ -8,6 +8,7 @@ file(STRINGS "VERSION" pVersion)
 
 # Set up project with version number from VERSION file.
 project(wgrib2 VERSION ${pVersion} LANGUAGES Fortran C)
+message(STATUS "Building wgrib2-${CMAKE_PROJECT_VERSION}")
 
 # Handle user build options.
 option(USE_NETCDF3 "Use NetCDF-3?" off)
