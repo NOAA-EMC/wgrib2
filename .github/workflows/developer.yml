@@ -85,3 +85,4 @@ jobs:
         cmake ..
         make VERBOSE=1
         make test
+        ls -l tests/data
