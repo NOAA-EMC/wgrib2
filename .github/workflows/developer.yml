@@ -31,7 +31,7 @@ jobs:
         sudo apt-get install libpng-dev autotools-dev autoconf gcovr
 
     - name: checkout-jasper
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: jasper-software/jasper
         path: jasper
@@ -46,7 +46,7 @@ jobs:
         make install
 
     - name: checkout-sp
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: NOAA-EMC/NCEPLIBS-sp
         path: sp
@@ -62,7 +62,7 @@ jobs:
         make install
 
     - name: checkout-ip2
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: NOAA-EMC/NCEPLIBS-ip2
         path: ip2
@@ -78,7 +78,7 @@ jobs:
         make install        
 
     - name: checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with: 
         path: wgrib2
 
