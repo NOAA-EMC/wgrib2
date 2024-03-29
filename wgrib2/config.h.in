@@ -8,7 +8,7 @@
 #cmakedefine USE_REGEX
 #cmakedefine USE_TIGGE
 #cmakedefine USE_MYSQL
-#cmakedefine USE_IPOLATES
+#define USE_IPOLATES @USE_IPOLATES@
 #cmakedefine USE_UDF
 #cmakedefine USE_OPENMP
 #cmakedefine USE_PROJ4
@@ -23,9 +23,9 @@
 #cmakedefine MAKE_FTN_API
 #cmakedefine USE_AEC
 
-#define BUILD_COMMENTS @BUILD_COMMENTS@
-#define CC @CC@
-#define FORTRAN @FORTRAN@
-#define CPPFLAGS @CPPFLAGS@
-#define FFLAGS @FFLAGS
+#define BUILD_COMMENTS "@BUILD_COMMENTS@"
+#define CC "@CMAKE_C_COMPILER@ @CMAKE_C_COMPILER_ID@"
+#define FORTRAN "@CMAKE_Fortran_COMPILER@ @CMAKE_Fortran_COMPILER_ID@"
+#define CPPFLAGS "@CMAKE_C_FLAGS@"
+#define FFLAGS "@CMAKE_Fortran_FLAGS@"
 #endif
