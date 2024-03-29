@@ -15,7 +15,8 @@ ls -l ../wgrib2
 
 # Run an inventory on a test file. This does not work.
 #echo "*** testing inventory of gdaswave.t00z.wcoast.0p16.f000.grib2..."
-#./wgrib2 -inv ../tests/data/gdaswave.t00z.wcoast.0p16.f000.grib2 
+./wgrib2 ../tests/data/gdaswave.t00z.wcoast.0p16.f000.grib2 > tmp.txt
+cat tmp.txt
 
 echo "*** SUCCESS!"
 exit 0
