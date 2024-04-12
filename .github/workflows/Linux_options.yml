@@ -1,7 +1,8 @@
-# This is the developer workflow for the wgrib2 project.
+# This is the Linux_options workflow for the wgrib2 project. This
+# tests different wgrib2 build options.
 #
-# Kyle Gerheiser, Ed Hartnett
-name: developer
+# Ed Hartnett, 3/27/24
+name: Linux_options
 on:
   push:
     branches:
@@ -16,22 +17,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  developer:
+  Linux_options:
     runs-on: ubuntu-latest
     env:
       FC: gfortran
       CC: gcc
 
+    strategy:
+#      fail-fast: true
+      matrix:
+        config:
+        - {
+            options: "-DUSE_IPOLATES=1"
+          }
+          
     steps:
 
     - name: install
       run: |
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
-        sudo apt-get install libpng-dev autotools-dev autoconf gcovr
+        sudo apt-get install libpng-dev autotools-dev autoconf
 
     - name: checkout-jasper
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
       with:
         repository: jasper-software/jasper
         path: jasper
@@ -46,11 +55,11 @@ jobs:
         make install
 
     - name: checkout-sp
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
       with:
         repository: NOAA-EMC/NCEPLIBS-sp
         path: sp
-        ref: develop
+        ref: v2.3.3
 
     - name: build-sp
       run: |
@@ -61,8 +70,33 @@ jobs:
         make -j2
         make install
 
+    - name: cache-ip
+      id: cache-ip
+      uses: actions/cache@v3
+      with:
+        path: ~/ip
+        key: ip-${{ runner.os }}-${{ matrix.ip-version }}
+
+    - name: checkout-ip
+      if: steps.cache-ip.outputs.cache-hit != 'true'
+      uses: actions/checkout@v3
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip
+        path: ip
+        ref: v3.3.3
+
+    - name: build-ip
+      if: steps.cache-ip.outputs.cache-hit != 'true'
+      run: |
+        cd ip
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
+        make -j2
+        make install
+          
     - name: checkout-ip2
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
       with:
         repository: NOAA-EMC/NCEPLIBS-ip2
         path: ip2
@@ -78,27 +112,14 @@ jobs:
         make install        
 
     - name: checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
       with: 
         path: wgrib2
 
     - name: build
       run: |
         cd wgrib2
-        mkdir build
-        cd build
-        export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake ..
+        mkdir b
+        cd b
+        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/sp;~/ip;~/ip2" ..
         make VERBOSE=1
-        ctest --verbose --output-on-failure --rerun-failed
-        gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
-        
-    - name: upload-test-coverage
-      uses: actions/upload-artifact@v4
-      with:
-        name: wgrib2-test-coverage
-        path: |
-          wgrib2/build/*.html
-          wgrib2/build/*.css
