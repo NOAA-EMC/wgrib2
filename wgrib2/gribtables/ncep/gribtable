@@ -212,6 +212,8 @@
 0:1:0:255:0:0:1:165:CDTWMF:Column integrated divergence of total water mass flux:kgm-1s-1
 0:1:0:255:0:0:1:166:CWVF:Column integrated water vapour flux:kgm-1s-1
 0:1:0:255:0:0:1:167:TCSLW:Total column supercooled liquid water:kg/m^2
+0:1:0:255:0:0:1:168:SSPFHW:Saturation specific humidity with respect to water:kg/m^3
+0:1:0:255:0:0:1:169:TCISSPFHW:Total column integrated saturation specific humidity with respect to water:kg/m^2
 0:0:0:255:7:1:1:192:CRAIN:Categorical Rain:-
 0:0:0:255:7:1:1:193:CFRZR:Categorical Freezing Rain:-
 0:0:0:255:7:1:1:194:CICEP:Categorical Ice Pellets:-
@@ -318,6 +320,15 @@
 0:1:0:255:0:0:2:56:UNWIND:u-component of neutral wind:m/s
 0:1:0:255:0:0:2:57:VNWIND:v-component of neutral wind:m/s
 0:1:0:255:0:0:2:58:TSFCSTR:Magnitude of turbulent surface stress:N/m^2
+0:1:0:255:0:0:2:59:VDIV:Vertical divergence:1/s
+0:1:0:255:0:0:2:60:DTC:Drag thermal coefficient:Numeric
+0:1:0:255:0:0:2:61:DEC:Drag evaporation coefficient:Numeric
+0:1:0:255:0:0:2:62:EASTTSS:Eastward turbulent surface stress:N/m^2
+0:1:0:255:0:0:2:63:NRTHTSS:Northward turbulent surface stress:N/m^2
+0:1:0:255:0:0:2:64:var2m64:Eastward turbulent surface stress due to orographic form drag:-
+0:1:0:255:0:0:2:65:var2m65:Northward turbulent surface stress due to orographic form drag:-
+0:1:0:255:0:0:2:66:var2m66:Eastward turbulent surface stress due to surface roughness:-
+0:1:0:255:0:0:2:67:NRTHTSSSR:Northward turbulent surface stress due to surface roughness:N/m^2
 0:0:0:255:7:1:2:192:VWSH:Vertical Speed Shear:1/s
 0:0:0:255:7:1:2:193:MFLX:Horizontal Momentum Flux:N/m^2
 0:0:0:255:7:1:2:194:USTM:U-Component Storm Motion:m/s
@@ -410,6 +421,7 @@
 0:1:0:255:0:0:3:43:CDGFLUX:Column integrated divergence of geopotential flux:W/m^2
 0:1:0:255:0:0:3:44:HWBT:Height of zero-degree wet-bulb temperature:m
 0:1:0:255:0:0:3:45:WOBT:Height of one-degree wet-bulb temperature:m
+0:1:0:255:0:0:3:46:PRESDHS:Pressure departure from hydrostatic state:Pa
 0:0:0:255:7:1:3:192:MSLET:MSLP (Eta model reduction):Pa
 0:0:0:255:7:1:3:193:5WAVH:5-Wave Geopotential Height:gpm
 0:0:0:255:7:1:3:194:U-GWD:Zonal Flux of Gravity Wave Stress:N/m^2
@@ -456,6 +468,7 @@
 0:1:0:255:0:0:4:12:DWUVR:Downward UV Radiation:W/m^2
 0:1:0:255:0:0:4:13:DSWRFLX:Direct Short Wave Radiation Flux:W/m^2
 0:1:0:255:0:0:4:14:DIFSWRF:Diffuse Short Wave Radiation Flux:W/m^2
+0:1:0:255:0:0:4:15:var4m15:Upward UV radiation emitted/reflected from the Earths surface:-
 0:1:0:255:0:0:4:50:UVIUCS:UV Index (Under Clear Sky):Numeric
 0:1:0:255:0:0:4:51:UVI:UV Index:Numeric
 0:1:0:255:0:0:4:52:DSWRFCS:Downward Short-Wave Radiation Flux, Clear Sky:W/m^2
@@ -721,6 +734,11 @@
 0:1:0:255:0:0:19:43:TLTHEIGHT:Trapping layer top height:m
 0:1:0:255:0:0:19:44:MEANVGRTL:Mean vertical gradient of refractivity inside trapping layer:1/m
 0:1:0:255:0:0:19:45:MINVGRTL:Minimum vertical gradient of refractivity inside trapping layer:1/m
+0:1:0:255:0:0:19:46:NETRADFLUX:Net radiation flux:W/m^2
+0:1:0:255:0:0:19:47:var19m47:Global irradiance on tilted surfaces:-
+0:1:0:255:0:0:19:48:PCONTT:Top of persistent contrails:m
+0:1:0:255:0:0:19:49:PCONTB:Base of persistent contrails:m
+0:1:0:255:0:0:19:50:CITEDR:Convectively-induced turbulence (CIT) (eddy dissipation rate):m2/3s-1
 0:0:0:255:7:1:19:192:MXSALB:Maximum Snow Albedo:%
 0:0:0:255:7:1:19:193:SNFALB:Snow-Free Albedo:%
 0:0:0:255:7:1:19:194:SRCONO:Slight risk convective outlook:Categorical
@@ -810,7 +828,7 @@
 0:1:0:255:0:0:20:78:CEMF:Column integrated eastward mass flux:kg/m^2/s
 0:1:0:255:0:0:20:79:CNMF:Column integrated northward mass flux:kg/m^2/s
 0:1:0:255:0:0:20:80:CDIVMF:Column integrated divergence of mass flux:kg/m^2/s
-0:1:0:255:0:0:20:81:CDNETS:Column integrated net source:kg/m^2/s
+0:1:0:255:0:0:20:81:CNETS:Column integrated net source:kg/m^2/s
 0:1:0:255:0:0:20:100:SADEN:Surface Area Density (Aerosol):1/m
 0:1:0:255:0:0:20:101:ATMTK:Vertical Visual Range:m
 0:1:0:255:0:0:20:102:AOTK:Aerosol Optical Thickness:Numeric
@@ -824,11 +842,35 @@
 0:1:0:255:0:0:20:110:ALEGRD:Aerosol Lidar Extinction from the Ground:1/m
 0:1:0:255:0:0:20:111:ANGSTEXP:Angstrom Exponent:Numeric
 0:1:0:255:0:0:20:112:SCTAOTK:Scattering Aerosol Optical Thickness:Numeric
+0:1:0:255:0:0:21:0:POTINTENG:Column Integrated Potential + Internal Energy:J/m^2
+0:1:0:255:0:0:21:1:KINENG:Column Integrated Kinetic Energy:J/m^2
+0:1:0:255:0:0:21:2:TOTENG:Column Integrated Total Energy,:J/m^2
+0:1:0:255:0:0:21:3:ENTHALPY:Column Integrated Enthalpy:J/m^2
+0:1:0:255:0:0:21:4:WATENTHALPY:Column Integrated Water Enthalpy:J/m^2
+0:1:0:255:0:0:21:5:EASTENTFLUX:Column Integrated Eastward Enthalpy Flux:Wm-1
+0:1:0:255:0:0:21:6:NRTHENTFLUX:Column Integrated Northward Enthalpy Flux:Wm-1
+0:1:0:255:0:0:21:7:EASTPOTFLUX:Column integrated eastward potential energy flux:Wm-1
+0:1:0:255:0:0:21:8:NRTHPOTFLUX:Column integrated northward potential energy flux:Wm-1
+0:1:0:255:0:0:21:9:EASTKINFLUX:Column integrated eastward kinetic energy flux:Wm-1
+0:1:0:255:0:0:21:10:NRTHKINFLUX:Column integrated northward kinetic energy flux:Wm-1
+0:1:0:255:0:0:21:11:EASTTOTFLUX:Column integrated eastward total energy flux:Wm-1
+0:1:0:255:0:0:21:12:NRTHTOTFLUX:Column integrated northward total energy flux:Wm-1
+0:1:0:255:0:0:21:13:DIVENTFLUX:Divergence of column integrated enthalpy flux see (Note 1):Wm-1
+0:1:0:255:0:0:21:14:DIVPOTFLUX:Divergence of column integrated potential energy flux:Wm-1
+0:1:0:255:0:0:21:15:DIVWPOTFLUX:Divergence of column integrated water potential energy flux:Wm-1
+0:1:0:255:0:0:21:16:DIVKENGFLUX:Divergence of column integrated kinetic energy flux:Wm-1
+0:1:0:255:0:0:21:17:DIVTOTFLUX:Divergence of column integrated total energy flux:Wm-1
+0:1:0:255:0:0:21:18:DIVWENTFLUX:Divergence of column integrated water enthalpy flux:Wm-1
+0:1:0:255:0:0:21:19:EASTHFLUX:Column integrated heat flux:Wm-1
+0:1:0:255:0:0:21:20:NRTHHFLUX:Column integrated northward heat flux:Wm-1
+0:1:0:255:0:0:21:21:PILENERGY:Column integrated potential+internal+latent energy:J/m^2
+0:1:0:255:0:0:21:22:EADYGR:Eady growth rate:day-1
 0:1:0:255:0:0:190:0:ATEXT:Arbitrary Text String:CCITTIA5
 0:1:0:255:0:0:191:0:TSEC:Seconds prior to initial reference time:s
 0:1:0:255:0:0:191:1:GEOLAT:Geographical Latitude:deg
 0:1:0:255:0:0:191:2:GEOLON:Geographical Longitude:deg
 0:1:0:255:0:0:191:3:DSLOBS:Days Since Last Observation:day
+0:1:0:255:0:0:191:4:TCDTRACK:Tropical cyclone density track:Numeric
 0:0:0:255:7:1:191:192:NLAT:Latitude (-90 to 90):deg
 0:0:0:255:7:1:191:193:ELON:East Longitude (0 to 360):deg
 0:0:0:255:7:1:191:194:RTSEC:Seconds prior to initial reference time:s
@@ -875,6 +917,8 @@
 1:0:0:255:7:1:1:193:CPOFP:Percent of Frozen Precipitation:%
 1:0:0:255:7:1:1:194:PPFFG:Probability of precipitation exceeding flash flood guidance values:%
 1:0:0:255:7:1:1:195:CWR:Probability of Wetting Rain, exceeding in 0.10 in a given time period:%
+1:0:0:255:7:1:1:196:var1h196:Binary Probability of precipitation exceeding average recurrence intervals (ARI):-
+1:0:0:255:7:1:1:197:var1h197:Binary Probability of precipitation exceeding flash flood guidance values:-
 1:1:0:255:0:0:2:0:WDPTHIL:Water Depth:m
 1:1:0:255:0:0:2:1:WTMPIL:Water Temperature:K
 1:1:0:255:0:0:2:2:WFRACT:Water Fraction:Proportion
@@ -890,6 +934,8 @@
 1:1:0:255:0:0:2:12:SALTIL:Salinity:kg/kg
 1:1:0:255:0:0:2:13:CSAFC:Cross Sectional Area of Flow in Channel:m^2
 1:1:0:255:0:0:2:14:LNDSNOWT:Snow temperature:K
+1:1:0:255:0:0:2:15:LDEPTH:Lake depth:m
+1:1:0:255:0:0:2:16:RDEPTH:River depth:m
 2:1:0:255:0:0:0:0:LAND:Land Cover (0=sea, 1=land):Proportion
 2:1:0:255:0:0:0:1:SFCR:Surface Roughness:m
 2:1:0:255:0:0:0:2:TSOIL:Soil Temperature (Parameter Deprecated,):K
@@ -952,6 +998,8 @@
 2:1:0:255:0:0:0:59:NECOFLUX:Net Ecosystem Exchange Flux:1/kg^2/s
 2:1:0:255:0:0:0:60:GROSSFLUX:Gross Primary Production Flux:1/kg^2/s
 2:1:0:255:0:0:0:61:ECORFLUX:Ecosystem Respiration Flux:1/kg^2/s
+2:1:0:255:0:0:0:62:EMISS:Emissivity:Proportion
+2:1:0:255:0:0:0:63:CANTMP:Canopy air temperature:K
 2:0:0:255:7:1:0:192:SOILW:Volumetric Soil Moisture Content:Fraction
 2:0:0:255:7:1:0:193:GFLUX:Ground Heat Flux:W/m^2
 2:0:0:255:7:1:0:194:MSTAV:Moisture Availability:%
@@ -1030,7 +1078,8 @@
 2:1:0:255:0:0:3:26:SHFLX:Soil Heat Flux:W/m^2
 2:1:0:255:0:0:3:27:SOILDEP:Soil Depth:m
 2:1:0:255:0:0:3:28:SNOWTMP:Snow Temperature:K
-2:1:0:255:0:0:3:29:ICETEMP:Ice Temperature:K
+2:1:0:255:0:0:3:29:ICETMP:Ice Temperature:K
+2:1:0:255:0:0:3:30:SWET:Soil wetness index:Numeric
 2:0:0:255:7:1:3:192:SOILL:Liquid Volumetric Soil Moisture (non Frozen):Proportion
 2:0:0:255:7:1:3:193:RLYRS:Number of Soil Layers in Root Zone:non-dim
 2:0:0:255:7:1:3:194:SLTYP:Surface Slope Type:Index
@@ -1071,8 +1120,27 @@
 2:1:0:255:0:0:4:24:COMBCO:Combustion Completeness:%
 2:1:0:255:0:0:4:25:FUELMC:Fuel Moisture Content:kg/kg
 2:1:0:255:0:0:4:26:WFIREPOT:Wildfire Potential (as defined by NOAA Global Systems Laboratory):Numeric
+2:1:0:255:0:0:4:27:LLFL:Live leaf fuel load:kg/m^2
+2:1:0:255:0:0:4:28:LWFL:Live wood fuel load:kg/m^2
+2:1:0:255:0:0:4:29:DLFL:Dead leaf fuel load:kg/m^2
+2:1:0:255:0:0:4:30:DWFL:Dead wood fuel load:kg/m^2
+2:1:0:255:0:0:4:31:var4L31:Live fuel moisture content:-
+2:1:0:255:0:0:4:32:var4L32:Fine dead leaf moisture content:-
+2:1:0:255:0:0:4:33:var4L33:Dense dead leaf moisture content:-
+2:1:0:255:0:0:4:34:var4L34:Fine dead wood moisture content:-
+2:1:0:255:0:0:4:35:DDWMC:Dense dead wood moisture content:kg/kg
+2:1:0:255:0:0:4:36:FRADPOW:Fire radiative power (Tentatively accpeted):W
 2:1:0:255:0:0:5:0:GLACCOV:Glacier Cover:Proportion
 2:1:0:255:0:0:5:1:GLACTMP:Glacier Temperature:K
+2:1:0:255:0:0:6:0:URBCOVER:Urban Cover:Proportion
+2:1:0:255:0:0:6:1:ROADCOVER:Road Cover:Proportion
+2:1:0:255:0:0:6:2:BUILDCOVER:Building Cover:Proportion
+2:1:0:255:0:0:6:3:BUILDHGT:Building Height:m
+2:1:0:255:0:0:6:4:VZAFRAC:Vertical-to-Horizontal Area Fraction:m2m-2
+2:1:0:255:0:0:6:5:SDBUILDHGT:Standard Deviation of Building Height:m
+2:1:0:255:0:0:6:6:DDROOF:Distance downward from roof surface:m
+2:1:0:255:0:0:6:7:DIOWALL:Distance inward from outer wall surface:m
+2:1:0:255:0:0:6:8:DDROAD:Distance downward from road surface:m
 3:1:0:255:0:0:0:0:SRAD:Scaled Radiance:Numeric
 3:1:0:255:0:0:0:1:SALBEDO:Scaled Albedo:Numeric
 3:1:0:255:0:0:0:2:SBTMP:Scaled Brightness Temperature:Numeric
@@ -1110,6 +1178,8 @@
 3:1:0:255:0:0:1:28:SPBRT:Brightness Temperature:K
 3:1:0:255:0:0:1:29:SCRAD:Scaled Radiance:Numeric
 3:1:0:255:0:0:1:30:RFL04:Reflectance in 0.4 Micron Channel:%
+3:1:0:255:0:0:1:31:CLDREF:Cloudy reflectance:%
+3:1:0:255:0:0:1:32:CLRREF:Clear reflectance:%
 3:1:0:255:0:0:1:98:CCMPEMRR:Correlation coefficient between MPE rain rates for the co-located IR data and the microwave data rain rates:Numeric
 3:1:0:255:0:0:1:99:SDMPEMRR:Standard deviation between MPE rain rates for the co-located IR data and the microwave data rain rates:Numeric
 3:0:0:255:7:1:1:192:USCT:Scatterometer Estimated U Wind Component:m/s
@@ -1405,6 +1475,11 @@
 10:1:0:255:0:0:0:90:USMFO:U-Component of Surface Momentum Flux into Ocean:N/m^2
 10:1:0:255:0:0:0:91:VSMFO:U-Component of Surface Momentum Flux into Ocean:N/m^2
 10:1:0:255:0:0:0:92:WAVETEFO:Wave Turbulent Energy Flux into Ocean:W/m^2
+10:1:0:255:0:0:0:93:EMIWAVE:Envelop maximum individual wave height:m
+10:1:0:255:0:0:0:94:TDMCREST:Time domain maximum individual crest height:m
+10:1:0:255:0:0:0:95:TDMWAVE:Time domain maximum individual wave height:m
+10:1:0:255:0:0:0:96:STMCREST:Space time maximum individual crest height:m
+10:1:0:255:0:0:0:97:STMWAVE:Space time maximum individual wave height:m
 10:0:0:255:7:1:0:192:WSTP:Wave Steepness:Proportion
 10:0:0:255:7:1:0:193:WLENG:Wave Length:-
 10:1:0:255:0:0:1:0:DIRC:Current Direction:deg
@@ -1442,6 +1517,11 @@
 10:1:0:255:0:0:2:21:ICEMPD:Ice Melt Pond Depth:m
 10:1:0:255:0:0:2:22:ICEMPV:Ice Melt Pond Volume per Unit Area:m3m-2
 10:1:0:255:0:0:2:23:SIFTP:Sea Ice Fraction Tendency due to Parameterization:1/s
+10:1:0:255:0:0:2:24:XICE:x-component of ice drift:m/s
+10:1:0:255:0:0:2:25:YICE:y-component of ice drift:m/s
+10:1:0:255:0:0:2:27:FRZMLTPOT:Freezing/melting potential (Tentatively accepted):W/m^2
+10:1:0:255:0:0:2:28:MLTDATE:Melt onset date (Tentatively accepted):Numeric
+10:1:0:255:0:0:2:29:FRZDATE:Freeze onset date (Tentatively accepted):Numeric
 10:1:0:255:0:0:3:0:WTMP:Water Temperature:K
 10:1:0:255:0:0:3:1:DSLM:Deviation of Sea Level from Mean:m
 10:1:0:255:0:0:3:2:CH:Heat Exchange Coefficient:-
@@ -1463,6 +1543,7 @@
 10:1:0:255:0:0:3:18:HFLUXCOR:Heat flux correction:W/m^2
 10:1:0:255:0:0:3:19:SSHGTPARM:Sea surface height tendency due to parameterization:m/s
 10:1:0:255:0:0:3:20:DSLIBARCOR:Deviation of sea level from mean with inverse barometer correction:m
+10:1:0:255:0:0:3:21:SALINITY:Salinity:kg/kg
 10:0:0:255:7:1:3:192:SURGE:Hurricane Storm Surge:m
 10:0:0:255:7:1:3:193:ETSRG:Extra Tropical Storm Surge:m
 10:0:0:255:7:1:3:194:ELEV:Ocean Surface Elevation Relative to Geoid:m
@@ -1523,16 +1604,26 @@
 10:1:0:255:0:0:4:29:BPEH:Bottom Pressure Equivalent Height:m
 10:1:0:255:0:0:4:30:FWFSW:Fresh Water Flux into Sea Water from Rivers:kg/m^2/s
 10:1:0:255:0:0:4:31:FWFC:Fresh Water Flux Correction:kg/m^2/s
-10:1:0:255:0:0:4:32:VSFSW:Virtual Salt Flux into Sea Water:gkgm-2s-1
-10:1:0:255:0:0:4:33:VSFC:Virtual Salt Flux Correction:gkgm-2s-1
+10:1:0:255:0:0:4:32:VSFSW:Virtual Salt Flux into Sea Water:gkg-1m-2s-1
+10:1:0:255:0:0:4:33:VSFC:Virtual Salt Flux Correction:gkg-1m-2s-1
 10:1:0:255:0:0:4:34:SWTTNR:Sea Water Temperature Tendency due to Newtonian Relaxation:K/s
-10:1:0:255:0:0:4:35:SWSTNR:Sea Water Salinity Tendency due to Newtonian Relaxation:gkgm-2s-1
+10:1:0:255:0:0:4:35:SWSTNR:Sea Water Salinity Tendency due to Newtonian Relaxation:gkg-1s-1
 10:1:0:255:0:0:4:36:SWTTP:Sea Water Temperature Tendency due to Parameterization:K/s
-10:1:0:255:0:0:4:37:SWSTP:Sea Water Salinity Tendency due to Parameterization:gkgm-2s-1
-10:1:0:255:0:0:4:38:ESWVP:Eastward Sea Water Velocity Tendency Due To Parameterization:1/m^2/s
-10:1:0:255:0:0:4:39:NSWVP:Northward Sea Water Velocity Tendency Due To Parameterization:1/m^2/s
+10:1:0:255:0:0:4:37:SWSTP:Sea Water Salinity Tendency due to Parameterization:gkg-1s-1
+10:1:0:255:0:0:4:38:ESWVP:Eastward Sea Water Velocity Tendency Due To Parameterization:m/s^2
+10:1:0:255:0:0:4:39:NSWVP:Northward Sea Water Velocity Tendency Due To Parameterization:m/s^2
 10:1:0:255:0:0:4:40:SWTTBC:Sea Water Temperature Tendency Due to Direct Bias Correction:K/s
-10:1:0:255:0:0:4:41:SWSTBC:Sea Water Salinity Tendency due to Direct Bias Correction:gkgm-2s-1
+10:1:0:255:0:0:4:41:SWSTBC:Sea Water Salinity Tendency due to Direct Bias Correction:gkg-1s-1
+10:1:0:255:0:0:4:42:SEAMVT:Sea water meridional volume transport:m3m-2s-1
+10:1:0:255:0:0:4:43:SEAZVT:Sea water zonal volume transport:m3m-2s-1
+10:1:0:255:0:0:4:44:SEACMVT:Sea water column integrated meridional volume transport:m3m-2s-1
+10:1:0:255:0:0:4:45:SEACZVT:Sea water column integrated zonal volume transport:m3m-2s-1
+10:1:0:255:0:0:4:46:SEAMMT:Sea water meridional mass transport:kg/m^2/s
+10:1:0:255:0:0:4:47:SEAZMT:Sea water zonal mass transport:kg/m^2/s
+10:1:0:255:0:0:4:48:SEACMMT:Sea water column integrated meridional mass transport:kg/m^2/s
+10:1:0:255:0:0:4:49:SEACZMT:Sea water column integrated zonal mass transport:kg/m^2/s
+10:1:0:255:0:0:4:50:SEACPSALT:Sea water column integrated practical salinity:gkg-1m
+10:1:0:255:0:0:4:51:SEACSALT:Sea water column integrated salinity:kgkg-1m
 10:0:0:255:7:1:4:192:WTMPC:3-D Temperature:degC
 10:0:0:255:7:1:4:193:SALIN:3-D Salinity:psu
 10:0:0:255:7:1:4:194:BKENG:Barotropic Kinectic Energy:J/kg
@@ -1563,4 +1654,14 @@
 20:1:0:255:0:0:1:8:AVECTNUM:Anopheles Vector Number:Numberm-2
 20:1:0:255:0:0:1:9:FMALVRH:Fraction of Malarial Vector Reproductive Habitat:Fraction
 20:1:0:255:0:0:2:0:POPDEN:Population Density:Personm-2
+20:1:0:255:0:0:3:0:RENPCAP:Renewable power capacity:W
+20:1:0:255:0:0:3:1:RENPPROD:Renewable power production rate:W
+20:1:0:255:0:0:3:2:WINDPCAP:Wind power capacity:W
+20:1:0:255:0:0:3:3:WINDPPROD:Wind power production rate:W
+20:1:0:255:0:0:3:4:SPVPCAP:Solar photovoltaic (PV) power capacity:W
+20:1:0:255:0:0:3:5:SPVPPROD:Solar photovoltaic (PV) power production rate:W
+20:1:0:255:0:0:3:6:SNPVPCAP:Solar non-photovoltaic (PV) power capacity:W
+20:1:0:255:0:0:3:7:SNPVPPROD:Solar non-photovoltaic (PV) power production rate:W
+20:1:0:255:0:0:3:8:CSPPCAP:Concentrated solar power (CSP) power capacity:W
+20:1:0:255:0:0:3:9:CSPPROD:Concentrated solar power (CSP) power production rate:W
 255:0:0:255:7:1:255:255:IMGD:Image data:-

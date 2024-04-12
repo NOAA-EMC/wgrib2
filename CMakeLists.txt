@@ -22,10 +22,10 @@ option(DISABLE_ALARM "Disable Alarm?" off)
 option(DISABLE_STAT "disable posix feature" off)
 set(USE_NAMES "NCEP")
 option(USE_G2CLIB "Use g2c lib?" off)
-option(USE_PNG "Use PNG?" off)
+option(USE_PNG "Use PNG?" on)
 option(USE_JASPER "Use Jasper?" off)
 option(USE_OPENJPEG "Use OpenJPEG?" off)
-option(USE_AEC "Use AEC?" off)
+option(USE_AEC "Use AEC?" on)
 # MAKE_FTN_API should only be on when building library
 option(MAKE_FTN_API "add ftn api?" off)
 option(DISABLE_STAT "disable posix feature" off)
@@ -109,8 +109,8 @@ if(USE_OPENMP)
 endif()
 
 if(USE_PNG)
-  find_package(ZLIB REQUIRED)
-  find_package(PNG REQUIRED)
+   find_package(ZLIB REQUIRED)
+   find_package(PNG REQUIRED)
 endif()
 
 
@@ -120,7 +120,7 @@ FILE(APPEND "wgrib2/config.h" "#ifndef _CONFIG_H\n")
 FILE(APPEND "wgrib2/config.h" "#define _CONFIG_H\n")
 
 FOREACH(var IN ITEMS USE_NETCDF3 USE_NETCDF4 USE_HDF5 USE_REGEX USE_TIGGE USE_MYSQL
-   USE_IPOLATES USE_UDF USE_OPENMP USE_PROJ4 USE_WMO_VALIDATION DISABLE_TIMEZONE
+   USE_IPOLATES USE_UDF USE_OPENMP USE_PROJ4 USE_WMO_VALIDATION DISABLE_TIMEZONE USE_PNG
    DISABLE_ALARM USE_NAMES USE_G2CLIB USE_PNG USE_JASPER USE_OPENJPEG MAKE_FTN_API USE_AEC BUILD_COMMENTS)
 
 #      FILE(APPEND "wgrib2/config.h" "#test ${var} ${${var}}\n")
@@ -140,13 +140,16 @@ FILE(APPEND "wgrib2/config.h" "#define FORTRAN \"${CMAKE_Fortran_COMPILER} ${CMA
 FILE(APPEND "wgrib2/config.h" "#define CPPFLAGS \"${CMAKE_C_FLAGS}\"\n")
 FILE(APPEND "wgrib2/config.h" "#define FFLAGS \"${CMAKE_Fortran_FLAGS}\"\n")
 
-
-
 FILE(APPEND "wgrib2/config.h" "#endif\n")
 
-
-
-
+if(USE_AEC)
+   add_subdirectory(libaec-master)
+   include_directories(libaec-master libaec-master/include)
+endif()
+if(USE_PNG)
+   add_subdirectory(zlib-1.2.12)
+   add_subdirectory(libpng-1.2.59)
+endif()
 
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
