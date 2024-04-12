@@ -34,14 +34,12 @@ option(USE_AEC "Use AEC?" off)
 option(MAKE_FTN_API "add ftn api?" off)
 option(DISABLE_STAT "disable posix feature" off)
 set(BUILD_COMMENTS "stock build")
-
 option(BUILD_LIB "Build wgrib2 library?" on)
 option(BUILD_SHARED_LIB "Build shared library?" off)
 
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-#set default install path if not provided
+# Set default install path if not provided.
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX
     "${CMAKE_BINARY_DIR}/install"
