@@ -70,9 +70,9 @@ if(BUILD_LIB)
 
   # with -DCALLABLE_WGRIB2 for the lib
   if(BUILD_SHARED_LIB)
-    add_library(wgrib2_lib SHARED ${lib_src} $<TARGET_OBJECTS:gctpc> $<TARGET_OBJECTS:aec>)
+    add_library(wgrib2_lib SHARED ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
   else()
-    add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc> $<TARGET_OBJECTS:aec>)
+    add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
   endif()
 
   # library and executable have same name (wgrib2) but different target names
