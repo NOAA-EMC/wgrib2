@@ -141,7 +141,7 @@ target_link_libraries(wgrib2_exe PRIVATE gctpc)
 
 if(${USE_AEC} STREQUAL ON)
   target_link_libraries(wgrib2_exe PRIVATE aec)
-end if()
+endif()
 
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
