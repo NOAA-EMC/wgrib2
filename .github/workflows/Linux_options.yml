@@ -30,7 +30,7 @@ jobs:
         - {
             options: "-DUSE_IPOLATES=1"
           }
-          {
+        - {
             options: "-DUSE_AEC=ON"
           }
           
