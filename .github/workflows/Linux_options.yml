@@ -134,3 +134,4 @@ jobs:
         cd b
         cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/sp;~/ip;~/ip2" ..
         make VERBOSE=1
+        ctest --verbose --output-on-failure --rerun-failed
