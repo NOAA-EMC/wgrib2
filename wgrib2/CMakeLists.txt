@@ -138,6 +138,11 @@ target_link_libraries(obj_lib PUBLIC gctpc -lm)
 
 # Link to gctpc directly because oobject libraries do not link transitively
 target_link_libraries(wgrib2_exe PRIVATE gctpc)
+
+if(${USE_AEC} STREQUAL ON)
+  target_link_libraries(wgrib2_exe PRIVATE aec)
+endif()
+
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
 if(BUILD_LIB)

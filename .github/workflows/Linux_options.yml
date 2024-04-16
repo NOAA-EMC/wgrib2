@@ -30,6 +30,9 @@ jobs:
         - {
             options: "-DUSE_IPOLATES=1"
           }
+        - {
+            options: "-DUSE_AEC=ON"
+          }
           
     steps:
 
@@ -37,9 +40,17 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
-        sudo apt-get install libpng-dev autotools-dev autoconf
+        sudo apt-get install libpng-dev autotools-dev autoconf libaec-dev
+
+    - name: cache-jasper
+      id: cache-jasper
+      uses: actions/cache@v3
+      with:
+        path: ~/jasper
+        key: jasper-${{ runner.os }}-1.900.1
 
     - name: checkout-jasper
+      if: steps.cache-jasper.outputs.cache-hit != 'true'
       uses: actions/checkout@v2
       with:
         repository: jasper-software/jasper
@@ -123,3 +134,4 @@ jobs:
         cd b
         cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/sp;~/ip;~/ip2" ..
         make VERBOSE=1
+        ctest --verbose --output-on-failure --rerun-failed

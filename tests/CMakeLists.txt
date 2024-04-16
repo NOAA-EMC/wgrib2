@@ -25,6 +25,7 @@ endfunction()
 # Copy test data file into buiild directory for testing.
 copy_test_data(gdaswave.t00z.wcoast.0p16.f000.grib2)
 copy_test_data(ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv)
+copy_test_data(ref_npts_gdaswave.t00z.wcoast.0p16.f000.grib2.txt)
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
