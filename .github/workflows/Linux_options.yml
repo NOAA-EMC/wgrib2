@@ -33,6 +33,9 @@ jobs:
         - {
             options: "-DUSE_AEC=ON"
           }
+        - { 
+            options: "-DUSE_NETCDF4=ON"
+          }
           
     steps:
 
