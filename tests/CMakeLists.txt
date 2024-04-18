@@ -1,8 +1,7 @@
 # This is the CMake file for the test directory in the wgrib2
 # project. 
 #
-# Ed Hartnett 3/27/24
-# Alyson Stahl 4/17/24
+# Ed Hartnett, Alyson Stahl 3/27/24
 
 # Run each shell test.
 function(shell_test name)
