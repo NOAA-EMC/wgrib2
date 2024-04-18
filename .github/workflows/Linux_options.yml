@@ -41,7 +41,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
         sudo apt-get install libpng-dev autotools-dev autoconf libaec-dev
-        sudo apt-get install openjpeg
 
     - name: cache-jasper
       id: cache-jasper
