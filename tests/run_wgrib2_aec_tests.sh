@@ -1,5 +1,5 @@
 #!/bin/sh
-# This is an optional test script for the wgrib2 project.
+# This checks the use of AEC compression, only available if USE_AEC is turn on in CMake.
 #
 # Alyson Stahl, 4/18/24
 
