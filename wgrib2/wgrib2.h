@@ -696,4 +696,16 @@ double get_unixtime(int year, int month, int day, int hour, int minute, int seco
 int JMA_Nb(unsigned char **sec);
 int JMA_Nr(unsigned char **sec);
 
+void ipolates_grib2_single_field(int *interpol, int *ipopt, int *gdt_in, int *gdttmpl_in, int *gdttmpl_size_in,
+  int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
+  int *ibi, unsigned char *bitmap, double *data_in, int *n_out, double *rlat, double *rlon,
+   int *ibo, unsigned char *bitmap_out, double *data_out, int *iret);
+
+void ipolatev_grib2_single_field(int *interpol, int *ipopt, int *gdt_in, int *gdttmpl_in, int *gdttmpl_size_in,
+  int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
+  int *ibi, unsigned char *bitmap, double *u_in, double *v_in, int *n_out, double *rlat, double *rlon,
+   double *crot, double *srot, int *ibo, unsigned char *bitmap_out,
+   double *u_out, double *v_out, int *iret);
+
+
 #endif /* _WGRIB2_H_ */

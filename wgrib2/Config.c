@@ -89,13 +89,9 @@ int f_config(ARG0) {
     strcat(inv_out, "tigge package is not installed\n");
 #endif
 
-#if USE_IPOLATES > 0
+#ifdef USE_IPOLATES
     inv_out += strlen(inv_out);
-    sprintf(inv_out, "IPOLATES " IPOLATES_LIB " (option %d) is installed", USE_IPOLATES);
-#if USE_SPECTRAL > 0
-    strcat(inv_out, " with spectral interpolation");
-#endif
-    strcat(inv_out, ", default vectors:\n");
+    sprintf(inv_out, "IPOLATES NCEPLIBS-ip\n");
 #else
     strcat(inv_out, "interpolation package is not installed, default vectors:\n");
 #endif

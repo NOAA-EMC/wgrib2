@@ -12,7 +12,3 @@ int wgrib2_get_reg_data(float *data, size_t size, int reg);
 int wgrib2_set_reg(float *data, size_t size, int reg);
 
 int wgrib2_free_file(const char *filename);		// will delete files that are used/not used
-#ifndef _IPOLATES_H
-#define _IPOLATES_H
-#include "ipolates.h"
-#endif
