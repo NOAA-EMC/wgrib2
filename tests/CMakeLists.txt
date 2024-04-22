@@ -26,6 +26,14 @@ endfunction()
 copy_test_data(gdaswave.t00z.wcoast.0p16.f000.grib2)
 copy_test_data(ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv)
 copy_test_data(ref_npts_gdaswave.t00z.wcoast.0p16.f000.grib2.txt)
+copy_test_data(tmp_int.grb)
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
+
+if (USE_NETCDF4)
+  shell_test(run_wgrib2_netcdf4_tests)
+endif()
+if (USE_NETCDF3)
+  shell_test(run_wgrib2_netcdf3_tests)
+endif()
