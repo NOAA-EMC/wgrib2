@@ -30,12 +30,21 @@ option(USE_PNG "Use PNG?" off)
 option(USE_JASPER "Use Jasper?" off)
 option(USE_OPENJPEG "Use OpenJPEG?" off)
 option(USE_AEC "Use AEC?" off)
+option(FTP_TEST_FILES "Fetch and test with files on FTP site." OFF)
+option(FTP_LARGE_TEST_FILES "Fetch and test with very large files on FTP site." OFF)
+option(FTP_EXTRA_TEST_FILES "Fetch even more large files from FTP and test them." OFF)
 # MAKE_FTN_API should only be on when building library
 option(MAKE_FTN_API "add ftn api?" off)
 option(DISABLE_STAT "disable posix feature" off)
 set(BUILD_COMMENTS "stock build")
 option(BUILD_LIB "Build wgrib2 library?" on)
 option(BUILD_SHARED_LIB "Build shared library?" off)
+
+# Developers can use this option to specify a local directory which
+# holds the test files. They will be copied instead of fetching the
+# files via FTP.
+SET(TEST_FILE_DIR "." CACHE STRING "Check this directory for test files before using FTP.")
+message(STATUS "Finding test data files in directory ${TEST_FILE_DIR}.")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
