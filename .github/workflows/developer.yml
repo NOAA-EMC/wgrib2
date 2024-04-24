@@ -111,7 +111,7 @@ jobs:
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
     
     - name: cache-data
-      if: steps.cache-data.outputs != 'true'
+      if: steps.cache-data.outputs.cache-hit != 'true'
       run: |
         mkdir ~/data
         cp $GITHUB_WORKSPACE/wgrib2/build/tests/data/* ~/data
