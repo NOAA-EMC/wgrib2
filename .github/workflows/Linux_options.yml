@@ -132,6 +132,6 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
-        cmake ${{ matrix.config.options }} -DUSE_JPEG=ON -DCMAKE_PREFIX_PATH="~/sp;~/ip;~/ip2" ..
+        cmake ${{ matrix.config.options }} -DUSE_JASPER=ON -DCMAKE_PREFIX_PATH="~/sp;~/ip;~/ip2" ..
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
