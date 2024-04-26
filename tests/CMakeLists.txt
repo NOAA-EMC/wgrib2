@@ -85,6 +85,7 @@ copy_test_data(gdaswave.t00z.wcoast.0p16.f000.grib2)
 copy_test_data(ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv)
 copy_test_data(ref_npts_gdaswave.t00z.wcoast.0p16.f000.grib2.txt)
 copy_test_data(ref_WW3_Regional_US_West_Coast_20220718_0000.grib2.inv)
+copy_test_data(gdas.t12z.pgrb2.1p00.anl.75r)
 copy_test_data(ref_wind.grb)
 copy_test_data(ref_uv.grb)
 
