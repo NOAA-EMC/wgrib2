@@ -25,20 +25,14 @@ cat npts.txt
 cmp npts.txt data/ref_npts_gdaswave.t00z.wcoast.0p16.f000.grib2.txt
 
 # Tests the calculation of wind speed, direction, and UGRD & VGRD components
-cksum_wind_0=`../wgrib2/wgrib2 data/ref_wind.gdas.t12z.pgrb2.1p00.anl.75r -text - | cksum`
-cksum_uv_0=`../wgrib2/wgrib2 data/ref_uv.gdas.t12z.pgrb2.1p00.anl.75r -text - | cksum`
-../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r -wind_dir wind.grb -wind_speed wind.grb -match "(UGRD|VGRD)"
-cksum_wind_1=`../wgrib2/wgrib2 wind.grb -text - | cksum`
-if [ "$cksum_wind_0" != "$cksum_wind_1" ] ; then
-    echo "failed for computing wind speed and direction"
-    exit 1
-fi
+../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -wind_dir wind.grb -wind_speed wind.grb -match "(UGRD|VGRD)"
+../wgrib2/wgrib2 wind.grb > wind.txt
+cat wind.txt
+cmp wind.txt data/ref_wind.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv
 ../wgrib2/wgrib2 wind.grb -wind_uv uv.grb
-cksum_uv_1=`../wgrib2/wgrib2 uv.grb -text - | cksum`
-if [ "$cksum_uv_0" != "$cksum_uv_1" ] ; then
-    echo "failed for computing UGRD & VGRD components"
-    exit 1
-fi
+../wgrib2/wgrib2 uv.grb > uv.txt
+cat uv.txt
+cmp uv.txt data/ref_uv.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv
 
 echo "*** SUCCESS!"
 exit 0
