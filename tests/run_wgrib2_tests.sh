@@ -25,8 +25,8 @@ cat npts.txt
 cmp npts.txt data/ref_npts_gdaswave.t00z.wcoast.0p16.f000.grib2.txt
 
 # Tests the calculation of wind speed, direction, and UGRD & VGRD components
-cksum_wind_0=`../wgrib2/wgrib2 data/ref_wind.grb -text - | cksum`
-cksum_uv_0=`../wgrib2/wgrib2 data/ref_uv.grb -text - | cksum`
+cksum_wind_0=`../wgrib2/wgrib2 data/ref_wind.gdas.t12z.pgrb2.1p00.anl.75r -text - | cksum`
+cksum_uv_0=`../wgrib2/wgrib2 data/ref_uv.gdas.t12z.pgrb2.1p00.anl.75r -text - | cksum`
 ../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r -wind_dir wind.grb -wind_speed wind.grb -match "(UGRD|VGRD)"
 cksum_wind_1=`../wgrib2/wgrib2 wind.grb -text - | cksum`
 if [ "$cksum_wind_0" != "$cksum_wind_1" ] ; then
