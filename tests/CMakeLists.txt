@@ -87,7 +87,7 @@ copy_test_data(ref_npts_gdaswave.t00z.wcoast.0p16.f000.grib2.txt)
 copy_test_data(ref_WW3_Regional_US_West_Coast_20220718_0000.grib2.inv)
 copy_test_data(gdas.t12z.pgrb2.1p00.anl.75r.grib2)
 copy_test_data(ref_wind.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv)
-copy_test_data(ref_uv.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inx)
+copy_test_data(ref_uv.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv)
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
