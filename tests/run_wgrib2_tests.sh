@@ -34,5 +34,10 @@ cmp wind.txt data/ref_wind.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv
 cat uv.txt
 cmp uv.txt data/ref_uv.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv
 
+# Tests printing of grid information
+../wgrib2/wgrib2 data/gdaswave.t00z.wcoast.0p16.f000.grib2 -grid > grid_test.txt
+cat grid_test.txt
+cmp grid_test.txt data/ref_grid.gdaswave.t00z.wcoast.0p16.f000.grib2.txt
+
 echo "*** SUCCESS!"
 exit 0
