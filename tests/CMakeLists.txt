@@ -96,5 +96,5 @@ endif()
 
 if (FTP_LARGE_TEST_FILES)
   copy_test_data(ref_rrfs.t18z.prslev.f000.grib2.inv)
-  shell_test(run_wgrib2_large_ftp_tests)
+  shell_test(run_wgrib2_ftp_large_tests)
 endif()
