@@ -84,7 +84,6 @@ endif()
 copy_test_data(gdaswave.t00z.wcoast.0p16.f000.grib2)
 copy_test_data(ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv)
 copy_test_data(ref_npts_gdaswave.t00z.wcoast.0p16.f000.grib2.txt)
-copy_test_data(ref_WW3_Regional_US_West_Coast_20220718_0000.grib2.inv)
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
@@ -94,7 +93,7 @@ if (FTP_TEST_FILES)
   shell_test(run_wgrib2_ftp_tests)
 endif()
 
-if (FTP_LARGE_TEST_FILES)
+if (FTP_EXTRA_TEST_FILES)
   copy_test_data(ref_rrfs.t18z.prslev.f000.grib2.inv)
-  shell_test(run_wgrib2_ftp_large_tests)
+  shell_test(run_ftp_extra_large_tests)
 endif()
