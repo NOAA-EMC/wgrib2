@@ -90,5 +90,11 @@ copy_test_data(ref_WW3_Regional_US_West_Coast_20220718_0000.grib2.inv)
 shell_test(run_wgrib2_tests)
 
 if (FTP_TEST_FILES)
+  copy_test_data(ref_WW3_Regional_US_West_Coast_20220718_0000.grib2.inv)
   shell_test(run_wgrib2_ftp_tests)
+endif()
+
+if (FTP_LARGE_TEST_FILES)
+  copy_test_data(ref_rrfs.t18z.prslev.f000.grib2.inv)
+  shell_test(run_wgrib2_large_ftp_tests)
 endif()
