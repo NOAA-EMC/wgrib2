@@ -105,7 +105,7 @@ jobs:
         export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake .. -DFTP_TEST_FILES=ON -DTEST_FILE_DIR=/home/runner/data
+        cmake .. -DFTP_TEST_FILES=ON -DTEST_FILE_DIR=/home/runner/data -DUSE_JASPER=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
