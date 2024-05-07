@@ -90,7 +90,7 @@ if [ "$cksum1" != "$cksum9" ] ; then
 fi
 
 echo "*** Converting from aec to jpeg"
-if ../wgrib2/wgrib2 junk_aec.grb -set_grib_type jpeg -grib_out junk_jpeg.grb;
+if ../wgrib2/wgrib2 junk_aec.grb -set_grib_type jpeg -grib_out junk_jpeg.grb; then
     cksum10=`../wgrib2/wgrib2 junk_jpeg.grb -text -  | cksum`
     if [ "$cksum1" != "$cksum10" ] ; then
         echo "failed for converting to jpeg packing"
