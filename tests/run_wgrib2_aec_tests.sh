@@ -7,8 +7,8 @@ set -e
 echo ""
 echo "*** Running wgrib2 tests"
 
-cksum0=`../wgrib2/wgrib2 data/tmp_int.grb -text -  | cksum`
-../wgrib2/wgrib2 data/tmp_int.grb -set_grib_type aec -grib_out junk.grb
+cksum0=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text -  | cksum`
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -set_grib_type aec -grib_out junk.grb
 cksum1=`../wgrib2/wgrib2 junk.grb -text -  | cksum`
 
 if [ "$cksum0" != "$cksum1" ] ; then
