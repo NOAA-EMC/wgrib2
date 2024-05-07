@@ -32,7 +32,7 @@ echo "*** Calculates wind speed for records 1-25, then returns the average, min,
         -set_var WIND \
         -grib_out tmp_windspeed.grb
 
-../wgrib2/wgrib2.exe tmp_windspeed.grb -rpn print_min -rpn print_max -rpn print_ave > min_max_ave_windspeed.txt
+../wgrib2/wgrib2 tmp_windspeed.grb -rpn print_min -rpn print_max -rpn print_ave > min_max_ave_windspeed.txt
 touch min_max_ave_windspeed.txt
 cmp min_max_ave_windspeed.txt data/ref_rpn.windspeed.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt
 
