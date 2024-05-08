@@ -45,18 +45,21 @@ cat sec0.txt
 cmp sec0.txt data/ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt
 
 echo "*** Testing checksum on section 0"
-chksum0=`../wgrib2/wgrib2 sec0.grb -checksum -1`
-chksum1=`../wgrib2/wgrib2 data/ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2 -checksum 0`
-
-if [ "$cksum0" != "$cksum1" ] ; then
-    echo "checksum failed"
-    exit 1
-fi
+../wgrib2/wgrib2 sec0.grb -checksum 0 > chksum1.txt
+../wgrib2/wgrib2 data/ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2 -checksum 0 > chksum2.txt
+touch chksum1.txt
+touch chksum2.txt
+cmp chksum1.txt chksum2.txt
 
 echo "*** Testing sec_len"
 ../wgrib2/wgrib2 data/gdaswave.t00z.wcoast.0p16.f000.grib2 -Sec_len > sec_len.txt
 cat sec_len.txt
 cmp sec_len.txt data/ref_sec_len.gdaswave.t00z.wcoast.0p16.f000.grib2.txt
+
+echo "*** Testing sec_len on a small file"
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -Sec_len > sec_len_small.txt
+cat sec_len_small.txt
+cmp sec_len_small.txt data/ref_sec_len.simple_packing.grib2.txt
 
 echo "*** SUCCESS!"
 exit 0
