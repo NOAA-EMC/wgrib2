@@ -38,7 +38,7 @@ echo "*** Testing grid information"
 cat grid_test.txt
 cmp grid_test.txt data/ref_grid.gdaswave.t00z.wcoast.0p16.f000.grib2.txt
 
-echo "*** Testing returning contents of section 0"
+echo "*** Testing Sec0"
 ../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -Sec0 -grib_out sec0.grb
 ../wgrib2/wgrib2 sec0.grb > sec0.txt
 cat sec0.txt
@@ -52,6 +52,11 @@ if [ "$cksum0" != "$cksum1" ] ; then
     echo "checksum failed"
     exit 1
 fi
+
+echo "*** Testing sec_len"
+../wgrib2/wgrib2 data/gdaswave.t00z.wcoast.0p16.f000.grib2 -Sec_len > sec_len.txt
+cat sec_len.txt
+cmp sec_len.txt data/ref_sec_len.gdaswave.t00z.wcoast.0p16.f000.grib2.txt
 
 echo "*** SUCCESS!"
 exit 0
