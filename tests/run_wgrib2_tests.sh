@@ -45,8 +45,8 @@ cat sec0.txt
 cmp sec0.txt data/ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt
 
 echo "*** Testing checksum on section 0"
-chksum0='../wgrib2/wgrib2 sec0.grb -checksum -1'
-chksum1='../wgrib2/wgrib2 data/ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2 -checksum 0'
+chksum0=`../wgrib2/wgrib2 sec0.grb -checksum -1`
+chksum1=`../wgrib2/wgrib2 data/ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2 -checksum 0`
 
 if [ "$cksum0" != "$cksum1" ] ; then
     echo "checksum failed"
