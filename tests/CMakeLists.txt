@@ -94,6 +94,9 @@ copy_test_data(ref_celsius.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
 copy_test_data(ref_fahrenheit.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
 copy_test_data(ref_rh.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
 copy_test_data(ref_rpn.windspeed.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
+copy_test_data(ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2)
+copy_test_data(ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
+
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
 shell_test(run_wgrib2_rpn_tests)
