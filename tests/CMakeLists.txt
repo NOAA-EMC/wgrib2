@@ -60,7 +60,14 @@ if(FTP_TEST_FILES)
   set(G2_FTP_URL "https://ftp.emc.ncep.noaa.gov/static_files/public/NCEPLIBS-g2")
 
   # These are the test data files.
-  set(FTP_FILES WW3_Regional_US_West_Coast_20220718_0000.grib2)
+  # These are the test data files.
+  set(FTP_FILES WW3_Regional_US_West_Coast_20220718_0000.grib2
+    WW3_Regional_US_East_Coast_20220717_0600.grib2
+    gep19.t00z.pgrb2a.0p50_bcf144 geavg.t00z.pgrb2a.0p50_mecomf144
+    gec00.t00z.pgrb2a.0p50.f144 gegfs.t00z.pgrb2a.0p50.f144
+    gegfs.t00z.pgrb2a.0p50_mef144 gep19.t00z.pgrb2a.0p50.f144
+    gdas.t12z.pgrb2.1p00.anl.grib2 blend.t19z.core.f001.co.grib2
+    aqm.t12z.max_8hr_o3.227.grib2 seaice.t00z.grb.grib2)
 
   # User may also ask for large test file.
   if(FTP_LARGE_TEST_FILES)
@@ -86,6 +93,7 @@ copy_test_data(ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv)
 copy_test_data(ref_npts_gdaswave.t00z.wcoast.0p16.f000.grib2.txt)
 copy_test_data(ref_simple_packing.grib2)
 copy_test_data(ref_WW3_Regional_US_West_Coast_20220718_0000.grib2.inv)
+copy_test_data(tmp_int.grb)
 copy_test_data(gdas.t12z.pgrb2.1p00.anl.75r.grib2)
 copy_test_data(ref_wind.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv)
 copy_test_data(ref_uv.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv)
@@ -99,13 +107,33 @@ copy_test_data(ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
 copy_test_data(ref_sec_len.gdaswave.t00z.wcoast.0p16.f000.grib2.txt)
 copy_test_data(ref_sec_len.simple_packing.grib2.txt)
 
+
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
 shell_test(run_wgrib2_rpn_tests)
 
+if (USE_NETCDF4)
+  shell_test(run_wgrib2_netcdf4_tests)
+endif()
+if (USE_NETCDF3)
+  shell_test(run_wgrib2_netcdf3_tests)
+endif()
+
 if (USE_AEC)
   shell_test(run_wgrib2_aec_tests)
 endif()
+
 if (FTP_TEST_FILES)
+  copy_test_data(ref_WW3_Regional_US_West_Coast_20220718_0000.grib2.inv)
+  copy_test_data(ref_merge_fcst.aqm.t12z.max_8hr_o3.227.grib2.txt)
+  copy_test_data(ref_HGT.500_mb.ENS=low-res_ctl.2023043000_2023050600.asc)
   shell_test(run_wgrib2_ftp_tests)
+  if (FTP_LARGE_TEST_FILES)
+    copy_test_data(ref_fv3lam.t00z.prslev.f000.grib2.inv)
+    shell_test(run_ftp_large_tests)
+  endif()
+  if (FTP_EXTRA_TEST_FILES)
+    copy_test_data(ref_rrfs.t18z.prslev.f000.grib2.inv)
+    shell_test(run_ftp_extra_large_tests)
+  endif()
 endif()
