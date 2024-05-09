@@ -107,7 +107,9 @@ endif()
 if (USE_NETCDF3)
   shell_test(run_wgrib2_netcdf3_tests)
 endif()
-
+if (USE_IPOLATES=1)
+  shell_test(run_ipolates_tests)
+endif
 if (USE_AEC)
   shell_test(run_wgrib2_aec_tests)
 endif()
