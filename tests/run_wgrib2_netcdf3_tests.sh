@@ -7,18 +7,18 @@ set -e
 set -x
 
 # make template
-../wgrib2/wgrib2 data/tmp_int.grb -rpn 0 -grib_out junk.template
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -rpn 0 -grib_out junk_netcdf.template
 
 # make netcdf file
-../wgrib2/wgrib2 data/tmp_int.grb -nc3 -netcdf junk.nc
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -nc3 -netcdf junk_netcdf.nc
 
 # convert netcdf to grb
-../wgrib2/wgrib2 junk.template -import_netcdf junk.nc TMP_500mb "0:1:0:181:0:360" -grib_out junk.grb
+../wgrib2/wgrib2 junk_netcdf.template -import_netcdf junk_netcdf.nc TMP_500mb "0:1:0:181:0:360" -grib_out junk_netcdf.grb
 
-n=`../wgrib2/wgrib2 data/tmp_int.grb -var -lev -rpn "sto_1" -import_grib junk.grb -rpn "rcl_1:print_rms" | \
+n=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -var -lev -rpn "sto_1" -import_grib junk_netcdf.grb -rpn "rcl_1:print_rms" | \
 grep -v ":rpn=0:" | wc -l`
 
-rm junk.grb junk.nc junk.template
+rm junk_netcdf.grb junk_netcdf.nc junk_netcdf.template
 if [ "$n" -eq 1 ] ; then
   echo "success"
   exit 0
