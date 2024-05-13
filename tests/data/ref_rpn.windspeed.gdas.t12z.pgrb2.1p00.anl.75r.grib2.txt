@@ -1,0 +1,2 @@
+1:0:rpn_min=0.0335829:rpn_max=113.815:rpn_ave=32.1264:d=2024042612:WIND:0.01 mb:anl:
+2:97919:rpn_min=0.0590511:rpn_max=109.028:rpn_ave=31.408:d=2024042612:WIND:0.02 mb:anl:
