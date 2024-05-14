@@ -29,7 +29,7 @@ echo "*** Testing converting from grib to netcdf on larger grib file using nc_nl
 ../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -nc_nlev 7 -netcdf junk_netcdf.nc -match ":(UGRD|VGRD|HGT|TMP):" 
 ncdump -v HGT,TMP,UGRD,VGRD junk_netcdf.nc > netcdf.txt
 touch netcdf.txt
-cmp data/ref_ncdump.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt netcdf.txt
+cmp data/ref_ncdump4.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt netcdf.txt
 
 
 echo "*** SUCCESS!"
