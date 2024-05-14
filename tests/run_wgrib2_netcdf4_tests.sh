@@ -6,6 +6,7 @@
 set -e 
 set -x
 
+echo "*** Testing converting from grib to netcdf to grib"
 # make template
 ../wgrib2/wgrib2 data/ref_simple_packing.grib2 -rpn 0 -grib_out junk_netcdf.template
 
@@ -19,10 +20,17 @@ n=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -var -lev -rpn "sto_1" -import
 grep -v ":rpn=0:" | wc -l`
 
 rm junk_netcdf.grb junk_netcdf.nc junk_netcdf.template
-if [ "$n" -eq 1 ] ; then
-  echo "success"
-  exit 0
-else
+if [ "$n" -ne 1 ] ; then
   exit 1
 fi
 
+echo "*** Testing converting from grib to netcdf on larger grib file using nc_nlev"
+../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -match ":(UGRD|VGRD|HGT|TMP):" -grib_out junk_netcdf.template
+../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -nc_nlev 7 -netcdf junk_netcdf.nc -match ":(UGRD|VGRD|HGT|TMP):" 
+ncdump -v HGT,TMP,UGRD,VGRD junk_netcdf.nc > netcdf.txt
+touch netcdf.txt
+cmp data/ref_ncdump.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt netcdf.txt
+
+
+echo "*** SUCCESS!"
+exit 0

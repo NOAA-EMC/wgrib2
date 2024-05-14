@@ -112,6 +112,7 @@ shell_test(run_wgrib2_rpn_tests)
 
 if (USE_NETCDF4)
   shell_test(run_wgrib2_netcdf4_tests)
+  copy_test_data(ref_ncdump4.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
 endif()
 if (USE_NETCDF3)
   shell_test(run_wgrib2_netcdf3_tests)
