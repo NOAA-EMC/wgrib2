@@ -61,5 +61,23 @@ echo "*** Testing sec_len on a small file"
 cat sec_len_small.txt
 cmp sec_len_small.txt data/ref_sec_len.simple_packing.grib2.txt
 
+echo "*** Testing separating grib messages into separate files then recombining into single file"
+# creating comparison file using match 
+../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -match ':(UGRD|VGRD|HGT|TMP):0.4 mb' -grib_out htuv.grb
+# separating messages into new grib files
+../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -inv junk.inv
+../wgrib2/wgrib2 -fgrep ":HGT:0.4 mb" -i_file junk.inv data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -grib_out hgt0p4.grb
+../wgrib2/wgrib2 -fgrep ":TMP:0.4 mb" -i_file junk.inv data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -grib_out tmp0p4.grb
+../wgrib2/wgrib2 -egrep ":(UGRD|VGRD):" -fgrep ":0.4 mb" -i_file junk.inv data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -grib_out winds0p4.grb
+# recombining files
+../wgrib2/wgrib2 hgt0p4.grb -grib result.grb
+../wgrib2/wgrib2 tmp0p4.grb -append -grib result.grb
+../wgrib2/wgrib2 winds0p4.grb -append -GRIB result.grb
+cksum0=`../wgrib2/wgrib2 htuv.grb -text -  | cksum`
+cksum0=`../wgrib2/wgrib2 result.grb -text -  | cksum`
+if [ "$cksum0" != "$cksum1" ] ; then
+    exit 1
+fi
+
 echo "*** SUCCESS!"
 exit 0
