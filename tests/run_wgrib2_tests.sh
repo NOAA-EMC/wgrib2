@@ -73,9 +73,12 @@ echo "*** Testing separating grib messages into separate files then recombining 
 ../wgrib2/wgrib2 hgt0p4.grb -grib result.grb
 ../wgrib2/wgrib2 tmp0p4.grb -append -grib result.grb
 ../wgrib2/wgrib2 winds0p4.grb -append -GRIB result.grb
+
 cksum0=`../wgrib2/wgrib2 htuv.grb -text -  | cksum`
-cksum0=`../wgrib2/wgrib2 result.grb -text -  | cksum`
+cksum1=`../wgrib2/wgrib2 result.grb -text -  | cksum`
+
 if [ "$cksum0" != "$cksum1" ] ; then
+    echo "*** Failed combining files"
     exit 1
 fi
 
