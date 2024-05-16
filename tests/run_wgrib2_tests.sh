@@ -106,6 +106,19 @@ echo "*** Testing spread output"
 touch spread.txt
 cmp data/ref_simple_packing.grib2.spread.txt spread.txt
 
+echo "*** Testing write/read section"
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -write_sec 0 sec0.dat -write_sec 1 sec1.dat \
+    -write_sec 2 sec2.dat -write_sec 3 sec3.dat -write_sec 4 sec4.dat -write_sec 5 sec5.dat \
+    -write_sec 6 sec6.dat -write_sec 7 sec7.dat -write_sec 8 sec8.dat
+../wgrib2/wgrib2 template.grb -read_sec 0 sec0.dat -read_sec 1 sec1.dat -read_sec 2 sec2.dat \
+    -read_sec 3 sec3.dat -read_sec 4 sec4.dat -read_sec 5 sec5.dat -read_sec 6 sec6.dat \
+    -read_sec 7 sec7.dat -read_sec 8 sec8.dat -grib secs.grb
+cksum6=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text -  | cksum`
+cksum7=`../wgrib2/wgrib2 secs.grb -text -  | cksum`
+if [ "$cksum6" != "$cksum7" ] ; then
+    echo "*** Failed write / read sections"
+    exit 1
+fi
 
 echo "*** SUCCESS!"
 exit 0
