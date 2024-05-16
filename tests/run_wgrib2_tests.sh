@@ -73,8 +73,8 @@ echo "*** Testing separating grib messages into separate files then recombining 
 ../wgrib2/wgrib2 hgt0p4.grb -grib result.grb
 ../wgrib2/wgrib2 tmp0p4.grb -append -grib result.grb
 ../wgrib2/wgrib2 winds0p4.grb -append -GRIB result.grb
-cksum0=`../wgrib2/wgrib2 htuv.grb -text -  | cksum`
-cksum1=`../wgrib2/wgrib2 result.grb -text -  | cksum`
+cksum0=`../wgrib2/wgrib2 htuv.grb -checksum data`
+cksum1=`../wgrib2/wgrib2 result.grb -checksum data`
 if [ "$cksum0" != "$cksum1" ] ; then
     echo "*** Failed combining files"
     exit 1
@@ -84,8 +84,8 @@ echo "*** Testing import_text"
 ../wgrib2/wgrib2 data/ref_simple_packing.grib2 -rpn 0 -grib_out template.grb
 ../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text grib_text.txt
 ../wgrib2/wgrib2 template.grb -import_text grib_text.txt -grib_out text2grib.grb
-cksum2=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text -  | cksum`
-cksum3=`../wgrib2/wgrib2 text2grib.grb -text -  | cksum`
+cksum2=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -checksum data`
+cksum3=`../wgrib2/wgrib2 text2grib.grb  -checksum data`
 if [ "$cksum2" != "$cksum3" ] ; then
     echo "*** Failed importing text to grib"
     exit 1
@@ -94,8 +94,8 @@ fi
 echo "*** Testing import_bin"
 ../wgrib2/wgrib2 data/ref_simple_packing.grib2 -bin grib_bin.bin
 ../wgrib2/wgrib2 template.grb -import_bin grib_bin.bin -grib_out bin2grib.grb
-cksum4=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text -  | cksum`
-cksum5=`../wgrib2/wgrib2 bin2grib.grb -text -  | cksum`
+cksum4=`../wgrib2/wgrib2 data/ref_simple_packing.grib2  -checksum data`
+cksum5=`../wgrib2/wgrib2 bin2grib.grb  -checksum data`
 if [ "$cksum4" != "$cksum5" ] ; then
     echo "*** Failed importing bin to grib"
     exit 1
@@ -113,8 +113,8 @@ echo "*** Testing write/read section"
 ../wgrib2/wgrib2 template.grb -read_sec 0 sec0.dat -read_sec 1 sec1.dat -read_sec 2 sec2.dat \
     -read_sec 3 sec3.dat -read_sec 4 sec4.dat -read_sec 5 sec5.dat -read_sec 6 sec6.dat \
     -read_sec 7 sec7.dat -read_sec 8 sec8.dat -grib secs.grb
-cksum6=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text -  | cksum`
-cksum7=`../wgrib2/wgrib2 secs.grb -text -  | cksum`
+cksum6=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -checksum data`
+cksum7=`../wgrib2/wgrib2 secs.grb  -checksum data`
 if [ "$cksum6" != "$cksum7" ] ; then
     echo "*** Failed write / read sections"
     exit 1
