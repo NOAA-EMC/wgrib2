@@ -73,7 +73,7 @@ fi
 
 echo "*** Converting from aec to complex3-bitmap"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type complex3-bitmap -grib_out junk_c3b.grb
-cksum8=`../wgrib2/wgrib2 junk_c3b.grb -text -checksum data`
+cksum8=`../wgrib2/wgrib2 junk_c3b.grb -checksum data`
 
 if [ "$cksum1" != "$cksum8" ] ; then
     echo "failed for converting to complex3 packing (with bitmap)"
