@@ -73,14 +73,39 @@ echo "*** Testing separating grib messages into separate files then recombining 
 ../wgrib2/wgrib2 hgt0p4.grb -grib result.grb
 ../wgrib2/wgrib2 tmp0p4.grb -append -grib result.grb
 ../wgrib2/wgrib2 winds0p4.grb -append -GRIB result.grb
-
 cksum0=`../wgrib2/wgrib2 htuv.grb -text -  | cksum`
 cksum1=`../wgrib2/wgrib2 result.grb -text -  | cksum`
-
 if [ "$cksum0" != "$cksum1" ] ; then
     echo "*** Failed combining files"
     exit 1
 fi
+
+echo "*** Testing import_text"
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -rpn 0 -grib_out template.grb
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text grib_text.txt
+../wgrib2/wgrib2 template.grb -import_text grib_text.txt -grib_out text2grib.grb
+cksum2=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text -  | cksum`
+cksum3=`../wgrib2/wgrib2 text2grib.grb -text -  | cksum`
+if [ "$cksum2" != "$cksum3" ] ; then
+    echo "*** Failed importing text to grib"
+    exit 1
+fi
+
+echo "*** Testing import_bin"
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -bin grib_bin.bin
+../wgrib2/wgrib2 template.grb -import_bin grib_bin.bin -grib_out bin2grib.grb
+cksum4=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text -  | cksum`
+cksum5=`../wgrib2/wgrib2 bin2grib.grb -text -  | cksum`
+if [ "$cksum4" != "$cksum5" ] ; then
+    echo "*** Failed importing bin to grib"
+    exit 1
+fi
+
+echo "*** Testing spread output"
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -v2 -spread spread.txt
+touch spread.txt
+cmp data/ref_simple_packing.grib2.spread.txt spread.txt
+
 
 echo "*** SUCCESS!"
 exit 0
