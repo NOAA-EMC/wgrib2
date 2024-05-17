@@ -4,7 +4,6 @@
 # Alyson Stahl, 4/22/24
 
 set -e 
-set -x
 
 echo "*** Testing converting from grib to netcdf to grib"
 # make template
@@ -28,8 +27,14 @@ echo "*** Testing converting from grib to netcdf with variables stored in 3D str
 ../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -nc_nlev 7 -netcdf junk_netcdf.nc -match ":(UGRD|VGRD|HGT|TMP):" 
 ncdump -v HGT,TMP,UGRD,VGRD junk_netcdf.nc > netcdf.txt
 touch netcdf.txt
-cmp data/ref_ncdump4.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt netcdf.txt
- 
+diff -w data/ref_ncdump4.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt netcdf.txt
+
+
+echo "*** Testing converting from grib to netcdf using table" 
+../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -match ":(UGRD|VGRD|TMP|HGT|RH):" -nc_table data/nctab.table -netcdf tablenc.nc
+ncdump -h tablenc.nc > tablenc.txt
+touch tablenc.txt
+diff -w tablenc.txt data/ref_tablenc.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt
 
 echo "*** SUCCESS!"
 exit 0
