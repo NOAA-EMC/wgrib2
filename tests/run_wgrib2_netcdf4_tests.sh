@@ -1,5 +1,5 @@
 #!/bin/sh
-# This checks the use of AEC compression, only available if USE_NETCDF4 is turned on in CMake.
+# This checks the use of netcdf, only available if USE_NETCDF4 is turned on in CMake.
 #
 # Alyson Stahl, 4/22/24
 
