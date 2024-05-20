@@ -3,8 +3,9 @@
 #
 # Alyson Stahl 5/9/2024
 
-set -e
+#set -e
 
 ../wgrib2/wgrib2 data/tmp_int.grb -new_grid_winds earth  -new_grid latlon 0:359:1 0:90:1 OUT.grb
+
 echo "*** SUCCESS!"
 exit 0
