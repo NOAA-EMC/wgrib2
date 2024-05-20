@@ -69,6 +69,22 @@ jobs:
         make -j2
         make install
 
+    - name: checkout-ip
+      uses: actions/checkout@v4
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip
+        path: ip
+        ref: v3.3.3
+  
+    - name: build-ip
+      run: |
+        cd ip
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
+        make -j2
+        make install
+
     - name: checkout-ip2
       uses: actions/checkout@v4
       with:
