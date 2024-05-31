@@ -28,7 +28,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
-        sudo apt-get install libpng-dev autotools-dev autoconf gcovr
+        sudo apt-get install libpng-dev autotools-dev libaec-dev autoconf gcovr
 
     - name: cache-jasper
       id: cache-jasper
@@ -90,6 +90,13 @@ jobs:
       with: 
         path: wgrib2
 
+    - name: cache-data
+      id: cache-data
+      uses: actions/cache@v3
+      with:
+        path: ~/data
+        key: data-1
+
     - name: build
       run: |
         cd wgrib2
@@ -98,10 +105,16 @@ jobs:
         export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake ..
+        cmake .. -DFTP_TEST_FILES=ON  -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
+    
+    - name: cache-data
+      if: steps.cache-data.outputs.cache-hit != 'true'
+      run: |
+        mkdir ~/data
+        cp $GITHUB_WORKSPACE/wgrib2/build/tests/data/* ~/data
         
     - name: upload-test-coverage
       uses: actions/upload-artifact@v4
