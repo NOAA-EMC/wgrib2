@@ -15,7 +15,7 @@ echo "*** Converting simple packing test file to aec"
 ../wgrib2/wgrib2 junk_aec.grb -v2 > junk_aec.txt
 diff -w junk_aec.txt ref_junk_simple.txt
 
-# Converting from aec back to simple packing
+echo "*** Converting from aec back to simple packing"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type simple -grib_out junk_simple.grb
 
 # Check result
