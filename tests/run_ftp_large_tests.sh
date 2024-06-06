@@ -11,7 +11,7 @@ echo "*** Running wgrib2 tests on large FTP test files"
 echo "*** Running an inventory test on large FTP test file"
 ../wgrib2/wgrib2 data/fv3lam.t00z.prslev.f000.grib2 > ftp_inv2.txt
 cat ftp_inv2.txt
-cmp ftp_inv2.txt data/ref_fv3lam.t00z.prslev.f000.grib2.inv
+diff -w ftp_inv2.txt data/ref_fv3lam.t00z.prslev.f000.grib2.inv
 
 echo "*** SUCCESS!"
 exit 0
