@@ -1,0 +1,19 @@
+Upgrade from v1.8.0.12g (8/06) to v1.8.0.12o (5/07)
+
+Changes:
+
+        updated ncep grib table 129, 130 to on388
+        updated levels to on388
+        changed units ncep grib table 128 WTPC(186)  K->C
+        support for updates in the grib table by process owners (compile change)
+        increased stdin line buffer to 2000 characters
+        level 210 is now WMO standard for non-NCEP files
+
+Reason for upgrade:
+
+	Request from marine branch: need updated ncep tables
+
+Comments:
+        No major changes since last update except needed table updates.
+        Compile options change so that table changes can be updated with new JIF.
+	Little change in the run time is expected. 
