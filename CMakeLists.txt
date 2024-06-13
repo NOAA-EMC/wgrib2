@@ -39,6 +39,7 @@ option(DISABLE_STAT "disable posix feature" off)
 set(BUILD_COMMENTS "stock build")
 option(BUILD_LIB "Build wgrib2 library?" on)
 option(BUILD_SHARED_LIB "Build shared library?" off)
+option(BUILD_WGRIB "Build wgrib code?" off)
 
 # Developers can use this option to specify a local directory which
 # holds the test files. They will be copied instead of fetching the
@@ -204,6 +205,9 @@ if(BUILD_LIB)
     DESTINATION ${CONFIG_INSTALL_DESTINATION})
 endif()
 
+if (BUILD_WGRIB)
+  add_subdirectory(wgrib)
+endif()
 # Turn on unit testing.
 include(CTest)
 if(BUILD_TESTING)
