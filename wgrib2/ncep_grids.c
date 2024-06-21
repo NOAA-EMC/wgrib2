@@ -8,7 +8,7 @@
 #include "fnlist.h"
 
 
-#if USE_IPOLATES > 0
+#ifdef USE_IPOLATES
 
 /*
  * ncep_grids:
