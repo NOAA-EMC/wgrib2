@@ -36,6 +36,9 @@ jobs:
         - { 
             options: "-DUSE_NETCDF4=ON"
           }
+        - { 
+            options: "-DBUILD_WGRIB=ON"
+          }
           
     steps:
 

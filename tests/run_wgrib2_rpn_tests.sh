@@ -12,6 +12,7 @@ echo "*** Converting temperatures from K to C"
 touch celsius.txt
 diff -w celsius.txt data/ref_celsius.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt
 
+
 echo "*** Converting temperatures from K to F"
 ../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -match ":TMP:0.01" -rpn "273.15:-:9:*:5:/:32:+" -text fahrenheit.txt
 touch fahrenheit.txt
