@@ -60,7 +60,6 @@ echo "*** Testing sec_len on a small file"
 ../wgrib2/wgrib2 data/ref_simple_packing.grib2 -Sec_len > sec_len_small.txt
 cat sec_len_small.txt
 diff -w sec_len_small.txt data/ref_sec_len.simple_packing.grib2.txt
-=======
 diff chksum1.txt chksum2.txt
 
 echo "*** Testing separating grib messages into separate files then recombining into single file"
