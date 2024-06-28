@@ -176,6 +176,7 @@ FILE(APPEND "wgrib2/config.h" "#define FFLAGS \"${CMAKE_Fortran_FLAGS}\"\n")
 FILE(APPEND "wgrib2/config.h" "#endif\n")
 ]===]
 #
+
 message(STATUS "Adding wgrib2, aux_probs subdirectories...")
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
