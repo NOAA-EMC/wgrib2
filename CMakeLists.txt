@@ -75,7 +75,6 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   set(CMAKE_Fortran_FLAGS_DEBUG "-ggdb -O0")
 endif()
 
-
 message(STATUS "Checking if user wants to use NCEPLIBS-g2c...")
 if(USE_G2CLIB) 
   if(USE_PNG) 
