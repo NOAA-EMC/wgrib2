@@ -100,7 +100,7 @@ jobs:
       with:
         repository: NOAA-EMC/NCEPLIBS-ip
         path: ip
-        ref: v3.3.3
+        ref: develop
 
     - name: build-ip
       if: steps.cache-ip.outputs.cache-hit != 'true'
