@@ -124,9 +124,11 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("ip@:3", when="@3.2: ipolates=1")
     depends_on("ip2", when="@3.2: ipolates=3")
     depends_on("sp", when="@3.2: ipolates=1")
-    depends_on("libaec", when="@3.2: +aec")
+    depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
     depends_on("jasper@:2", when="@3.2: +jasper")
+    depends_on("zlib", when="+png")
+    depends_on("libpng", when="+png")
 
 
     # Use Spack compiler wrapper flags
@@ -150,10 +152,6 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     parallel = False
     def cmake_args(self):
         args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
-
-#        args.append(self.define("FTP_TEST_FILES", self.run_tests))
-        args.append(self.define("BUILD_LIB", False))
-        args.append(self.define("MAKE_FTN_API", False))
 
         return args
 
