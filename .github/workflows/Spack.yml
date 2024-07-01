@@ -32,3 +32,15 @@ jobs:
         custom-recipe: spack/package.py
         spack-compiler: gcc
         repo-cache-key-suffix: ${{ matrix.os }}-1
+
+  recipe-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: recipe-check
+      uses: NOAA-EMC/ci-check-spack-recipe@develop
+      with:
+        recipe-file: package/spack/package.py
+        cmakelists-txt: package/CMakeLists.txt
+        ignore-list: USE_HDF5,BUILD_WGRIB

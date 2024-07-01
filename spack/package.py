@@ -27,6 +27,8 @@ variant_map = {
     "disable_timezone": "DISABLE_TIMEZONE",
     "disable_alarm": "DISABLE_ALARM",
     "fortran_api": "MAKE_FTN_API",
+    "disable_stat": "DISABLE_STAT",
+    "openjpeg": "USE_OPENJPEG",
 }
 
 class Wgrib2(MakefilePackage, CMakePackage):
@@ -88,7 +90,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         default=True,
         description="Make wgrib2api which allows fortran code to read/write grib2",
     )
-    variant("lib", default=True, description="Build library")
+    variant("lib", default=True, description="Build library", when="@3.2:")
     variant(
         "mysql", default=False, description="Link in interface to MySQL to write to mysql database"
     )
@@ -116,6 +118,9 @@ class Wgrib2(MakefilePackage, CMakePackage):
     variant("jasper", default=True, description="JPEG compression using Jasper")
     variant("openmp", default=True, description="OpenMP parallelization")
     variant("wmo_validation", default=False, description="WMO validation")
+    variant("shared", default=False, description="Enable shared library", when="+lib")
+    variant("disable_stat", default=False, description="Disable POSIX feature")
+    variant("openjpeg", default=False, description="Enable OpenJPEG")
 
     conflicts("+netcdf3", when="+netcdf4")
     conflicts("+netcdf3", when="@3.2:")
@@ -130,6 +135,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("jasper@:2", when="@3.2: +jasper")
     depends_on("zlib", when="+png")
     depends_on("libpng", when="+png")
+    depends_on("openjpeg", when="+openjpeg")
 
     # Use Spack compiler wrapper flags
     def inject_flags(self, name, flags):
@@ -150,9 +156,11 @@ class Wgrib2(MakefilePackage, CMakePackage):
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     # Disable parallel build
     parallel = False
+
     def cmake_args(self):
         args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
         args.append(self.define_from_variant("BUILD_LIB", "lib"))
+        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
 
         return args
 
