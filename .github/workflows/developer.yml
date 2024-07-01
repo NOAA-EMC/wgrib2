@@ -92,10 +92,10 @@ jobs:
 
     - name: cache-data
       id: cache-data
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/data
-        key: data-1
+        key: data-2
 
     - name: build
       run: |
