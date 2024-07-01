@@ -8,14 +8,40 @@ import re
 
 from spack.package import *
 
+variant_map = {
+    "netcdf3": "USE_NETCDF3",
+    "netcdf4": "USE_NETCDF4",
+    "spectral": "USE_SPECTRAL",
+    "mysql": "USE_MYSQL",
+    "udf": "USE_UDF",
+    "regex": "USE_REGEX",
+    "tigge": "USE_TIGGE",
+    "proj4": "USE_PROJ4",
+    "aec": "USE_AEC",
+    "g2c": "USE_G2CLIB",
+    "png": "USE_PNG",
+    "jasper": "USE_JASPER",
+    "openmp": "USE_OPENMP",
+    "wmo_validation": "USE_WMO_VALIDATION",
+    "ipolates": "USE_IPOLATES",
+    "disable_timezone": "DISABLE_TIMEZONE",
+    "disable_alarm": "DISABLE_ALARM",
+    "fortran_api": "MAKE_FTN_API",
+}
 
-class Wgrib2(MakefilePackage):
+class Wgrib2(MakefilePackage, CMakePackage):
     """Utility for interacting with GRIB2 files"""
 
     homepage = "https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2"
     url = "https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz.v2.0.8"
 
     maintainers("t-brown", "AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett")
+
+    build_system(
+        conditional("cmake", when="@3.2:"), conditional("makefile", when="@:3.1")
+    )
+
+    version("3.2.0", sha256="ac3ace77a32c2809cbc4538608ad64aabda2c9c1e44e7851da79764a6eb3c369")
 
     version(
         "3.1.1",
@@ -37,6 +63,13 @@ class Wgrib2(MakefilePackage):
         sha256="d7f1a4f9872922c62b3c7818c022465532cca1f5666b75d3ac5735f0b2747793",
         extension="tar.gz",
     )
+
+    def url_for_version(self, version):
+        if version >= Version("3.2.0"):
+            url_fmt = "https://github.com/NOAA-EMC/wgrib2/archive/refs/tags/v{0}.tar.gz"
+        else:
+            url_fmt = "https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz.v{0}"
+        return url_fmt.format(version)
 
     variant("netcdf3", default=True, description="Link in netcdf3 library to write netcdf3 files")
     variant(
@@ -83,33 +116,17 @@ class Wgrib2(MakefilePackage):
     variant("wmo_validation", default=False, description="WMO validation")
 
     conflicts("+netcdf3", when="+netcdf4")
+    conflicts("+netcdf3", when="@3.2:")
     conflicts("+openmp", when="%apple-clang")
 
-    depends_on("wget", type=("build"), when="+netcdf4")
+    depends_on("wget", type=("build"), when="@:3.1 +netcdf4")
+    depends_on("ip", when="@3.2: ipolates=1")
+    depends_on("ip@:4", when="@3.2.0 ipolates=1")
+    depends_on("sp", when="@3.2: ipolates=1")
+    depends_on("libaec", when="@3.2: +aec")
+    depends_on("netcdf-c", when="@3.2: +netcdf4")
+    depends_on("jasper@:2", when="@3.2: +jasper")
 
-    variant_map = {
-        "netcdf3": "USE_NETCDF3",
-        "netcdf4": "USE_NETCDF4",
-        "spectral": "USE_SPECTRAL",
-        "mysql": "USE_MYSQL",
-        "udf": "USE_UDF",
-        "regex": "USE_REGEX",
-        "tigge": "USE_TIGGE",
-        "proj4": "USE_PROJ4",
-        "aec": "USE_AEC",
-        "g2c": "USE_G2CLIB",
-        "png": "USE_PNG",
-        "jasper": "USE_JASPER",
-        "openmp": "USE_OPENMP",
-        "wmo_validation": "USE_WMO_VALIDATION",
-        "ipolates": "USE_IPOLATES",
-        "disable_timezone": "DISABLE_TIMEZONE",
-        "disable_alarm": "DISABLE_ALARM",
-        "fortran_api": "MAKE_FTN_API",
-    }
-
-    # Disable parallel build
-    parallel = False
 
     # Use Spack compiler wrapper flags
     def inject_flags(self, name, flags):
@@ -127,13 +144,29 @@ class Wgrib2(MakefilePackage):
 
         return (flags, None, None)
 
+class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
+    # Disable parallel build
+    parallel = False
+    def cmake_args(self):
+        args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
+
+#        args.append(self.define("FTP_TEST_FILES", self.run_tests))
+        args.append(self.define("BUILD_LIB", False))
+        args.append(self.define("MAKE_FTN_API", False))
+
+        return args
+
+class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
+    # Disable parallel build
+    parallel = False
+
     flag_handler = inject_flags
 
     def url_for_version(self, version):
         url = "https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz.v{}"
         return url.format(version)
 
-    def edit(self, spec, prefix):
+    def edit(self, pkg, spec, prefix):
         makefile = FileFilter("makefile")
 
         # ifort no longer accepts -openmp
@@ -145,7 +178,7 @@ class Wgrib2(MakefilePackage):
         if spec.satisfies("%clang") or spec.satisfies("%apple-clang"):
             makefile.filter(r"--fast-math", "-ffast-math")
 
-        for variant_name, makefile_option in self.variant_map.items():
+        for variant_name, makefile_option in variant_map.items():
             value = int(spec.variants[variant_name].value)
             makefile.filter(r"^%s=.*" % makefile_option, "{}={}".format(makefile_option, value))
 
@@ -157,7 +190,7 @@ class Wgrib2(MakefilePackage):
 
         env.set("COMP_SYS", comp_sys)
 
-    def build(self, spec, prefix):
+    def build(self, pkg, spec, prefix):
         # Get source files for netCDF4 builds
         if self.spec.satisfies("+netcdf4"):
             with working_dir(self.build_directory):
@@ -183,7 +216,7 @@ class Wgrib2(MakefilePackage):
             makefile = FileFilter("makefile")
 
             # Disable all options
-            for variant_name, makefile_option in self.variant_map.items():
+            for variant_name, makefile_option in variant_map.items():
                 value = 0
                 makefile.filter(
                     r"^%s=.*" % makefile_option, "{}={}".format(makefile_option, value)
@@ -200,5 +233,5 @@ class Wgrib2(MakefilePackage):
             move(join_path("lib", "wgrib2api.mod"), join_path("install", "include"))
             move(join_path("lib", "wgrib2lowapi.mod"), join_path("install", "include"))
 
-    def install(self, spec, prefix):
+    def install(self, pkg, spec, prefix):
         install_tree("install/", prefix)
