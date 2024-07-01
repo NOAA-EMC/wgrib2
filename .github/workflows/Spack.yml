@@ -43,5 +43,5 @@ jobs:
       with:
         recipe-file: package/spack/package.py
         cmakelists-txt: package/CMakeLists.txt
-        ignore-list: USE_HDF5,BUILD_WGRIB
+        ignore-list: USE_HDF5,BUILD_WGRIB,FTP_TEST_FILES,FTP_LARGE_TEST_FILES,FTP_EXTRA_TEST_FILES
         alternative-grep: true
