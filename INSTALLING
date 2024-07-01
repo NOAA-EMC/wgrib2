@@ -33,11 +33,11 @@ Compile the wgrib2 using gnu make
 
 Try executing wgrib2
 
-      wgrib2/wgrib2 -config
+      src/wgrib2 -config
 
 Copy wgrib2 to SOMEPLACE
 
-      cygwin/linux/unix: cp wgrib2/wgrib2 SOMEPLACE
+      cygwin/linux/unix: cp src/wgrib2 SOMEPLACE
 
 
                           Not So Quick Directions
@@ -60,7 +60,7 @@ Edit the file "makefile" and select the desired options:
 #               feature, subroutines can allocated/deallocated arrays
 # disable_timezone: some OS do not handle time zones in POSIX maner
 #
-# the flags are stored in wgrib2/config.h
+# the flags are stored in src/config.h
 #
 # Warning do not set both USE_NETCDF3 and USE_NETCDF4 to one
 
