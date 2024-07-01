@@ -62,8 +62,8 @@ target_compile_definitions(obj_lib PUBLIC ${definitions_list})
 # Write wgrib2_meta.h. This is installed and contains pre-processor
 # defines for other packages using wgrib2.
 configure_file (
-  "${PROJECT_SOURCE_DIR}/wgrib2/wgrib2_meta.h.in"
-  "${PROJECT_BINARY_DIR}/wgrib2/wgrib2_meta.h"
+  "${PROJECT_SOURCE_DIR}/src/wgrib2_meta.h.in"
+  "${PROJECT_BINARY_DIR}/src/wgrib2_meta.h"
   )
 
 if(BUILD_LIB)

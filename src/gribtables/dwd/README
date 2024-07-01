@@ -27,7 +27,7 @@ cd to the directory with shortName.def, and run
 This script will read shortName.def and make dwd_gribtable
 
 Convert dwd_gribtable to C code by make_gribtable.sh
-put results in grib2/wgrib2/gribtables/dwd/dwd_gribtable.dat
+put results in grib2/src/gribtables/dwd/dwd_gribtable.dat
 
 check for duplicates
    ../../check_dup_gribtable.sh dwd_gribtable
