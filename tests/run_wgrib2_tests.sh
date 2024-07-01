@@ -9,7 +9,7 @@ echo "*** Running wgrib2 tests"
 
 # Just run executable; it returns 8.
 echo "*** testing run with no args..."
-ls -l ../wgrib2
+ls -l ../src
 ../src/wgrib2 > out.txt  && exit 1
 [ $? -ne 8 ] && exit 2
 
