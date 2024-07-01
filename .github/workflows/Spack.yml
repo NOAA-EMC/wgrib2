@@ -28,6 +28,7 @@ jobs:
       uses: NOAA-EMC/ci-test-spack-package@develop
       with:
         package-name: wgrib2
+        package-variants: ipolates=1
         custom-recipe: spack/package.py
         spack-compiler: gcc
         repo-cache-key-suffix: ${{ matrix.os }}-1

@@ -123,6 +123,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("wget", type=("build"), when="@:3.1 +netcdf4")
     depends_on("ip", when="@3.2: ipolates=1")
     depends_on("ip@:4", when="@3.2.0 ipolates=1")
+    depends_on("ip2", when="@3.2: ipolates=3")
     depends_on("sp", when="@3.2: ipolates=1")
     depends_on("libaec", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
