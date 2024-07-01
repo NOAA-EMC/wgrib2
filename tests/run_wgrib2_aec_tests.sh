@@ -8,94 +8,74 @@ echo ""
 echo "*** Running wgrib2 tests"
 
 echo "*** Converting simple packing test file to aec"
-cksum0=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -text -  | cksum`
 ../wgrib2/wgrib2 data/ref_simple_packing.grib2 -set_grib_type aec -grib_out junk_aec.grb
-cksum1=`../wgrib2/wgrib2 junk_aec.grb -text -  | cksum`
 
-if [ "$cksum0" != "$cksum1" ] ; then
-    echo "failed for compressing to aec and reading from aec"
-    exit 1
-fi
+# Check result
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -v2 > ref_junk_simple.txt
+../wgrib2/wgrib2 junk_aec.grb -v2 > junk_aec.txt
+diff -w junk_aec.txt ref_junk_simple.txt
 
 echo "*** Converting from aec back to simple packing"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type simple -grib_out junk_simple.grb
-cksum2=`../wgrib2/wgrib2 junk_simple.grb -text -  | cksum`
 
-if [ "$cksum1" != "$cksum2" ] ; then
-    echo "failed for converting to simple packing"
-    exit 1
-fi
+# Check result
+../wgrib2/wgrib2 junk_simple.grb -v2 > junk_simple.txt
+diff -w ref_junk_simple.txt junk_simple.txt
 
 echo "*** Converting from aec to complex1"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type complex1 -grib_out junk_c1.grb
-cksum3=`../wgrib2/wgrib2 junk_c1.grb -text -  | cksum`
 
-if [ "$cksum1" != "$cksum3" ] ; then
-    echo "failed for converting to complex1 packing"
-    exit 1
-fi
+# Check result
+../wgrib2/wgrib2 junk_c1.grb -v2 > junk_c1.txt
+diff -w junk_c1.txt junk_aec.txt
 
 echo "*** Converting from aec to complex1-bitmap"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type complex1-bitmap -grib_out junk_c1b.grb
-cksum4=`../wgrib2/wgrib2 junk_c1b.grb -text -  | cksum`
 
-if [ "$cksum1" != "$cksum4" ] ; then
-    echo "failed for converting to complex1 packing (with bitmap)"
-    exit 1
-fi
+# Check result
+../wgrib2/wgrib2 junk_c1.grb -v2 > junk_c1b.txt
+diff -w junk_c1b.txt junk_aec.txt
 
 echo "*** Converting from aec to complex2"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type complex2 -grib_out junk_c2.grb
-cksum5=`../wgrib2/wgrib2 junk_c2.grb -text -  | cksum`
 
-if [ "$cksum1" != "$cksum5" ] ; then
-    echo "failed for converting to complex2 packing"
-    exit 1
-fi
+# Check result
+../wgrib2/wgrib2 junk_c2.grb -v2 > junk_c2.txt
+diff -w junk_c2.txt junk_aec.txt
 
 echo "*** Converting from aec to complex2-bitmap"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type complex2-bitmap -grib_out junk_c2b.grb
-cksum6=`../wgrib2/wgrib2 junk_c2b.grb -text -  | cksum`
 
-if [ "$cksum1" != "$cksum6" ] ; then
-    echo "failed for converting to complex2 packing (with bitmap)"
-    exit 1
-fi
+# Check result
+../wgrib2/wgrib2 junk_c2b.grb -v2 > junk_c2b.txt
+diff -w junk_c2b.txt junk_aec.txt
 
 echo "*** Converting from aec to complex3"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type complex3 -grib_out junk_c3.grb
-cksum7=`../wgrib2/wgrib2 junk_c3.grb -text -  | cksum`
 
-if [ "$cksum1" != "$cksum7" ] ; then
-    echo "failed for converting to complex3 packing"
-    exit 1
-fi
+# Check result
+../wgrib2/wgrib2 junk_c3.grb -v2 > junk_c3.txt
+diff -w junk_c3.txt junk_aec.txt
 
 echo "*** Converting from aec to complex3-bitmap"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type complex3-bitmap -grib_out junk_c3b.grb
-cksum8=`../wgrib2/wgrib2 junk_c3b.grb -text -  | cksum`
 
-if [ "$cksum1" != "$cksum8" ] ; then
-    echo "failed for converting to complex3 packing (with bitmap)"
-    exit 1
-fi
+# Check result
+../wgrib2/wgrib2 junk_c3b.grb -v2 > junk_c3b.txt
+diff -w junk_c3b.txt junk_aec.txt
 
 echo "*** Converting from aec to ieee"
 ../wgrib2/wgrib2 junk_aec.grb -set_grib_type ieee -grib_out junk_ieee.grb
-cksum9=`../wgrib2/wgrib2 junk_ieee.grb -text -  | cksum`
 
-if [ "$cksum1" != "$cksum9" ] ; then
-    echo "failed for converting to ieee packing"
-    exit 1
-fi
+# Check result
+../wgrib2/wgrib2 junk_ieee.grb -v2 > junk_ieee.txt
+diff -w junk_ieee.txt junk_aec.txt
 
 echo "*** Converting from aec to jpeg"
 if ../wgrib2/wgrib2 junk_aec.grb -set_grib_type jpeg -grib_out junk_jpeg.grb; then
-    cksum10=`../wgrib2/wgrib2 junk_jpeg.grb -text -  | cksum`
-    if [ "$cksum1" != "$cksum10" ] ; then
-        echo "failed for converting to jpeg packing"
-        exit 1
-    fi
+    # Check result
+    ../wgrib2/wgrib2 junk_jpeg.grb -v2 > junk_jpeg.txt
+    diff -w junk_jpeg.txt junk_aec.txt
 else 
     echo "Use of jpeg not enabled. Skipping test."
 fi
