@@ -88,6 +88,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         default=True,
         description="Make wgrib2api which allows fortran code to read/write grib2",
     )
+    variant("lib", default=True, description="Build library")
     variant(
         "mysql", default=False, description="Link in interface to MySQL to write to mysql database"
     )
@@ -130,7 +131,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("zlib", when="+png")
     depends_on("libpng", when="+png")
 
-
     # Use Spack compiler wrapper flags
     def inject_flags(self, name, flags):
         if name == "cflags":
@@ -152,6 +152,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     parallel = False
     def cmake_args(self):
         args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
+        args.append(self.define_from_variant("BUILD_LIB", "lib"))
 
         return args
 
