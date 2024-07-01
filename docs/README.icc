@@ -24,7 +24,7 @@ Bash:
    export CC=icc
    export FC=ifort
    export COMP_SYS=intel_linux                 for linux only
-   make                                        makes wgrib2/wgrib2
+   make                                        makes src/wgrib2
    make lib                                    makes lib/*.a lib/*.mod for wgrib2api
 
 

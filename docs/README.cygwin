@@ -64,7 +64,7 @@ Compile
    export FC=gfortran
    (you may want to alter the "makefile" to make a custom configuration)
    make
-   (this should make wgrib2/wgrib2.exe)
+   (this should make src/wgrib2.exe)
 
 
 2/23/2021: wgrib2 v3.0.1+ Cygwin and zlib
