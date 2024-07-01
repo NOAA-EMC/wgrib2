@@ -34,6 +34,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
     homepage = "https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2"
     url = "https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz.v2.0.8"
+    git = "https://github.com/NOAA-EMC/wgrib2"
 
     maintainers("t-brown", "AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett")
 
@@ -41,8 +42,8 @@ class Wgrib2(MakefilePackage, CMakePackage):
         conditional("cmake", when="@3.2:"), conditional("makefile", when="@:3.1")
     )
 
+    version("develop", branch="develop")
     version("3.2.0", sha256="ac3ace77a32c2809cbc4538608ad64aabda2c9c1e44e7851da79764a6eb3c369")
-
     version(
         "3.1.1",
         sha256="9236f6afddad76d868c2cfdf5c4227f5bdda5e85ae40c18bafb37218e49bc04a",
