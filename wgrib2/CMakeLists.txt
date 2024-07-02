@@ -106,7 +106,7 @@ if(USE_G2CLIB)
 endif()
 
 if(USE_IPOLATES)
-  target_link_libraries(obj_lib PUBLIC ip::ip_d)
+  target_link_libraries(obj_lib PUBLIC ip::ip_4)
 
   # Link to the Fortran runtime library for each compiler if using ip2.
   # The wgrib2 exectuable is created using the C compiler and
