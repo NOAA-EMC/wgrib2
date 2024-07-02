@@ -92,7 +92,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/ip
-        key: ip-${{ runner.os }}-${{ matrix.ip-version }}
+        key: ip-${{ runner.os }}-develop
 
     - name: checkout-ip
       if: steps.cache-ip.outputs.cache-hit != 'true'
