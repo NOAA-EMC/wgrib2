@@ -1,0 +1,84 @@
+1:0:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+2:179:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+3:358:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+4:537:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+5:716:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+6:895:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+7:1074:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+8:1253:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+9:1432:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+10:1611:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+11:1790:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+12:1969:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+13:2148:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
+14:2327:grid_template=0:winds(grid):
+	lat-lon grid:(359 x 90) units 1e-06 input WE:SN output WE:SN res 56
+	lat 0.000000 to 89.000000 by 1.000000
+	lon 0.000000 to 358.000000 by 1.000000 #points=32310
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=0 to 89000000 lon=0 to 358000000
