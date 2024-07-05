@@ -261,7 +261,7 @@ void init_globals(void) {
     match_extra_fn_n = 0;
     strncpy(ndates_fmt," %s",4);
 
-#if USE_IPOLATES != 0
+#ifdef USE_IPOLATES
     wind_rotation = undefined;
     new_grid_format = grib;
 #endif

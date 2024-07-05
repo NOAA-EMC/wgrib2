@@ -101,6 +101,22 @@ jobs:
         make -j2
         make install        
 
+    - name: checkout-ip
+      uses: actions/checkout@v4
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip
+        path: ip
+        ref: develop
+
+    - name: build-ip
+      run: |
+        cd ip
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~
+        make -j2
+        make install        
+
     - name: checkout
       uses: actions/checkout@v4
       with: 
@@ -108,10 +124,10 @@ jobs:
 
     - name: cache-data
       id: cache-data
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/data
-        key: data-1
+        key: data-2
 
     - name: build
       run: |
@@ -121,7 +137,7 @@ jobs:
         export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake .. -DFTP_TEST_FILES=ON  -DTEST_FILE_DIR=/home/runner/data -DUSE_IPOLATES=1 -DCMAKE_PREFIX_PATH="~/sp;~/ip;~/ip2"
+        cmake .. -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/ip2" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=1
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null

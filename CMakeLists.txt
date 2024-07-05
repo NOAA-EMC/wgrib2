@@ -16,7 +16,7 @@ option(USE_HDF5 "Use HDF5?" off)
 option(USE_REGEX "Use Regex?" on)
 option(USE_TIGGE "Use tigge?" on)
 option(USE_MYSQL "Use MySQL?" off)
-option(USE_IPOLATES "iplib=0,1,3?" 3)
+option(USE_IPOLATES "Use Ipolates" off)
 option(USE_UDF "Use UDF?" off)
 option(USE_OPENMP "Use OpenMP?" on)
 option(USE_PROJ4 "Use Proj4?" off)
@@ -39,6 +39,7 @@ option(DISABLE_STAT "disable posix feature" off)
 set(BUILD_COMMENTS "stock build")
 option(BUILD_LIB "Build wgrib2 library?" on)
 option(BUILD_SHARED_LIB "Build shared library?" off)
+option(BUILD_WGRIB "Build wgrib code?" off)
 
 # Developers can use this option to specify a local directory which
 # holds the test files. They will be copied instead of fetching the
@@ -74,7 +75,6 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   set(CMAKE_Fortran_FLAGS_DEBUG "-ggdb -O0")
 endif()
 
-
 message(STATUS "Checking if user wants to use NCEPLIBS-g2c...")
 if(USE_G2CLIB) 
   if(USE_PNG) 
@@ -92,17 +92,10 @@ endif()
 
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
 message(STATUS "Checking if the user want to use NCEPLIBS-ip...")
-if(USE_IPOLATES EQUAL 1)
+if(USE_IPOLATES)
   find_package(ip CONFIG REQUIRED)
-  find_package(sp CONFIG REQUIRED)
-elseif(USE_IPOLATES EQUAL 3)
-  find_package(ip2 CONFIG REQUIRED)
+  list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib_4")
 endif()
-
-if(NOT USE_IPOLATES EQUAL 0)
-  list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib")
-endif()
-list(APPEND definitions_list -DUSE_IPOLATES=${USE_IPOLATES})
 
 message(STATUS "Checking if the user want to use NetCDF...")
 if(USE_NETCDF4)
@@ -204,9 +197,11 @@ if(BUILD_LIB)
     DESTINATION ${CONFIG_INSTALL_DESTINATION})
 endif()
 
+if (BUILD_WGRIB)
+  add_subdirectory(wgrib)
+endif()
 # Turn on unit testing.
 include(CTest)
 if(BUILD_TESTING)
   add_subdirectory(tests)
 endif()
-
