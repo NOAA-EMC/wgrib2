@@ -1,11 +1,11 @@
 #!/bin/sh
-# This checks the use of ip external library, only available if USE_IPOLATES=1 CMake.
+# This checks the use of ip external library, only available if USE_IPOLATES=ON CMake.
 #
 # Alyson Stahl 5/9/2024
 
-#set -e
+set -e
 
-../wgrib2/wgrib2 data/tmp_int.grb -new_grid_winds earth  -new_grid latlon 0:359:1 0:90:1 OUT.grb
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -new_grid_winds earth  -new_grid latlon 0:359:1 0:90:1 OUT.grb
 
 echo "*** SUCCESS!"
 exit 0
