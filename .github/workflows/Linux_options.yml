@@ -28,7 +28,7 @@ jobs:
       matrix:
         config:
         - {
-            options: "-DUSE_IPOLATES=1"
+            options: "-DUSE_IPOLATES=ON"
           }
         - {
             options: "-DUSE_AEC=ON"
@@ -92,7 +92,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/ip
-        key: ip-${{ runner.os }}-${{ matrix.ip-version }}
+        key: ip-${{ runner.os }}-develop
 
     - name: checkout-ip
       if: steps.cache-ip.outputs.cache-hit != 'true'
@@ -100,7 +100,7 @@ jobs:
       with:
         repository: NOAA-EMC/NCEPLIBS-ip
         path: ip
-        ref: v3.3.3
+        ref: develop
 
     - name: build-ip
       if: steps.cache-ip.outputs.cache-hit != 'true'
