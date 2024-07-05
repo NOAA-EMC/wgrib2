@@ -1,83 +1,83 @@
-1:0:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+1:0:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-2:179:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+2:8324:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-3:358:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+3:16648:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-4:537:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+4:24972:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-5:716:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+5:33296:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-6:895:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+6:41620:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-7:1074:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+7:49944:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-8:1253:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+8:58268:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-9:1432:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+9:66592:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-10:1611:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+10:74916:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-11:1790:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+11:83240:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-12:1969:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+12:91564:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-13:2148:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+13:99888:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
 	unscaled lat=0 to 180000000 lon=0 to 359000000
-14:2327:grid_template=0:winds(grid):
-	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 56
+14:108212:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
 	lat 0.000000 to 180.000000 by 1.000000
 	lon 0.000000 to 359.000000 by 1.000000 #points=65160
 	basic_ang=0 sub_angle=1000000 units=0.000001
