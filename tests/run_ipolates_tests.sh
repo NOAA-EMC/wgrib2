@@ -11,5 +11,6 @@ set -e
 touch new_grid.txt
 diff -w new_grid.txt data/ref_new_grid_gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt
 
+
 echo "*** SUCCESS!"
 exit 0
