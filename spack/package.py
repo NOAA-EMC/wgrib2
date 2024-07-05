@@ -31,6 +31,7 @@ variant_map = {
     "openjpeg": "USE_OPENJPEG",
 }
 
+
 class Wgrib2(MakefilePackage, CMakePackage):
     """Utility for interacting with GRIB2 files"""
 
@@ -40,9 +41,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
     maintainers("t-brown", "AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett")
 
-    build_system(
-        conditional("cmake", when="@3.2:"), conditional("makefile", when="@:3.1")
-    )
+    build_system(conditional("cmake", when="@3.2:"), conditional("makefile", when="@:3.1"))
 
     version("develop", branch="develop")
     version("3.2.0", sha256="ac3ace77a32c2809cbc4538608ad64aabda2c9c1e44e7851da79764a6eb3c369")
@@ -74,7 +73,12 @@ class Wgrib2(MakefilePackage, CMakePackage):
             url_fmt = "https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz.v{0}"
         return url_fmt.format(version)
 
-    variant("netcdf3", default=True, description="Link in netcdf3 library to write netcdf3 files")
+    variant(
+        "netcdf3",
+        default=True,
+        description="Link in netcdf3 library to write netcdf3 files",
+        when="@:3.1",
+    )
     variant(
         "netcdf4", default=False, description="Link in netcdf4 library to write netcdf3/4 files"
     )
@@ -84,15 +88,23 @@ class Wgrib2(MakefilePackage, CMakePackage):
         description="Use to interpolate to new grids (0 = OFF, 1 = ip, 3 = ip2)",
         values=("0", "1", "3"),
     )
-    variant("spectral", default=False, description="Spectral interpolation in -new_grid")
+    variant(
+        "spectral", default=False, description="Spectral interpolation in -new_grid", when="@:3.1"
+    )
+    #   Not currently working for @3.2:
     variant(
         "fortran_api",
         default=True,
         description="Make wgrib2api which allows fortran code to read/write grib2",
+        when="@:3.1",
     )
-    variant("lib", default=True, description="Build library", when="@3.2:")
+    #   Not currently working for @3.2:
+    #    variant("lib", default=True, description="Build library", when="@3.2:")
     variant(
-        "mysql", default=False, description="Link in interface to MySQL to write to mysql database"
+        "mysql",
+        default=False,
+        description="Link in interface to MySQL to write to mysql database",
+        when="@:3.1",
     )
     variant(
         "udf",
@@ -101,11 +113,21 @@ class Wgrib2(MakefilePackage, CMakePackage):
     )
     variant("regex", default=True, description="Use regular expression library (POSIX-2)")
     variant("tigge", default=True, description="Ability for TIGGE-like variable names")
-    variant("proj4", default=False, description="The proj4 library is used to verify gctpc.")
+    variant(
+        "proj4",
+        default=False,
+        description="The proj4 library is used to verify gctpc.",
+        when="@:3.1",
+    )
     variant(
         "aec", default=True, description="Use the libaec library for packing with GRIB2 template"
     )
-    variant("g2c", default=False, description="Include NCEP g2clib (mainly for testing purposes)")
+    variant(
+        "g2c",
+        default=False,
+        description="Include NCEP g2clib (mainly for testing purposes)",
+        when="@:3.1",
+    )
     variant(
         "disable_timezone", default=False, description="Some machines do not support timezones"
     )
@@ -118,12 +140,11 @@ class Wgrib2(MakefilePackage, CMakePackage):
     variant("jasper", default=True, description="JPEG compression using Jasper")
     variant("openmp", default=True, description="OpenMP parallelization")
     variant("wmo_validation", default=False, description="WMO validation")
-    variant("shared", default=False, description="Enable shared library", when="+lib")
-    variant("disable_stat", default=False, description="Disable POSIX feature")
-    variant("openjpeg", default=False, description="Enable OpenJPEG")
+    #    variant("shared", default=False, description="Enable shared library", when="+lib")
+    variant("disable_stat", default=False, description="Disable POSIX feature", when="@:3.1")
+    variant("openjpeg", default=False, description="Enable OpenJPEG", when="@:3.1")
 
     conflicts("+netcdf3", when="+netcdf4")
-    conflicts("+netcdf3", when="@3.2:")
     conflicts("+openmp", when="%apple-clang")
 
     depends_on("wget", type=("build"), when="@:3.1 +netcdf4")
@@ -153,16 +174,25 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
         return (flags, None, None)
 
+    def patch(self):
+        filter_file(
+            r"\"\$\{PROJECT_BINARY_DIR\}(\/wgrib2\/wgrib2_meta\.h)\"",
+            r'"${PROJECT_BINARY_DIR}/wgrib2_meta.h"',
+            "wgrib2/CMakeLists.txt",
+        )
+
+
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     # Disable parallel build
     parallel = False
 
     def cmake_args(self):
         args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
-        args.append(self.define_from_variant("BUILD_LIB", "lib"))
-        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
+        #        args.append(self.define_from_variant("BUILD_LIB", "lib"))
+        #        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
 
         return args
+
 
 class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
     # Disable parallel build
