@@ -46,10 +46,10 @@ int f_config(ARG0) {
 #else
     strcat(inv_out, "Netcdf package is not installed\n");
 #endif
-//#if defined USE_NETCDF4
-//    strcat(inv_out, "netcdf4: " USE_NETCDF4 "\n");
-//    strcat(inv_out, "hdf5: " USE_HDF5 "\n");
-//#endif
+#if defined USE_NETCDF4
+    strcat(inv_out, "netcdf4: " USE_NETCDF4 "\n");
+    strcat(inv_out, "hdf5: " USE_HDF5 "\n");
+#endif
 #ifdef USE_AEC
     strcat(inv_out, USE_AEC " is installed\n" );
 #endif
