@@ -23,12 +23,6 @@
 #define USE_NETCDF
 #endif
 
-#ifndef WGRIB2_VERSION
-#define WGRIB2_VERSION "v3.1.4beta1 11/2023  Wesley Ebisuzaki, Reinoud Bokhorst, John Howard, Jaakko Hyvätti, Dusan Jovic, \
-Daniel Lee, Kristian Nilssen, Karl Pfeiffer, Pablo Romero, Manfred Schwarb, Gregor Schee, Arlindo da Silva, \
-Niklas Sondell, Sam Trahan, George Trojan, Sergey Varlamov"
-#endif
-
 #ifndef BUILD_COMMENTS
 #define BUILD_COMMENTS "unknown build"
 #endif
