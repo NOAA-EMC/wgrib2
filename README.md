@@ -42,8 +42,8 @@ Jovic, Daniel Lee, Kristian Nilssen, Karl Pfeiffer, Pablo Romero,
 Manfred Schwarb, Gregor Schee, Arlindo da Silva, Niklas Sondell, Sam
 Trahan, George Trojan, Sergey Varlamov
 
-CMake Build: Kyle Gerheiser, Alyson Stahl, Edward Hartnett, Alex
-Richert
+CMake Build and testing: Kyle Gerheiser, Alyson Stahl, Edward
+Hartnett, Alex Richert
 
 # Installing
 
