@@ -140,7 +140,7 @@ configure_file("${PROJECT_SOURCE_DIR}/src/config.h.in" "${CMAKE_CURRENT_BINARY_D
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 message(STATUS "Adding wgrib2, aux_probs subdirectories...")
-add_subdirectory(wgrib2)
+add_subdirectory(src)
 add_subdirectory(aux_progs)
 
 if(BUILD_LIB)
