@@ -9,7 +9,7 @@ echo ""
 echo "*** Running wgrib2 tests on extra large FTP test files"
 
 echo "*** Running an inventory test on extra large FTP test file"
-../wgrib2/wgrib2 data/rrfs.t18z.prslev.f000.grib2 > ftp_inv3.txt
+../src/wgrib2 data/rrfs.t18z.prslev.f000.grib2 > ftp_inv3.txt
 cat ftp_inv3.txt
 diff -w ftp_inv3.txt data/ref_rrfs.t18z.prslev.f000.grib2.inv
 
