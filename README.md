@@ -3,7 +3,7 @@
 Provides functionality for interacting with, reading, writing, and
 manipulating grib2 files, with a CMake build.
 
-See wgrib2 documentation and release page
+See wgrib2 documentation
 [here](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/).
 
 This release of the wgrib2 package, with CMake build capability, is
@@ -37,9 +37,13 @@ Wgrib2 is used by the following projects:
 
 ### Authors
 
-Wesley Ebisuzaki - CPC
+Wesley Ebisuzaki, Reinoud Bokhorst, John Howard, Jaakko Hyvätti, Dusan
+Jovic, Daniel Lee, Kristian Nilssen, Karl Pfeiffer, Pablo Romero,
+Manfred Schwarb, Gregor Schee, Arlindo da Silva, Niklas Sondell, Sam
+Trahan, George Trojan, Sergey Varlamov
 
-Kyle Gerheiser (CMake build) - NOAA/EMC
+CMake Build and testing: Kyle Gerheiser, Alyson Stahl, Edward
+Hartnett, Alex Richert
 
 # Installing
 
@@ -49,9 +53,7 @@ configuration.
 
 The CMake build provided here supports most build options (NetCDF,
 PNG, Jasper, spectral, and ipolates), but not certain features such as
-MySQL. If those features are necessary please use the makefile build
-provided in the link above.
-
+MySQL. 
 
 ```
 mkdir build && cd build
@@ -64,46 +66,13 @@ make install
 
 To use the wgrib2 library the CMake build offers a package config.
 
-After running `find_package(wgrib2)` CMake will generate the following targets for use in your project:
+After running `find_package(wgrib2)` CMake will generate the following
+targets for use in your project:
 
 ```
 wgrib2::wgrib2_lib (c library)
 wgrib2::wgrib2_api (fortran target)
 ```
-
-## Default Build Options
-
-* USE_NETCDF3 = OFF
-
-* USE_NETCDF4 = ON
-
-* USE_REGEX = ON
-
-* USE_TIGGE = ON
-
-* USE_MYSQL = OFF (not yet supported in CMake)
-
-* USE_IPOLATES = 0 (= 3 requires ip2 lib)
-
-* USE_SPECTRAL = OFF (requires SP lib)
-
-* USE_UDF = OFF (not yet supported in CMake)
-
-* USE_OPENMP = OFF
-
-* USE_PROJ4 = OFF (not yet supported in CMake)
-
-* MAKE_FTN_API = ON
-
-* DISABLE_ALARM = OFF
-
-* USE_G2CLIB = OFF (not yet supported in CMake)
-
-* USE_PNG = ON (requires PNG library)
-
-* USE_JASPER = ON (requires Jasper library)
-
-* USE_AEC = OFF (not yet supported in CMake)
 
 ### References
 
