@@ -8,7 +8,7 @@
 #cmakedefine USE_REGEX
 #cmakedefine USE_TIGGE
 #cmakedefine USE_MYSQL
-#define USE_IPOLATES @USE_IPOLATES@
+#cmakedefine USE_IPOLATES
 #cmakedefine USE_UDF
 #cmakedefine USE_OPENMP
 #cmakedefine USE_PROJ4
