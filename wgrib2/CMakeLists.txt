@@ -131,7 +131,7 @@ endif()
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
 if(BUILD_LIB)
-  set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2_meta.h)
+  set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2/wgrib2_meta.h)
   target_link_libraries(wgrib2_lib PUBLIC gctpc)
   # if(USE_IPOLATES EQUAL 1)
   #   target_link_libraries(wgrib2_lib PRIVATE ip:ip_4 sp:sp_4)
