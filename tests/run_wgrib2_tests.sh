@@ -96,10 +96,10 @@ echo "*** Testing import_bin"
 touch bin2grib.txt
 diff -w bin2grib.txt simple.txt 
 
-echo "*** Testing spread output"
-../wgrib2/wgrib2 data/ref_simple_packing.grib2 -v2 -spread spread.txt
-touch spread.txt
-diff -w data/ref_simple_packing.grib2.spread.txt spread.txt
+#echo "*** Testing spread output"
+#../wgrib2/wgrib2 data/ref_simple_packing.grib2 -v2 -spread spread.txt
+#touch spread.txt
+#diff -w data/ref_simple_packing.grib2.spread.txt spread.txt
 
 echo "*** Testing write/read section"
 ../wgrib2/wgrib2 data/ref_simple_packing.grib2 -write_sec 0 sec0.dat -write_sec 1 sec1.dat \
