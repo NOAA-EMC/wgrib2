@@ -22,14 +22,14 @@ echo "*** Testing calculation of number of grid points"
 ../wgrib2/wgrib2 data/gdaswave.t00z.wcoast.0p16.f000.grib2 -npts > npts.txt
 cat npts.txt
 
-#echo "*** Testing calculation of wind speed, direction, and UGRD & VGRD components"
-#../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -wind_dir wind.grb -wind_speed wind.grb -match "(UGRD|VGRD)"
-#../wgrib2/wgrib2 wind.grb > wind.txt
-#cat wind.txt
+echo "*** Testing calculation of wind speed, direction, and UGRD & VGRD components"
+../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -wind_dir wind.grb -wind_speed wind.grb -match "(UGRD|VGRD)"
+../wgrib2/wgrib2 wind.grb > wind.txt
+cat wind.txt
 #diff -w wind.txt data/ref_wind.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv
-#../wgrib2/wgrib2 wind.grb -wind_uv uv.grb
-#../wgrib2/wgrib2 uv.grb > uv.txt
-#cat uv.txt
+../wgrib2/wgrib2 wind.grb -wind_uv uv.grb
+../wgrib2/wgrib2 uv.grb > uv.txt
+cat uv.txt
 #diff -w uv.txt data/ref_uv.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv
 
 echo "*** Testing grid information"
@@ -96,9 +96,9 @@ echo "*** Testing import_bin"
 touch bin2grib.txt
 diff -w bin2grib.txt simple.txt 
 
-#echo "*** Testing spread output"
-#../wgrib2/wgrib2 data/ref_simple_packing.grib2 -v2 -spread spread.txt
-#touch spread.txt
+echo "*** Testing spread output"
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -v2 -spread spread.txt
+touch spread.txt
 #diff -w data/ref_simple_packing.grib2.spread.txt spread.txt
 
 echo "*** Testing write/read section"
