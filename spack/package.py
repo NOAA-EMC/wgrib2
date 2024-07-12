@@ -23,7 +23,6 @@ variant_map = {
     "jasper": "USE_JASPER",
     "openmp": "USE_OPENMP",
     "wmo_validation": "USE_WMO_VALIDATION",
-    "ipolates": "USE_IPOLATES",
     "disable_timezone": "DISABLE_TIMEZONE",
     "disable_alarm": "DISABLE_ALARM",
     "fortran_api": "MAKE_FTN_API",
@@ -154,7 +153,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
     depends_on("jasper@:2", when="@3.2: +jasper")
-    depends_on("zlib", when="+png")
+    depends_on("zlib-api", when="+png")
     depends_on("libpng", when="+png")
     depends_on("openjpeg", when="+openjpeg")
 
@@ -174,13 +173,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
         return (flags, None, None)
 
-    def patch(self):
-        filter_file(
-            r"\"\$\{PROJECT_BINARY_DIR\}(\/wgrib2\/wgrib2_meta\.h)\"",
-            r'"${PROJECT_BINARY_DIR}/wgrib2_meta.h"',
-            "wgrib2/CMakeLists.txt",
-        )
-
 
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     # Disable parallel build
@@ -188,6 +180,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
 
     def cmake_args(self):
         args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
+        #        args.append(self.define_from_variant("BUILD_LIB", "lib"))
         #        args.append(self.define_from_variant("BUILD_LIB", "lib"))
         #        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
 
