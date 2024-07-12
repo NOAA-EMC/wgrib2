@@ -1,0 +1,48 @@
+# This is a CI workflow for the wgrib2 project.
+#
+# This workflow builds wgrib2 with Spack, including installing with the "--test
+# root" option to run the CTest suite.
+#
+# Alex Richert, Jun 2024
+
+name: Spack
+on:
+  push:
+    branches:
+    - develop
+  pull_request:
+    branches:
+    - develop
+
+jobs:
+  Spack:
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"]
+        variants: ["ipolates=0", "ipolates=1"]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+    - name: "Build Spack package"
+      uses: NOAA-EMC/ci-test-spack-package@develop
+      with:
+        package-name: wgrib2
+        package-variants: ${{ matrix.variants }}
+        custom-recipe: spack/package.py
+        spack-compiler: gcc
+        repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-1
+
+  recipe-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: recipe-check
+      uses: NOAA-EMC/ci-check-spack-recipe@develop
+      with:
+        recipe-file: package/spack/package.py
+        cmakelists-txt: package/CMakeLists.txt
+        ignore-list: USE_HDF5,BUILD_WGRIB,FTP_TEST_FILES,FTP_LARGE_TEST_FILES,FTP_EXTRA_TEST_FILES
+        alternative-grep: true
