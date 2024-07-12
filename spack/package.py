@@ -23,12 +23,12 @@ variant_map = {
     "jasper": "USE_JASPER",
     "openmp": "USE_OPENMP",
     "wmo_validation": "USE_WMO_VALIDATION",
+    "ipolates": "USE_IPOLATES",
     "disable_timezone": "DISABLE_TIMEZONE",
     "disable_alarm": "DISABLE_ALARM",
     "fortran_api": "MAKE_FTN_API",
     "disable_stat": "DISABLE_STAT",
     "openjpeg": "USE_OPENJPEG",
-    "ipolates": "USE_IPOLATES",
 }
 
 
@@ -148,9 +148,9 @@ class Wgrib2(MakefilePackage, CMakePackage):
     conflicts("+openmp", when="%apple-clang")
 
     depends_on("wget", type=("build"), when="@:3.1 +netcdf4")
-    depends_on("ip@:3", when="@3.2: ipolates=1")
-    depends_on("ip2", when="@3.2: ipolates=3")
-    depends_on("sp", when="@3.2: ipolates=1")
+    depends_on("ip@:3", when="@3.2 ipolates=1")
+    depends_on("ip2", when="@3.2 ipolates=3")
+    depends_on("ip@4.1:", when="@develop ipolates=1")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
     depends_on("jasper@:2", when="@3.2: +jasper")
@@ -181,7 +181,6 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
 
     def cmake_args(self):
         args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
-        #        args.append(self.define_from_variant("BUILD_LIB", "lib"))
         #        args.append(self.define_from_variant("BUILD_LIB", "lib"))
         #        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
 
