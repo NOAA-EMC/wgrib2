@@ -19,6 +19,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest"]
+        variants: ["ipolates=0", "ipolates=1"]
 
     runs-on: ${{ matrix.os }}
 
@@ -28,7 +29,7 @@ jobs:
       uses: NOAA-EMC/ci-test-spack-package@develop
       with:
         package-name: wgrib2
-        package-variants: ipolates=0
+        package-variants: ${{ matrix.variants }}
         custom-recipe: spack/package.py
         spack-compiler: gcc
         repo-cache-key-suffix: ${{ matrix.os }}-1
