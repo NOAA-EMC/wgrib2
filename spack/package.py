@@ -28,6 +28,7 @@ variant_map = {
     "fortran_api": "MAKE_FTN_API",
     "disable_stat": "DISABLE_STAT",
     "openjpeg": "USE_OPENJPEG",
+    "ipolates": "USE_IPOLATES",
 }
 
 
