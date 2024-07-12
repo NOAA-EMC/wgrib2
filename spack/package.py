@@ -189,7 +189,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
 
 class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
     # Disable parallel build
-    parallel = True
+    parallel = False
 
     flag_handler = inject_flags
 
