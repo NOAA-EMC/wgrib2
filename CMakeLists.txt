@@ -94,6 +94,7 @@ message(STATUS "Checking if the user want to use NCEPLIBS-ip...")
 if(USE_IPOLATES)
   find_package(ip CONFIG REQUIRED)
   list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib_4")
+  list(APPEND definitions_list -DUSE_IPOLATES)
 endif()
 
 message(STATUS "Checking if the user want to use NetCDF...")
