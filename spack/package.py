@@ -44,6 +44,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     build_system(conditional("cmake", when="@3.2:"), conditional("makefile", when="@:3.1"))
 
     version("develop", branch="develop")
+    version("3.3.0", sha256="010827fba9c31f05807e02375240950927e9e51379e1444388153284f08f58e2")
     version("3.2.0", sha256="ac3ace77a32c2809cbc4538608ad64aabda2c9c1e44e7851da79764a6eb3c369")
     version(
         "3.1.1",
