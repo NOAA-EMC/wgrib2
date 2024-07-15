@@ -25,7 +25,7 @@ Wgrib2 is used by the following projects:
 * [Rapid Refresh Forecast System
   (RRFS)](https://gsl.noaa.gov/focus-areas/unified_forecast_system/rrfs).
 * [The Climate Prediction Center
-  (CPC)[(https://www.cpc.ncep.noaa.gov/) uses wgrib2 extensively to
+  (CPC)](https://www.cpc.ncep.noaa.gov/) uses wgrib2 extensively to
   process GRIB2 files in their real-time applications.
 * The [MET/METplus](https://dtcenter.org/community-code/metplus)
   software uses wgrib2 to extract information from GRIB2 files.
