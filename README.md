@@ -11,7 +11,7 @@ part of the [NCEPLIBS](https://github.com/NOAA-EMC/NCEPLIBS) project.
 
 # Users
 
-Wgrib2 is used by the following projects:
+Wgrib2 is used by the following NOAA projects:
 * [NOMADS](nomads.ncep.noaa.gov) uses wgrib2 in grib_filter (a wrapper for
    wgrib2) wgrib2 is used to create the *.idx files for random access.
 * [global-workflow](https://github.com/NOAA-EMC/global-workflow/),
@@ -34,6 +34,20 @@ Wgrib2 is used by the following projects:
   post-processing of the atmosphere component has been using wgrib2 to
   interplate the UPP output master files in Gaussian grid into
   pgrb2/pgrb2b files in lat-lon grid.
+* (pywgrib2_s)[https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/pywgrib2_s.html]
+  and pywgrib2_xy call wgrib2.
+
+Wgrib2 is used in the following projects outside NOAA:
+
+* (RNomads)[https://cran.r-project.org/web/packages/rNOMADS/rNOMADS.pdf]
+is an R module that can get grib files from nomads.ncep.noaa.gov and
+read them. RNomads will run in windows and linux, and the code uses
+wgrib2.
+* wgrib2 is included in anaconda, redhat and other repositories.
+* (GrADS)[http://cola.gmu.edu/grads/] uses wgrib2 to create control
+files. Also used to create ctl files for the grads dods server.
+* Wgrib2 is the suggested regridding tool for grib2 by
+(UPP)[https://github.com/NOAA-EMC/UPP].
 
 ### Authors
 
