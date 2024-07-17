@@ -44,7 +44,7 @@ Wgrib2 is used by the following projects:
   wgrib2.
 * wgrib2 is included in anaconda, redhat and other repositories.
 * [GrADS](http://cola.gmu.edu/grads/) uses wgrib2 to create control
-files. Also used to create ctl files for the grads dods server.
+  files. Also used to create ctl files for the grads dods server.
 
 ### Authors
 

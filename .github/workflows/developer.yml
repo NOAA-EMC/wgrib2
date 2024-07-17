@@ -22,10 +22,6 @@ jobs:
       FC: gfortran
       CC: gcc
 
-  permissions:
-    id-token: write
-    pages: write
-
   steps:
 
     - name: install
