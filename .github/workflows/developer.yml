@@ -22,7 +22,11 @@ jobs:
       FC: gfortran
       CC: gcc
 
-    steps:
+  permissions:
+    id-token: write
+    pages: write
+
+  steps:
 
     - name: install
       run: |
