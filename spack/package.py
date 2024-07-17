@@ -29,6 +29,7 @@ variant_map = {
     "fortran_api": "MAKE_FTN_API",
     "disable_stat": "DISABLE_STAT",
     "openjpeg": "USE_OPENJPEG",
+    "enable_docs": "ENABLE_DOCS",
 }
 
 
@@ -144,6 +145,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     #    variant("shared", default=False, description="Enable shared library", when="+lib")
     variant("disable_stat", default=False, description="Disable POSIX feature", when="@:3.1")
     variant("openjpeg", default=False, description="Enable OpenJPEG", when="@:3.1")
+    variant("enable_docs", default=False, description="Build doxygen documentation", when="@3.4.0:")
 
     conflicts("+netcdf3", when="+netcdf4")
     conflicts("+openmp", when="%apple-clang")

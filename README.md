@@ -6,6 +6,9 @@ manipulating grib2 files, with a CMake build.
 See wgrib2 documentation
 [here](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/).
 
+See also the [develop branch doxygen
+build](https://noaa-emc.github.io/wgrib2).
+
 This release of the wgrib2 package, with CMake build capability, is
 part of the [NCEPLIBS](https://github.com/NOAA-EMC/NCEPLIBS) project.
 
@@ -34,6 +37,17 @@ Wgrib2 is used by the following projects:
   post-processing of the atmosphere component has been using wgrib2 to
   interplate the UPP output master files in Gaussian grid into
   pgrb2/pgrb2b files in lat-lon grid.
+* Wgrib2 is the suggested regridding tool for GRIB2 by
+  [UPP](https://github.com/NOAA-EMC/UPP).
+* [pywgrib2_s](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/pywgrib2_s.html)
+  and pywgrib2_xy call wgrib2.
+* [RNomads](https://cran.r-project.org/web/packages/rNOMADS/rNOMADS.pdf)
+  is an R module that can get grib files from nomads.ncep.noaa.gov and
+  read them. RNomads will run in windows and linux, and the code uses
+  wgrib2.
+* wgrib2 is included in anaconda, redhat and other repositories.
+* [GrADS](http://cola.gmu.edu/grads/) uses wgrib2 to create control
+  files. Also used to create ctl files for the grads dods server.
 
 ### Authors
 
