@@ -26,7 +26,6 @@ jobs:
 
     - name: install
       run: |
-        #sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
         sudo apt-get install libpng-dev autotools-dev libaec-dev autoconf gcovr doxygen
 
