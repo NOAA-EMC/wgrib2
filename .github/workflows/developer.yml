@@ -23,7 +23,6 @@ jobs:
       CC: gcc
 
   steps:
-
     - name: install
       run: |
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
