@@ -28,11 +28,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
-        sudo apt-get install libpng-dev autotools-dev libaec-dev autoconf gcovr
+        sudo apt-get install libpng-dev autotools-dev libaec-dev autoconf gcovr doxygen
 
     - name: cache-jasper
       id: cache-jasper
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/jasper
         key: jasper-${{ runner.os }}-1.900.1
