@@ -6,6 +6,9 @@ manipulating grib2 files, with a CMake build.
 See wgrib2 documentation
 [here](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/).
 
+See also the [develop branch doxygen
+build](https://noaa-emc.github.io/wgrib2).
+
 This release of the wgrib2 package, with CMake build capability, is
 part of the [NCEPLIBS](https://github.com/NOAA-EMC/NCEPLIBS) project.
 
