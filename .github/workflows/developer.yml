@@ -32,7 +32,7 @@ jobs:
 
     - name: cache-jasper
       id: cache-jasper
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/jasper
         key: jasper-${{ runner.os }}-1.900.1
@@ -130,7 +130,7 @@ jobs:
         key: data-2
 
     - name: Setup Pages
-      uses: actions/configure-pages@v3
+      uses: actions/configure-pages@v4
       
     - name: build
       run: |
