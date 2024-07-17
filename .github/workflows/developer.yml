@@ -16,6 +16,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  permissions:
+    id-token: write
+
   developer:
     runs-on: ubuntu-latest
     env:
