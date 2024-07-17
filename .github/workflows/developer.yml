@@ -22,16 +22,17 @@ jobs:
       FC: gfortran
       CC: gcc
 
-  steps:
+    steps:
+
     - name: install
       run: |
+        sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
         sudo apt-get install libpng-dev autotools-dev libaec-dev autoconf gcovr
-        sudo apt-get install doxygen
 
     - name: cache-jasper
       id: cache-jasper
-      uses: actions/cache@v4
+      uses: actions/cache@v3
       with:
         path: ~/jasper
         key: jasper-${{ runner.os }}-1.900.1
@@ -128,9 +129,6 @@ jobs:
         path: ~/data
         key: data-2
 
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
-      
     - name: build
       run: |
         cd wgrib2
@@ -139,7 +137,7 @@ jobs:
         export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/ip2;~/sp" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON
+        cmake .. -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/ip2;~/sp" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
@@ -157,12 +155,3 @@ jobs:
         path: |
           wgrib2/build/*.html
           wgrib2/build/*.css
-
-    - name: Upload built documentation
-      uses: actions/upload-pages-artifact@v1
-      with:
-        path: wgrib2/build/docs/html  # Path to the built site files
-
-    - name: Deploy
-      uses: actions/deploy-pages@v1
-          
