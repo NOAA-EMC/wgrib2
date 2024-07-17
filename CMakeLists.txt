@@ -10,6 +10,7 @@ file(STRINGS "VERSION" pVersion)
 project(wgrib2 VERSION ${pVersion} LANGUAGES Fortran C)
 
 # Handle user build options.
+option(ENABLE_DOCS "Enable generation of doxygen-based documentation." OFF)
 option(USE_NETCDF3 "Use NetCDF-3?" off)
 option(USE_NETCDF4 "Use NetCDF-4?" off)
 option(USE_HDF5 "Use HDF5?" off)
@@ -183,3 +184,10 @@ include(CTest)
 if(BUILD_TESTING)
   add_subdirectory(tests)
 endif()
+
+# Determine whether or not to generate documentation.
+if(ENABLE_DOCS)
+  find_package(Doxygen REQUIRED)
+  add_subdirectory(docs)  
+endif()
+
