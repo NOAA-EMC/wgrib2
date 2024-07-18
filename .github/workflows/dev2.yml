@@ -1,7 +1,7 @@
 # This is the developer workflow for the wgrib2 project.
 #
 # Kyle Gerheiser, Ed Hartnett
-name: developer
+name: dev2
 on:
   push:
     branches:
@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  developer:
+  dev2:
     runs-on: ubuntu-latest
     env:
       FC: gfortran
@@ -163,6 +163,14 @@ jobs:
           wgrib2/build/*.html
           wgrib2/build/*.css
 
+    - name: Upload Artifact
+      if: github.ref == 'refs/heads/develop'
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: |
+          wgrib2/build/*.html
+          wgrib2/build/*.css
+
     - name: Upload built documentation
       uses: actions/upload-pages-artifact@v1
       with:
@@ -171,3 +179,21 @@ jobs:
     - name: Deploy
       uses: actions/deploy-pages@v1
           
+  deploy-coverage:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    needs: dev2
+    
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      # environment created automatically by GitHub
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
