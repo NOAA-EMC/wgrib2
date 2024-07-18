@@ -2,7 +2,8 @@
 
 # Introduction
 
-This document briefly describes wgrib2. Test... test
+This document briefly describes wgrib2, which provides functionality
+for interacting with, reading, writing, and manipulating GRIB2 files.
 
 ## Documentation for Previous Versions of wgrib2
 
