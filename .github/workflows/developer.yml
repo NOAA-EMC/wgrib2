@@ -133,9 +133,6 @@ jobs:
         path: ~/data
         key: data-2
 
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
-      
     - name: build
       run: |
         cd wgrib2
@@ -163,11 +160,7 @@ jobs:
           wgrib2/build/*.html
           wgrib2/build/*.css
 
-    #- name: Upload built documentation
-    #  uses: actions/upload-pages-artifact@v1
-    #  with:
-    #    path: wgrib2/build/docs/html  # Path to the built site files
-
-    #- name: Deploy
-    #  uses: actions/deploy-pages@v1
-          
+    - name: Upload built documentation
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: wgrib2/build/docs/html  # Path to the built site files
