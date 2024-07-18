@@ -1,6 +1,7 @@
-# This is the developer workflow for the wgrib2 project.
+# This workflow builds the docs and uploads them to gh-pages branch
+# for the wgrib2 project.
 #
-# Kyle Gerheiser, Ed Hartnett
+# Ed Hartnett
 name: dev2
 on:
   push:
