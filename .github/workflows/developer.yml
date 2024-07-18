@@ -163,6 +163,14 @@ jobs:
           wgrib2/build/*.html
           wgrib2/build/*.css
 
+    - name: Upload Artifact
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: |
+          wgrib2/build/*.html
+          wgrib2/build/*.css
+
     - name: Upload built documentation
       uses: actions/upload-pages-artifact@v1
       with:
@@ -171,3 +179,21 @@ jobs:
     - name: Deploy
       uses: actions/deploy-pages@v1
           
+  deploy-coverage:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: developer
+    
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      # environment created automatically by GitHub
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
