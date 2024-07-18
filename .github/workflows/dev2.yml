@@ -6,9 +6,6 @@ on:
   push:
     branches:
       - develop
-  pull_request:
-    branches:
-      - develop
 
 # Cancel in-progress workflows when pushing to a branch
 concurrency:
@@ -57,69 +54,21 @@ jobs:
         make
         make install
 
-    - name: checkout-sp
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-sp
-        path: sp
-        ref: develop
-
-    - name: build-sp
-      run: |
-        cd sp
-        mkdir build
-        cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/sp -DBUILD_8=ON ..
-        make -j2
-        make install
-
     - name: checkout-ip
       uses: actions/checkout@v4
       with:
         repository: NOAA-EMC/NCEPLIBS-ip
         path: ip
-        ref: v3.3.3
+        ref: v5.0.0
   
     - name: build-ip
       run: |
         cd ip
         mkdir build
         cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip 
         make -j2
         make install
-
-    - name: checkout-ip2
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip2
-        path: ip2
-        ref: develop
-
-    - name: build-ip2
-      run: |
-        cd ip2
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip2 -DCMAKE_PREFIX_PATH=~
-        make -j2
-        make install        
-
-    - name: checkout-ip
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip
-        path: ip
-        ref: develop
-
-    - name: build-ip
-      run: |
-        cd ip
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~
-        make -j2
-        make install        
 
     - name: checkout
       uses: actions/checkout@v4
@@ -141,36 +90,9 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/ip2;~/sp" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON
+        cmake .. -DENABLE_DOCS=ON -DCMAKE_PREFIX_PATH="~/ip"
         make VERBOSE=1
-        ctest --verbose --output-on-failure --rerun-failed
-        gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
     
-    - name: cache-data
-      if: steps.cache-data.outputs.cache-hit != 'true'
-      run: |
-        mkdir ~/data
-        cp $GITHUB_WORKSPACE/wgrib2/build/tests/data/* ~/data
-        
-    - name: upload-test-coverage
-      uses: actions/upload-artifact@v4
-      with:
-        name: wgrib2-test-coverage
-        path: |
-          wgrib2/build/*.html
-          wgrib2/build/*.css
-
-    - name: Upload Artifact
-      if: github.ref == 'refs/heads/develop'
-      uses: actions/upload-pages-artifact@v1
-      with:
-        path: |
-          wgrib2/build/*.html
-          wgrib2/build/*.css
-
     - name: Upload built documentation
       uses: actions/upload-pages-artifact@v1
       with:
@@ -179,21 +101,4 @@ jobs:
     - name: Deploy
       uses: actions/deploy-pages@v1
           
-  deploy-coverage:
-    if: github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    needs: dev2
-    
-    permissions:
-      pages: write
-      id-token: write
 
-    environment:
-      # environment created automatically by GitHub
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
