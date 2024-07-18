@@ -106,7 +106,7 @@ if(USE_G2CLIB)
 endif()
 
 if(USE_IPOLATES)
-  target_link_libraries(obj_lib PUBLIC ip::ip_4)
+  target_link_libraries(obj_lib PUBLIC ip::ip_d)
 
   # Link to the Fortran runtime library for each compiler if using ip2.
   # The wgrib2 exectuable is created using the C compiler and
@@ -133,9 +133,6 @@ target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 if(BUILD_LIB)
   set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2/wgrib2_meta.h)
   target_link_libraries(wgrib2_lib PUBLIC gctpc)
-  # if(USE_IPOLATES EQUAL 1)
-  #   target_link_libraries(wgrib2_lib PRIVATE ip:ip_4 sp:sp_4)
-  # endif()
   set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
   target_compile_definitions(wgrib2_lib PUBLIC ${definitions_list})
   
