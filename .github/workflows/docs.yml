@@ -98,9 +98,7 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: page
-        path: |
-          wgrib2/build/*.html
-          wgrib2/build/*.css
+        path: wgrib2/build/docs/html
         if-no-files-found: error
         
   deploy-docs:
