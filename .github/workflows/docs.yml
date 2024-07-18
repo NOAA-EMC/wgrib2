@@ -100,6 +100,6 @@ jobs:
         path: wgrib2/build/docs/html  # Path to the built site files
 
     - name: Deploy
-      uses: actions/deploy-pages@v4
+      uses: actions/deploy-pages@v1
           
 
