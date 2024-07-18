@@ -95,7 +95,7 @@ jobs:
         make VERBOSE=1
         
     - name: upload
-    - uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@master
       with:
         name: page
         path: |
