@@ -86,7 +86,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     )
     variant(
         "ipolates",
-        default="3",
+        default="0",
         description="Use to interpolate to new grids (0 = OFF, 1 = ip, 3 = ip2)",
         values=("0", "1", "3"),
     )
