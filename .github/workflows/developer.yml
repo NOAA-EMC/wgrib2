@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    branches:
+      - develop
 
 # Cancel in-progress workflows when pushing to a branch
 concurrency:
