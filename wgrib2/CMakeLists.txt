@@ -128,6 +128,11 @@ if(USE_AEC)
   target_link_libraries(wgrib2_exe PRIVATE aec)
 endif()
 
+if(USE_OPENJPEG)
+  include_directories(${OPENJPEG_INCLUDE_DIRS})
+  target_link_libraries(wgrib2_exe PRIVATE ${OPENJPEG_LIBRARIES})
+endif()
+
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
 if(BUILD_LIB)
