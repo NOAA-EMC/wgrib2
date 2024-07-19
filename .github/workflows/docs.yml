@@ -7,6 +7,9 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    branches:
+      - develop
 
 # Cancel in-progress workflows when pushing to a branch
 concurrency:
@@ -104,6 +107,10 @@ jobs:
     environment:
       name: github-pages
       url: ${{steps.deployment.outputs.page_url}}
+
+    permissions:
+      id-token: write
+      pages: write
 
     steps:
     - uses: actions/download-artifact@master
