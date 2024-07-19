@@ -89,14 +89,14 @@ class Wgrib2(MakefilePackage, CMakePackage):
         default="3",
         description="Use to interpolate to new grids (0 = OFF, 1 = ip, 3 = ip2)",
         values=("0", "1", "3"),
-        when="@:3.2"
+        #when="@:3.2"
     )
-    variant(
-        "ipolates",
-        default=False,
-        description="Use ipolates library",
-        when="@3.3:"
-    )
+    #variant(
+    #    "ipolates",
+    #    default=False,
+    #    description="Use ipolates library",
+    #    when="@3.3:"
+    #)
     variant(
         "spectral", default=False, description="Spectral interpolation in -new_grid", when="@:3.1"
     )
