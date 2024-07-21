@@ -26,6 +26,7 @@ jobs:
     permissions:
       id-token: write
       pages: write
+      actions: read
 
     steps:
 
@@ -56,7 +57,7 @@ jobs:
         make VERBOSE=1
         
     - name: upload
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@v2
       with:
         name: page
         path: wgrib2/build/docs/html
@@ -72,19 +73,20 @@ jobs:
     permissions:
       id-token: write
       pages: write
+      actions: read
 
     steps:
-    - uses: actions/download-artifact@master
+    - uses: actions/download-artifact@v2
       with:
         name: page
         path: .
     - name: Setup Pages
       uses: actions/configure-pages@v2
-    - uses: actions/upload-pages-artifact@v1
+    - uses: actions/upload-pages-artifact@v2
       with:
         path: .
     - id: deployment
-      uses: actions/deploy-pages@main
+      uses: actions/deploy-pages@v3
 
           
 
