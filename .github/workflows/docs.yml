@@ -26,6 +26,7 @@ jobs:
     permissions:
       id-token: write
       pages: write
+      actions: read
 
     steps:
 
@@ -111,6 +112,7 @@ jobs:
     permissions:
       id-token: write
       pages: write
+      actions: read
 
     steps:
     - uses: actions/download-artifact@master
