@@ -32,7 +32,6 @@ jobs:
 
     - name: install
       run: |
-        sudo apt-get install pkg-config
         sudo apt-get install doxygen
 
     - name: checkout
