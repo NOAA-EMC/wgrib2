@@ -115,7 +115,7 @@ jobs:
       actions: read
 
     steps:
-    - uses: actions/download-artifact@master
+    - uses: actions/download-artifact@v2
       with:
         name: page
         path: .
