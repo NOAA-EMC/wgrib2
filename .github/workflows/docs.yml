@@ -16,6 +16,9 @@ concurrency:
 jobs:
   build-docs:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
     env:
       FC: gfortran
       CC: gcc
@@ -114,7 +117,8 @@ jobs:
       with:
         name: page
         path: .
-    - uses: actions/configure-pages@v1
+    - name: Setup Pages
+      uses: actions/configure-pages@v2
     - uses: actions/upload-pages-artifact@v1
       with:
         path: .
