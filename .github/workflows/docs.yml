@@ -32,48 +32,7 @@ jobs:
 
     - name: install
       run: |
-        sudo apt-get update
-        sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
-        sudo apt-get install libpng-dev libaec-dev doxygen
-
-    - name: cache-jasper
-      id: cache-jasper
-      uses: actions/cache@v4
-      with:
-        path: ~/jasper
-        key: jasper-${{ runner.os }}-1.900.1
-
-    - name: checkout-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'
-      uses: actions/checkout@v4
-      with:
-        repository: jasper-software/jasper
-        path: jasper
-        ref: version-1.900.1
-
-    - name: build-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'
-      run: |
-        cd jasper
-        ./configure --prefix=$HOME/Jasper
-        make
-        make install
-
-    - name: checkout-ip
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip
-        path: ip
-        ref: v5.0.0
-  
-    - name: build-ip
-      run: |
-        cd ip
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip 
-        make -j2
-        make install
+        sudo apt-get install doxygen
 
     - name: checkout
       uses: actions/checkout@v4
@@ -92,7 +51,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        cmake .. -DENABLE_DOCS=ON -DCMAKE_PREFIX_PATH="~/ip"
+        cmake .. -DUSE_IPOLATES=OFF -DENABLE_DOCS=ON
         make VERBOSE=1
         
     - name: upload
