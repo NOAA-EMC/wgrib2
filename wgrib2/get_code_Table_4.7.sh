@@ -1,4 +1,5 @@
 #!/bin/sh
+# This script updates wgrib2 with WMO code info.
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
