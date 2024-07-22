@@ -184,8 +184,8 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
 
     def cmake_args(self):
         args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
-        #        args.append(self.define_from_variant("BUILD_LIB", "lib"))
-        #        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
+        args.append(self.define_from_variant("BUILD_LIB", "lib"))
+        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
 
         return args
 
