@@ -101,7 +101,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         when="@:3.1",
     )
     #   Not currently working for @3.2:
-    #    variant("lib", default=True, description="Build library", when="@3.2:")
+    variant("lib", default=True, description="Build library", when="@3.2:")
     variant(
         "mysql",
         default=False,
