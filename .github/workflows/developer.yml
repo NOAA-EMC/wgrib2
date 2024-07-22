@@ -164,5 +164,3 @@ jobs:
       uses: actions/upload-pages-artifact@v1
       with:
         path: wgrib2/build/docs/html  # Path to the built site files
-
-          
