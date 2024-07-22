@@ -180,7 +180,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     # Disable parallel build
-    parallel = False
+    parallel = True
 
     def cmake_args(self):
         args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
@@ -192,7 +192,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
 
 class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
     # Disable parallel build
-    parallel = False
+    parallel = True
 
     flag_handler = inject_flags
 
