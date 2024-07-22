@@ -1,0 +1,90 @@
+# This workflow builds the docs and uploads them to gh-pages branch
+# for the wgrib2 project.
+#
+# Ed Hartnett
+name: docs
+on:
+  push:
+    branches:
+      - develop
+
+# Cancel in-progress workflows when pushing to a branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+    env:
+      FC: gfortran
+      CC: gcc
+
+    permissions:
+      id-token: write
+      pages: write
+      actions: read
+
+    steps:
+
+    - name: install
+      run: |
+        sudo apt-get install doxygen
+
+    - name: checkout
+      uses: actions/checkout@v4
+      with: 
+        path: wgrib2
+
+    - name: cache-data
+      id: cache-data
+      uses: actions/cache@v4
+      with:
+        path: ~/data
+        key: data-2
+
+    - name: build
+      run: |
+        cd wgrib2
+        mkdir build
+        cd build
+        cmake .. -DUSE_IPOLATES=OFF -DENABLE_DOCS=ON
+        make VERBOSE=1
+        
+    - name: upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: page
+        path: wgrib2/build/docs/html
+        if-no-files-found: error
+        
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: build-docs
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+
+    permissions:
+      id-token: write
+      pages: write
+      actions: read
+
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: page
+        path: .
+    - name: Setup Pages
+      uses: actions/configure-pages@v2
+    - uses: actions/upload-pages-artifact@v2
+      with:
+        path: .
+    - id: deployment
+      uses: actions/deploy-pages@v3
+
+          
+
