@@ -142,7 +142,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     variant("jasper", default=True, description="JPEG compression using Jasper")
     variant("openmp", default=True, description="OpenMP parallelization")
     variant("wmo_validation", default=False, description="WMO validation")
-    #    variant("shared", default=False, description="Enable shared library", when="+lib")
+    variant("shared", default=False, description="Enable shared library", when="+lib")
     variant("disable_stat", default=False, description="Disable POSIX feature", when="@:3.1")
     variant("openjpeg", default=False, description="Enable OpenJPEG", when="@:3.1")
     variant("enable_docs", default=False, description="Build doxygen documentation", when="@3.4.0:")
