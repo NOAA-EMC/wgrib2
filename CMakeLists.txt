@@ -130,6 +130,12 @@ if(USE_PNG)
   find_package(PNG REQUIRED)
 endif()
 
+# Find required packages to use OpenJPEG
+message(STATUS "Checking of the user wants to use OpenJPEG...")
+if(USE_OPENJPEG)
+  find_package(OpenJPEG REQUIRED)
+endif()
+
 # Find required packages to use AEC
 message(STATUS "Checking of the user wants to use AEC...")
 if(USE_AEC)
