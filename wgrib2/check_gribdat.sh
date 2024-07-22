@@ -1,4 +1,5 @@
 #!/bin/sh
+# This script checks parameter info for wgrib2.
 
 if [ $# -ne 2 ] ; then
   echo "$0 gribtab.dat.1 gribtab.dat.2"

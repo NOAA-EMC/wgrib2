@@ -1,4 +1,5 @@
 #!/bin/sh
+# This script checks parameter info for wgrib2.
 
 export LC_ALL=C
 

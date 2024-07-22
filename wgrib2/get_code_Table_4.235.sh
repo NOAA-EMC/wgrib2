@@ -1,4 +1,5 @@
 #!/bin/sh
+# This script updates wgrib2 with WMO code info.
 
 tab=$1
 tab="4.235"
