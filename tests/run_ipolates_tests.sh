@@ -92,5 +92,29 @@ echo "*** Testing conversion to NCEP grid definition 129"
 touch ncep_grid_129.txt
 diff -w ncep_grid_129.txt data/ref_new_grid_ncep_129.txt
 
+echo "*** Testing conversion to NCEP grid definition 170"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 170 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s -lon 10 12 -lon 20 80 > ncep_grid_170.txt
+touch ncep_grid_170.txt
+diff -w ncep_grid_170.txt data/ref_new_grid_ncep_170.txt
+
+echo "*** Testing conversion to NCEP grid definition 173"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 173 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s -lon 10 12 -lon 20 80 > ncep_grid_173.txt
+touch ncep_grid_173.txt
+diff -w ncep_grid_173.txt data/ref_new_grid_ncep_173.txt
+
+echo "*** Testing conversion to NCEP grid definition 184"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 184 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_184.txt
+touch ncep_grid_184.txt
+diff -w ncep_grid_184.txt data/ref_new_grid_ncep_184.txt
+
+echo "*** Testing conversion to NCEP grid definition 194"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 194 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_194.txt
+touch ncep_grid_194.txt
+diff -w ncep_grid_194.txt data/ref_new_grid_ncep_194.txt
+
 echo "*** SUCCESS!"
 exit 0
