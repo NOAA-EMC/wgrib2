@@ -56,5 +56,41 @@ echo "*** Testing conversion to NCEP grid definition 4"
 touch ncep_grid_4.txt
 diff -w ncep_grid_4.txt data/ref_new_grid_ncep_4.txt
 
+echo "*** Testing conversion to NCEP grid definition 45"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 45 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s -lon 10 12 -lon 20 80 > ncep_grid_45.txt
+touch ncep_grid_45.txt
+diff -w ncep_grid_45.txt data/ref_new_grid_ncep_45.txt
+
+echo "*** Testing conversion to NCEP grid definition 98"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 98 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s -lon 10 12 -lon 20 80 > ncep_grid_98.txt
+touch ncep_grid_98.txt
+diff -w ncep_grid_98.txt data/ref_new_grid_ncep_98.txt
+
+echo "*** Testing conversion to NCEP grid definition 126"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 126 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s -lon 10 12 -lon 20 80 > ncep_grid_126.txt
+touch ncep_grid_126.txt
+diff -w ncep_grid_126.txt data/ref_new_grid_ncep_126.txt
+
+echo "*** Testing conversion to NCEP grid definition 127"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 127 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s -lon 10 12 -lon 20 80 > ncep_grid_127.txt
+touch ncep_grid_127.txt
+diff -w ncep_grid_127.txt data/ref_new_grid_ncep_127.txt
+
+echo "*** Testing conversion to NCEP grid definition 128"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 128 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s -lon 10 12 -lon 20 80 > ncep_grid_128.txt
+touch ncep_grid_128.txt
+diff -w ncep_grid_128.txt data/ref_new_grid_ncep_128.txt
+
+echo "*** Testing conversion to NCEP grid definition 129"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 129 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s -lon 10 12 -lon 20 80 > ncep_grid_129.txt
+touch ncep_grid_129.txt
+diff -w ncep_grid_129.txt data/ref_new_grid_ncep_129.txt
+
 echo "*** SUCCESS!"
 exit 0
