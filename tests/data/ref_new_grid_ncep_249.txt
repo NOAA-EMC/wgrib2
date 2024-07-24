@@ -1,0 +1,42 @@
+1:0:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl:
+2:110318:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl:
+3:220636:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl:
+4:330954:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl:
+5:441272:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl:
+6:535855:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl:
+7:630438:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl:
+8:725021:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl:
+9:819604:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl:
+10:914187:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl:
+11:1008770:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl:
+12:1103353:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl:
+13:1197936:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl:
+14:1276784:grid_template=20:winds(N/S):
+	polar stereographic grid: (367 x 343) input WE:SN output WE:SN res 48
+	North pole lat1 45.400000 lon1 188.400000 latD 60.000000 lonV 210.000000 dx 9867.890000 m dy 9867.890000 m:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl:
