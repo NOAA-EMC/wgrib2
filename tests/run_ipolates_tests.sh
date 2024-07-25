@@ -140,5 +140,59 @@ echo "*** Testing conversion to NCEP grid definition 249"
 touch ncep_grid_249.txt
 diff -w ncep_grid_249.txt data/ref_new_grid_ncep_249.txt
 
+echo "*** Testing conversion to NCEP grid definition t62"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid t62 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_t62.txt
+touch ncep_grid_t62.txt
+diff -w ncep_grid_t62.txt data/ref_new_grid_ncep_t62.txt
+
+echo "*** Testing conversion to NCEP grid definition t126"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid t126 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_t126.txt
+touch ncep_grid_t126.txt
+diff -w ncep_grid_t126.txt data/ref_new_grid_ncep_t126.txt
+
+echo "*** Testing conversion to NCEP grid definition t170"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid t170 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_t170.txt
+touch ncep_grid_t170.txt
+diff -w ncep_grid_t170.txt data/ref_new_grid_ncep_t170.txt
+
+echo "*** Testing conversion to NCEP grid definition t190"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid t190 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_t190.txt
+touch ncep_grid_t190.txt
+diff -w ncep_grid_t190.txt data/ref_new_grid_ncep_t190.txt
+
+echo "*** Testing conversion to NCEP grid definition t254"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid t254 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_t254.txt
+touch ncep_grid_t254.txt
+diff -w ncep_grid_t254.txt data/ref_new_grid_ncep_t254.txt
+
+echo "*** Testing conversion to NCEP grid definition t382"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid t382 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_t382.txt
+touch ncep_grid_t382.txt
+diff -w ncep_grid_t382.txt data/ref_new_grid_ncep_t382.txt
+
+echo "*** Testing conversion to NCEP grid definition t574"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid t574 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_t574.txt
+touch ncep_grid_t574.txt
+diff -w ncep_grid_t574.txt data/ref_new_grid_ncep_t574.txt
+
+echo "*** Testing conversion to NCEP grid definition t1148"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid t1148 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_t1148.txt
+touch ncep_grid_t1148.txt
+diff -w ncep_grid_t1148.txt data/ref_new_grid_ncep_t1148.txt
+
+echo "*** Testing conversion to NCEP grid definition t1534"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid t1534 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > ncep_grid_t1534.txt
+touch ncep_grid_t1534.txt
+diff -w ncep_grid_t1534.txt data/ref_new_grid_ncep_t1534.txt
+
 echo "*** SUCCESS!"
 exit 0
