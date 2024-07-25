@@ -194,5 +194,11 @@ echo "*** Testing conversion to NCEP grid definition t1534"
 touch ncep_grid_t1534.txt
 diff -w ncep_grid_t1534.txt data/ref_new_grid_ncep_t1534.txt
 
+echo "*** Testing conversion to Mercator grid"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid mercator:0 0:361:1:360 0:91:1:90 junk.grb
+../wgrib2/wgrib2 junk.grb -grid -v2 -s > mercator_grid.txt
+touch mercator_grid.txt
+diff -w mercator_grid.txt data/ref_mercator_grid.txt
+
 echo "*** SUCCESS!"
 exit 0

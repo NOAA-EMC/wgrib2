@@ -1,0 +1,70 @@
+1:0:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl:
+2:28924:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl:
+3:57848:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl:
+4:82666:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl:
+5:107484:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl:
+6:132302:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl:
+7:157120:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl:
+8:181938:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl:
+9:206756:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl:
+10:231574:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl:
+11:256392:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl:
+12:281210:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl:
+13:306028:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl:
+14:330846:grid_template=10:winds(N/S):
+	Mercator grid: (361 x 91) LatD 0.000000 input WE:SN output WE:SN res 48
+	lat 0.000000 to 90.000000 by 1.000000 m
+	lon 0.000000 to 360.000000 by 1.000000 m
+	orientation 0.000000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl:
