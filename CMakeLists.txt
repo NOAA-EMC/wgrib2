@@ -118,7 +118,7 @@ if(USE_JASPER)
 endif()
 
 # Find required packages to use OpenJPEG
-message(STATUS "Checking of the user wants to use OpenJPEG...")
+message(STATUS "Checking if the user wants to use OpenJPEG...")
 if(USE_OPENJPEG)
   find_package(OpenJPEG REQUIRED)
 endif()
@@ -134,14 +134,14 @@ if(USE_OPENMP)
 #  endif()
 endif()
 
-message(STATUS "Checking of the user wants to use PNG...")
+message(STATUS "Checking if the user wants to use PNG...")
 if(USE_PNG)
   find_package(ZLIB REQUIRED)
   find_package(PNG REQUIRED)
 endif()
 
 # Find required packages to use AEC
-message(STATUS "Checking of the user wants to use AEC...")
+message(STATUS "Checking if the user wants to use AEC...")
 if(USE_AEC)
   find_package(libaec 1.0.6 REQUIRED)
 endif()
