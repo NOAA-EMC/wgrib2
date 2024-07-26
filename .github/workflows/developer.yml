@@ -141,7 +141,7 @@ jobs:
         export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/ip2;~/sp;~/jasper" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON
+        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/ip2;~/sp;~/Jasper" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
