@@ -1,0 +1,84 @@
+1:0:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=-46.2517:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=-17.2517
+2:41939:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=-66.3756:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=-18.3756
+3:83878:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=-29:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=-14
+4:125817:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=-56:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=-23
+5:162536:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=-6.00665:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=0.993347
+6:204475:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=-27.0025:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=-16.0025
+7:241194:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=0.439747:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=10.4397
+8:283133:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=3.4976:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=-2.5024
+9:319852:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=-7.87319:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=8.12681
+10:361791:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=10.2451:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=-0.754887
+11:398510:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=-8:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=9
+12:440449:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=15:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=8
+13:477168:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=-3.99862:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=-7.99862
+14:519107:grid_template=0:winds(N/S):
+	lat-lon grid:(288 x 145) units 1e-06 input WE:NS output WE:SN res 48
+	lat 90.000000 to -90.000000 by 1.250000
+	lon 0.000000 to 358.750000 by 1.250000 #points=41760
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=90000000 to -90000000 lon=0 to 358750000:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl::lon=10.000000,lat=12.500000,i=23625,ix=9,iy=83,val=14.6878:lon=20.000000,lat=80.000000,i=39185,ix=17,iy=137,val=12.6878
