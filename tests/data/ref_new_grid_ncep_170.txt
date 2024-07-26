@@ -1,0 +1,98 @@
+1:0:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=-44.7159:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=-15.7159
+2:131251:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=-65.657:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=-20.657
+3:262502:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=-28.9228:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=-11.9228
+4:393753:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=-56.4385:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=-24.4385
+5:508620:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=-6.00541:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=-0.00540543
+6:639871:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=-26.4699:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=-15.4699
+7:754738:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=0.508083:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=9.50808
+8:885989:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=4.24332:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=-2.75668
+9:1000856:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=-7.99564:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=7.00436
+10:1132107:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=10.1171:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=-0.882854
+11:1246974:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=-7.91026:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=8.08974
+12:1378225:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=14.5461:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=7.54612
+13:1493092:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=-2.99963:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=-7.99963
+14:1624343:grid_template=40:winds(N/S):
+	Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+	number of latitudes between pole-equator=128 #points=131072
+	lat 89.462822 to -89.462822
+	lon 0.000000 to 359.296875 by 0.703125
+	basic_ang=0 sub_angle=1000000 units=0.000001
+	unscaled lat=89462822 to -89462822 lon=0 to 359296875:12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl::lon=9.843750,lat=12.280678,i=74255,ix=15,iy=146,val=14.3613:lon=19.687500,lat=80.350237,i=123933,ix=29,iy=243,val=12.3613
