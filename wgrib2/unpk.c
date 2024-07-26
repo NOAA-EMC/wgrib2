@@ -17,7 +17,7 @@
    int i;
 #endif
 #ifdef USE_JASPER
-    #include "jasper.h"
+   #include <jasper/jasper.h>
 #endif
 
 #ifdef USE_AEC

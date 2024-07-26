@@ -3,7 +3,7 @@
 #include "wgrib2.h"
 
 #ifdef USE_JASPER
-#include "jasper.h"
+#include <jasper/jasper.h>
 #define JAS_1_700_2
 
 

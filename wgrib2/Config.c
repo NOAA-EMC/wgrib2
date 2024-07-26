@@ -5,7 +5,7 @@
 #include <limits.h>
 #include "wgrib2.h"
 #ifdef USE_JASPER
-#include "jasper.h"
+#include <jasper/jasper.h>
 #endif
 #include "grb2.h"
 #include "fnlist.h"
