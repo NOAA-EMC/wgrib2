@@ -90,7 +90,7 @@ if(USE_NETCDF4)
 endif()
 
 if(USE_JASPER)
-  #include_directories(${JASPER_INCLUDE_DIR})
+  include_directories(${JASPER_INCLUDE_DIR})
   target_include_directories(obj_lib PUBLIC ${JASPER_INCLUDE_DIR})
   target_link_libraries(obj_lib PUBLIC ${JASPER_LIBRARIES})
 endif()
