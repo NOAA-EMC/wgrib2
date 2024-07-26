@@ -39,6 +39,9 @@ jobs:
         - { 
             options: "-DBUILD_WGRIB=ON"
           }
+        - {
+            options: "-DUSE_OPENJPEG=ON"
+          }
           
     steps:
 
