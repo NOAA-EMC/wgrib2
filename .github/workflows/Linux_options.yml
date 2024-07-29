@@ -71,22 +71,6 @@ jobs:
         make
         make install
 
-    - name: checkout-sp
-      uses: actions/checkout@v2
-      with:
-        repository: NOAA-EMC/NCEPLIBS-sp
-        path: sp
-        ref: v2.3.3
-
-    - name: build-sp
-      run: |
-        cd sp
-        mkdir build
-        cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/sp -DBUILD_8=ON ..
-        make -j2
-        make install
-
     - name: cache-ip
       id: cache-ip
       uses: actions/cache@v3
@@ -111,22 +95,6 @@ jobs:
         cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
         make -j2
         make install
-          
-    - name: checkout-ip2
-      uses: actions/checkout@v2
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip2
-        path: ip2
-        ref: develop
-
-    - name: build-ip2
-      run: |
-        cd ip2
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip2 -DCMAKE_PREFIX_PATH=~
-        make -j2
-        make install        
 
     - name: checkout
       uses: actions/checkout@v2
@@ -138,6 +106,6 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
-        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/sp;~/ip;~/ip2" ..
+        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/ip" ..
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
