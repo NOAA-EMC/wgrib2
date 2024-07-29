@@ -101,7 +101,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         when="@:3.1",
     )
     #   Not currently working for @3.2:
-    variant("lib", default=True, description="Build library", when="@3.2:")
+    #    variant("lib", default=True, description="Build library", when="@3.2:")
     variant(
         "mysql",
         default=False,
@@ -142,7 +142,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     variant("jasper", default=True, description="JPEG compression using Jasper")
     variant("openmp", default=True, description="OpenMP parallelization")
     variant("wmo_validation", default=False, description="WMO validation")
-    variant("shared", default=False, description="Enable shared library", when="+lib")
+    #    variant("shared", default=False, description="Enable shared library", when="+lib")
     variant("disable_stat", default=False, description="Disable POSIX feature", when="@:3.1")
     variant("openjpeg", default=False, description="Enable OpenJPEG", when="@:3.1")
     variant("enable_docs", default=False, description="Build doxygen documentation", when="@3.4.0:")
@@ -180,19 +180,19 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     # Disable parallel build
-    parallel = True
+    parallel = False
 
     def cmake_args(self):
         args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
-        args.append(self.define_from_variant("BUILD_LIB", "lib"))
-        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
+        #        args.append(self.define_from_variant("BUILD_LIB", "lib"))
+        #        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
 
         return args
 
 
 class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
     # Disable parallel build
-    parallel = True
+    parallel = False
 
     flag_handler = inject_flags
 
