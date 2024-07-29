@@ -47,8 +47,7 @@ wgrib2_api.c wgrib2.c Wind_dir.c Wind_speed.c Wind_uv.c Write_sec.c
 Wrt_grib.c wrtieee.c wxtext.c)
 
 if(MAKE_FTN_API)
-  list(APPEND lib_src
-    ftn_api/fort_wgrib2.c ftn_api/wgrib2api.f90  ftn_api/wgrib2lowapi.f90 )
+  add_subdirectory(ftn_api)
 endif()
 
 add_subdirectory(gctpc)

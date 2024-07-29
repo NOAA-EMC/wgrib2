@@ -151,6 +151,10 @@ message(STATUS "Adding wgrib2, aux_probs subdirectories...")
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
 
+if(MAKE_FTN_API AND NOT BUILD_LIB)
+  message(FATAL_ERROR "MAKE_FTN_API should only be on when building library")
+endif()
+
 if(BUILD_LIB)
   message(STATUS "Adding wgrib2 library build...")
   ### Package config
