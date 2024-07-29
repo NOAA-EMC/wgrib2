@@ -151,7 +151,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
     conflicts("+openmp", when="%apple-clang")
 
     depends_on("wget", type=("build"), when="@:3.1 +netcdf4")
-    depends_on("ip@:3", when="@3.2 +ipolates")
     depends_on("ip@5.1:", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
