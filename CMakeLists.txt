@@ -104,6 +104,10 @@ if(USE_NETCDF4)
   list(APPEND definitions_list -DUSE_NETCDF4 -DUSE_HDF5 -DHDF5="hdf5")
 endif()
 
+if(USE_OPENJPEG AND USE_JASPER)
+  message(FATAL_ERROR "USE_OPENJPEG OR USE_JASPER, not both")
+endif()
+
 message(STATUS "Checking if the user wants to use Jasper...")
 if(USE_JASPER)
   list(APPEND definitions_list -DUSE_JASPER)
@@ -111,6 +115,12 @@ if(USE_JASPER)
   if(JASPER_VERSION_STRING VERSION_GREATER_EQUAL "1.900.25")
     list(APPEND definitions_list -DJAS_VERSION_MAJOR=2)
   endif()
+endif()
+
+# Find required packages to use OpenJPEG
+message(STATUS "Checking if the user wants to use OpenJPEG...")
+if(USE_OPENJPEG)
+  find_package(OpenJPEG REQUIRED)
 endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
@@ -124,20 +134,14 @@ if(USE_OPENMP)
 #  endif()
 endif()
 
-message(STATUS "Checking of the user wants to use PNG...")
+message(STATUS "Checking if the user wants to use PNG...")
 if(USE_PNG)
   find_package(ZLIB REQUIRED)
   find_package(PNG REQUIRED)
 endif()
 
-# Find required packages to use OpenJPEG
-message(STATUS "Checking of the user wants to use OpenJPEG...")
-if(USE_OPENJPEG)
-  find_package(OpenJPEG REQUIRED)
-endif()
-
 # Find required packages to use AEC
-message(STATUS "Checking of the user wants to use AEC...")
+message(STATUS "Checking if the user wants to use AEC...")
 if(USE_AEC)
   find_package(libaec 1.0.6 REQUIRED)
 endif()
