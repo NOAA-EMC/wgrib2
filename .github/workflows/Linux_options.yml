@@ -39,6 +39,9 @@ jobs:
         - { 
             options: "-DBUILD_WGRIB=ON"
           }
+        - {
+            options: "-DUSE_OPENJPEG=ON"
+          }
           
     steps:
 
@@ -67,7 +70,7 @@ jobs:
       if: steps.cache-jasper.outputs.cache-hit != 'true'
       run: |
         cd jasper
-        ./configure --prefix=$HOME/Jasper
+        ./configure --prefix=$HOME/jasper
         make
         make install
 
