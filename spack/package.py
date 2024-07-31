@@ -98,7 +98,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         "fortran_api",
         default=True,
         description="Make wgrib2api which allows fortran code to read/write grib2",
-        when="@:3.1",
+        when="@3.3:",
     )
     #   Not currently working for @3.2:
     #    variant("lib", default=True, description="Build library", when="@3.2:")
