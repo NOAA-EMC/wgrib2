@@ -1,3 +1,8 @@
+# This is the CMake file for the ftn_api directory in the wgrib2
+# project. This will only build if MAKE_FTN_API=ON and 
+# BUILD_LIB=ON
+#
+# Kyle Gerheiser
 
 set(fortran_src
   wgrib2api.f90
