@@ -151,7 +151,8 @@ message(STATUS "Writing config.h...")
 configure_file("${PROJECT_SOURCE_DIR}/wgrib2/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-message(STATUS "Adding wgrib2, aux_probs subdirectories...")
+message(STATUS "Adding wgrib2, aux_probs, and data subdirectories...")
+include_directories(data)
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
 
