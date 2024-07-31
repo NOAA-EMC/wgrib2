@@ -106,6 +106,7 @@ copy_test_data(ref_sec0.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
 copy_test_data(ref_sec_len.gdaswave.t00z.wcoast.0p16.f000.grib2.txt)
 copy_test_data(ref_sec_len.simple_packing.grib2.txt)
 copy_test_data(ref_simple_packing.grib2.spread.txt)
+copy_test_data(ref_wmo_rot_lat_lon.txt)
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)

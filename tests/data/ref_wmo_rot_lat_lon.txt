@@ -1,0 +1,70 @@
+1:0:(11,14),lon=-8.743736,lat=28.634338,val=-36.4:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+2:382483:(11,14),lon=-8.743736,lat=28.634338,val=-22:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+3:764966:(11,14),lon=-8.743736,lat=28.634338,val=-37:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+4:1092836:(11,14),lon=-8.743736,lat=28.634338,val=-20:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+5:1475319:(11,14),lon=-8.743736,lat=28.634338,val=-21.1:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+6:1803189:(11,14),lon=-8.743736,lat=28.634338,val=0.6:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+7:2131059:(11,14),lon=-8.743736,lat=28.634338,val=-6.1:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+8:2458929:(11,14),lon=-8.743736,lat=28.634338,val=8.9:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+9:2786799:(11,14),lon=-8.743736,lat=28.634338,val=1:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+10:3114669:(11,14),lon=-8.743736,lat=28.634338,val=11:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+11:3442539:(11,14),lon=-8.743736,lat=28.634338,val=4.9:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+12:3770409:(11,14),lon=-8.743736,lat=28.634338,val=9:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+13:4043666:(11,14),lon=-8.743736,lat=28.634338,val=6.8:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000
+14:4316923:(11,14),lon=-8.743736,lat=28.634338,val=2:grid_template=1:winds(N/S):
+	rotated lat-lon grid:(665 x 657) units 1e-06 input WE:SN output WE:SN res 48
+	lat -20.000000 to 21.000000 by 0.062500
+	lon 342.000000 to 23.500000 by 0.062500 #points=436905
+	south pole lat=-40.000000 lon=10.000000 angle of rot=0.000000

@@ -38,6 +38,11 @@ echo "*** Testing new_grid_order on file in incorrect order."
 touch new_grid_reorder.txt
 diff -w new_grid_reorder.txt new_grid.txt
 
+echo "*** Testing conversion to wmo rot lat-lon grid"
+../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid rot-ll:10:-40:0 342:665:0.0625 -20:657:0.0625 \
+   junk.grb
+
+exit 1
 echo "*** Testing conversion to NCEP grid definition 2"
 ../wgrib2/wgrib2 test.grb -new_grid_winds earth -new_grid ncep grid 2 junk.grb
 ../wgrib2/wgrib2 junk.grb -grid -v2 -s -lon 10 12 -lon 20 80 > ncep_grid_2.txt
