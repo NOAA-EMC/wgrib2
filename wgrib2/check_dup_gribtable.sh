@@ -1,5 +1,7 @@
 #!/bin/sh
-# This script checks parameter info for wgrib2.
+# This script checks parameter info for wgrib2. This is a test script
+# that is manually run when updating the grib2 table from the NCO web
+# pages.
 
 export LC_ALL=C
 
