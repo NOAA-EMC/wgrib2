@@ -263,8 +263,6 @@ unsigned char blank_sec1[21] = { 0,0,0,21,1,
                 255, 255, 255, 255, 255, // month .. second
                 255, 255};
 
-/* is is for IPOLATES equal 3 */
-
 int f_new_grid(ARG4) {
     struct local_struct *save;
 
@@ -302,11 +300,8 @@ int f_new_grid(ARG4) {
     if (mode == -1) {                   // initialization
         decode = 1;
         output_order_wanted = raw;      // in raw order
+// ALEX
 	use_ncep_post_arakawa();
-#ifdef G95
-        // initialize g95 runtime library
-        if (g95_runstop == 0) { g95_runtime_start(0,NULL); g95_runstop = 1; }
-#endif
 
         // allocate static variables
 
