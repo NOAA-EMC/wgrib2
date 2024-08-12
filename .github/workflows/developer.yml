@@ -57,54 +57,6 @@ jobs:
         make
         make install
 
-    - name: checkout-sp
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-sp
-        path: sp
-        ref: develop
-
-    - name: build-sp
-      run: |
-        cd sp
-        mkdir build
-        cd build
-        cmake -DCMAKE_INSTALL_PREFIX=~/sp -DBUILD_8=ON ..
-        make -j2
-        make install
-
-    - name: checkout-ip
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip
-        path: ip
-        ref: v3.3.3
-  
-    - name: build-ip
-      run: |
-        cd ip
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
-        make -j2
-        make install
-
-    - name: checkout-ip2
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip2
-        path: ip2
-        ref: develop
-
-    - name: build-ip2
-      run: |
-        cd ip2
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip2 -DCMAKE_PREFIX_PATH=~
-        make -j2
-        make install        
-
     - name: checkout-ip
       uses: actions/checkout@v4
       with:
@@ -141,7 +93,7 @@ jobs:
         export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/ip2;~/sp;~/jasper" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON
+        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/jasper" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null

@@ -93,7 +93,7 @@ endif()
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
 message(STATUS "Checking if the user want to use NCEPLIBS-ip...")
 if(USE_IPOLATES)
-  find_package(ip CONFIG REQUIRED)
+  find_package(ip 5.1.0 CONFIG REQUIRED)
   list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib_d")
   # list(APPEND definitions_list -DUSE_IPOLATES)
 endif()
