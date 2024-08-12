@@ -9,8 +9,7 @@ import re
 from spack.package import *
 
 variant_map = {
-    "netcdf3": "USE_NETCDF3",
-    "netcdf4": "USE_NETCDF4",
+    "netcdf": "USE_NETCDF",
     "spectral": "USE_SPECTRAL",
     "mysql": "USE_MYSQL",
     "udf": "USE_UDF",
@@ -76,13 +75,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         return url_fmt.format(version)
 
     variant(
-        "netcdf3",
-        default=True,
-        description="Link in netcdf3 library to write netcdf3 files",
-        when="@:3.1",
-    )
-    variant(
-        "netcdf4", default=False, description="Link in netcdf4 library to write netcdf3/4 files"
+        "netcdf", default=False, description="Link in netcdf library to read, write netcdf files"
     )
     variant(
         "ipolates",
