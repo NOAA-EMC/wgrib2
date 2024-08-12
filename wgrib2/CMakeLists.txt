@@ -84,7 +84,7 @@ endif()
 add_executable(wgrib2_exe ${callable_src})
 set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
-if(USE_NETCDF4)
+if(USE_NETCDF)
   target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
 endif()
 

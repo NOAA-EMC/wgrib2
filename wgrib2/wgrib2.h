@@ -16,13 +16,6 @@
 
 #include "wgrib2_api.h"
 
-#ifdef USE_NETCDF4
-#define USE_NETCDF
-#endif
-#ifdef USE_NETCDF3
-#define USE_NETCDF
-#endif
-
 #ifndef BUILD_COMMENTS
 #define BUILD_COMMENTS "unknown build"
 #endif

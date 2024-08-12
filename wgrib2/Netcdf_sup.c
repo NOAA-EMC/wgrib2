@@ -26,7 +26,7 @@ vsm: test compilation with undefined USE_NETCDF...
 
 //#define DEBUG_NC
 
-#if defined USE_NETCDF3 || defined USE_NETCDF4
+#if defined USE_NETCDF
 
 /*
  * Create time string (UTC) from time

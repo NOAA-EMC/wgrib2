@@ -1,4 +1,4 @@
-/******************************************************************************************
+/******************************************************************************************FF
 
  This file is part of wgrib2 and is distributed under terms of the GNU General Public License
  For details see, Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
@@ -23,13 +23,10 @@
 
 //#define DEBUG_NC
 
-#if defined USE_NETCDF3 || defined USE_NETCDF4
+#if defined USE_NETCDF
 #include <netcdf.h>
 
 // change by Sander Hulst 5/2011, for netcdf-4 library compiled without netcdf-4/hdf format 
-#if defined USE_NETCDF3
-#undef NC_NETCDF4
-#endif
 
 /* defined in Netcdf_sup.c */
 extern g2nc_4Dlt nc_4Dlt[G2NC_NUM_4DLT];
@@ -255,34 +252,8 @@ int f_netcdf(ARG1)
     save->dim_latlon=0;
     save->lev_ind=-1;
     save->time_ind=-1;
-    {
-      const char * vlib;
-      float nclib_ver;
-      vlib = nc_inq_libvers();
-      sscanf(vlib,"%f",&nclib_ver);
+    save->nc4 = nc4 ? 1 : 0;
 
-#ifdef DEBUG_NC
-fprintf(stderr,"netcdf: library version defined as = %f\n",nclib_ver);
-fprintf(stderr,"netcdf: long version = %s\n",vlib);
-#endif
-      save->nc4 = 0;
-      if(nc4)
-      {
-#ifdef NC_NETCDF4
-        if(nclib_ver >= 4.0) save->nc4 = 1;
-        else
-        {
-          fatal_error(
-"netcdf: -nc4 option require wgrib2 to be compiled with NetCDF-4/HDF5/zlib libraries,\n was compiled with libnetcdf version %s",
-          vlib);
-        }
-#else
-        fatal_error(
-"netcdf: -nc4 option require wgrib2 to be compiled with NetCDF-4/HDF5/zlib libraries,\n was compiled with libnetcdf version %s",
-          vlib);
-#endif
-      }
-    }
     if ( nc_table )
     {
       if ( nc_table->grads >= 0)  save->grads_compatible = nc_table->grads;
@@ -758,14 +729,11 @@ fprintf(stderr,"netcdf: skip this field as not at one of user-defined levels: le
       save->verf_utime = verf_utime;
       // define NEW nc file, assume nx and ny of the 1st message hold for all messages...
     // get some info for grid_mapping
-#ifdef NC_NETCDF4
       if (save->nc4)
-        netcdf_command( nc_create(save->ncfile, NC_NETCDF4, &(save->ncid)) );
+        netcdf_command_plus( nc_create(save->ncfile, NC_NETCDF4, &(save->ncid)),"error creating compressed netcdf4 file" );
       else
-        netcdf_command( nc_create(save->ncfile, NC_CLASSIC_MODEL, &(save->ncid)) );
-#else
-      netcdf_command( nc_create(save->ncfile, 0, &(save->ncid)) );
-#endif
+        netcdf_command_plus( nc_create(save->ncfile, NC_CLASSIC_MODEL, &(save->ncid)),"error creating classic netcdf file"  );
+
       create_nc_dims(save->ncid, lt_4D,
           &(save->time_dim), &(save->time_var), save->time_ind,
           save->time_step, save->time_step_type,
@@ -1047,7 +1015,6 @@ min, max, add_offset, scale_factor, varname_buf);
         netcdf_command( nc_put_att_float(save->ncid, varid, "valid_min", NC_FLOAT, 1, &valid_min) );
         netcdf_command( nc_put_att_float(save->ncid, varid, "valid_max", NC_FLOAT, 1, &valid_max) );
       }
-#ifdef NC_NETCDF4
       if (save->nc4)
       {
         netcdf_command( nc_def_var_chunking(save->ncid, varid, NC_CHUNKED, chunks) );
@@ -1056,7 +1023,6 @@ min, max, add_offset, scale_factor, varname_buf);
 //        netcdf_command( nc_def_var_endian(save->ncid, varid, endian) );
 //        NC_ENDIAN_NATIVE,NC_ENDIAN_LITTLE,NC_ENDIAN_BIG
       }
-#endif
       netcdf_command( nc_enddef(save->ncid) );
     }
 

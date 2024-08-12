@@ -148,7 +148,7 @@ extern int warn_check_pdt;
 
 extern char ext_name_field, ext_name_space;
 
-#if defined USE_NETCDF3 || defined USE_NETCDF4
+#if defined USE_NETCDF
 extern int nc4;
 #endif
 
@@ -269,7 +269,7 @@ void init_globals(void) {
     ext_name_field = '.';
     ext_name_space = '_';
 
-#if defined USE_NETCDF3 || defined USE_NETCDF4
+#if defined USE_NETCDF
     nc4 = 0;
 #endif
 

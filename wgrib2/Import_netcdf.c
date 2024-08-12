@@ -22,7 +22,7 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-#if defined USE_NETCDF3 || defined USE_NETCDF4
+#if defined USE_NETCDF
 
 #include <netcdf.h>
 
