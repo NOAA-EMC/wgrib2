@@ -34,7 +34,7 @@ jobs:
             options: "-DUSE_AEC=ON"
           }
         - { 
-            options: "-DUSE_NETCDF4=ON"
+            options: "-DUSE_NETCDF=ON"
           }
         - { 
             options: "-DBUILD_WGRIB=ON"
