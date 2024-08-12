@@ -9,6 +9,8 @@ import re
 from spack.package import *
 
 variant_map = {
+    "netcdf3": "USE_NETCDF3",
+    "netcdf4": "USE_NETCDF4",
     "netcdf": "USE_NETCDF",
     "spectral": "USE_SPECTRAL",
     "mysql": "USE_MYSQL",
@@ -75,8 +77,18 @@ class Wgrib2(MakefilePackage, CMakePackage):
         return url_fmt.format(version)
 
     variant(
-        "netcdf", default=False, description="Link in netcdf library to read, write netcdf files"
+        "netcdf3",
+        default=True,
+        description="Link in netcdf3 library to write netcdf3 files",
+        when="@:3.1",
     )
+    variant(
+        "netcdf4", default=False, description="Link in netcdf4 library to write netcdf3/4 files"
+    )
+    variant(
+        "netcdf", default=False, description="Link in netcdf library to write netcdf3/4 files new"
+    )
+
     variant(
         "ipolates",
         default=False,
@@ -140,11 +152,16 @@ class Wgrib2(MakefilePackage, CMakePackage):
     variant("openjpeg", default=False, description="Enable OpenJPEG", when="@:3.1")
     variant("enable_docs", default=False, description="Build doxygen documentation", when="@3.4.0:")
 
+    conflicts("+netcdf3", when="+netcdf4")
+    conflicts("+netcdf3", when="+netcdf")
+    conflicts("+netcdf4", when="+netcdf")
     conflicts("+openmp", when="%apple-clang")
 
+    depends_on("wget", type=("build"), when="@:3.1 +netcdf4")
     depends_on("wget", type=("build"), when="@:3.1 +netcdf")
     depends_on("ip@5.1:", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
+    depends_on("netcdf-c", when="@3.2: +netcdf4")
     depends_on("netcdf-c", when="@3.2: +netcdf")
     depends_on("jasper@:2", when="@3.2: +jasper")
     depends_on("zlib-api", when="+png")
@@ -216,6 +233,14 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
 
     def build(self, pkg, spec, prefix):
         # Get source files for netCDF4 builds
+        if self.spec.satisfies("+netcdf4"):
+            with working_dir(self.build_directory):
+                os.system(
+                    "wget https://downloads.unidata.ucar.edu/netcdf-c/4.8.1/netcdf-c-4.8.1.tar.gz"
+                )
+                os.system(
+                    "wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-1.12.1/src/hdf5-1.12.1.tar.gz"
+                )
         if self.spec.satisfies("+netcdf"):
             with working_dir(self.build_directory):
                 os.system(
