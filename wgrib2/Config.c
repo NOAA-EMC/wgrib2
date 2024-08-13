@@ -10,7 +10,7 @@
 #include "grb2.h"
 #include "fnlist.h"
 
-#if defined USE_NETCDF3 || defined USE_NETCDF4
+#if defined USE_NETCDF
 #include <netcdf.h>
 #endif
 
@@ -39,17 +39,13 @@ int f_config(ARG0) {
     inv_out += strlen(inv_out);
     sprintf(inv_out,"Compiled on %s %s\n\n",__TIME__,__DATE__);
 
-#if defined USE_NETCDF3 || defined USE_NETCDF4
+#if defined USE_NETCDF
     strcat(inv_out, "Netcdf package: ");
     strcat(inv_out,  nc_inq_libvers());
     strcat(inv_out, " is installed\n");
 #else
     strcat(inv_out, "Netcdf package is not installed\n");
 #endif
-//#if defined USE_NETCDF4
-//    strcat(inv_out, "netcdf4: " USE_NETCDF4 "\n");
-//    strcat(inv_out, "hdf5: " USE_HDF5 "\n");
-//#endif
 #ifdef USE_AEC
     strcat(inv_out, USE_AEC " is installed\n" );
 #endif

@@ -11,9 +11,7 @@ project(wgrib2 VERSION ${pVersion} LANGUAGES Fortran C)
 
 # Handle user build options.
 option(ENABLE_DOCS "Enable generation of doxygen-based documentation." OFF)
-option(USE_NETCDF3 "Use NetCDF-3?" off)
-option(USE_NETCDF4 "Use NetCDF-4?" off)
-option(USE_HDF5 "Use HDF5?" off)
+option(USE_NETCDF "Use NetCDF" on)
 option(USE_REGEX "Use Regex?" on)
 option(USE_TIGGE "Use tigge?" on)
 option(USE_MYSQL "Use MySQL?" off)
@@ -86,10 +84,6 @@ if(USE_G2CLIB)
   endif()
 endif()
 
-if(USE_NETCDF3 AND USE_NETCDF4)
-  message(FATAL_ERROR "USE_NETCDF3 OR USE_NetCDF4, not both")
-endif()
-
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
 message(STATUS "Checking if the user want to use NCEPLIBS-ip...")
 if(USE_IPOLATES)
@@ -99,9 +93,8 @@ if(USE_IPOLATES)
 endif()
 
 message(STATUS "Checking if the user want to use NetCDF...")
-if(USE_NETCDF4)
+if(USE_NETCDF)
   find_package(NetCDF MODULE REQUIRED COMPONENTS C)
-  list(APPEND definitions_list -DUSE_NETCDF4 -DUSE_HDF5 -DHDF5="hdf5")
 endif()
 
 if(USE_OPENJPEG AND USE_JASPER)

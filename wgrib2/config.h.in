@@ -2,9 +2,7 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
-#cmakedefine USE_NETCDF3 
-#cmakedefine USE_NETCDF4
-#cmakedefine USE_HDF5
+#cmakedefine USE_NETCDF
 #cmakedefine USE_REGEX
 #cmakedefine USE_TIGGE
 #cmakedefine USE_MYSQL
