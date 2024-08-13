@@ -17,6 +17,7 @@
 #   - NetCDF_CONFIG_EXECUTABLE    - the netcdf-config executable if found
 #   - NetCDF_PARALLEL             - Boolean True if NetCDF4 has parallel IO support via hdf5 and/or pnetcdf
 #   - NetCDF_HAS_PNETCDF          - Boolean True if NetCDF4 has pnetcdf support
+#   - NetCDF_HAS_HDF5             - Boolean True if NetCDF4 has HDF5 support
 #
 # Deprecated Defines
 #   - NetCDF_LIBRARIES            - [Deprecated] Use NetCDF::NetCDF_<LANG> targets instead.
@@ -182,6 +183,13 @@ else()
   set(NetCDF_PARALLEL FALSE CACHE STRING "NetCDF has no parallel IO capability." FORCE)
 endif()
 
+netcdf_config(${NetCDF_C_CONFIG_EXECUTABLE} --has-hdf5 _val)
+if( _val MATCHES "^(yes)$" )
+  set(NetCDF_HAS_HDF5 TRUE CACHE STRING "NetCDF has HDF5 enabled." FORCE)
+else()
+  set(NetCDF_HAS_HDF5 FALSE CACHE STRING "NetCDF does not have HDF5 enabled." FORCE)
+endif()
+
 if(NetCDF_PARALLEL)
   find_package(MPI REQUIRED)
 endif()
@@ -307,6 +315,7 @@ if( ${CMAKE_FIND_PACKAGE_NAME}_FOUND AND NOT ${CMAKE_FIND_PACKAGE_NAME}_FIND_QUI
   message( STATUS "Find${CMAKE_FIND_PACKAGE_NAME} defines targets:" )
   message( STATUS "  - NetCDF_VERSION [${NetCDF_VERSION}]")
   message( STATUS "  - NetCDF_PARALLEL [${NetCDF_PARALLEL}]")
+  message( STATUS "  - NetCDF_HAS_HDF5 [${NetCDF_HAS_HDF5}]")
   foreach( _comp IN LISTS _new_search_components )
     string( TOUPPER "${_comp}" _COMP )
     message( STATUS "  - NetCDF_${_comp}_CONFIG_EXECUTABLE [${NetCDF_${_comp}_CONFIG_EXECUTABLE}]")
@@ -328,6 +337,7 @@ foreach( _prefix NetCDF NetCDF4 NETCDF NETCDF4 ${CMAKE_FIND_PACKAGE_NAME} )
   set( ${_prefix}_FOUND        ${${CMAKE_FIND_PACKAGE_NAME}_FOUND} )
   set( ${_prefix}_CONFIG_EXECUTABLE ${NetCDF_CONFIG_EXECUTABLE} )
   set( ${_prefix}_PARALLEL ${NetCDF_PARALLEL} )
+  set( ${_prefix}_HAS_HDF5 ${NetCDF_HAS_HDF5} )
 
   foreach( _comp ${_search_components} )
     string( TOUPPER "${_comp}" _COMP )
