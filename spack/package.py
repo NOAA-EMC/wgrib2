@@ -9,8 +9,8 @@ import re
 from spack.package import *
 
 variant_map = {
-    "netcdf3": "USE_NETCDF3",
-    "netcdf4": "USE_NETCDF4",
+#    "netcdf3": "USE_NETCDF3",
+#    "netcdf4": "USE_NETCDF4",
     "netcdf": "USE_NETCDF",
     "spectral": "USE_SPECTRAL",
     "mysql": "USE_MYSQL",
@@ -77,18 +77,18 @@ class Wgrib2(MakefilePackage, CMakePackage):
             url_fmt = "https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz.v{0}"
         return url_fmt.format(version)
 
-    variant(
-        "netcdf3",
-        default=True,
-        description="Link in netcdf3 library to write netcdf3 files",
-        when="@:3.1",
-    )
-    variant(
-        "netcdf4", 
-        default=False, 
-        description="Link in netcdf4 library to write netcdf3/4 files", 
-        when="@3.1.1:3.3"
-    )
+#    variant(
+#        "netcdf3",
+#        default=True,
+#        description="Link in netcdf3 library to write netcdf3 files",
+#        when="@:3.1",
+#    )
+#    variant(
+#        "netcdf4", 
+#        default=False, 
+#        description="Link in netcdf4 library to write netcdf3/4 files", 
+#        when="@3.1.1:3.3"
+#    )
     variant(
         "netcdf", 
         default=False, 
@@ -158,16 +158,16 @@ class Wgrib2(MakefilePackage, CMakePackage):
     variant("openjpeg", default=False, description="Enable OpenJPEG", when="@:3.1")
     variant("enable_docs", default=False, description="Build doxygen documentation", when="@3.4.0:")
 
-    conflicts("+netcdf3", when="+netcdf4")
-    conflicts("+netcdf3", when="+netcdf")
+    #conflicts("+netcdf3", when="+netcdf4")
+    #conflicts("+netcdf3", when="+netcdf")
     conflicts("+openmp", when="%apple-clang")
 
     depends_on("wget", type=("build"), when="@:3.1 +netcdf4")
     depends_on("wget", type=("build"), when="@:3.1 +netcdf")
     depends_on("ip@5.1:", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
-    depends_on("netcdf-c", when="@3.2: +netcdf4")
-    depends_on("netcdf-c", when="@3.2: +netcdf")
+    #depends_on("netcdf-c", when="@3.2: +netcdf4")
+    depends_on("netcdf-c", when="@3.4: +netcdf")
     depends_on("jasper@:2", when="@3.2: +jasper")
     depends_on("zlib-api", when="+png")
     depends_on("libpng", when="+png")
