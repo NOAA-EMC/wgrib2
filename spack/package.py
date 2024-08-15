@@ -84,10 +84,16 @@ class Wgrib2(MakefilePackage, CMakePackage):
         when="@:3.1",
     )
     variant(
-        "netcdf4", default=False, description="Link in netcdf4 library to write netcdf3/4 files"
+        "netcdf4", 
+        default=False, 
+        description="Link in netcdf4 library to write netcdf3/4 files", 
+        when="@3.1.1:3.3"
     )
     variant(
-        "netcdf", default=False, description="Link in netcdf4 library to write netcdf3/4 files"
+        "netcdf", 
+        default=False, 
+        description="Link in netcdf4 library to write netcdf3/4 files",
+        when="@3.4:"
     )
     variant(
         "ipolates",
