@@ -6,7 +6,7 @@ tab="4.235"
 no=`echo $tab | sed 's/-/./'`
 tab=`echo $tab | sed 's/\./-/'`
 
-out="CodeTable_$no.dat"
+out="../wgrib2/CodeTable_$no.dat"
 
 # set -x
 
@@ -25,7 +25,7 @@ lc=0
 [ $no == '4.10' ] && no='4.10_need_to_edit'
 [ $no == '4.15' ] && lc=1
 
-out="CodeTable_$no.dat"
+out="../wgrib2/CodeTable_$no.dat"
 
 if [ 1 -eq 1 ] ; then
 

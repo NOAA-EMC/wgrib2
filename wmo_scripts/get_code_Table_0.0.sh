@@ -3,7 +3,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="CodeTable_0.0.dat"
+outfile="../wgrib2/CodeTable_0.0.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 0.0: Product discipline

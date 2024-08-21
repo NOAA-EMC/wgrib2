@@ -3,7 +3,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="CodeTable_3.15.dat"
+outfile="../wgrib2/CodeTable_3.15.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 3.15: Physical meaning of vertical coordinate

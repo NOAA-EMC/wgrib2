@@ -23,7 +23,7 @@ lc=0
 [ $no == '4.9' ] && no='4.9_need_to_edit'
 [ $no == '4.10' ] && no='4.10_need_to_edit'
 
-out="CodeTable_$no.dat"
+out="../wgrib2/CodeTable_$no.dat"
 
 
 if [ 1 -eq 1 ] ; then

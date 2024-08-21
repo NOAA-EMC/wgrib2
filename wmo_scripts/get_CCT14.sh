@@ -3,7 +3,7 @@
 
 urlbase="https://github.com/wmo-im/CCT"
 
-outfile="codetable_4_230.c"  # resp. codetable_4_233.c
+outfile="../wgrib2/codetable_4_230.c"  # resp. codetable_4_233.c
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---Common Code Table 14: Atmospheric chemical or physical constituent type

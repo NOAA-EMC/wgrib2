@@ -3,7 +3,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="CodeTable_3.1.dat"
+outfile="../wgrib2/CodeTable_3.1.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 3.1: Grid definition template number

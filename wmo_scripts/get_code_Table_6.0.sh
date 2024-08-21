@@ -3,7 +3,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="CodeTable_6.0.dat"
+outfile="../wgrib2/CodeTable_6.0.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 6.0: Bit map indicator

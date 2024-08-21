@@ -3,7 +3,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="CodeTable_4.7.dat"
+outfile="../wgrib2/CodeTable_4.7.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 4.7: Derived forecast

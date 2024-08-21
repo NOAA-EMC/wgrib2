@@ -3,7 +3,7 @@
 
 urlbase="https://github.com/wmo-im/CCT"
 
-outfile="code_table0.dat"
+outfile="../wgrib2/code_table0.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---Common Code Table 11: Originating/generating centres

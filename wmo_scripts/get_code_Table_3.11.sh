@@ -3,7 +3,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="CodeTable_3.11.dat"
+outfile="../wgrib2/CodeTable_3.11.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 3.11: Interpretation of list of numbers at end of section 3

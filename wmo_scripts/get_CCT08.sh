@@ -3,7 +3,7 @@
 
 urlbase="https://github.com/wmo-im/CCT"
 
-outfile="BUFRTable_0_02_019.dat"
+outfile="../wgrib2/BUFRTable_0_02_019.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---Common Code Table 08: Satellite Instruments
