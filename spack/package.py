@@ -238,6 +238,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
 
     def build(self, pkg, spec, prefix):
         # Get source files for netCDF4 builds
+        '''
         if self.spec.satisfies("+netcdf4"):
             with working_dir(self.build_directory):
                 os.system(
@@ -254,7 +255,8 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
                 os.system(
                     "wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-1.12.1/src/hdf5-1.12.1.tar.gz"
                 )
-
+        '''
+        
         make()
 
         # Move wgrib2 executable to a tempoary directory
