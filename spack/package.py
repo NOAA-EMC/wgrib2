@@ -162,8 +162,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
     conflicts("+netcdf3", when="+netcdf")
     conflicts("+openmp", when="%apple-clang")
 
-    depends_on("wget", type=("build"), when="@:3.1 +netcdf4")
-    depends_on("wget", type=("build"), when="@:3.1 +netcdf")
     depends_on("ip@5.1:", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
@@ -237,25 +235,6 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
         env.set("COMP_SYS", comp_sys)
 
     def build(self, pkg, spec, prefix):
-        # Get source files for netCDF4 builds
-        '''
-        if self.spec.satisfies("+netcdf4"):
-            with working_dir(self.build_directory):
-                os.system(
-                    "wget https://downloads.unidata.ucar.edu/netcdf-c/4.8.1/netcdf-c-4.8.1.tar.gz"
-                )
-                os.system(
-                    "wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-1.12.1/src/hdf5-1.12.1.tar.gz"
-                )
-        if self.spec.satisfies("+netcdf"):
-            with working_dir(self.build_directory):
-                os.system(
-                    "wget https://downloads.unidata.ucar.edu/netcdf-c/4.8.1/netcdf-c-4.8.1.tar.gz"
-                )
-                os.system(
-                    "wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-1.12.1/src/hdf5-1.12.1.tar.gz"
-                )
-        '''
         
         make()
 
