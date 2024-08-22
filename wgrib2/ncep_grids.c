@@ -164,17 +164,17 @@ void ncep_grids(const char **arg1, const char **arg2, const char **arg3) {
 		*arg3 = "89.95833333333:2160:-0.083333333333";
 		break;
 
-		case 184: /* CONUS NDFD 2.5 km */
-			*arg1 = "lambert:265:25";
-			*arg2 = "238.446:2145:2540";
-			*arg3 = "20.192:1377:2540";
-			break;
+	    case 184: /* CONUS NDFD 2.5 km */
+		*arg1 = "lambert:265:25";
+		*arg2 = "238.446:2145:2540";
+		*arg3 = "20.192:1377:2540";
+		break;
 
-		case 187: /* CONUS RTMA 2.5 km */
-			*arg1 = "lambert:265:25";
-			*arg2 = "238.446:2145:2540";
-			*arg3 = "20.192:1597:2540";
-			break;
+	    case 187: /* CONUS RTMA 2.5 km */
+		*arg1 = "lambert:265:25";
+		*arg2 = "238.446:2145:2540";
+		*arg3 = "20.192:1597:2540";
+		break;
 
 	    case 194: /* Puerto Rico NDFD 3 km Mercator */
 		*arg1 = "mercator:20";
