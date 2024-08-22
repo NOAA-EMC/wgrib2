@@ -1,0 +1,615 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2: example, converting CMORPH into GRIB</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; Converting CMORPH into GRIB</font>
+
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>Converting CMORPH into GRIB</h3>
+</font>
+
+<h3>Introduction</h3>
+
+<p>
+Converting a binary file into GRIB is a common operation.  Once the
+data in grib, using the data is easier and safer.  I remember someone
+who stored data in a simple binary file.  Every day, he would get the Z500
+and tack it onto the file as a simple (nx,ny) array.  So the first record
+was January 1, 20XX Z500, the second record was January 2, 20XX Z500 and so on.
+Suppose the computer that updated the archive was down one day, his archive would 
+be out of sync, and he may never know it.  Not safe.  Once the data
+are stored in a "descriptive" format, you can never get out of sync and other
+programs can read the data.
+
+<p>
+CPC produces CMORPH which is a high temporal estimate of the precipitation.
+Making 30 minute estimates of the precip is hard because satellites that
+"see" the precip are polar orbiters.  To make a "movie", you really want
+to use a geostationary satellite.  So CMORPH uses the polar orbiters to
+get the precip when available. For the other times, it assumes that
+the precip from a cloud system is similar to the precip from that cloud system
+when observed by a polar orbiter in a previous and future time.  Identification
+of cloud systems can be done using imagery from geostationary satellites.
+
+<p>
+A sample binary CMORPH file is described by the following GrADS control file.
+
+<pre>
+DSET ^CMORPH2_3Phase_0.25deg-30min_%y4%m2%d2%h2
+OPTIONS template little_endian
+UNDEF -999.0
+TITLE CMORPH-2 3-Phase 0.25deg-30min precip rate
+XDEF 1440 LINEAR   0.125 0.25
+YDEF  720 LINEAR -89.875 0.25
+ZDEF    1 LEVELS   1
+TDEF 9999 LINEAR 00:00Z13Sep2018 30mn
+VARS 4
+cmorph  1  99  total precip rate  [mm/hr]
+liquid  1  99  liquid precip rate [mm/hr]
+mixed   1  99  mixed precip rate  [mm/hr]
+solid   1  99  solid precip rate  [mm/hr]
+
+name = CMORPH2_3Phase_0.25deg-30min_YYYYMMDDHH
+format: little endian ieee
+        fortran direct access
+        undefined grid values have the value -999.0
+grid:   1440 x 720 we:sn
+        0.125W to 359.885W by 0.25 degrees
+        89.875S to 89.875N by 0.25 degrees
+fields: 4
+        #1 CMORPH (total precip) unit mm/hr
+        #2 liquid precip
+        #3 mixed precip
+        #4 solid precip
+</pre>
+
+
+<h3>Making a Template File</h3>
+
+<p>
+We are going to show two ways to gribify the CMORPH data.  One is
+by using a fortran program and the second by the wgrib2 utility.
+
+
+
+<p>
+
+The <font color=red>-netcdf</font> option writes the grid values to a specified
+file in netcdf format using COARDS convention for the Latitude-Longitude, Mercator
+and Gaussian grids and the CF-1.0 convention for Lambert and Polar stereographic
+projection grids. Other grid templates and projections are not supported yet.
+
+<p>
+Default the grid values are written as 4 bytes float having {TIME,LAT,LON}
+dimension shape (3D data) and possible vertical LEV information added to the name of variables.
+For example, V wind component defined at 10 m level in atmosphere will have default name
+<font color=brown>VGRD_10maboveground</font>.
+With some minimal efforts and using the sub-options described below it is also possible to write data as a 4D data
+with the {TIME,LEV,LAT,LON} dimension shape that could be usefull for the vertical
+structure analysis etc.
+<p>
+3D and 4D data could be mixed in the same netcdf file if both have the same horizontal
+grid shapes. Practically any number of variables could be placed in to the single netcdf file
+as well as time dimension can be almost arbitrary extended. For these purposes
+please use the wgrib2 <font color=red>-append</font> option.
+All missing values in data are replaced by the _FillValue defined in wgrib2 as
+9.999e+20 for the float data, 32767 for short-packed data and 127 for byte-packed data.
+
+
+
+<h3>Simple usage</h3>
+<p>
+
+<pre>
+-netcdf file_name
+</pre>
+
+<h3>Example 1</h3>
+<p>
+
+<pre>
+<font color=brown>$ wgrib2 ../example/eta.t00z.awphys18.grb2 -netcdf eta.nc</font>
+
+The above line converts the grib2 file into a netcdf file.
+
+</pre>
+
+<h3>Sub-options for -netcdf</h3>
+
+<p>
+Next sub-options could help to customize created netcdf file(s).
+All sub-options must preceed the <font color=red>-netcdf</font> option as it is the wgrib2 rule.
+More then one <font color=red>-netcdf</font> option could be given on the wgrib2 command line,
+please read the documentation for wgrib2.
+Almost all sub-options have <font color=red>-no_...</font> version that annulates previous
+assignment.
+For the advanced users it is recommended to use the GRIB2 to NETCDF conversion table
+with the <font color=red>-nc_table</font> sub-option or combine the command line options
+with instructions in the <font color=red>-nc_table</font> conversion file.
+
+<p>
+The <font color=red>-append</font> option makes possible to create single
+large data set for long time series of gridded data. Time dimension of data in the netcdf file
+is "unlimited", it could be extended "forward" when adding new data but not "backward" before
+the first defined time value. If data for the same time step already exist in the updated
+netcdf file these will be silently overwritten.
+
+<p>
+The <font color=red>-nc_nlev</font> option is needed to export data to netcdf
+as 4D data defined in {TIME,LEV,LAT,LON} space.
+It must be followed by integer <font color=brown>max_number_of_vertical_levels</font>
+which defines the vertical dimension size of 4D data exported to the netcdf file.
+This value can not be found from each single grib2 message or sub-message,
+usually it has to be scanned the entire grib2 file or even number of files.
+It is the reason why the <font color=brown>max_number_of_vertical_levels</font>
+value must be provided by user.
+<p>
+Grib2 types of vertical levels eligible for export to the netcdf as 4D data
+are defined in the wgrib2 internal table and now include next types of GRIB2 levels:
+<pre>
+<table>
+<tr><td>20<td>:<td>K level
+<tr><td>100<td>:<td>pressure level
+<tr><td>104<td>:<td>sigma level
+<tr><td>105<td>:<td>hybrid level
+<tr><td>107<td>:<td>K isentropic level
+<tr><td>160<td>:<td>ocean depth below sea level
+</table>
+</pre>
+<p>
+Data for the first found eligible level type are treated as 4D and vertical level
+information is not added to the variable names.
+Error is generetad if data for other then first found eligible level type
+are met in the input stream.
+Data on the non-eligible levels are treated as 3D data  defined in the {TIME,LAT,LON} space
+with the possible level information included into the variable names or with the user-specified names
+(see <font color=red>-nc_table</font> option description below for how to do it).
+<p>
+The <font color=red>-nc_nlev</font> option has not <font color=red>-no_...</font> option,
+please use instead the <font color=brown>max_number_of_vertical_levels</font> equal to 0.
+In this case all data from the input stream will be threated as 3D.
+<p>
+When existing netcdf file is updated in the <font color=red>-append</font> mode
+the value of <font color=brown>max_number_of_vertical_levels</font> must not exceed
+initial value provided when the netcdf file was first created (defined).
+By default when first creating the netcdf file, vertical level values are not fixed
+(are undefined) and these are defined one-by-one when data at new level are added
+to the netcdf file, up to the <font color=brown>max_number_of_vertical_levels</font>.
+To overcome this feature please use the <font color=red>-nc_table</font> option.
+
+<p>
+The <font color=red>-nc_pack</font> option makes it possible to limit the range of defined values and pack data in the netcdf file specifying data range and packing type as <font color=brown>min:max[:float|byte|short]</font>. Type <font color=brown>float</font> here is
+default and do not assume data packing, only data range is checked. Data outside of
+specified range are replaced by missing value code for all types of packing.
+This replacement is done in the local copy of unpacked data, so main data array
+stays unchanged.
+Values of <font color=brown>min</font> and <font color=brown>max</font> could be any
+signed float. Packing is applied to all new variables in the input stream.
+If some variable was already defined in the netcdf file and now is appended to it
+in the <font color=red>-append</font> mode the initially defined and fixed in the netcdf file
+valid range and packing parameters are used.
+<p>
+The packing is possible to the <font color=brown>short</font> (2 bytes)
+or <font color=brown>byte</font> (1 byte) values with potential loss of precision.
+Both zero values of <font color=brown>min</font> and <font color=brown>max</font>
+packing parameters for the <font color=brown>short</font> or
+<font color=brown>byte</font> packing activate 'auto' packing when
+<font color=brown>min</font> and <font color=brown>max</font>
+values are defined from the first entered field.
+<!-- behaviour was modified January 2008, vsm
+When packing, fitting is checked, error is raised if data
+do not fit in the packing limits.
+-->
+<p>
+PS: packing in 'byte' is not directly accepted by GrADS v1.9b4 if netcdf file
+is open with 'sdfopen' command. But by some reasons using the GrADS
+data description file (catalog) for the same netcdf file helps in this situation.
+
+<p>
+The <font color=red>-nc_grads</font> option activates some tests for the created
+netcdf file to be GrADS (version 1.9b4) compatible,
+or to be open by sdfopen in gradsnc or gradsdods.
+The GrADS support only COARDS convention netcdf files;
+it do not support non-constant data time stepping
+and silently generates wrong time stamps for such netcdf files.
+Packing to byte also is not directly recognized by GrADS v1.9b4.
+With this option an error is raised and processing stops
+if any of criterias above is determined.
+
+<p>
+The <font color=red>-nc_table</font> option followed by the <I>file_name</I> is most usefull for the advanced users
+as it specifies the file where user can customize many features of created netcdf file.
+Next examples demonstrate which directives and conversion rules could be given
+in the <font color=red>-nc_table</font> file.
+Almost all of them are optional with exception of $nlev for the case
+when user explicitly specifies the vertical level values $levs.
+<p>
+<font color=red>$lev_type 100:pressure:pressure level:mb:0.01</font>
+<p>This directive explicitly defines the type of vertical level
+in the grib2 file that becomes eligible for treating data at these levels as 4D data
+and some it attributes for netcdf file.
+Default, first found level type listed in the wgrib2 build-in table
+of eligible levels is selected if no $lev_type directive found.
+<p>Fields here include:
+<pre>
+<table>
+<tr valign=top><td><font color=brown>100</font><td>-<td>the grib2 level type code number
+for treating data as 4D. In this example it is the code number for pressure levels, integer
+<tr valign=top><td><font color=brown>pressure</font><td>-<td>
+short_name for the vertical axis in the netcdf file, string
+<tr valign=top><td><font color=brown>pressure level</font><td>-<td>long_name for the vertical axis in the netcdf file, string, could include spaces
+<tr valign=top><td><font color=brown>mb</font><td>-<td>vertical axis units as written in the netcdf file, string
+<tr valign=top><td><font color=brown>0.01</font><td>-<td>decimal scale to convert grib2 level values to the netcdf-stored values, float. In this example we convert Pa to mb (hPa). It is default conversion scale for the pressure levels when exporting to the netcdf file
+</table>
+</pre>
+
+<font color=red>$nlev X</font>
+<p>This directive is an equivalent of the <font color=red>-nc_nlev</font> command line option
+but value in the <font color=red>-nc_table</font> file has precedence over the command line option if both are found.
+It is required if next $levs directive is specified.
+<p>
+<table>
+<tr><td><font color=red>$levs lev(1) lev(2) lev(3)...</font>
+<tr><td><font color=red>      ...lev(I-1) lev(I) lev(I+1)...</font>
+<tr><td><font color=red>      ...lev(X-1) lev(X)</font>
+</table>
+<p>
+This directive explicitly specifies the  vertical level values to be exported
+to the netcdf file, in the netcdf units.
+If this directive exists in the <font color=red>-nc_table</font> file and there is found the grib2 data
+eligible for the 4D presentation but defined on other then listed level -
+these data are skipped from export and work is silently continued.
+All data conversion parameters are checked before the $levs is checked.
+List of level values could consist of multiple lines;
+max line length in the <font color=red>-nc_table</font> file is limited by _MAX_PATH symbols (about 255 symbols);
+use space, ',', ';' or ':' as lev(i) fields separator.
+<p>
+Impact of $nlev and $levs directives is different depending on
+does the netcdf file is first created or it is updated.
+When the netcdf file is first created these values are written
+to the netcdf file fixing 4D data vertical structure.
+When updating an existing netcdf file in the <font color=red>-append</font> mode
+these parameters will work like filter limiting possible
+updates of 4D data by these that satisfy to the given $levs only and
+ignoring other. 3D (TIME,LAT,LON) data are not affected by these directives.
+<p>
+The $nlev and $levs directives could be necessary if records
+in the grib2 file have randomly changing vertical level values
+that makes it impossible sequentionally define valid order of vertical levels.
+
+<p>
+<font color=red>$grads 1</font>
+<p>This directive is an equivalent of the <font color=red>-nc_grads</font> command line option
+if passed value is 1 or to the <font color=red>-no_nc_grads</font> if value is 0.
+Directive in the <font color=red>-nc_table</font> file has precedence over the command line option.
+
+<p>
+<font color=red>wgib2_name:wgrib2_level|*:nc_name|ignore[:ignore|no|float|short|byte[:min:max]]</font>
+<p>
+All non-empty lines in the <font color=red>-nc_table</font> file not starting from the '$' symbol or from the comment mark '#'
+are treated as grib2 to netcdf conversion rules for the specified variables.
+In these strings the <font color=brown>wgib2_name</font> and <font color=brown>wgrib2_level</font>
+are strings as returned by the wgrib2 inventory;
+<font color=brown>*</font> used as the <font color=brown>wgrib2_level</font> will apply
+to all levels not given explicitly.
+The valid range and packing information is optional but it overwrites common
+packing rule if such is specified by the <font color=red>-nc_pack</font> command line option.
+Absence of packing information means no packing for this variable.
+Min and max values are any signed float values. Both could be omitted or put to zero.
+Last case means that automatic scaling will be estimated from the first entered
+<font color=brown>wgib2_name</font> field at the <font color=brown>wgrib2_level</font>
+or at the first level in case of <font color=brown>*</font> as level value.
+<p>
+If the keyword <font color=brown>ignore</font> is found as a netcdf variable name or
+as a packing type value, the corresponding data are ignored
+and do not written to the netcdf file.
+Impact from this keyword is similar to the wgrib2 <font color=red>-not</font> option
+or filtering data with the grep utility.
+<p>
+The <font color=brown>ignore</font> keyword is recommended if the data from the same
+grib2 file are exported in number of output files (netcdf or other)
+by the same wgrib2 process. Then the same decoded data could be passed
+for the output in other file of any supported type.
+Doing export to the single netcdf file it is not recommended to use the
+<font color=brown>ignore</font> keyword
+as corresponding data are first decoded and after that skipped from writing
+to the netcdf file.
+<p>
+In the next example two lines from the <font color=red>-nc_table</font> file instruct
+the wgrib2 utility export to the netcdf file the geopotential height changing name
+from <font color=brown>HGT</font> (wgrib2) to
+<font color=brown>geopotential</font> in the netcdf file,
+at all levels except at 975 mb if these data would be found in the grib2 decoded input data stream:
+<pre>
+<font color=brown>
+HGT:*:geopotential
+HGT:975 mb:ignore
+</font>
+</pre>
+All other variables not listed in the <font color=red>-nc_table</font> file but found in the input stream
+are processed as regular 3D data.
+
+
+<h3>Example 2</h3>
+<p>
+Next example shows the content of user-defined <font color=red>-nc_table</font> file
+for one special case of Japan Meteorological Agency MSM system grib2 data conversion.
+Same <font color=red>-nc_table</font> file includes the rules for
+conversion of both 'surface' and upper air data although
+the input grib2 files are different.
+
+<pre>
+<font color=brown>
+#
+# File name: jma_msm_g2nc.table
+# Description: Specifies parameters for conversion to Netcdf format
+# hourly analyses and forecasts of JMA MSM system as best suited to
+# my purposes: forcing of ocean model and reference data for analysis
+# of meteorological conditions with GrADS-based visualization tools.
+# Sergey Varlamov, July 2007
+#
+$lev_type  100:p:pressure level:mb:0.01
+$nlev      16
+$levs  1000 975 950 925 900 850 800 700 600 500
+        400 300 250 200 150 100
+$grads 1
+#
+# Upper air data on pressure levels, 05.2007 - 16 pressure levels
+#
+UGRD:*:u
+VGRD:*:v
+#UGRD:*:u:ignore
+#VGRD:*:v:ignore
+TMP:*:temp
+#write HGT at any level as hgtprs:
+HGT:*:hgtprs
+#but skip HGT at 100 mb, now commented - example and test
+#HGT:100 mb:hgtprs:ignore
+RH:*:rh:short:-2:110
+VVEL:*:omega
+#
+# JMA MSM model surface data conversion rules
+#
+PRMSL:mean sea level:prmsl
+PRES:surface:prsfc
+UGRD:10 m above ground:u10m
+VGRD:10 m above ground:v10m
+TMP:1.5 m above ground:t2m
+RH:1.5 m above ground:rh2m:short:-5:110
+TCDC:surface:ncld:short:-5:110
+LCDC:surface:ncld_low:short:-5:110
+MCDC:surface:ncld_mid:short:-5:110
+HCDC:surface:ncld_upper:short:-5:110
+APCP:surface:r1h
+# End of file
+</font>
+
+Using above file we could create the daily file with 3h analyses
+at the 'surface' layers from the input grib2 files
+with the next simple shell script:
+
+<font color=brown>
+date=20070715
+for (( j=0; j<=21; j+=3 )) #hour of day loop
+do
+  if [ $j -lt  10 ]
+  then
+    h=0$j
+  else
+    h=$j
+  fi
+  gpath=../example/Z__C_RJTD_${date}${h}0000_MSM_GPV_Rjp_Lsurf_FH00-15_grib2.bin
+
+  wgrib2 $gpath -match ":anl:" -nc_table ./jma_msm_g2nc.table -append -netcdf ./msm_s_${date}.nc
+  code=$?
+  if [ $code -eq 0 ]
+  then
+    echo ${date}${h}': created/added to Netcdf'
+  else
+    echo ${date}${h}': wgrib2 failed...'
+    exit $code
+  fi
+done
+</font>
+
+Or create the netcdf file with the 4D 3h analyses at 16 pressure levels if replace:
+
+<font color=brown>gpath=../example/Z__C_RJTD_${date}${h}0000_MSM_GPV_Rjp_L-pall_FH00-15_grib2.bin</font>
+
+and change the name for the output file:
+
+<font color=brown>./msm_s_${date}.nc</font> to the <font color=brown>./msm_p_${date}.nc</font>
+
+Resulting netcdf files could be used directly at least from the GrADS (gradsnc or gradsdods)
+utility for data visualization and analyses.
+</pre>
+
+<h3> Example 3</h3>
+
+In this example, we want to take some grib files, extract the 200, 500 and 700 height fields,
+convert to a regional subset and finally convert it into a netcdf file.  Since the -netcdf 
+option doesn't support appending, the netcdf conversion cannot be in a loop. 
+
+<pre>
+Version 1, using loops and a temporary file
+
+rm tempfile
+for f in gfs.t00z.pgrb2f[01]?
+do
+   wgrib2 - -match ':HGT:' -match ':(200|500|700) mb:'  -append -new_grid_winds earth -new_grid latlon 0:40:2 20:20:2 tempfile
+done
+wgrib2 tempfile -netcdf ~/myfile.nc
+rm tempfile
+
+Version 2, data-flow 
+
+1:   cat gfs.t00z.pgrb2f[01]? | \
+2:   wgrib2 - -match ':HGT:' -match ':(200|500|700) mb:'  -inv /dev/null \
+3:      -new_grid_winds earth -new_grid latlon 0:40:2 20:20:2 - | \
+4:   wgrib2 - -netcdf ~/myfile.nc
+
+
+Line 1 (cat), takes all the desired grib files and writes to stdout
+Line 2 (wgrib2), reads the grib file from stdin and selects the desired fields
+Line 3 (-new_grid), is a continuation of the wgrib2 command and writes the new grid to stdout
+Line 4 (wgrib2), reads the new grid from stdin and writes out a netcdf file (myfile.nc)
+</pre>
+<p>
+See also:
+<a href="./bin.html">-bin</a>,
+<a href="./ieee.html">-ieee</a>
+<a href="./text.html">-text</a>
+<a href="./spread.html">-spread</a>
+<!-- add ? -->
+<a href="./append.html">-append</a>
+</td>
+</tr>
+
+
+<!--  End of Content area  --><html><body></body></html>
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: Jan. 27, 2014
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

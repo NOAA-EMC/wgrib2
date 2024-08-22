@@ -1,0 +1,392 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2:</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<pre>
+wgrib2 v0.1.9.4-beta2 6/2011 Wesley Ebisuzaki, Reinoud Bokhorst, Jaakko Hyvätti, Kristian Nilssen, Karl Pfeiffer, Pablo Romero, Manfred Schwarb, Arlindo da Silva, Niklas Sondell, Sergey Varlamov
+ -0xSec           inv  X      Hex dump of section X (0..8)
+ <a href="./bitmap.html">-bitmap</a>          inv         bitmap mode
+ <a href="./center.html">-center</a>          inv         center
+ <a href="./checksum.html">-checksum</a>        inv  X      CRC checksum of section X (0..8), whole message (X = -1/message) or (X=data)
+ -code_table_0.0  inv         code table 0.0 discipline
+ -code_table_1.0  inv         code table 1.0 master table version
+ -code_table_1.1  inv         code table 1.1 local table version
+ -code_table_1.2  inv         code table 1.2 significance of reference time
+ -code_table_1.3  inv         code table 1.3 production status of processed data
+ -code_table_1.4  inv         code table 1.4 type of processed data
+ -code_table_3.0  inv         code table 3.0 Source of grid definition
+ -code_table_3.1  inv         code table 3.1 Grid definition template number
+ -code_table_3.11 inv         code table 3.11 regional/global thinned/reduced grid
+ -code_table_3.15 inv         code table 3.15 Physical meaning of vertical coordinate
+ -code_table_3.2  inv         code table 3.2 Size (radius) and Shape of Earth
+ -code_table_3.21 inv         code table 3.21 Vertical Dimension coordinate values defn
+ -code_table_3.6  inv         code table 3.6 Spectral data representation type
+ -code_table_3.7  inv         code table 3.7 Spectral data representation mode
+ -code_table_3.8  inv         code table 3.8 Grid point position
+ -code_table_4.0  inv         code table 4.0 Product Definition Template Number
+ -code_table_4.1  inv         code table 4.1
+ -code_table_4.10 inv         code table 4.10 statistical processing
+ -code_table_4.11 inv         code table 4.11 type of time intervals
+ -code_table_4.15 inv         code table 4.15 type of areal statistical processing
+ -code_table_4.2  inv         code table 4.2
+ -code_table_4.230 inv         code table 4.230 chemical constituent type
+ -code_table_4.3  inv         code table 4.3 Type of Generating Process
+ -code_table_4.4  inv         code table 4.4
+ -code_table_4.5a inv         code table 4.5 (1st value)
+ -code_table_4.5b inv         code table 4.5 (2nd value)
+ -code_table_4.6  inv         code table 4.6 ensemble type
+ -code_table_4.7  inv         code table 4.7 derived forecast
+ -code_table_4.9  inv         code table 4.9 Probability Type
+ -code_table_5.0  inv         code table 5.0 data representation number
+ -code_table_5.1  inv         code table 5.1 type of original field values
+ -code_table_5.4  inv         code table 5.4 group splitting method
+ -code_table_5.5  inv         code table 5.5 missing value management for complex packing
+ -code_table_5.6  inv         code table 5.5 complex packing spatial differencing
+ -code_table_5.7  inv         code table 5.7 precision in IEEE packing
+ -code_table_6.0  inv         code table 6.0 Bitmap indicator
+ -ctl_ens         inv         ens info for g2ctl/GrADS
+ -ctl_inv         inv         ctl inventory dump for g2ctl/GrADS
+ -cyclic          inv         is grid cyclic? (not for gaussian)
+ <a href="./disc.html">-disc</a>            inv         discipline (code table 0.0)
+ -domain          inv         find rectangular domain for g2ctl/GrADS plots
+ <a href="./ens.html">-ens</a>             inv         ensemble information
+ -ext_name        inv         extended name, var+qualifiers
+ -flag_table_3.10 inv         flag table 3.10 scanning mode for one diamond
+ -flag_table_3.3  inv         flag table 3.3, resolution and component flags
+ -flag_table_3.4  inv         flag table 3.4, scanning mode
+ -flag_table_3.5  inv         flag table 3.5 projection center
+ -flag_table_3.9  inv         flag table 3.9 numbering order of diamonds seen from corresponding pole
+ <a href="./ftime.html">-ftime</a>           inv         forecast time
+ -full_name       inv         extended name, var+qualifiers
+ <a href="./get_byte.html">-get_byte</a>        inv  X Y Z  get bytes in Section X, location Y (1..N), number of bytes Z (decimal format)
+ -get_hex         inv  X Y Z  get bytes in Section X, location Y (1..N), number of bytes Z (bytes in hexadecimal format)
+ <a href="./get_int.html">-get_int</a>         inv  X Y Z  get ints in Section X, location Y (byte), number of ints Z
+ <a href="./grid.html">-grid</a>            inv         grid definition
+ <a href="./ij.html">-ij</a>              inv  X Y    value of field at grid(X,Y) X=1,..,nx Y=1,..,ny (WxText enabled)
+ <a href="./ijlat.html">-ijlat</a>           inv  X Y    lat,lon and grid value at grid(X,Y) X=1,..,nx Y=1,..,ny (WxText enabled)
+ <a href="./ilat.html">-ilat</a>            inv  X      lat,lon and grid value at Xth grid point, X=1,..,npnts (WxText enabled)
+ <a href="./lev.html">-lev</a>             inv         level (code table 4.5)
+ -lev0            inv         level for g2ctl/GrADS
+ <a href="./lon.html">-lon</a>             inv  X Y    value at grid point nearest lon=X lat=Y (WxText enabled)
+ <a href="./match_inv.html">-match_inv</a>       inv         inventory used by -match, -not, <a href="./if.html">-if</a> and -not_if
+ -max             inv         print maximum value
+ -min             inv         print minimum value
+ -misc            inv         variable name qualifiers like chemical, ensemble, probability, etc
+ <a href="./MM.html">-MM</a>              inv         reference time MM
+ -n               inv         prints out inventory number
+ -N_ens           inv         number of ensemble members
+ -nl              inv         inserts new line into inventory
+ -nlons           inv         number of longitudes for each latitude
+ -nl_out          inv  X      write new line in file X
+ <a href="./npts.html">-npts</a>            inv         number of grid points
+ <a href="./nxny.html">-nxny</a>            inv         nx and ny of grid
+ -packing         inv         shows the packing mode (use <a href="./v.html">-v</a> for more details)
+ -pds_fcst_time   inv         fcst_time(1) in units given by pds
+ -print           inv  X      inserts string into inventory
+ <a href="./prob.html">-prob</a>            inv         probability information
+ -process         inv         Process (code table 4.3)
+ -processid       inv         process id (locally defined)
+ -radius          inv         radius of Earth
+ -range           inv         print out location of record in bytes, 0 = first byte
+ -RT              inv         type of reference Time
+ <a href="./s.html">-s</a>               inv         simple inventory
+ -S               inv         simple inventory with minutes and seconds (subject to change)
+ -scale           inv         scale for packing
+ -scaling         inv         scaling for packing (old format)
+ -scan            inv         scan order of grid
+ -Sec0            inv         contents of section0
+ -Sec3            inv         contents of section 3 (Grid Definition Section)
+ -Sec4            inv         Sec 4 values (Product definition section)
+ -Sec5            inv         Sec 5 values (Data representation section)
+ -Sec6            inv         show bit-map section
+ -Sec_len         inv         length of various grib sections
+ -spatial_proc    inv         show spacial processing, pdt=4.15
+ -spectral        inv         show spectral bands
+ -spectral_bands  inv         spectral bands for satellite, pdt=4.31
+ -start_ft        inv         verf time = reference_time + forecast_time (YYYYMMDDHH) - no stat. proc time
+ -start_FT        inv         verf time = reference_time + forecast_time (YYYYMMDDHHMMSS) - no stat. proc time
+ <a href="./stats.html">-stats</a>           inv         statistical summary of data values
+ -subcenter       inv         subcenter
+ -t               inv         reference time YYYYMMDDHH, -v2 for alt format
+ -T               inv         reference time YYYYMMDDHHMMSS
+ -table           inv         parameter table
+ <a href="./unix_time.html">-unix_time</a>       inv         print unix timestamp for rt & vt
+ -V               inv         diagnostic output
+ <a href="./var.html">-var</a>             inv         short variable name
+ -varX            inv         raw variable name - discipline mastertab localtab center parmcat parmnum
+ -vector_dir      inv         grid or earth relative winds
+ -verf            inv         simple inventory using verification time
+ -vt              inv         verf time = reference_time + forecast_time, -v2 for alt format
+ -VT              inv         verf time = reference_time + forecast_time (YYYYMMDDHHMMSS)
+ -YY              inv         reference time YYYY
+ -s_out           inv> X      simple inventory written to X
+ <a href="./big_endian.html">-big_endian</a>      misc        sets ieee output to big endian (default is big endian)
+ -colon           misc X      replace item deliminator (:) with X
+ <a href="./config.html">-config</a>          misc        shows the configuration
+ <a href="./count.html">-count</a>           misc        prints number of fields
+ <a href="./end.html">-end</a>             misc        stop after first (sub)message (save time)
+ <a href="./fix_ncep.html">-fix_ncep</a>        misc        fix ncep PDT=8 headers produced by cnvgrib
+ <a href="./grid_changes.html">-grid_changes</a>    misc        prints number of grid changes
+ -grid_def        misc        read lon and lat data from grib file -- experimental
+ <a href="./h.html">-h</a>               misc        help, shows common options
+ <a href="./header.html">-header</a>          misc        f77 header or nx-ny header in text output (default)
+ <a href="./help.html">-help</a>            misc X      help [search string|all], -help all, shows all options
+ <a href="./if.html">-if</a>              misc X      if X (POSIX regular expression) matches, conditional execution up to next output/fi
+ -if_n            misc X      if (inv numbers in range), X=(start:end:step)
+ -if_rec          misc X      if (record numbers in range), X=(start:end:step)
+ -if_reg          misc X      if rpn registers defined, X = A, A:B, A:B:C, etc A = register number
+ <a href="./ijundefine.html">-ijundefine</a>      misc X Y Z  sets grid point values to undefined X=(in-box|out-box) Y=ix0:ix1 Z=iy0:iy1 ix=(1..nx) iy=(1..ny)
+ -import_bin      misc X      read binary file (X) for data
+ -import_ieee     misc X      read ieee file (X) for data
+ -import_text     misc X      read text file (X) for data
+ <a href="./inv.html">-inv</a>             misc X      write inventory to X
+ <a href="./limit.html">-limit</a>           misc X      stops after X fields decoded
+ -little_endian   misc        sets ieee output to little endian (default is big endian)
+ <a href="./new_grid_interpolation.html">-new_grid_interpolation</a> misc X      new_grid interpolation X=bilinear,bicubic,neighbor,budget
+ -new_grid_ipopt  misc X      new_grid ipopt values X=i1:i2..:iN N <= 20
+ -new_grid_vectors misc X      change fields to vector interpolate: X=none,default,UGRD:VGRD
+ <a href="./new_grid_winds.html">-new_grid_winds</a>  misc X      new_grid wind orientation: X = grid, earth (N/S, default) -- alpha
+ -no_header       misc        no f77 header or nx-ny header in text output
+ <a href="./not_if.html">-not_if</a>          misc X      if not X (regular expression) matches, conditional execution until next output/fi
+ <a href="./one_line.html">-one_line</a>        misc        puts all on one line (makes into inventory format)
+ <a href="./quit.html">-quit</a>            misc        stop after first (sub)message (save time)
+ <a href="./rpn.html">-rpn</a>             misc X      reverse polish notation calculator (beta)
+ -set             misc X Y    set X = Y, X=local_table,etc (help: -set help help)
+ -set_ave         misc X      set ave/acc .. only on pdt=4.0 only anl/fcst
+ -set_bin_prec    misc X      X set number of binary bits for grib_out packing
+ <a href="./set_byte.html">-set_byte</a>        misc X Y Z  set bytes in Section X, location Y (1..N), bytes Z (a|a:b:c)
+ -set_center      misc X      changes center X = C or C:S C and S are center/subcenter numbers
+ <a href="./set_date.html">-set_date</a>        misc X      changes date code .. keep old date code if not specified completely
+ -set_ext_name    misc X      X=0/1 extended name on/off
+ -set_flag_table_3.3 misc X      flag table 3.3 = X
+ -set_flag_table_3.4 misc X      flag table 3.4 = X
+ -set_ftime       misc X      set ftime .. only on pdt=4.0 only anl/fcst
+ -set_grib_max_bits misc X      sets scaling so number of bits does not exceed N in (new) grib output
+ <a href="./set_grib_type.html">-set_grib_type</a>   misc X      set grib type = jpeg, simple, ieee, complex(1|2|3), same
+ -set_hex         misc X Y Z  set bytes in Section X, location Y (1..N), bytes Z (a|a:b:c) in hexadecimal
+ -set_ijval       misc X Y Z  sets grid point value X=ix Y=iy Z=val
+ -set_int         misc X Y Z  set in in Section X, location Y (1..N), signed integers Z (a|a:b:c)
+ -set_lev         misc X      changes level code .. not complete
+ <a href="./set_metadata.html">-set_metadata</a>    misc X      read meta-data for grib writing from file X
+ <a href="./set_pdt.html">-set_pdt</a>         misc X      makes new (clean) pdt, X=PDT_number or X=PDT_number:size of PDT in octets
+ -set_radius      misc X      set radius of Earth X= 0,6,8
+ -set_scaling     misc X Y    set decimal scaling=X binary scaling=Y for grib_out packing
+ -set_sec_size    misc X Y    resizes section , X=section number, Y=size in octets, DANGEROUS
+ <a href="./set_ts_dates.html">-set_ts_dates</a>    misc X Y Z  changes date code for time series X=YYYYMMDDHH(mmss) Y=dtime Z=block size
+ <a href="./set_var.html">-set_var</a>         misc X      changes variable name
+ -submsg          misc X      process submessage X (0=process all messages)
+ -sys             misc X      run system/shell command, X=shell command
+ -text_col        misc X      number of columns on text output
+ -text_fmt        misc X      format for text output (C)
+ -udf             misc X Y    run UDF, X=program+optional_args, Y=return file
+ -udf_arg         misc X Y    add grib-data to UDF argument file, X=file Y=name
+ <a href="./undefine.html">-undefine</a>        misc X Y Z  sets grid point values to undefined X=(in-box|out-box) Y=lon0:lon1 Z=lat0:lat1
+ <a href="./undefine_val.html">-undefine_val</a>    misc X      grid point set to undefined if X=val or X=low:high
+ <a href="./v.html">-v</a>               misc        verbose (v=1)
+ -v0              misc        not verbose (v=0)
+ -v1              misc        verbose (v=1)
+ -v2              misc        really verbose (v=2)
+ -v98             misc        verbose mode for debugging only (v=98)
+ -v99             misc        verbose mode for debugging only (v=99)
+ <a href="./version.html">-version</a>         misc        print version
+ <a href="./AAIG.html">-AAIG</a>            out         writes Ascii ArcInfo Grid file, lat-lon grid only (alpha)
+ <a href="./ave.html">-ave</a>             out  X Y    average X=time step, Y=output grib file needs file is special order
+ <a href="./bin.html">-bin</a>             out  X      write binary data to X
+ -cress_lola      out  X..Z,A lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=radius1:radius2:..:radiusN
+ <a href="./csv.html">-csv</a>             out  X      make comma separated file, X=file (WxText enabled)
+ -fcst_ave        out  X Y    average X=time step, Y=output grib file needs file is special order
+ <a href="./fi.html">-fi</a>              out         null output operation
+ <a href="./grib.html">-grib</a>            out  X      writes GRIB record (one submessage) to X
+ <a href="./GRIB.html">-GRIB</a>            out  X      writes entire GRIB record (all submessages)
+ -grib_ieee       out  X      writes data[] to X.grb, X.head, X.tail, and X.h
+ <a href="./grib_out.html">-grib_out</a>        out  X      writes decoded/modified data in grib-2 format to file X
+ <a href="./ieee.html">-ieee</a>            out  X      write (default:big-endian) IEEE data to X
+ <a href="./ijbox.html">-ijbox</a>           out  X..Z,A grid values in bounding box X=i1:i2[:di] Y=j1:j2[:dj] Z=file A=[bin|text|spread]
+ <a href="./ijsmall_grib.html">-ijsmall_grib</a>    out  X Y Z  make small domain grib file X=ix0:ix1 Y=iy0:iy1 Z=file (beta)
+ -irr_grid        out  X Y Z  make irregular grid, nearest neighbor, X=lon-lat list Y=radius (km) Z=output grib file
+ <a href="./lola.html">-lola</a>            out  X..Z,A lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=[bin|text|spread|grib]
+ -merge_fcst      out  X Y    normalize NCEP-type ave/acc X=number Y=output grib file
+ -mysql           out  5 args H=[host] U=[user] P=[password] D=[db] T=[table] (alpha)
+ -mysql_dump      out  7 args H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]
+ -mysql_speed     out  7 args H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]
+ <a href="./ncep_norm.html">-ncep_norm</a>       out  X      normalize NCEP-type ave/acc X=output grib file
+ <a href="./ncep_uv.html">-ncep_uv</a>         out  X      combine U and V fields into one message like NCEP operations
+ <a href="./netcdf.html">-netcdf</a>          out  X      write netcdf data to X
+ <a href="./new_grid.html">-new_grid</a>        out  X..Z,A bilinear interpolate: X=projection Y=x0:nx:dx Z=y0:ny:dy A=grib_file alpha
+ <a href="./small_grib.html">-small_grib</a>      out  X Y Z  make small domain grib file X=lonW:lonE Y=latS:latN Z=file (beta)
+ <a href="./spread.html">-spread</a>          out  X      write text - spread sheet format into X (WxText enabled)
+ <a href="./text.html">-text</a>            out  X      write text data into X
+ <a href="./tosubmsg.html">-tosubmsg</a>        out  X      convert GRIB message to submessage and write to file X
+ <a href="./wind_speed.html">-wind_speed</a>      out  X      calculate wind speed, X = output gribfile (U then V in datafile)
+ <a href="./append.html">-append</a>          init        append mode, write to existing output files
+ <a href="./d.html">-d</a>               init X      dump message X (n or n.m), only 1 -d allowed
+ -fix_ncep_2      init        ncep bug fix 2, probability observation < -ve number
+ -fix_ncep_3      init        sets flag to fix ncep bug 3 (constant fields)
+ -fix_ncep_4      init        fixes NCEP grib2 files where DX and DY are undefined
+ <a href="./flush.html">-flush</a>           init        flush output buffers after every write (interactive)
+ <a href="./for.html">-for</a>             init X      process record numbers in range, X=(start:end:step), only one -for allowed
+ <a href="./for_n.html">-for_n</a>           init X      process inv numbers in range, X=(start:end:step), only one <a href="./for.html">-for</a> allowed
+ <a href="./g2clib.html">-g2clib</a>          init X      X=0/1 use g2clib for decoding grib
+ <a href="./i.html">-i</a>               init        read Inventory from stdin
+ <a href="./match.html">-match</a>           init X      process data that matches X (POSIX regular expression)
+ -nc3             init        use netcdf3 (classic)
+ -nc4             init        use netcdf4 (compressed, controlled endianness etc)
+ -nc_grads        init        require netcdf file to be grads v1.9b4 compatible (fixed time step only)
+ -nc_nlev         init X      netcdf, X = max LEV dimension for {TIME,LEV,LAT,LON} data
+ -nc_pack         init X      pack/check limits of all NEW input variables, X=min:max[:byte|short|float]
+ -nc_table        init X      X is conversion_to_netcdf_table file name
+ -nc_time         init X      netcdf, [[-]yyyymmddhhnnss]:[dt{s[ec]|m[in]|h[our]|d[ay]}], [-] is for time alignment only
+ -no_append       init        not append mode, write to new output files (default)
+ -no_flush        init        flush output buffers when full (default)
+ -no_nc_grads     init        netcdf file may be not grads v1.9b4 compatible, variable time step
+ -no_nc_pack      init        no packing in netcdf for NEW variables
+ -no_nc_table     init        disable previously defined conversion_to_netcdf_table
+ -no_nc_time      init        netcdf, disable previously defined initial or relative date and time step
+ <a href="./not.html">-not</a>             init X      process data that does not match X (POSIX regular expression)
+ <a href="./order.html">-order</a>           init X      decoded data in X (raw|we:sn|we:ns) order, we:sn is default
+ <a href="./set_regex.html">-set_regex</a>       init X      set regex mode X = 0:extended regex (default) 1:pattern 2:extended regex & quote metacharacters
+ <a href="./tigge.html">-tigge</a>           init        use modified-TIGGE grib table
+</pre>
+ <tr>
+  <td>
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: May 15, 2005
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

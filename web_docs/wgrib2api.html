@@ -1,0 +1,370 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - HOME: ftn_wgrib2api</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; ftn_wgrib2api</font>
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>HOME: ftn_wgrib2api</h3>
+<h3 align=center>The Easy Way of Reading and Writing Grib2 Using Fortran</h3>
+</font>
+
+
+<h3>Introduction</h3>
+
+<p>
+Can a set of fortran routines make reading and writing grib2 easy?
+Is it possible?  
+Can you read grib2 without referring to a the WMO grib standard?
+Can you write grib2 without becoming an grib2 expert?  Is reading and writing grib
+now easier than other popular file formats?
+
+<font color="blue">
+<pre>
+!       read 6 hour forecast from z500 field from file 'FILE.grb2'
+
+        use wgrib2api
+	real, allocatable :: grid(:,:)
+
+	iret = grb2_mk_inv('FILE.grb2','FILE.inv')	              ! make index/inventory file, FILE.inv
+	if (iret.ne.0) stop 1
+
+!       search index file for terms: ':HGT:500 mb:' and ':6 hour fcst:'
+	iret = grb2_inq('FILE,grb2','FILE.inv',':HGT:500 mb:',':6 hour fcst:',data2=grid)
+	if (iret.ne.1) stop 2                                         ! error if not 1 match
+	write(*,*)'It was easy!  Z500 fhr=6 grid(10,12) =', grid(10,12)
+
+	stop
+	end
+</pre>
+</font>
+
+<p>
+Reading doesn't get much easier than that.  You are allowed upto 20 search terms that are 
+based on the wgrib2 inventory.  You don't have to even allocate the variable grid.
+Now wgrib2api uses optional parameters to make the 
+grb2_inq(..) call both simple and powerful.
+We can expand the above program to get much more information about the field that was read.
+Do some testing, is it easier to read grib2, netcdf or hdf5?
+
+<font color="blue">
+<pre>
+!       read 6 hour forecast from z500 field from file 'FILE.grb2'
+!       showing the use of some optional parameters
+
+        use wgrib2api
+	real, allocatable :: grid(:,:), lat(:,:), lon(:,:)
+        character (len=300) :: metadata, grid_info
+        integer :: nx, ny
+
+	iret = grb2_mk_inv('FILE.grb2','FILE.inv')	              ! make index/inventory file, FILE.inv
+	if (iret.ne.0) stop 1
+
+!       search index file for terms: ':HGT:', ':500 mb:' and ':6 hour fcst:'
+	iret = grb2_inq('FILE,grb2','FILE.inv',':HGT:',':500 mb:',':6 hour fcst:',data2=grid, &
+          nx=nx, ny=ny, lat=lat, lon=lon, desc=metadata, grid_desc=grid_info)
+        if (iret.ne.1) stop 2                                         ! error if not 1 match
+
+        write(*,*)'It was easy!  Z500 fhr=6 grid(10,12) =', grid(10,12)
+        write(*,*) 'at latitude=',lat(10,12),' longitude=',lon(10,12)
+        write(*,*) 'grid size=(',nx,',',ny,')'
+        write(*,*) 'metadata: ',trim(metadata)
+        write(*,*) 'grid: ', trim(grid_info)
+
+	stop
+	end
+</pre>
+</font>
+
+<p>
+Writing grib2 is also easy.  First you need a template which is a sample grib2 file.  The
+template has the correct grid and unchanging metadata such as the center and grid definition.  
+The writing process consists of adding
+the gridded data, the new variable name, level, reference date and forecast information
+such as analysis, or 12 hour forecast and perhaps some ensemble information or some similar
+changing metadata.
+
+<p>  Finding a template has gotten easier as grib2 has become more common.  There are tools
+to change the grid information (wgrib2) and change specific metadata information (wgrib2).
+Suppose we already have a template.  Writing a grib2 file is as easy as
+
+<font color="blue">
+<pre>
+!       template.grb2: grib2 file, message/record 1 is template
+!       fort.11: 10 mb TMP binary data WE:SN order
+!       OUT.grb2:  output file, 10 mb TMP in grib2 format
+
+        use wgrib2api
+        real, allocatable :: grid(:,:)
+        integer, parameter :: nx=360, ny=181
+
+        allocate (grid(nx,ny))
+        read(11) grid
+        i = grb2_wrt('OUT.grb2','template.grb2',1,data2=grid,meta='d=2001020100:TMP:10 mb:anl:packing=j')
+!       writes out 10 mb temperature, reference date = 00Z01Feb2001, analysis, jpeg2000 packing
+        if (i.ne.0) stop 8
+
+        stop
+        end
+</pre>
+</font>
+
+<p>
+Reading and writing is based on text strings rather numbers in a table, so you don't have to
+refer to the WMO documentation.  All the text strings are based on the wgrib2 inventories,
+so there should be no surprises as long as you are familiar with the wgrib2 inventories.
+
+
+<p>
+Here is a practical example, you want to calculate the 1000-500 mb thickness.
+We are assuming that the input file only contains one Z1000 and Z500 field.  We
+are also assuming the first record can be used as a template.
+
+<font color="blue">
+<pre>
+!	sample program:
+!       read z500, z1000
+!       write 500-1000 mb  thickness  (z500-z1000)
+!
+	use wgrib2api
+
+	real, allocatable :: z500(:,:), z1000(:,:)
+	character (len=200) :: file, inv, metadata
+
+	file = 'gep19.t00z.pgrb2af180'
+	inv = 'gep19.t00z.pgrb2af180.inv'
+
+	iret = grb2_mk_inv(file, inv)		! make an inventory file
+
+!       read z500 and z1000
+	iret = grb2_inq(file,inv,':HGT:1000 mb:', data2=z1000)
+	if (iret.ne.1) stop 2
+	iret = grb2_inq(file,inv,':HGT:500 mb:', data2=z500, desc=metadata)
+	if (iret.ne.1) stop 3
+
+        z1000 = z500 - z1000
+
+!	the write needs metadata, going to use metadata from the z500 read
+
+!	new style write, var=.. and level=.. override the z500 metadata
+        iret = grb2_wrt('thick.grb',FILE,1,data2=z1000,meta=metadata,var='THICK',level='500-1000 mb')
+	if (iret.ne.0) stop 4
+
+!	old style write, convert z500 metadata -> thickness metadata
+        write(*,*) 'metadata 0 ', trim(metadata)
+        iret = grb2_set_substring(metadata,'THICK',2)
+	if (iret.ne.0) stop 5
+        iret = grb2_set_substring(metadata,'500-1000 mb',3)
+	if (iret.ne.0) stop 6
+        write(*,*) 'metadata 1 ', trim(metadata)
+        iret = grb2_wrt('thick.grb',FILE,1,data2=z1000,meta=metadata)
+	if (iret.ne.0) stop 7
+
+        stop
+        end
+</pre>
+</font>
+
+<font color=red><h3>Tested Systems</h3></font>
+<p>
+<li> RH6 gfortran
+<li> RH6 ifort
+<li> SUSE ifort
+<li> Ubuntu 14.04 gfortran
+<li> Cygwin64 (Windows)  gfortran
+<li> MacOS ifort (beta v2.0.7)
+</ol>
+
+
+<font color=red><h3>Source Code</h3></font>
+<p>
+The source code is included with <a href="./index.html">wgrib2</a>.  Please use the 
+newest version of wgrib2 because wgrib2api is a new addition to wgrib2.  You need
+to compile wgrib2api using the same fortran compiler that you will be using to
+compile your fortran programs.  By default, wgrib2api/ftp_api is compiled with
+OpenMP.  So your fortran needs to be compiled with the same OpenMP setting.
+
+<p>
+<a href="https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/compile_questions.html">compiling</a> (making the ftn_api)<br>
+<a href="https://ftp.cpc.ncep.noaa.gov/wd51we/wgrib2api/ftn_samples/">Sample Code</a>
+
+<p> The default wgrib2/wgrib2api build includes the ipolates and netcdf3 libraries.  If your fortran
+code uses a different ipolates or netcdf libraries, you will have to configure the wgrib2's makefile
+and rebuild the wgrib2 library without the ipolates and netcdf options.  Removing the two libraries
+will not have an effect on the grb2_*(..) routines.  However, if the missing libraries would adversely
+affect calls to wgrib2a(..) and wgrib2c(..) that use the -new_grid or -netcdf options.
+
+
+<p>
+<font color=red><h3>Documentation</h3></font>
+<ol>
+<li> <a href="https://ftp.cpc.ncep.noaa.gov/wd51we/wgrib2api/ftn_interface.pptx">Introduction pptx</a>
+<li> <a href="./grb2_mk_inv.html">Making an index file, in order to read grib: grb2_mk_inv(..)</a>
+<li> <a href="./grb2_inq.html">Reading grib: grb2_inq(..)</a>
+<li> <a href="./grb2_inq_scanning.html">Scanning grib: grb2_inq(..) with sequential reads</a>
+<li> <a href="./grb2_wrt.html">Writing grib: grb2_wrt(..)</a>
+<li> <a href="./grb2_free_file.html">Freeing files: grb2_free_file(..) does a flush</a>
+<li> <a href="./grb2_undefined.html">undefined grid points</a>
+<li> <a href="./wgrib2api_hpc.html">HPC: introduction</a>
+<li> <a href="./wgrib2_memory.html">HPC: reading/writing memory buffers/files</a>
+<li> Sample fortran code: <a href="https://ftp.cpc.ncep.noaa.gov/wd51we/wgrib2api/japan_grid_merge">merge 2000 small grids</a>
+<li> Example: <a href="./wgrib2api_ave_rh.html">calculating the average surface to 700 mb relative humidity</a>.
+</ol>
+
+<font color=red><h3>Other Languages</h3></font>
+<ol>
+<li> C_wgrib2api is in development and is based on ftn_wgrib2api
+<li> <a href="https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/py_wgrib2api.html">py_wgrib2api</a>
+</ol>
+
+
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: January 25, 2018, Aug 16, 2018
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

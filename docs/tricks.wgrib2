@@ -1,0 +1,1821 @@
+                              Tricks for wgrib2     2/2022
+
+
+There is "cheap tricks" page for wgrib2 at 
+http://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/tricks.cheap
+
+old: compatible with wgrib
+new: wgrib2 only
+most tricks: wgrib2 only
+
+(0)  How do I (...)?
+    If you are lucky, a script already exists.
+
+    convert grib1 -> grib2, use grb1to2.pl
+    compress grib2 by finding best complex packing,  use compress4_grb2.sh
+    compare two grib2 files,  use cmp_grib2_grib2.sh
+    compare grib1 and grib2 files, use cmp_grib1_grib2.sh
+    speed up -new_grid, use wgrib2m
+
+(1) How do I convert the entire file to binary?
+
+    wgrib2 grib_file -bin out.bin
+
+(2) How do I get a verbose listing of the 20th message only?
+
+    wgrib2 -V -d 20 grib_file
+
+    If grib message 20 has submessages, then d 20 will get the first
+    field of the grib message.  I.e, this will be the same as -d 20.1
+
+
+(3) How do I extract the 20th and 30th grib message?
+
+    new: wgrib2 grib_file -match "(^20:^30:)" -bin binary_file
+    new: wgrib2 grib_file -for "20:30:10" -bin binary_file
+    old: wgrib2 grib_file | egrep "(^20:|^30:)" | wgrib2 -i grib_file -bin binary_file
+
+    Note: this assumes that grib message 20 and 30 do not have submessages.  If
+    they have submessages, the the fields will be labelled 20.1, 20.2, etc.
+    If your selected may have 2 submessages, this will work
+
+    new: wgrib2 grib_file -match "^(20|30)(.1|.2):" -bin binary_file
+
+(4) How do I extract the first 10 records as a grib file?
+
+    new: wgrib2 grib_file -for_n 1:10 -grib new_grib_file
+    old: wgrib2 grib_file | head -n 10 | wgrib2 -i grib_file -grib new_grib_file
+
+    What is the difference between "-for 1:10" and "-for_n 1:10"
+
+        -for 1:10  processes the first 10 grib messages.  A grib message may
+             have more than 1 field.
+        -for_n 1:10 processes the first 10 fields. (Submessages count)
+
+(4') How do I extract records 34-66 from a file as a grib file?
+
+
+    new: wgrib2 grib_file -for 34:66 -grib new_grib_file
+
+    old: Here is an example of an awk filter.
+
+        wgrib2 -s grib_file | awk '{if ($1 > 33 && $1 < 67) print $0}'
+            FS=':' | wgrib2 -i grib_file -grib new_grib_file
+
+    FS=':' implies that arguments are separated by colons.  As
+    a result, the record number is the first argument ($1).
+    The variable "$0" is the entire input line.  Isn't awk fun?
+
+(4''') How do I extract grib messages 10,12,19 from a grib file
+
+       wgrib2 old_grib -match '^(1|12|19):' -grib new_grib
+
+    The ^ is a special regular-expression character that matches the
+    start of the line. The () denotes an expression and the vertical bar
+    is the OR operator.  See you book on regular expressions for details.
+
+    This only works if the the grib messages do not have submessages.
+    This for grib message with sub-messages
+
+       wgrib2 old_grib -match '^(1|12|19)(.:)' -grib new_grib
+
+(4'''') How do I extract a range of dates from a file?
+
+   Example 1. Analysis file 
+
+	$ wgrib2 z500.gdas.199704.f06
+	1:0:d=1997040100:HGT:500 mb:6 hour fcst:
+	2:228571:d=1997040106:HGT:500 mb:6 hour fcst:
+	...
+	120:27173104:d=1997043018:HGT:500 mb:6 hour fcst:
+
+   The file contains the 500 mb geopotential height for the April 1997.  To obtain
+   the data for a range of date:
+
+	$ wgrib2 z500.gdas.199704.f06 | \
+	    awk '{d=substr($3,3); if (d >=1997042400 && d <=1997042512) print $0}' FS=':' | \
+	    wgrib2 z500.gdas.199704.f06 -i -grib z500subset.grb
+
+   The second line runs the awk command.
+      FS=':'   means that the colon is the delimator
+      $3 is the 3rd column of the input line; ie, d=1997040100
+      substr($3,3) means the substring of $3 starting at the 3rd character; ie, 1997040100
+
+  Example 2. Extract a range of forecast times
+
+	$ wgrib2 t250.03.2015080900.daily.grb2
+	1:0:d=2015080900:TMP:250 mb:6 hour fcst:
+	2:20236:d=2015080900:TMP:250 mb:12 hour fcst:
+	..
+	456:8689473:d=2015080900:TMP:250 mb:2736 hour fcst: 
+
+   To extract a range of forecasts, you can put the verification time into the inventory
+
+	$ wgrib2 t250.03.2015080900.daily.grb2 -vt -s
+	1:0:vt=2015080906:d=2015080900:TMP:250 mb:6 hour fcst:
+	2:20236:vt=2015080912:d=2015080900:TMP:250 mb:12 hour fcst:
+	...
+
+    Modifying example 1 
+	$ wgrib2 t250.03.2015080900.daily.grb2 -vt -s | \
+	    awk '{d=substr($3,4); if (d >=2015081000 && d <= 2014081012) print $0}' FS=':' | \
+	    wgrib2 t250.03.2015080900.daily.grb2 -i -grib subset.grb
+	4:60273:d=2015080900:TMP:250 mb:24 hour fcst:
+	5:80131:d=2015080900:TMP:250 mb:30 hour fcst:
+	6:99799:d=2015080900:TMP:250 mb:36 hour fcst:
+
+(5) How do I remove the 2+i*8 th record from the file?
+
+    You can do it with an AWK filter, but here is what I used. Remember -if is terminated by -fi or an output.
+
+     wgrib2 in \
+	-if_n 1::8 -s -grib out\
+	-if_n 3::8 -s -grib out\
+	-if_n 4::8 -s -grib out\
+	-if_n 5::8 -s -grib out\
+	-if_n 6::8 -s -grib out\
+	-if_n 7::8 -s -grib out\
+	-if_n 8::8 -s -grib out
+
+	Note: "-if_n 2::8 -s -grib out"  is missing
+ 
+(6) Some NCEP polar stereographic/lambert conformal files say that dx=0 and dy=0.
+
+    Some NCEP files encode the grid spacing but set a flag specifying that
+    the grid spacing is not given.  In this case wgrib2 and wgrib display a grid
+    spacing of zero.  You can set the flag correctly by
+
+
+    wgrib2 -set_flag_table_3.3 48  in.grb -grib out.grb
+
+(7) CMC files have some variables which don't have a name.
+
+    wgrib2 doesn't include the local extensions from CMC.  AFAIK, the 
+    CMC grib tables follows the NCEP grib table except where they don't.  
+    (How does that helps me?) So you may be able to get most of the fields
+    right by using nt the NCEP tables.  This can be done changing the center 
+    flag to NCEP (7).
+
+       wgrib2 -set center 7 (CMC grib file)
+       obsolete: wgrib2 -set_center 7 (CMC grib file)
+
+    Warning, "-set center 7" changes the center of the in-memory
+    grib message.  If you write out the grib message, it will now
+    have the center set to 7!
+
+    wgrib2 -set center 7 (CMC grib file) -match 'HGT' -grib hgt.grb
+    Note that hgt.grb will be labeled as coming from NCEP (7).
+
+    If you are using g2ctl, you can use the NCEP table by changing
+
+       $wgrib2='wgrib2';
+
+    to
+
+       $wgrib='wgrib -set center 7';
+
+    in the g2ctl source code.
+    
+(8) I get  *** ERROR: not handled by to_we_sn_scan ***
+
+   The default mode of wgrib2 is to convert the grid to WE:SN order.  
+The code to convert from the native order to WE:SN hasn't been tested 
+or written.  This happens with grids with a variable number of lat or 
+lon points.  In order to use this file, you have to use the file in 
+raw-order mode.  I.e., use "-order raw" on the command line.  When 
+you dump the data, the grid points will be output without any translation 
+of the order.
+
+     wgrib2 -order raw -d 1 grib_file -bin out.bin
+
+(9) Getting more information
+    The option -v and -v2 should be tried.  Some of the options give
+    a more verbose output.  
+
+(10) I am generating a text dump (CSV) and the size of the file is really large.
+
+    If you set the grid point values to "undefined", they won't print out.
+
+    wgrib2 grib_file -undefine out-box 30:40 -10:10 -csv out.txt
+
+   The grid points outside of the box are set to undefined.  The -csv options
+   tries to print the entire grid but finds only the values between 30N-40N and 
+   10W-10E are defined.
+
+(10') I am generating a text dump (CSV) and the size of the file is really large,
+I am only interested in variable XYZ when it has values larger than 10
+
+    wgrib2 grib_file -match ':XYZ:' -undefine_val -9e20:10" -csv output.txt
+
+(10''') I am generating a text dump (CSV) and I need all the points printed, including 
+   the undefined values.
+
+   The -ijbox option will print out all the values within a box, including 
+   the undefined valued.  Also see (33).
+
+(11) I tried using the small_grib option but the files are bigger than the original.
+
+   By default, The small_grib option writes a regional subset in simple packing.  This 
+   requires less CPU resources but produces larger files than jpeg or complex packing. 
+   To use the same packing as the original file, use the "-set_grib_type same" option.
+
+(12) I want to modify some existing grib files.  For example, I want to make
+   sure the humidity (RH, SPFH) is positive.
+
+   Suppose my file only has 1 record - brute force method
+
+   1) Save the data in a text file, tmp.out.
+
+     -sh-3.00$ wgrib2 test.grb  -no_header -text tmp.out
+     1:0:d=2009030712:SPFH:2 m above ground:6 hour fcst:
+
+   2) Change the data file, tmp.out, using the program of your choice.
+
+   3) Use the import_text option to read in new data values and use the
+      -grib_out to write the values to a grib file.  Note that you can
+      not use the -grib option.
+
+     -sh-3.00$ wgrib2 test.grb -no_header -import_text tmp.out -grib_out new.grb
+     1:0:d=2009030712:SPFH:2 m above ground:6 hour fcst:
+
+   
+   Suppose my file only has 1 record - simple method
+
+        wgrib2 test.grb -rpn "0:max" -set_grib_type c2 -grib_out new.grb
+
+        -rpn 0:max, replaces the grid point values with max(0,grid_point_value)
+
+
+(13) My software won't handle the level "30-0 mb above ground".  How do
+     I change the level to "15 mb above ground"?
+
+     old style IF structure
+     wgrib2 in.grb -if ":30-0 mb above ground" -set_lev "15 mb above ground"
+          -fi -grib out.grb
+
+     new style IF structure (wgrib2 v3.0.0+)
+     wgrib2 in.grb -if ":30-0 mb above ground" -set_lev "15 mb above ground"
+          -endif -grib out.grb
+
+
+
+(14) I have a list of options that I frequently use.  How do I reduce
+     the typing?
+
+     (sh) my_opts="-grid -nl -packing -nl -stats"
+     -sh-3.00$ wgrib2 gfs.t18z.master.grbf00.10m.uv.grib2 $my_opts
+
+(14') My list of option is getting long and hard to read.
+
+     Some option lists consist of thousands of options.  Consider a person getting the point value
+     for every major city in the world.
+
+
+     You can place the commands in a file.
+
+     ------- my_list ------
+     -grid
+     -nl -packing
+     -nl -stats
+     ----end of my_list----
+
+     -sh-3.00$ wgrib2 gfs.t18z.master.grbf00.10m.uv.grib2 `cat my_list`
+     1.1:0:grid_template=0:
+             lat-lon grid:(720 x 361) units 1e-06 input WE:NS output WE:SN res 48
+             lat 90.000000 to -90.000000 by 0.500000
+             lon 0.000000 to 359.500000 by 0.500000 #points=259920:
+     :packing=grid point data - jpeg2000 compression:
+     :ndata=259920:undef=0:mean=-0.0242625:min=-24.13:max=26.44:cos_wt_mean=-0.228323
+     1.2:0:grid_template=0:
+             lat-lon grid:(720 x 361) units 1e-06 input WE:NS output WE:SN res 48
+             lat 90.000000 to -90.000000 by 0.500000
+             lon 0.000000 to 359.500000 by 0.500000 #points=259920:
+     :packing=grid point data - jpeg2000 compression:
+     :ndata=259920:undef=0:mean=0.672931:min=-18.61:max=23.4:cos_wt_mean=0.788584
+
+
+(15)  I want to write the second records of a decoded grib-point data to stdout 
+      without the inventory.
+
+      Use the -inv option to send the inventory to a read-only file and the symbolic
+      file "-" which represents stdout.
+
+         wgrib2 -d 2 input.grb2 -inv /dev/null -text -
+
+
+(16)  Masking data:  I want set all oceanic values to undefined.
+
+      Suppose LAND is a grib file with the land mask (land=1, water=0) with the
+         same grid as the data file (data.old)
+
+      Make a new file with the land mask as the first record.
+
+            cat LAND data.old > data.tmp
+
+      wgrib2 data.tmp \
+         -if '^1:' \
+            -rpn '1:==:sto_1' \
+         -fi \
+         -not_if '^1:' \
+           -rpn 'rcl_1:mask' \
+           -set_grib_type same \
+           -set_scaling same same \
+         -grib_out data.new
+
+      Line 2:  if the first record then
+      Line 3:     compute grid_value == 1 and save in register 1
+      Line 4:  endif
+      Line 5:  if not the first record  then
+      Line 6:     recall register 1, apply mask operator
+      Line 6:     top-of-stack = mask(grid, register_1)
+      Line 6:  note: rpn changes the scaling to 12-bits binary precision
+      Line 7:  change packing to the same as the input file
+      Line 8:  change scaling to the same as the input file
+      Line 9:  write to data.new, note: output statement closes an -if statement
+
+      6/2021: -import_grib can be used to avoid the first step
+
+
+(16') My grib file uses the special value of -999.9 as the undefine value.
+      (Grid points with a value of -999.9 are considered to be undefined).
+
+      Using special values as undefined values is outside of the grib standard
+      and should be avoided.  To convert a file that uses -999.9 to the
+      grib standard, you should do
+
+      wgrib2 IN.grb -undefine_val 999.9 -set_grib_type same -grib_out OUT.grb
+
+(17)  Make a daily max from the TMAX of the 00Z-06Z, 06Z-12Z, 12Z-18Z and 18Z-24Z
+
+      *** FOR ANALYSES ***
+
+      wgrib2 data >inv
+      grep ":d=$YYYYMMDD" <inv | sort -r -k3,3 | \
+          wgrib2 -i data \
+            -if '00:TMAX:' -rpn sto_1 -fi \
+            -if '06:TMAX:' -rpn sto_2 -fi \
+            -if '12:TMAX:' -rpn sto_3 -fi \
+            -if '18:TMAX:' -rpn sto_4 -fi \
+            -if_reg '1:2:3:4' -rpn 'rcl_1:rcl_2:rcl_3:rcl_4:max:max:max' \
+                -set_grib_type same \
+                -set_scaling same same \
+                -set_ave '4@6 hour max(0-6 hour max fcst),missing=0' -grib_out TMAX$YYYYMMDD
+
+      6/2021: TMAX is obsolete, -time_processing could be used
+
+      *** FOR FORECASTS ***
+
+      wgrib2 -s -start_ft $data >inv
+      # N is the starting foreast hour
+      N=240
+      M=`expr $N + 24`
+      grep ":start_ft=$YYYYMMDD" <inv | sort -r -k3,3 | \
+      wgrib2 -i $data \
+         -if ":TMAX:.*:vt=........00:" -rpn sto_1 -fi \
+         -if ":TMAX:.*:vt=........06:" -rpn sto_2 -fi \
+         -if ":TMAX:.*:vt=........12:" -rpn sto_3 -fi \
+         -if ":TMAX:.*:vt=........18:" -rpn sto_4 -fi \
+         -if_reg '1:2:3:4' -rpn 'rcl_1:rcl_2:rcl_3:rcl_4:max:max:max' \
+         -set_ave "$N-$M hour max fcst" \
+         -set_grib_type same \
+         -set_scaling same same \
+         -grib_out TMAX$YYYYMMDD
+
+      Note TMAX is only on the 2 m level in NCEP files
+      6/2021:  TMAX is obsolete.
+      6/2021:  -merge_fcst can be used
+
+(18)  Set the master table of a grib file to 6, do not change sub-messages into messages
+
+      wgrib2 IN.GRB  -match "^[0-9]*(:|\.1)" -set master_table 6 -GRIB OUT.GRB
+
+      The -match "^[0-9]*(:|\.1)" will match records with no sub-messages or the first sub-message
+      -set master_table 6 will set the value of the master table in the in-memory copy of the grib message
+      -GRIB OUT.GRB will write out the entire grib message including all sub-messages. Note -GRIB not -grib
+
+(18')  Process by grib message, not by field.  Enable to keep the sub-message structure
+
+      wgrib2 -match "^[0-9]*(:|\.1)"    ...
+      
+      ex. wgrib2 -match "^[0-9]*(:|\.1)"  IN.grb -if ":UGRD:" -GRIB uv.grb -if ":TMP:" -GRIB tmp.grb
+      ex. wgrib2 -match "^[0-9]*(:|\.1)"  IN.grb -set_date 2010122500 -GRIB Christmas.grb
+
+(18'') overtdateg2: how to change the date code in a grib2 file
+
+       ex. change the analysis/initial time date to 12Z 2 Jan 2010
+          wgrib2 -match "^[0-9]*(:|\.1)"  IN.grb -set_date 2010010212 -GRIB OUT.grb
+
+(18''') overmodelg2: how to change the process codes in a grib2 file
+  	 To see the process ids, use the -process_id option.
+       ex. change the process id to 123 (background) and 124 (analysis/forecast)
+          wgrib2 -match "^[0-9]*(:|\.1)"  IN.grb -set background_process_id 123 
+		-set analysis_or_forecast_process_id 124 -GRIB OUT.grb
+
+(19)  The -csv, -spread, -mysql options ignore missing/undefined grid values.  How do I add missing 
+      to my CSV file or mysql database?
+
+      The grib file has undefined points, my code expects -999 as undefined. How do I change
+      undefined values to -999.
+
+      How do I change the large values 9.999e20 to -999.
+
+      wgrib2 uses 9.999e20 as undefined.  All these questions are about changing this value to
+      something else.  The trick is to use the -rpn option and the merge operator.
+
+           -rpn "-999:swap:merge"
+
+      The above rpn command:  (start) the grid values placed on the top of the stack
+                              (a) pushes -999 onto the top of the stack
+                              (b) swaps -999 and the the grid values
+                              (c) merges the top two stack entries.  Undefined "data" values
+                                  are replaced by -999
+                              (end) the top of the stack replaces the old grid values
+
+       ex. wgrib2 IN.GRB -match ":VAR:LEVEL:"  -rpn "-999:swap:merge" -csv OUT.TXT
+           wgrib2 IN.GRB -rpn "-999:swap:merge" -grib_out OUT.GRB
+     
+(20)  My grib file has extra bytes between the records.  (I obtained some grib2 data with the 
+      get_inv.pl/get_data.pl scripts.)  How do I get rid of junk bytes.
+
+         wgrib2 IN.GRB -submsg 1 -GRIB OUT.GRB
+
+         if you used: wgrib2 IN.GRB -grib OUT.GRB 
+         all the sub-messages will be converted to messages.
+
+(21)  How do I convert my grib file so that UGRD and VGRD are in the same message (like with opn NCEP files)?
+
+      For wgrib2 v3.0.0+:
+
+         wgrib2 IN.grb -new_grid_vectors UGRD:VGRD -new_grid_order OUT.grb check.grb
+         check.grb contains the UGRD/VGRD fields that could not be matched up,
+           example UGRD (VGRD) with no corresponding VGRD (UGRD)
+
+      For historical interest:
+
+        wgrib2 IN.grb | sed -e 's/:UGRD:/:UGRDu:/' -e 's/:VGRD:/:UGRDv:/' \
+        | sort -t: -k3,3 -k5 -k4,4 \
+        | wgrib2 -i IN.grb -ncep_uv OUT.grb
+
+      line 1 makes a inventory where UGRD is replaced by UGRDu and VGRD is replaced by UGRDv
+      line 2 sorts the inventory by (date), (level-end of the line) and finally by the variable name
+         In this sort the UGRD field will be followed by the VGRD fields
+      line 3 read the inventory and writes out a new grib file using that inventory
+
+(21') When using -new_grid, the vector fields must be adjacent (u-component then v-component). How to do it?
+
+      For wgrib2 v3.0.0+:
+
+         wgrib2 IN.grb -new_grid_order OUT.grb check.grb
+         check.grb contains the vector fields that could not be matched up,
+           example UGRD with no corresponding VGRD
+
+      For historical interest:
+
+      This problem is like the previous but all the vector fields need to be made adjacent.  The list of
+      vectors as of 7/2015 is
+
+      UGRD, VGRD, VUCSH, VVCSH, UFLX, VFLX, UGUST, VGUST, USTM, VSTM,
+        VDFUA, VDFVA, MAXUW, MAXVW, UOGRD, VOGRD, UICE, VICE, U-GRD, V-GRD
+
+        wgrib2 IN.grb | sed -e 's/:UGRD:/:UGRDu:/' -e 's/:VGRD:/:UGRDv:/' \
+           -e 's/:VUCSH:/:VUCSHu:/' -e 's/:VVCSH:/:VUCSHv:/' \
+           -e 's/:UFLX:/:UFLXu:/' -e 's/:VFLX:/:UFLXv:/' \
+           -e 's/:UGUST:/:UGUSTu:/' -e 's/:VGUST:/:UGUSTv:/' \
+           -e 's/:USTM:/:USTMu:/' -e 's/:VSTM:/:USTMv:/' \
+           -e 's/:VDFUA:/:VDFUAu:/' -e 's/:VDFVA:/:VDFUAv:/' \
+           -e 's/:MAXUW:/:MAXUWu:/' -e 's/:MAXVW:/:MAXUVv:/' \
+           -e 's/:UOGRD:/:UOGRDu:/' -e 's/:VOGRD:/:UOGRDv:/' \
+           -e 's/:UICE:/:UICEu:/' -e 's/:VICE:/:UICEv:/' \
+        | sort -t: -k3,3 -k5 -k4,4 | \
+        wgrib2 -i IN.grb -grib OUT.grb
+
+(21'') In the operational CFSv2 time series, V does not follow U and the forecasts
+     are not in order.
+
+     wgrib2 IN.grb | \
+       sed -e 's/:UGRD:/:UGRDa:/' -e 's/:VGRD:/:UGRDb:/' | \
+       sort -t: -k3,3 -k6n,6 -k5,5 -k4,4 |  \
+       wgrib2 -i IN.grb -grib OUT.grb
+
+
+     line 1: makes standard inventory
+     line 2: converts UGRD -> UGRDa and VGRD -> UGRDb 
+      so VGRD should follow UGRD when sorted
+     line 3: sort by date code, forecast time, level and variable
+     line 4: wgrib2 reads inventory, writes out grib file as sorted by inventory           
+
+(22)  Obsolete: refers to the spectral GFS
+
+      The GFS model has output every 3 hours in the files: gfs.t00z.pgrb2.1p00.fHHH
+              HHH=000, 003, 006, 009, etc
+      The APCP (accumulated precip) fields of the following format
+
+         gfs.t00z.pgrb2.1p00.f003: has APCP:surface:0-3 hour acc fcst:
+         gfs.t00z.pgrb2.1p00.f006: has APCP:surface:0-6 hour acc fcst:
+         gfs.t00z.pgrb2.1p00.f009: has APCP:surface:6-9 hour acc fcst:
+         gfs.t00z.pgrb2.1p00.f012: has APCP:surface:6-12 hour acc fcst:
+         gfs.t00z.pgrb2.1p00.f015: has APCP:surface:12-15 hour acc fcst:
+         ..
+
+      I want a file with the 3 hourly accumulations like
+
+         1:0:d=2017041800:APCP:surface:0-3 hour acc fcst:
+         2:97943:d=2017041800:APCP:surface:3-6 hour acc fcst:
+         3:195886:d=2017041800:APCP:surface:6-9 hour acc fcst:
+         4:301974:d=2017041800:APCP:surface:9-12 hour acc fcst:
+         5:383627:d=2017041800:APCP:surface:12-15 hour acc fcst:
+         ..
+
+      You can use the -ncep_norm to make the 3 hourly accumulations of the APCP and olr by
+
+      cat gfs.t00z.pgrb2.1p00.f0?? | wgrib2 - -match '(:APCP:|:ULWRF:top of atmosphere:)' \
+         -if ':APCP:' -ncep_norm $HOME/apcp.grb2 \
+         -if ':ULWRF:top of atmosphere:' -ncep_norm $HOME/olr.grb2
+
+      Results are
+
+            $ wgrib2 ~/apcp.grb2 
+            1:0:d=2017041800:APCP:surface:0-3 hour acc fcst:
+            2:97943:d=2017041800:APCP:surface:3-6 hour acc fcst:
+            3:195886:d=2017041800:APCP:surface:6-9 hour acc fcst:
+            4:301974:d=2017041800:APCP:surface:9-12 hour acc fcst:
+            ...
+            $ wgrib2 ~/olr.grb2  
+            1:0:d=2017041800:ULWRF:top of atmosphere:0-3 hour ave fcst:
+            2:65363:d=2017041800:ULWRF:top of atmosphere:3-6 hour ave fcst:
+            3:130726:d=2017041800:ULWRF:top of atmosphere:6-9 hour ave fcst:
+            4:204234:d=2017041800:ULWRF:top of atmosphere:9-12 hour ave fcst:
+            ...
+
+(23) Take a month of 4x daily data and make daily averages.
+	If you use use wgrib2 -ave dt OUTFILE, you will get a monthly mean when you do 
+	the averaging.  You need to rearrange the file, so you only get daily
+        chunks of a variable.
+
+		wgrib2 $file | sed 's/\(:d=........\)/\1:/' | \
+		  sort -t: -k3,3 -k5,5 -k6,6 -k7,7 -k4,4 | \
+		  wgrib2 $file -i -ave 6hr $out
+
+        Note: this procedure does not work with time series.
+
+(23') take a month time series of data and make a time series of daily average.
+      Note, (23) doesn't work for time series.  In this example, the days are
+      in reverse order.  This example only works with a time series (single field)
+      the is every 3 hours.  Revised 4/2015
+
+       wgrib2 $1  | sed 's/\(:d=........\)/\1:/' | sort -k3,3r -k4 -t: | \
+          wgrib2 -i $1 -ave 3hr $1.junk -set_grib_type c3
+       
+       put data in chronological order (not necessary but looks nice)
+
+       wgrib2 $1.junk | sort -k3 -t: | wgrib2 -i $1.junk -grib $1.daily
+
+(23'') take time series (single variable) of forecasts (every 6 hours) from a fixed 
+       starting time.  Daily averages have to be from 00Z to 18Z (start of forecast time interval)
+
+
+       wgrib2 $file -start_ft -s | sed 's/\(:start_ft=........\)/\1:/' | sort -t: \
+        -k3,3r -k6,7 -k4,4 | wgrib2 -i $file -set_grib_type c3 -fcst_ave 6hr $out.tmp
+
+       # make file in nice order (optional)
+       wgrib2 $out.tmp -start_ft -s  | sort -t: -k3 | wgrib2 -i $out.tmp -grib $out
+       rm $out.tmp
+
+(23''') time time series (single variable) of analyses every 3 hours and make monthly means
+
+       wgrib2 $1  | sed 's/\(:d=......\)/\1:/' | sort -k3,3r -k4 -t: | \
+          wgrib2 -i $1 -ave 3hr $1.junk -set_grib_type c3
+
+       put data in chronological order (not necessary but looks nice)
+
+       wgrib2 $1.junk | sort -k3 -t: | wgrib2 -i $1.junk -grib $1.mon
+
+(24) I want to change the process or model id of a grib file to 123.
+
+          wgrib2 IN.grb -set analysis_or_forecast_process_id 123 -grib OUT.grb
+
+     To see the available fields, type wgrib2 anything -set help help
+
+     The -set option has a few predefined fields.  If the field hasn't been defined,
+     you can use the -set_byte or -set_int options.
+
+(25) -new_grid doesn't work!  The error message says that the winds were ignored.
+
+    The -new_grid option interpolates does vector interpolations for vector quantities.
+    This makes a big difference near the North and South poles. As a consequence of
+    doing vector interpolations, -new_grid requires the zonal and meridional components
+    of the vector quantity to be processed as pairs.  That is, the meridional component
+    must be processed directly after the zonal component.  This is done by sorting
+    the inventory.  However, to get the U-V order, we have to alter the names.
+
+    wgrib2 IN.grb | \
+    sed -e 's/:d=\([0-9]*\):\([A-Z]\)\([^:]*\)/:d=\1:\3_\2:/' | \
+    sort -t: -k3,3 -k5,5 -k6,6 -k4,4 |  \
+    wgrib2 -i IN.grb -new_grid_winds earth -new_grid latlon 0:144:2.5 -90:73:2.5 OUT.grb
+
+
+    1) This line make the inventory of IN.grb
+    2) This line takes :d=YYYYMMDDHH:NAME: and converts it into :d=YYYYMMDDHH:AME_N:
+        The first letter of the make is put in the end. So meridional winds
+        will follow the zonal winds when the file is sorted by the names.
+    3) sort the inventory
+    4) process the data in the order given by the inventory (-i).  This ensures that the 
+       meridional winds follow the zonal winds.  This example shows the interpolation to
+       a 2.5 degree grid.
+  
+(26) I have grib2 files in WE:NS order, how do I put them into WE:SN order?
+
+     Use -new_grid to a new grid.  Just make the new grid the same as the 
+     old grid except for a WE:SN order.
+
+(27) wgrib2 is really slow for extracting multiple point data.
+
+        wgrib2 IN.grb -lon 22 56 > data_22_55.txt
+        wgrib2 IN.grb -lon 22 58 > data_22_58.txt
+        wgrib2 IN.grb -lon 23 33 > data_23_33.txt
+
+     In the above example, the file is being decoded 3 times.  Time can be saved by
+     decoding once.
+
+        wgrib2 IN.grb -lon 22 56 -lon 22 58 -lon 23 33 >data.txt
+
+(28)  I have an irregular grid (130).  How do I get the lat-lon of the points?
+
+    (a) The -grid option will print out the first the lat-lon values for the
+        first 300 points.  
+
+    (b) wgrib2 irr_grid.grb2 -d 1 -no_header -rpn rcl_lat -text lat.dat \
+              -rpn rcl_lon -text lon.dat
+
+    (c) wgrib irr_grid.grb2 -d 1 -rpn 0 -spread latlon.txt
+
+(29)  How do I remove duplicate records?
+
+    The following routine removes records that have the same inventory.
+
+    wgrib2 IN.grb -submsg 1 | unique.pl | wgrib2 -i IN.grb -GRIB OUT.grb
+
+    Note: (a) for messages with sub-messages, only the inventory of the 1st message is checked.
+               i.e. if the 1st sub-message matches and the second sub-message doesn't, the 
+               entire message is removed.
+          (b) order is preserved
+          (c) sub-message structure is retained, see (a)
+          (d) note that on the command line, "GRIB" is capitalized
+        ----------------------- unique.pl ------------------------
+        #!/usr/bin/perl -w
+        # print only lines where fields 3..N are different
+        # 
+        while (<STDIN>) {
+           chomp;
+           $line = $_;
+           $_ =~ s/^[0-9.]*:[0-9]*://;
+           if (! defined $inv{$_}) { 
+             $inv{$_} = 1;
+             print "$line\n";
+           }
+       }
+        --------------------- end unique.pl ----------------------
+
+(30)   I want to use the editor to change the 2 m RH fields in a file
+
+       Here is a simple way a extract and change a single grib message.
+
+            wgrib2 IN.grb -match ":RH:2 m above ground:" -text rh.txt -grib rh.grb
+                    .. extract 2m RH in text and as a grib file
+            edit rh.txt
+                    .. modify the grid point values
+            wgrib2 rh.grb -import_text rh.txt -set_grib_type c3 -grib_out new_rh.grb
+                    .. write a new grib file with modified values 
+
+       Suppose you want to keep the original file and change a specific record
+
+            wgrib2 IN.grb -match ":RH:2 m above ground:" -text rh.txt
+            edit rh.txt
+            wgrib2 IN.grb -if ":RH:2 m above ground:" -import_text rh.txt  -fi -set_grib_type c3 -grib_out OUT.grb 
+
+       The above sequence will lose the submessages and waste time re-encoding the grib message. It is possible
+       to save not re-encoding.
+
+(31)    I wanted to find the min TMP2M for a given year from CFSR.
+
+        IN.grb = time series of TMP2m (only) for the given year
+
+        # create an inventory where record 1 is last
+        wgrib2 IN.grb -for 2:: > junk.inv
+        wgrib2 IN.grb -d 1 >> junk.inv
+
+        # process the file with record 1 last
+        wgrib2 -i <junk.inv IN.grb \
+          -if "^2:" -rpn "sto_1" -fi \
+          -rpn "rcl_1:min:sto_1" \
+          -if "^1:" -set_ave "0-1 year min anl" -grib_out OUT.grb
+
+        rm junk.inv
+
+        The first record to process is number 2, need to save in register 1.
+        for all processed records: register1 = min(regster1, top of stack)
+        The last record to process is number 1, change time code and save.
+
+(32)  How do I separate a grib file by grid types?
+
+       Sometimes a grib file may have multiple grids and want to split the file
+       by grid type.
+
+       You can see the grid used by the file
+
+           wgrib2 -grid IN.grb
+
+       You can see the number of grids (and the checksum) used by the (linux/unix)
+
+           wgrib2 IN.grb -checksum 3 | cut -f3 -d: | sort -u
+
+                wgrib2 IN.grb -checksum 3   will write the checksum of section 3, the grid definition section
+                cut -f3 -d:                 will select field 3 which is the check sum
+                sort -u                     sort and only show unique line
+
+            bash-3.2$ wgrib2 grids.grb -checksum 3 | cut -f3 -d: | sort -u
+            sec3_cksum=1966855777
+            sec3_cksum=2751972329
+            sec3_cksum=3045129773
+            sec3_cksum=3781314504
+            sec3_cksum=4009958728
+
+            In the file grids,grb, there are 
+
+            You can extract a specific grid from grids.grb by, for example,
+
+            bash-3.2$ wgrib2 grids.grb -checksum 3 | grep "sec3_cksum=1966855777" | wgrib2 grids.grb -i -grib grid1.grb
+            2:169368:d=2009060500:HGT:200 mb:330 hour fcst:std dev
+
+(32')  How many different grids are in my grib file
+
+           wgrib2 IN.grb -checksum 3 | cut -f3 -d: | sort -u | wc -l
+
+           Note: the above solutions look at the checksum of section 3 (GDS)
+           A different shape of the earth counts as a different grid.
+           A different scanning mode counts as a different grid.
+
+(33)  The -spreadsheet and -csv options don't print out the undefined grid points.
+      How do I enable them to print out the undefined values?
+
+           See (10''')
+
+           Normally -text and -csv do not print out undefined values.  To print out
+           a strange value for undefined grid points, you will have replace the 
+           undefined grid points by the strange value.
+
+           bash-3.2$ wgrib2 IN.grb -rpn "-9999:swap:merge" -spreadsheet OUT.txt
+
+           -rpn "-9999:swap:merge" invokes the Reverse Polish Notation calculator.
+                 -9999 pushes a grid of strange values onto the stack, -9999 in this case.
+                 swap  exchanges the top two grids on the stack, the grib grid data and the -9999 grid
+                 merge replaces the top two grid on the stack with the top grid points if defined
+                      otherwise the second from top grid point values.
+
+                At the end of -rpn, the top of the stack is new grid point data.
+           
+(34)   Similar questions like this have been posted have been asked before.
+
+       "So I have a full grib2 file, containing about 300 fields. Its about 55 megs. I need to grab a 
+       few values at a certain point. Using the wgrib2 -lon function to select location and the grep 
+       command to narrow down to the fields I want works, in that it does return the values I require. 
+       But it is so slow! ..  Anyone think there is a faster way?"
+
+       Most NCEP grib2 files are compressed with JPEG2000 which produces small but slow-to-decode 
+       files.  The best trick is to reduce the number of decodes that you do.
+
+       Simple way to get values at (30N, -90W) and (40N, -80N)
+
+            wgrib2 IN.grb -lon -90 30 > location1.txt
+            wgrib2 IN.grb -lon -80 40 > location2.txt
+
+       Trick 1, extract location1 and location2 at the same time (2x savings)
+                Code that reads location.txt needs to be changed
+
+            wgrib2 IN.grb -lon -90 30 -lon -80 40 > locations.txt
+
+       Trick 2, only decode the fields that you need (ex. 2 m temp, accumulated precip)
+           2 m temp = "TMP:2 m above ground"
+           accumulated precip = "APCP"
+
+            wgrib2 IN.grb  -match "(:TMP:2 m above ground:|:APCP:)" -lon -90 30 -lon -80 40 > locations.txt
+
+          notes:  -match "(A|B)" means only process fields whose inventory matches A or B.
+                  The argument of -match is a regular expression (unix speak) which is expressive.
+
+       In our example, only two fields need to be decoded as compared to the 2x300 fields.
+
+       Comment: grib2 supports irregular grids (grids defined by longitude and latitudes).  To save
+         the values for 10 locations as a grib2 files, try
+
+         wgrib2 IN.grb -irr_grid "lon1:lat1:lon2:lat2 .. lon10:lat10" RADIUS OUT.grb
+           RADIUS: the nearest neighbor has to be within RADIUS km to be used.
+           the nearest neighbor is used.
+           
+	 storing the grib messages as submessages will make the file smaller.
+
+            wgrib2 OUT.grb -tosubmsg SMALL_OUT.grb
+
+(35)   I needed to make a grib file from a direct access big-endian IEEE time series of daily 
+       00Z Z500 fields for 1980.
+
+       step 1: make a template file, a grib2 file with 1 record with the right grid (same as IEEE file) 
+               and metadata (except time and level).  Here is the result
+
+                  bash-3.2$ wgrib2 template
+                  1:0:d=2012010100:HGT:500 mb:anl:
+
+               The grid matches too.
+
+                  bash-3.2$ wgrib2 template -grid
+                  1:0:grid_template=0:winds(N/S):
+                          lat-lon grid:(144 x 73) units 1e-06 input WE:NS output WE:SN res 48
+                          lat 90.000000 to -90.000000 by 2.500000
+                          lon 0.000000 to 357.500000 by 2.500000 #points=10512
+
+       here's the bash command to convert the file into grib2.
+
+       i=1
+       while [ $i -le 366 ] ; do
+           wgrib2 template
+           i=`expr $i + 1`
+       done | wgrib2 -i template -set_ts_dates 1980010100 1day 1 -set_lev "700 mb" -no_header \
+          -big_endian -import_ieee $ieee -set_grib_type c3 -grib_out Z700.grb2
+
+       How many lines of fortran was saved?
+
+(36)   The CSV file is corrupted when piping to stdout:
+
+        wgrib2 test.grib -d 61 -csv - >out.txt
+        out.txt starts with this line:
+              61:1537474"2013-07-02 00:00:00","2013-07-02 06:00:00","HGT","850 mb",0,-90,1283
+        and ends with this line:
+             :d=2013070200:HGT:850 mb:6 hour fcst:
+
+   Answer:
+
+   wgrib2 options are divided into
+
+       init    - initialization functions (run before the processing of the grib file)
+       inv     - inventory functions .. write to stdout
+       out     - write to an output file
+       misc    - none of the above.
+
+       If there are no "inv" options on the command line, a "-s" is added to the command line.
+
+       Your command:   wgrib2 test.grib -d 61 -csv - > out.txt
+       has no inv options, so it is internally converted into: wgrib2 test.grb -d 61 -csv - -s >out.txt
+       So stdout has both the -csv file and the -s inventory are piped to stdout.
+       To solve your problem, try:  wgrib2 test.grib -inv /dev/null -d 61 -csv -  >out.txt
+       on windows,    wgrib2 test.grib -inv NUL -d 61 -csv -  >out.txt
+       The -inv option will send the inventory to a file rather than stdout.
+
+(37) Same grib name but different numbers, What is in a name? 
+
+       NCEP grib tables often have two sets of numbers for the variables.  Let's take
+       SOILW (soil water) as an example.  Originally there was no WMO definition, so a
+       local definition of SOILW was added to the NCEP local tables.  A proposal for a new
+       variable was sent to the WMO which was later approved.  As a result, two sets of
+       numbers for the same variable.  Once WMO has approved the new variable, what
+       happens? Once the new grib table is added to wgrib2, wgrib2 will use SOILW for
+       both the local and WMO definitions.   However, if you try to set the variable name
+       to SOILW (-set_var SOILW), it will use the WMO definition if available.  This will
+       cause problems because most codes use numbers to identify variables.  The suggested
+       fix would for the codes to use the WMO definition and change any files with the local
+       definition to use the WMO definition by,
+
+          old: wgrib2 IN.grb -if ":SOILW:" -set_var SOILW -fi -grib OUT.grb
+          new: wgrib2 IN.grb -if ":SOILW:" -set_var SOILW -endif -grib OUT.grb
+
+
+(38) How to read and append to the same grib file?  (Post-processing)
+
+     Generally reading and writing to the same file requires care.  You don't want to read
+     a section of the file that you are in the process of writing.  Suppose you want to
+     append the wind speed and direction to a file which already contains the zonal and
+     meridional winds.  One way to to create a file and append it to the original file
+
+         wgrib2 -match "(UGRD|VGRD)" file.grb2 -wind_speed tmpfile -wind_dir tmpfile
+         cat tmpfile  >> file.grb2
+
+     Note: the -match option is not essential but speeds up the processing by only
+     decoding the UGRD and VGRD fields.
+
+     To append to the input file, you have to make an inventory file so that you don't
+     read the sections that are in the process of being written.
+
+         wgrib2 file.grb2 > file.inv
+         egrep ":(UGRD|VGRD):" | wgrib2 -i file.grb2 -append -wind_speed file.grb2 -wind_dir file.grb2
+
+     Note: the egrep command speeds up the processing by only reading and decoding 
+     the UGRD and VGRD fields.
+
+     The latter method is faster when the inventory file already exists or can be 
+     reused (multiple post-processing steps).  
+
+(39) some rpn tricks
+
+     WEASD = max(WEASD,0)
+        wgrib2 IN.grb -set_grib_type c3 \
+          -if ":WEASD:" -rpn "0:max" -fi -grib_out OUT.grb
+     if (TMP2m >= 310K) TMP2m = UNDEFINED
+        wgrib2 IN.grb -set_grib_type c3 \
+          -if ":TMP:2 m above ground:" -rpn "dup:310:<:/" -fi -grib_out OUT.grb
+
+(40) How do I get the wind speed and direction? conversion between earth and grid relative winds.
+
+     new: use -wind_dir and -wind_speed
+
+     Calculating the wind speed is easy (UGRD^2 + VGRD^2)^0.5
+	use: wgrib2 IN.grb -wind_speed WND.grb
+
+     Calculating the wind direction can be tricky.
+	For global files, the UGRD is the wind to the east
+	and VGRD is the wind to the north (earth relative).
+	You can use: wgrib2 IN.grb -wind_dir WND.grb
+
+	For Lambert conformal and polar stereographic files,
+	UGRD is the wind from grid point (i,j) to (i+1,j).
+	VGRD is the wind from grid point (i,j) to (i,j+1).
+	This is call grid relative winds and -wind_dir doesn't work.
+	However, the -new_grid option can change the winds
+	to earth relative.  So step 1 is to convert the winds to earth relative.
+
+	wgrib2 IN.grb -new_grid_winds earth -new_grid `grid_defn.pl IN.grb` OUT.grb
+
+	The script grid_defn.pl returns the definition of the grid defintion of IN.grb
+	in -new_grid format.      http://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2.scripts/
+
+	Step 2 is to calculate the wind speed and direction.
+
+	wgrib2 OUT.grb -wind_speed WND.grb -wind_dir WND.grb
+
+(41) A user found the Gaussian grid for 1 hourly PWAT changed in the CFSv2 (July 2013)
+    prior to July 2013
+
+       Gaussian grid: (1760 x 880) units 1e-06 input WE:NS output WE:SN
+       number of latitudes between pole-equator=440 #points=1548800
+       lat 89.844000 to -89.844000
+       lon 0.000000 to 359.795000 by 0.2050001:0:grid_template=40:winds(N/S):
+
+    July 2013 and afterwards,
+
+       Gaussian grid: (1760 x 880) units 1e-06 input WE:NS output WE:SN
+       number of latitudes between pole-equator=440 #points=1548800
+       lat 89.843000 to -89.843000
+       lon 0.000000 to 359.795000 by 0.205000
+
+    It's a subtle difference, the Gaussian grid goes from +/-89.844 to +/-89.843.  
+    Gaussian grids are defined by the zeros of the Legendre polynomial, so the
+    differences are probably caused by using a different compiler which caused
+    a slightly different result.  (Different order of operations?)  Now this
+    minor change in the grid definition caused a problem in the conversion
+    to netcdf.  The converter said the grid were different and wouldn't make
+    a time series across the July 2013 transition.  
+
+    The following command will change the 8 bytes in the Grid Definition Section.
+    If the grid happens to be the previous grid, then you will second last grid.
+    Otherwise you will get garbage file.  You have been warned.
+
+    wgrib2 -set_int 3 47 89743000 -set_int 3 56 -89743000 IN.grb  -grib OUT.grb
+
+(42) I want to convert a grid to -180 to 180 grid.
+
+    Assuming that you have IPOLATES installed and IPOLATES supports the grid, 
+    then you can do
+
+    wgrib2 In.grb -new_grid_winds earth -new_grid latlon 180:361:1 -90:181:1 out.grb
+
+    If you don't want an 1x1 degree grid, you would have to change the grid defintion.
+
+(43) This question is obsolete and applies the spectral GFS.
+
+    -merge_fcst, -ncep_norm stop working after 10 days into the forecast
+    when using NCEP products.
+
+    As of 7/2014, the GFS and CFSv2 first create grib1 files and then convert the files
+    into grib2 using cnvgrib.
+
+    Accumulations and averages have the form "N-M hour (ave/acc) forecast".  With
+    grib1, you can write "N-M hour (ave/acc) forecast" when N and M <= 255 hours.
+    When N and M were greater then 255 and a multiple of 6, you could change the
+    time units from hours to "6 hours".  Then the max hour 1530 (little over 2 months).
+
+    So for hours 0 .. 252, the time units was set to hours
+    So for hours 258.. 1530 the time units was set to 6 hours
+
+    The 255 limit is changed to 4 billion in grib2, so there is no need 
+    to change time units.
+
+    The program, cnvgrib retains the time units when converting to grib2.  However
+    the -merge_fcst and -ncep_norm options require all the time units to be identical.
+    Consequently these options fail at day 10 when the grib2 files were created by
+    cnvgrib.
+
+    work around, use -set_metadata to recode the forecast times
+
+    wgrib2 IN.grb | wgrib2 IN.grb -set_metadata - -grib OUT.grb
+
+(44) I have a time series of SST analyses at 00Z with no missing dates.  I want to 
+     make a time series of the daily increments (SST(day+1) - SST(day))
+
+     1	#!/bin/sh
+     2	#
+     3	# make daily increments
+     4	#
+     5	file=sst.t00z
+     6	pipe=/tmp/pipe$$
+     7	
+     8	set -x
+     9	n=`wgrib2 $file | wc -l`
+    10	n_1=`expr $n - 1`
+    11	
+    12	[ -f $pipe ] && rm $pipe
+    13	[ -p $pipe ] && rm $pipe
+    14	
+    15	mkfifo $pipe
+    16	wgrib2 $file -for_n "2:$n" -bin $pipe &
+    17	
+    18	wgrib2 -for_n "1:$n_1" $file -rpn "sto_1" -import_bin $pipe -rpn "rcl_1:-" \
+    19	 -set_pdt +4.8 -set_ave "0-24 hour last-first anl" -set_grib_type c1 -grib_out $file.inc 
+    20	
+    21	[ -p $pipe ] && rm $pipe
+    22	
+    23	exit
+
+    line 9:  find the number of fields in the time series
+    line 10:  find the number of fields in the time series  minus 1
+    lines 12-15: make a named pipe (unix or linux)
+    line 16: write fields 2:n to the pipe in binary format as a background process
+    line 18: -for_n "1:$n_1"  .. process all but the last field
+    line 18: -rpn sto_1 .. save SST in register 1
+    line 18: -import_bin $pipe .. read day+1 SST from pipe
+    line 18: -rpn "rcl_1:-"   compute day+1 SST - day SST
+    line 19: -set_pdt +4.8 .. change product definition template to 4.8 (+ to preserve metadata)
+    line 19: change metadata of pdt 4.8 to "0-24 hour last-first anl"
+
+(45) How do I compare Z500 from two grib files (same grid)?
+        fld=":HGT:500 mb:"
+        wgrib2 $file1 -match "$fld" -inv /dev/null -bin - | \
+        wgrib2 $file2 -match "$fld" -s -rpn "sto_1" -import_bin - -rpn "rcl_1:print_corr:print_rms"
+
+	line 2: read $file1 and Z500 to binary and write it to stdout
+        line 3: read $file2, save Z500 to register 1, read stdin (Z500 of file1), print correlation and rms
+
+(45') How do I compare two grib files with identical structure and grids?
+        wgrib2 $file1 -inv /dev/null -bin - | \
+        wgrib2 $file2 -s -rpn "sto_1" -import_bin - -rpn "rcl_1:print_corr:print_rms"
+
+(46)  Land-sea mask mismatch problem:
+
+      The SST and sea-ice analysis can be created with a different land-sea mask than 
+      used by numerical model.  So if the sst analysis in the model, some sea points 
+      may have no analyzed SSTs.
+
+      Assuming the land points have an undefined value (for SST), this will extend the SST
+      analysis by 2 grid points.
+
+      wgrib2 $in -set_scaling -2 0 -rpn smth9g -grib_out tmp.1 -rpn smth9g -grib_out tmp.2
+
+         smth9 will do a 9-point smoothing. A side effect is that undefined points that
+         are adjacent to a defined point will become defined.
+
+         The above line creates a smoothed SST with a defined sst that are 1 (tmp.1) and 
+         2 (tmp.2) points from the sst analysis.
+
+      wgrib2 $in -rpn sto_1 -import_grib tmp.1 -rpn "rcl_1:merge:sto_1" \
+         -import_grib tmp.2 -rpn "rcl_1:merge" \
+         -set_grib_type c3 -set_scaling -2 0 -grib_out $in.fill
+
+      This command merges the 3 files with the following priority:  $in > tmp.1 > tmp.2
+      The net result is a new SST analysis which can be used with minor mismatches
+      in the land-sea mask.
+
+(47)  Converting grib file from locally defined grib table to WMO defined grib table.
+
+        *** these solutions require wgrib v2.0.2+ ***
+
+      Case 1: Only one variables need to be converted and the rest are ok.
+
+          example: DLWRF can be defined with NCEP local table as well WMO table
+                   In the current GFS file, DLWRF has the varX of
+
+                   $ wgrib2  gdas1.t12z.sfluxgrbf01.grib2 -match DLWRF
+                   29:61416941:var0_2_1_7_5_192
+                   90:144283119:var0_2_1_7_5_192
+
+                   The format of varX is
+
+                     var(Discipline)_(Master table)_(Local_table)_(Center)_Category)_(Parameter)
+
+		   Discipline (Code Table 0.0) = 0
+		   Master table (Table 1.0)= 2
+                   Local table (Code Table 1.1) = 1
+                   Center (Table 0) = 7 (NCEP)
+                   Category (Code Table 4.1)= 5
+                   Parmeter (Code Table 4.2) = 192
+      
+                   To change to the WMO definition of DLWRF you can do
+
+                      wgrib IN -if "var0_2_1_7_5_192:" -set_var DLWRF -fi -grib OUT
+
+                   The above command would fail if the master table were 3 or any other number. To
+                   make the master table a wild card, you can do
+
+                      wgrib IN -if "var0_[0-9]+_1_7_5_192:" -set_var DLWRF -fi -grib OUT
+
+                   Makes you want to learn regular expressions.
+
+      Case 2: The entire file needs to be converted to WMO tables.
+
+          In this case, we are going to assume that the Master and Local tables are fixed
+          numbers.  (The center that made the file may switch to WMO tables and would indicate
+          it by using a different table numbers.)
+
+             Suppose TMP in the grib file is defined by
+
+		   Discipline (Code Table 0.0) = 0
+		   Master table (Table 1.0)= 1
+                   Local table (Code Table 1.1) = 2
+                   Center (Table 0) = 3
+                   Category (Code Table 4.1)= 4
+                   Parmeter (Code Table 4.2) = 5
+
+
+             Suppose HGT in the grib file is defined by
+
+		   Discipline (Code Table 0.0) = 0
+		   Master table (Table 1.0)= 1
+                   Local table (Code Table 1.1) = 2
+                   Center (Table 0) = 3
+                   Category (Code Table 4.1)= 6
+                   Category (Code Table 4.1)= 7
+
+             Suppose max 0-6 hour fcst UGRD in the grib file is defined by
+
+		   Discipline (Code Table 0.0) = 0
+		   Master table (Table 1.0)= 1
+                   Local table (Code Table 1.1) = 2
+                   Center (Table 0) = 3
+                   Category (Code Table 4.1)= 8
+                   Category (Code Table 4.1)= 9
+
+            
+             wgrib2 IN \
+               -if ":var_0_1_2_3_4_5:" -set_var TMP -grib OUT \
+               -if ":var_0_1_2_3_6_7:" -set_var HGT -grib OUT \
+               -if ":var_0_1_2_3_8_9:" -set_var UGRD -set_ave "0-6 hour max fcst" -grib OUT
+
+            The above line will convert 3 of the variables in the file
+
+(48) I have a HRRR file that I want to convert to netcdf.  I want to convert some UGRD/VGRD/HGT/TMP
+     into a 3-D structure (X,Y,Z). 
+
+     $ wgrib2 HRRRfile -match TMP
+     101:8480451:d=2014010100:TMP:1 hybrid level:anl:
+     102:8533783:d=2014010100:TMP:2 hybrid level:anl:
+     103:8585030:d=2014010100:TMP:3 hybrid level:anl:
+     ...
+     149:10425493:d=2014010100:TMP:49 hybrid level:anl:
+     150:10461311:d=2014010100:TMP:50 hybrid level:anl:
+     686:29981253:d=2014010100:TMP:2 m above ground:anl:
+     696:30707544:d=2014010100:TMP:surface:anl:
+
+     The data are on 50 hybrid levels.
+
+     Doing the following commands: 
+                $ wgrib2 HRRRfile -netcdf junk.nc -match ":(UGRD|VGRD|HGT|TMP):" 
+                $ ncdump -h junk.nc  | grep short
+		HGT_1hybridlevel:short_name = "HGT_1hybridlevel" ;
+		HGT_2hybridlevel:short_name = "HGT_2hybridlevel" ;
+		HGT_3hybridlevel:short_name = "HGT_3hybridlevel" ;
+		HGT_4hybridlevel:short_name = "HGT_4hybridlevel" ;
+		HGT_5hybridlevel:short_name = "HGT_5hybridlevel" ;
+                ...
+
+     give each field has its own name.  NetCDF data is stored in a (X,Y) structure.
+
+     Doing the following commands: 
+                $ wgrib2 HRRRfile -nc_nlev 50 -netcdf junk.nc -match ":(UGRD|VGRD|HGT|TMP):" 
+                $ ncdump -h junk.nc | grep short | more
+		HGT:short_name = "HGT" ;
+		TMP:short_name = "TMP" ;
+		UGRD:short_name = "UGRD" ;
+		VGRD:short_name = "VGRD" ;
+		UGRD_tropopause:short_name = "UGRD_tropopause" ;
+		VGRD_tropopause:short_name = "VGRD_tropopause" ;
+		TMP_2maboveground:short_name = "TMP_2maboveground" ;
+		UGRD_10maboveground:short_name = "UGRD_10maboveground" ;
+		VGRD_10maboveground:short_name = "VGRD_10maboveground" ;
+		HGT_surface:short_name = "HGT_surface" ;
+		TMP_surface:short_name = "TMP_surface" ;
+     50 levels of HGT, TMP, UGRD and VGRD are now 3-D variables.
+
+(49)  GrADS trick, may be helpful with other applications
+
+      The grib file tmax2m_member_01.grib wouldn't plot in GrADS because the was using
+      a Product Definition Template (PDT) that wasn't supported by GrADS v2.0.1.
+
+      $ wgrib2 /tmp/tmax2m_member_01.grib
+      1:0:d=1995070200:TMP:2 m above ground:0-6 hour max fcst:ENS=? table4.6=255 pert=1
+      2:58293:d=1995070200:TMP:2 m above ground:6-12 hour max fcst:ENS=? table4.6=255 pert=1
+      3:116586:d=1995070200:TMP:2 m above ground:12-18 hour max fcst:ENS=? table4.6=255 pert=1
+
+      This file is using PDT 61 which is like the supported PDT 8 except for the ensemble 
+      information.  If the grib file is converted to PDT 8 (with the loss of the ensemble 
+      metadata), then GrADS can display the forecast.
+
+      $ wgrib2 /tmp/tmax2m_member_01.grib -set_pdt +8 -grib /tmp/tmax.grb
+      ...
+      $ wgrib2 /tmp/tmax.grb
+      1:0:d=1995070200:TMP:2 m above ground:0-6 hour max fcst:
+      2:58283:d=1995070200:TMP:2 m above ground:6-12 hour max fcst:
+      ...
+
+      The other common supported PDT is 0 which is for analyses and instantaneous forecasts.
+
+(50)  GrADS trick, may be helpful with other applications
+  
+      This is an old trick to display grib2 files with GrADS.  Convert the file
+      into netcdf and see if "sdfopen" will work.
+
+      Comments:  The file, /tmp/tmax2m_member_01.grib, almost or sort of worked with this 
+      trick.  The file in question did not have time(n) = To + n*dt and had some
+      problems with GrADS.
+
+      Other potential problems.  GrADS's sdfopen command want the grid to lat-lon.  Projections
+        will require ctl file.
+
+(51)  This is fast way to make a time series from a forecast run (or analyses) where each 
+      variable in in its own file.
+
+----------------------------------- grib2_ts.sh -----------------------------------------    
+#!/bin/sh
+# public domain 2/2016 Wesley Ebisuzaki
+#
+# Take N grib2 file with a specified date and make a time series
+# The N files must be in alphanumeric order, ex., gfs.YYYYMMDDHH
+# The contents of N files must be similar except for the date code
+#
+# The output is a set of M time series.
+#
+# example usage:  grib2_ts.sh pgb.anl.*    (filenames=pgb.anl.YYYYMMDDHH)
+# example usage:  grib2_ts.sh pgb.f???     (filenames=pgb.f{3 digit forecast hour})
+#
+
+file1=$1
+cmd="cat $* | wgrib2 - "
+
+for f in `wgrib2 $file1 | cut -f4-5 -d: | sed 's/ /@/g' | sort -u`
+do
+  match=`echo $f | sed 's/@/ /g'`
+  file=`echo $f | sed -e 's/[:@]/_/g'`
+  cmd="$cmd -if ':${match}:' -grib $file"
+done
+eval $cmd
+exit $?
+----------------------------------- end grib2_ts.sh -------------------------------------    
+
+This script only works on "simple" grib files.  Some files have variables
+that require extended variable names.  Some extended variable names use
+special characters such as ">" which cannot appear in a filename.
+
+
+(52)  I want a CSV (comma separated value) file for a grid point.
+
+    wgrib2 gep19.t00z.pgrb2af180 -irr_grid 10:20 1000 - | wgrib2 - -csv out
+
+The above makes a CSV file, out, for the closest grid point to 10E and 20N.  The
+grid point has to be within 1000 km.
+
+    wgrib2 gep19.t00z.pgrb2af180 -irr_grid 10:20:30:40 1000 - | wgrib2 - -csv out
+
+The above makes a CSV file, out, for the closest grid points to (10E, 20N) and
+(30E,40N). The grid points have to be within 1000 km.
+
+(53) Some ECMWF files contain both grib1 and grib2 data. How you separate
+   them in to different files?
+
+   to get the grib1 data:  wgrib ECMWF.grb -grib -o ECMWF.grb1 -d all
+   to get the grib2 data:  wgrib2 ECMWF.grb -grib ECMWF.grb2
+
+(54) Fixing the verification time (vt).
+
+     "I am trying to alter the vt times of certain variables in a grib 2 file.
+       ...
+     144:35236742:vt=2016062006:d=2016062006:TPRATE:surface:0-1 hour acc fcst:
+     145:35438549:vt=2016062006:d=2016062006:TPRATE:surface:0-2 hour acc fcst:
+     146:35642694:vt=2016062006:d=2016062006:TPRATE:surface:0-3 hour acc fcst:"
+
+    The verification time was incorrectly set by producer of the grib file, and
+    it would be best if the producer would fix their grib files.  Lets call your
+    file, XYZ.grb, to protect the name of the guilty party.  The following
+    will fix the verification time.
+
+        wgrib2 XYZ.grb > XYZ.inv
+        wgrib2 XYZ.grb -set_metadata XYZ.inv -grib XYZ_new.grb2
+
+    The option -set_metadata will rewrite the metadata and correct the verification
+    time. The option, -set_metadata, only handles a subset of the grib standard, so
+    some files can't be handled.  
+
+(55) My grib file is WE|EW:SN order, how do I convert it to WE:SN order?
+
+    WE|EW:SN means the first row goes from W to E.  The next row of data
+     is slightly N and goes from E to W.  The third row of data goes from
+     W to E and so forth.
+
+   Step 1: Find the grid dimensions
+
+        $ wgrib2 blend.grb -nxny 
+        1:0:(2145 x 1597)
+
+   Step 2: Use -ijsmall_grib to rewrite the entire grid.  -ijsmall_grib will
+        write the subgrid in WE:SN order.
+
+        wgrib2 blend.grb -ijsmall_grib 1:2145 1:1597 blend2.grb
+
+(56) I get the error:
+
+   $ wgrib2 surface.warms.2016021600f00.grb
+   1:0:d=2016021600:REFC:entire atmosphere:anl:
+   2:738980:d=2016021600:VIS:surface:anl:
+   3:1648450:d=2016021600:PRES:surface:anl:
+   4:2387430:d=2016021600:TMP:surface:anl:
+   5:3183240:d=2016021600:WEASD:surface:anl:
+   6:3183428:d=2016021600:TMP:2 m above ground:anl:
+   7:3808748:d=2016021600:DPT:2 m above ground:anl:
+   8:4547728:d=2016021600:RH:2 m above ground:anl:
+   9:5116218:d=2016021600:UGRD:10 m above ground:anl:
+   10:5684708:d=2016021600:VGRD:10 m above ground:anl:
+
+   *** FATAL ERROR: Statistical processing bad n=0 ***
+
+   11:6253198
+
+   What happened?
+
+     The error occurred in message 11.  Message 11 includes statisical processing
+     and the "n" parameter has an illegal value of zero.  The producer of the grib
+     file needs to fix the grib file.  Earlier versions of wgrib2 printed an empty
+     time stamp.  The current version will terminate with a fatal error.  (That will 
+     get the producer's attention.)
+
+   How do I read the file?
+
+     The fatal error is triggered when you generate the time stamp.  You have
+     to avoid anything that generates a time stamp such as -s, -if and -match.
+
+     To create a file without record 11, you can do
+
+        $ wgrib2 surface.warms.2016021600f00.grb -pdt | egrep -v "^11:" | \
+          wgrib2 -i surface.warms.2016021600f00.grb -grib surface.new.grb
+
+     You can't use the -not option because that creates an match inventory
+     which triggers the error message.
+   
+    To make an inventory,
+
+        $ wgrib2 surface.warms.2016021600f00.grb -if_rec 1:10 -s -fi -if_rec 12: -s -fi
+ 
+     If you can process the file in two pieces, you can do
+
+        $ wgrib2 surface.warms.2016021600f00.grb -for 1:10 (rest of options)
+
+        $ wgrib2 surface.warms.2016021600f00.grb -for 12: (rest of options)
+
+     With the last line, the for loop has no ending value which is equivalent to the end of the file
+
+(57) What is the difference between,
+
+      A)  wgrib2 $1 -match ":(VIS:surface:60 min fcst|HGT:cloud ceiling:60 min fcst)" -grib  out  >/dev/null
+
+      B)  wgrib2 $1 -match ":(VIS:surface:60 min fcst|HGT:cloud ceiling:60 min fcst)" | \
+            wgrib2 -i $1  -grib_out out  >/dev/null
+
+
+    Both A and B create grib files with similar fields.
+
+      A)  This command copies the  ":(VIS:surface:60 min fcst|HGT:cloud ceiling:60 min fcst)" fields
+            to the file out.  This command takes one sequential read of the file.
+
+      B)  The first line of B creates an inventory of the ":(VIS:surface:60 min fcst|HGT:cloud ceiling:60 min fcst)"
+            fields.  This line takes one sequential read of the file (like A).
+
+          The second line of B reads the inventory and does a -grib_out of the selected records.  This
+            requires wgrib2 to do a random-access read and decode the selected records and to encode 
+            the same records using the default packing and scaling.
+
+      Version A is much faster.  If you need to change the scaling or compression type of the output file, you
+      can do something like
+
+         wgrib2 $1 -match ":(VIS:surface:60 min fcst|HGT:cloud ceiling:60 min fcst)" \
+             -set_grib_type c3 -grib  out  >/dev/null
+
+      which will convert the packing to "c3" in one sequential read.
+
+(58)  I have a grib file and I can't figure out the differences between grib messages records 10 and 11.
+
+        bash-4.1$ wgrib2 test.grb -for 10:11
+        10:1635:d=2016091900:UGRD:10 m above ground:1 hour fcst:
+        11:1814:d=2016091900:UGRD:10 m above ground:1 hour fcst:
+
+       Grib messages 10 and 11 have the same default inventory but they may be different fields.  
+       For example, the two fields could have been created by different centers or by different
+       models.  Perhaps some (obscure) table has different value.  Finding the difference is 
+       a 3 step process.
+
+       Step 1:  Find out which sections are different.  You should check
+
+           Section 1  - has center, subcenter, production status, type of processed data
+           Section 2  - has any locally use data
+           Section 3  - has grid definition
+           Section 4  - product definition
+
+       Sections 5, 6 and 7 are used to store the grid point values and do not store any information
+       about the type of field. To see if Section 1 is the same in both grib messages, type
+
+         bash-4.1$ wgrib2 test.grb  -for 10:11 -checksum 1
+         10:1635:sec1_cksum=2150887347
+         11:1814:sec1_cksum=2150887347
+
+       In our example, Section 1 have the same checksum and are the same.  This step should
+       be repeated for Sections 2, 3 and 4.  This step isolates the difference to a single section.
+
+       Step 2:  Once you have isolated the differences to a single Section, you can dump the Section 
+       contents. The differences often is in Section 4, the Product Definition Section.  At this point, 
+       you can dump the entire Section.
+
+         bash-4.1$ wgrib2 test.grb -for 10:11 -v2 -0xSec 4
+
+       From the output, you can find the bytes/octets that are different.
+
+       Step 3:  Once you have found the differences in the Sections, you have to consult the grib 
+       documentation.  The problem may be that your file is using a template that lacks support in wgrib2 
+       or that the table needs to be expressed in the default inventory.  Consult wgrib2 support.
+
+(59)   How do I write a single grid point value to a file in binary? (or text or CSV)
+
+       The -lon option will write the grid point value to the inventory but sometimes
+       one needs to write the value to a binary file.  You can use the -lola option
+       with nlat=nlon=1 and dlat=dlon=1 (or any non-zero value).  In this example, 
+       we write out the nearest grid point to 10E and 20N in binary/text/CSV formats.
+
+       binary: wgrib2 IN.grb -no_header -lola "10:1:1" "20:1:1" grid.bin bin
+       text:   wgrib2 IN.grb -lola "10:1:1" "20:1:1" grid.txt text
+       CSV:    wgrib2 IN.grb -lola "10:1:1" "20:1:1" grid.grb grib       (convert to grib)
+               wgrib2 grid.grb -csv grid.csv                             (convert grib to CSV)
+       text2:  wgrib2 IN.grb -s -last grid.txt -lon -last grid.txt -nl_out grid.txt
+
+       Note: text2 uses the -last option which write the output of the last "inv" option to a file.
+
+(60)   I have a file with a level type (XXX) that I want to change to "100 m above ground"
+
+       For a level, -code_table_4.5a has the level type and -code_table_4.5b is undefined (255)
+       For a layer, -code_table_4.5a has the level1 type and -code_table_4.5b is has level2 type
+                    (A layer is defined by two levels)
+
+       (1)    wgrib2 IN.grb -match_inv_add_code code_table_4.5a "" "" -match_inv_add code_table_4.5b "" "" \
+       (2)         -if ":code table 4.5a=XXX:code table 4.5b=255:" -set_lev "100 m above ground" -fi \
+       (3)         -grib OUT.grb
+
+       (1) As of 11/2018, code table 4.5a/b are not part of the match inventory, so we have to add it in.
+       (2) if code table 4.5a == XXX and code table 4.5b == 255 , then change the level
+       (3) write out the file
+
+(61)  I have a file with var246 that I want to change to the standard UGRD at 100 m above ground. 
+
+      cheap version: wgrib2 IN.grb -if ":var246:" -set_var UGRD -set_lev "100 m above ground" -fi -grib OUT.grb
+
+      The above version assumes the var246 is unique.  It is possible that var246 can refer to two
+      different variables because 6 integers are used to identify a variable.  Sometimes you have
+      to refer to the varA_B_C_D_E_F format especially when the table conflicts with the WMO tables.
+
+      A = discipline
+      B = master table
+      C = local table
+      D = parameter category
+      E = parameter
+
+         see http://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/varX.html
+
+      To see the varA_B_C_D_E_F format of the file, do
+
+         wgrib2 IN.grb -s -varX
+
+      Once you found the unique variable name, you can do
+
+      wgrib2 IN.grb \
+       -if ":varA1_B1_C1_D1_E1_F1:" -set_var "UGRD" -set_lev "100 m above ground: -fi \
+       -if ":varA2_B2_C2_D2_E2_F2:" -set_var "TMP" -set_lev "100 m above ground: -fi \
+       -grib OUT.grb
+
+(62)  How do I replace grib message 10 in file A by grib message 1 in file B and save it in file C?
+
+      wgrib2 A -for 1:9 -grib C
+      wgrib2 B -for 1:1 -append -grib C
+      wgrib2 A -for 11: -append -grib C
+
+(63)  My file has some fields which are completely undefined.  How do I get rid of these undefined fields.
+
+      wgrib2 IN.grb -max | grep -v ":max=undefined" | wgrib2 IN.grb -i -grib OUT.grb
+
+(64)  How do I get a temperature profile for 10N -40W
+
+      1) get a grib file with all the temperatures with all the temperature fields (IN.grb)
+      2) 10N 40W translates to lon=320 lat=10
+
+wgrib2 IN.grb -match ":TMP:[0-9]* mb:" | sort -k5,5rn -t: | \
+   wgrib2 -i IN.grb -s -lon 320 10
+703:1255733704:d=2018030400:TMP:1000 mb:48 hour fcst::lon=320.039063,lat=10.016270,val=296.3
+689:1229794983:d=2018030400:TMP:975 mb:48 hour fcst::lon=320.039063,lat=10.016270,val=294.1
+673:1197991070:d=2018030400:TMP:950 mb:48 hour fcst::lon=320.039063,lat=10.016270,val=292.1
+...
+13:24746631:d=2018030400:TMP:1 mb:48 hour fcst::lon=320.039063,lat=10.016270,val=266.1
+
+
+   How it works:
+          wgrib2 IN.grb -match ":TMP:[0-9]* mb:"     creates an inventory of temperature on mb surfaces
+          sort -k5,5rn -t:                           sorts the 5th column (level) in reverse numeric order (big to small)
+          wgrib2 -i IN.grb -s -lon 320 10            wgrib2 -i    read the inventory for the fields to process
+                                                     wgrib2 -lon  print nearest grid point to lon=320 lat=10
+                                                     -ijlat could have been used instead of the lon/lat values.
+
+(65) I have 80 ensemble members that have WIND (wind speed) at 10m. I want
+     to find the probability the the WIND is greater or equal to 15 m/s
+     based on the percentile of ens members >= 15 m/s
+     
+
+   ensemble data is at $input/flx.memNNN.YYMMDDHH where NNN=001..080
+   WIND is only defined at 10 meters above ground
+
+   cat $input/flx.mem???.$date | wgrib2 - -match ":WIND:" -rpn "15:>=" -ens_processing ensstat.grb x
+   wgrib2 ensstat.grb -match  ":ens mean" -set_grib_type c3 -set_prob 1 1 1 15 15 -grib wind_ge_15.grb
+
+   Okay, 2 lines to compute the probabilities. Here's the easier to understand version
+
+   # make file with 80 member WIND fields
+   cat $input/flx.mem???.$date | wgrib2 - -match ":WIND:" -grib wind.grb
+   # convert WIND (wind speed) to 1/0 depending if >= 15 m/s
+   wgrib2 wind.grb -rpn "15:>=" -grib_out wind15.grb
+   # find ensemble average using the -ens_processing option
+   wgrib2 wind15.grb -ens_processing ensstat.grb x
+   # extract ensemble mean from statistics
+   wgrib2 ensstat.grb -match  ":ens mean" -grib ens_mean.grb
+   #  convert into grib probability
+   #  wgrib2 ens_mean.grb -set_prob A B C LV UV -grib wind_ge_15.grb
+   #  A=forecast probability number
+   #  B=number of probability forecasts
+   #  C=grib2 Code table 4.9 (ge, le, bound)
+   #  LV=lower value
+   #  UV=upper value
+   #  note: A and B are used so that one can find ranges
+   #   ex. fcst1 = probability WIND >= 5
+   #   ex. fcst2 = probability WIND >= 10
+   #   ex. fcst3 = probability WIND >= 15
+   #      A=1, 2 or 3 and B=3  .. can find probability wind >= 5 and WIND < 10
+   wgrib2 ens_mean.grb -set_grib_type c3 -set_prob 1 1 1 15 15 -grib wind_ge_15.grb
+
+(65') I want to get the probabiliy of WIND >= 10, 15 and 20 m/s based
+      on the percentiles of ensemble members
+
+      # get WIND field from all ensemble members
+      cat $input/flx.mem???.$date | wgrib2 - -match ":WIND:10 m above ground:" -grib ens.grb
+
+      # have 3 probability fields, makes easy to find prob between 10 and 15, and 15 and 20.
+
+      wgrib2 ens.grb -rpn "10:>=" -ens_processing -  x -inv /dev/null | \
+      wgrib2 - -match  ":ens mean" -set_grib_type c3 -set_prob 1 3 1 10 10 -grib wind.grb
+
+      wgrib2 ens.grb -rpn "15:>=" -ens_processing -  x -inv /dev/null | \
+      wgrib2 - -match  ":ens mean" -set_grib_type c3 -set_prob 2 3 1 15 15 -append -grib wind.grb
+
+      wgrib2 ens.grb -rpn "20:>=" -ens_processing -  x -inv /dev/null | \
+      wgrib2 - -match  ":ens mean" -set_grib_type c3 -set_prob 3 3 1 20 20 -append -grib wind.grb
+
+(66) The new GFS (FV3) model is producing two APCP (accumulated precip), I want the old/new version.
+
+      The new GFS is producing the old and new stype of APCP
+           old:  N-M hour acc fcst      N = int(M-1)/M) * 6
+                  ex.  0-3 hour acc fcst
+                       0-6 hour acc fcst
+                       6-9 hour acc fcst
+                       6-12 hour acc fcst
+                       12-15 hour acc fcst
+           new:  0-M hour acc fcst
+                  ex.  0-3 hour acc fcst
+                       0-6 hour acc fcst
+                       0-9 hour acc fcst
+                       0-12 hour acc fcst
+                       0-15 hour acc fcst
+
+       The new style is easier to use.  To find the N-M hour accumulation
+            ex.  (0-M hour acc fcst) - (0-N hour acc fcst) == N-M hour accumulated fcst
+
+       The problem is that many programs do not accept two copies of the APCP, and
+       some are only working with the old style APCP
+
+       A quick way to eliminate the old/new APCP from your downloaded file.
+
+       Keep old style APCP and remove new style APCP
+
+           $ wgrib2 IN.grb -not APCP -grib OUT.grb
+           $ wgrib2 IN.grb -match APCP -append -grib OUT.grb -quit
+
+           This script uses the fact that the old APCP is the 1st APCP.
+           This more complicated version can handle the APCP in any order.
+
+           $ wgrib2 IN.grb -not APCP -grib OUT.grb
+           $ wgrib2 IN.grb -match APCP -append -if ":(0-3 |0-6|[1-9][0-9]*-[0-9]*)" -grib OUT.grb \
+                        -if ":(0-3 |0-6|[1-9][0-9]*-[0-9]*)" -quit -fi
+
+       Keep new style APCP and remove old stype APCP
+
+           $ wgrib2 IN.grb -not APCP -grib OUT.grb
+           $ wgrib2 IN.grb | grep APCP | tail -n 1 | wgrib2 -i IN.grb -append OUT.grb
+
+           This script uses the fact that the new APCP is the 2nd APCP.
+           This more complicated version can handle the APCP in any order.
+
+           $ wgrib2 IN.grb -not APCP -grib OUT.grb
+           $ wgrib2 IN.grb -match APCP -append -if ":0-" -grib OUT.grb -if ":0-" -quit -fi
+
+       With the new IF structure (wgrib2 v3.0.0+), life is easier.
+
+           Keep 1st APCP (old style) 
+              $ wgrib2 IN.grb -if APCP -if_reg 0 -else -grib OUT.grb -rpn sto_0 -endif \
+                 -else -grib OUT.grb -endif
+
+           Keep 2nd APCP (new style) 
+              $ wgrib2 IN.grb -if APCP -if_reg 0 -grib OUT.grb -else -rpn sto_0 -endif \
+                 -else -grib OUT.grb -endif
+
+(66') I want the "(N-1)-(N) hour acc" APCP from the N-fcst hour HRRR file.
+
+   The N fhour HRRR has the "0-N hour acc" APCP
+   and the "N-1-N hour acc" APCP.  The only exceptions are the f000 and 
+   f001 files which have one APCP, "0-0 hour acc" and "0-1 hour acc".
+
+   wgrib2 HRRR.grb -match -APCP -match ':(0-1 |[1-9][0-9]*-)' -grib small.grb
+
+   I guess that one could write safer code
+
+   wgrib2 HRRR.grb -match -APCP -match ':(0-1|[1-9][0-9]*-[0-9]*) hour acc:' -grib small.grb
+
+
+(67) How do I get the precip from i to j hours from the GFS-FV3 model files?
+removed: see trick 67'
+(67') How do I get the APCP for specific periods from the GFS
+
+#!/bin/sh
+#
+# example of calculating GFS APCP for custom periods
+#  want 06-09, 09-12, 12-15, 15-24, 24-48 hours
+#  need the 06, 09, 12, 15, 24 and 48 hour forecasts
+#
+# the output iis in apcp.grb
+# the calculated APCP fields may have a small negative because of
+# finite precision is used
+
+dir=/gpfs/dell1/nco/ops/com/gfs/prod/gfs.20211212/00/atmos/
+
+cat $dir/gfs.t00z.pgrb2.0p25.f006 $dir/gfs.t00z.pgrb2.0p25.f009 \
+      $dir/gfs.t00z.pgrb2.0p25.f012 $dir/gfs.t00z.pgrb2.0p25.f015 \
+      $dir/gfs.t00z.pgrb2.0p25.f024 $dir/gfs.t00z.pgrb2.0p25.f048 | \
+wgrib2 - -match ":APCP:" -match ":0-[0-9]* [a-z]* acc fcst:" -set_grib_type c1 -ncep_norm apcp.grb
+
+68) My grib file is corrupted, and wgrib2 stops when it finds the corrupted grib message.
+    How do I skip the corrupted message?
+
+    Corrupted files are to be avoided. Grib2 is doesn't have a checksum, so you can
+    corrupt the data and the grib decoder will not be the wiser.  You can corrupt
+    some other part of the file, and the grib decoder can think that the
+    grib message is 2**32 - 1 bytes in length.  However, sometimes you have to
+    do what you have to do.
+
+
+    Step 1) find the location of the last good grib message
+
+             $ wgrib2 IN.grb -range
+
+         Suppose the last good message is 
+
+             51:2278237:range=2278237-2360367
+
+         Then you want to skip at least 2360367 + 1 bytes
+
+    Step 2) use "dd" to skip N bytes, so wgrib2 doesn't recognize the bad
+         grib message.  Often you have to skip the ending byte of the last
+         good message + 1.  However, grib allows non-grib data between the
+         grib message, so you may have to skip more messages.
+
+              $ dd ibs=1 skip=N if=IN.grb  | wgrib2 - -grib recover_file.grb
+
+         where N is the number of bytes to skip. The command 'dd' is a standard
+         linux/unix utility, and there are versions of dd for Windows.
+
+69) wgrib2 -merge_fcst 0 filename fails at hour 30 or 36 with ensemble type grib2
+         data (HREF, GEFS, RRFS).
+
+         This answer is for the HREF which fails twice for the 0-48 hour forecasts.
+
+      $ wgrib2 all.grb  -s -N_ens
+      ...
+      35:13523144:d=2024012300:APCP:surface:34-35 hour acc fcst:wt ens mean:process=193:10 ens members
+      36:13935174:d=2024012300:APCP:surface:35-36 hour acc fcst:wt ens mean:process=193:10 ens members
+      37:14348322:d=2024012300:APCP:surface:36-37 hour acc fcst:wt ens mean:process=193:8 ens members
+      38:14759327:d=2024012300:APCP:surface:37-38 hour acc fcst:wt ens mean:process=193:8 ens members
+      39:15177821:d=2024012300:APCP:surface:38-39 hour acc fcst:wt ens mean:process=193:8 ens members
+      40:15595511:d=2024012300:APCP:surface:39-40 hour acc fcst:wt ens mean:process=193:8 ens members
+      41:16002062:d=2024012300:APCP:surface:40-41 hour acc fcst:wt ens mean:process=193:8 ens members
+      42:16408392:d=2024012300:APCP:surface:41-42 hour acc fcst:wt ens mean:process=193:8 ens members
+      43:16814291:d=2024012300:APCP:surface:42-43 hour acc fcst:wt ens mean:process=193:7 ens members
+      44:17210394:d=2024012300:APCP:surface:43-44 hour acc fcst:wt ens mean:process=193:7 ens members
+      ...
+
+         From the above, you see the number of ensemble members that were used
+         to create the ensemble mean changes with forecast lead.  As a result -merge_fcst
+         considers that there are 3 types of APCP forecasts and will merge the 48 1 hour fcsts.
+
+         If you want pretend that all the ensembles had 10 members, you could do,
+
+      $ wgrib2 all.grb -set_ensm_derived_fcst 12 10 -merge_fcst 0 merged.grb
+
+          FYI, 12 is the pdt used by the APCP forecast.
+
+70)  How do I change the process id from 140 to 141.
+       I revised some grib files, and I wanted to tell the users that these were the
+       new version.  So I want to change the process id from 140 to 141.  The probem is the 
+       match_inv doesn't contain the process id.  I devised this script.  The trick is
+       to use the "-match_inv_add" option.
+
+#!/bin/sh
+#
+# update process id from 140 to 141
+
+wgrib2 $1 -match_inv_add processid x x \
+ -if "forecast generating process=140"  \
+  -print "yes" \
+   -set analysis_or_forecast_process_id 141 \
+   -grib $1.new \
+ -else \
+   -print "no" \
+   -grib $1.new \
+  -endif
+
+71) Depending on the version of wgrib2, the aerosol type is either "Total aerosol" or
+      "Total Aerosol".  As result my -match depends on the version of wgrib2.
+
+   Sorry.  The chemical/aerosol name comes directly from the NCEP web page.  People
+   didn't realize that changes in the table would affect the wgrib2 behavior. 
+
+   The fix is to replace "aerosol" or "Aerosol" by "[aA]erosol" when used in the -match
+   and -if options.  Regex to the rescue.
+
+72) The grid point values consist of (1) floats (valued between 0 and 100), (2) flags
+   -1 and  (3) undefined values.  How do I interpolate?  Nearest neighbor will preserve
+    the flag values but I want bilinear interpolation when the values are the floats.
+
+    A = original field
+    B = only the floats, convert -1 to undefined
+      wgrib2 A -undefine_val -1.1:-0.9 -grib_out B
+    C = floats converted to undefined values
+      wgrib2 A -undefine_val -0.1:101 -grib_out C
+    Bi = B interpolated
+    Ci = C interpolated
+       ex. wgrib2 B -new_grid_winds earth -new_grid_interpolation bilinear -new_grid ncep grid 221 Bi
+       ex. wgrib2 C -new_grid_winds earth -new_grid_interpolation neighbor -new_grid ncep grid 221 Ci
+    D = merge of Bi and Ci
+    wgrib2 Bi -rpn sto_1 -import Ci -rpn "rcl_1:merge" -grib_out D
+
+73) I have a file with forecasts at 3 hour intervals (ex. 3 hour fcst, 6 hour fcst, etc).
+    How do I get the forecasts at 6 hour intervals?
+
+  Assuming the forecasts start at 00Z, 06Z, 12Z or 18Z.
+
+  wgrib2 IN.grb -match ":vt=........(00|06|12|18):" -grib OUT.grb
+  vt= verification time or ending time.
+  The 8 periods will match YYYYMMDD.
+
+   IF you want to have an expression of the forecast time, see example 4''''.
+   You have to modify the example for awk to process the forecast hour to see
+   if it is a multiple of 6.
+
+74)  The fnl grib2 file use to have 322 records and now has 352 records.  How do I filter
+     out the new records?
+
+     This trick came from NCO.
+
+     Create a table of fields to keep. Must not include date code, byte location or records number
+
+     without forecast time
+     $ wgrib2 OLD.grb | cut -f4-5 -d: >field.table
+
+     with forecast time
+     $ wgrib2 OLD.grb | cut -f4-6 -d: >field.table
+
+     Now to filter
+
+     $ wgrib2 NEW.grb | grep -f field.table | wgrib2 NEW.grb -i -grib NEW_FILTERED.grb
+
+     The -i option say to read the inventory from stdin, and use it to control processing.
