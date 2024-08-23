@@ -1,0 +1,418 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2mv/wgrib2ms (nee wgrib2m)</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; wgrib2m</font>
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>wgrib2ms - wgrib2 m(multiple streams) s(scalar data)</h3>
+<h3 align=center>wgrib2mv - wgrib2 m(multiple streams) v(vector data)</h3>
+</font>
+
+
+<h3>Introduction</h3>
+
+<p>
+Wgrib2 was designed to be parallelized by what-may-be-called dataflow programming.
+Data flows into a black box and data flows out.  One way to parallelize is to
+divide the data flow into N streams, process each stream separately and then recombine 
+the streams at the end of the processing.  For example, some wgrib2 operations
+can be doubled in processing speed if you run two copies of wgrib2 and let
+one copy process the even grib messages (records) and the other process the
+odd messages.  The grib output of the two copies need to be recombined by
+a merging program.
+
+<img src="./single_dual_stream.png" alt="diagram of single and dual processing streams">
+
+<p>
+Wgrib2ms is a shell script that allow you parallelize your wgrib2 commands
+by running N copies of wgrib2 by dividing the file into N streams. One
+common operation that needs parallelization is regridding using the
+<font color='red'>-new_grid</font> option.  The 
+<font color='red'>-new_grid</font> option has a unique requirement that
+zonal wind must be followed by the corresponding meridional wind in order to accuractely
+determine the winds near the pole.  We can use this data-flow parallelation by
+creating a file which contains both components of the wind in the same grib message
+by using submessages (vector).  Once the grib file has the vectors in the same grib message,
+the shell script, wgrib2mv, can be used to parallelized the regridding by
+<font color='red'>-new_grid</font>.
+
+<font color='red'>
+<h3>wgrib2ms</h3>
+</font>
+
+<h3>Simple Usage</h3>
+<p>
+<pre>
+<font color=red>Each grib message has one field</font>
+run in 1 stream:                      wgrib2      FILE (options)
+run in N streams:                     wgrib2ms  N FILE (options)           N &gt; 1
+generate script to run in N streams:  wgrib2ms -N FILE (options)           N &gt; 1
+
+ * restrictions on the options that work with wgrib2ms
+</pre>
+
+Wgrib2ms runs wgrib2 in N streams and combines the grib output at the
+end.  For example,
+
+<pre>
+wgrib2ms 4 IN.grb -set_grib_type c2 -ijsmall_grib 1:10 20:40 OUT.grb
+
+An easy-to-read version of the shell code that is generated by wgrib2ms,
+
+ 1: mkfifo pipe1 pipe2 pipe3 pipe4
+ 2: wgrib2 -for_n 1::4 IN.grb -set_grib_type c2 -ijsmall_grib 1:10 20:40 pipe1 &
+ 3: wgrib2 -for_n 2::4 IN.grb -set_grib_type c2 -ijsmall_grib 1:10 20:40 pipe2 &
+ 4: wgrib2 -for_n 3::4 IN.grb -set_grib_type c2 -ijsmall_grib 1:10 20:40 pipe3 &
+ 5: wgrib2 -for_n 4::4 IN.grb -set_grib_type c2 -ijsmall_grib 1:10 20:40 pipe4 &
+ 6: gmerge OUT.grb pipe1 pipe2 pipe3 pipe4
+ 7: wait
+ 8: rm pipe1 pipe2 pipe3 pipe4
+
+line 1: make 4 pipes
+lines 2-5: run 4 copies of wgrib2 in background, grib output to the pipes
+    each copy of wgrib2 processes every 4th field
+lines 6: gmerge reads grib messages from the 4 pipes in round-robin fashion and 
+     writes it out to OUT.grb
+
+The advantage of this code is that there are no temporary disk files and the merging
+of the results of the 4 streams is done at the same time as the wgrib2 processing.
+</pre>
+
+<font color='red'>
+<h3>wgrib2mv</h3>
+<h3>Regridding using -new_grid</h3>
+</font>
+
+<p>  Paralleling the regridding process is an almost trivial parallelization.
+Regridding the Z500, Z1000 and T100 fields can be done independantly.  The only
+problem is in regridding vector quantities near the pole.  For vector quantities,
+one converts the vectors to a 3-d vector (x,y,z), interpolate the 3-d vectory and then project
+it to the surface.  So the two components of the vector need to be stored
+in the same grib message, and the then the parallelization becomes easy.
+Wgrib2mv is like wgrib2ms except it requires that the input grib file
+have the scalars in their own grib message, and have the vectors
+have the vector components saved as submessages in their own grib message.
+The output of wgrib2mv, are in a like format.
+<p>
+
+
+<p>  Wgrib2mv is for regridding using <font color='red'>-new_grid</font>.
+This option requires the various vector fields (see <a href='./new_grid_vectors.html'>vectors</a>)
+be processed together.  To prevent the vector components from being processed by different copies
+of wgrib2, the vector components are put in the same grib message. Using wgrib2 v3.0.0, making
+the file is easy
+
+<pre>
+$ <font color='brown'>wgrib2 IN.grb -new_grid_order OUT.grb ERROR.grb</font>
+
+If there is an unmatched vector field (error), the field will be written to ERROR.grb.
+So ERROR.grb should be an empty file.  Once the data are prepared, you can run wgrib2mv on it.
+
+
+$ <font color='brown'>wgrib2mv 4 OUT.grb -new_grid_winds earth -new_grid ncep grid 3 grid3.grb</font>
+
+This regrids the file using 4 threads.
+</pre>
+
+
+<p>
+Output options that can be used by wgrib2ms/wgrib2mv
+<ol>
+<li> -grib
+<li> -grib_out
+<li> -ijsmall_grib
+<li> -new_grid (wgrib2mv, wgrib2ms if vectors are set to none)
+<li> -small_grib
+<li> all other output options should not be used
+</ol>
+</p>
+<h3>wgrib2m restrictions on the output options</h3>
+<p>
+<ol>
+<li> Each output option must write to a different file
+<li> Each output option must write to the output file for every record processed.
+<li> You cannot use -if to select the record to be output (see restriction 2)
+<li> Output options can only write grib (ex. -netcdf, -cvs are not allowed)
+</ol>
+</p>
+<h3>wgrib2 reading options supported by wgrib2m</h3>
+<p>
+<ol>
+<li> processing a regular grib file (not a pipe)
+<li> -i (reading inventory from stdin) added v1.1
+</ol>
+</p>
+<h3>wgrib2 options that work differently in wgrib2m</h3>
+<p>
+Some options still work but may behave differently in wgrib2m.
+Since the processing is split in to N streams, each copy of
+wgrib2 will not see all the records.  For example, you
+may want to calculate the 1000mb-500mb thickness.  If one
+copy of wgrib2 gets the 1000 mb Z and other one gets the 500 mb Z, 
+then you can't calculate the thinkness.  This will affect
+
+<ol>
+<li> -rpn
+<li> -import (all types)
+<li> memory, and temporary files
+</ol>
+
+
+<h3>Usage</h3>
+<p>
+<pre>
+wgrib2ms N (wgrib2 subset options)
+  for N > 1, execute wgrib2 (wgrib2 subset options) in N streams
+  for N < -1, produces script running -N streams
+wgrib2mv N (wgrib2 subset options)
+  for N > 1, execute wgrib2 (wgrib2 subset options) in N streams
+  for N < -1, produces script running -N streams
+
+v1.1+
+  grep ":HGT:" nam.idx | wgrib2ms 3 -i nam.grb2 -set_grib_type c3 -grib_out HGT.c3
+v1.2 wgrib2m was renamed wgrib2mv, added wgrib2ms
+  can write to stdout by the "-" filename.  Note only one output option can write to stdout
+</pre>
+
+<h3>Producing a Script</h3>
+<p>
+Normally wgrib2ms is used to run wgrib2 in N streams.  However, you might
+use wgrib2ms to generate a script that runs wgrib2 in N streams.  
+You can then alter the script to run in your environment.  For example,
+NCEP operational scripts are not suppose to write files in /tmp.  However,
+that is the default location for pipes.  NCEP operational scripts are
+suppose to use $WGRIB2 instead of wgrib2.  Again, another change that needs
+to be done.  
+
+<h3>Example:wgrib2mv</h3>
+A major use of wgrib2mv is to regrid a file.  Suppose we only want to do a vector
+interpolation of (UGRD,VGRD) and (UGRD,VGRD) and only (UGRD,VGRD) are already
+stored in the same grib message.  In addition suppose we want to interpolate 
+to ncep grid 221.  THen the 1 stream version is.
+<pre>
+    wgrib2 IN.grb -new_grid_winds grid -new_grid ncep grid 221 OUT221.grb
+
+    This will put UGRD and VGRD in their own grib messages. Suppose we want them in
+    the same grib message, the you can do
+
+    wgrib2 IN.grb -inv /dev/null -new_grid_winds grid -new_grid ncep grid 221 - \
+      wgrib2 - -ncep_uv OUT221.grb
+
+To parallelize (8 streams) the above you can do
+
+    wgrib2mv 8 IN.grb -inv /dev/null -new_grid_winds grid -new_grid ncep grid 221 OUT221.grb
+
+wgrib2mv run M(ultiple streams) using V(ector in own grib message).
+
+Now suppose we only want to treat (UGRD,VGRD) and (USTR,VSTM) as vectors.  In addition,
+we want to bilinearly interpolate all the fields except to SOTYP and VGTYP which are
+to be nearest neighbor values.  For one stream,
+
+   wgrib2 IN.grb -new_grid_winds earth -new_grid_interpolation bilinear \
+      -new_grid_vectors "UGRD:VGRD:USTM:VSTM" \
+      -if ":(VGTYP|SOTYP):" -new_grid_interpolation neighbor -fi \
+      -new_grid ncep grid 221 - -inv /dev/null | wgrib2 - -ncep_uv OUT.grb
+
+The 4 stream version is
+
+   wgrib2 IN.grb -submsg_uv tmpfile
+   wgrib2mv 4 tmpfile -new_grid_winds earth -new_grid_interpolation bilinear \
+      -new_grid_vectors "UGRD:VGRD:USTM:VSTM" \
+      -if ":(VGTYP|SOTYP):" -new_grid_interpolation neighbor -fi \
+      -new_grid ncep grid 221 - -inv /dev/null | wgrib2 - -ncep_uv OUT.grb
+</pre>
+
+<h3>Example 1: Jpeg2000 to complex packing</h3>
+
+Jpeg2000 packing is known for good compression at the expense of speed.
+Suppose you have downloaded some jpeg2000 compressed files and want to
+work with them. You speed up your processing by converting the files
+from jpeg2000 to complex-3 in parallel.
+
+<pre>
+ $ wgrib2ms 8 jpeg2000.grb -set_grib_type c3 -grib_out fast.grb
+
+ The above runs 8 copies of wgrib2 to speed up the processing.  On
+an 8 core machine, the command will be quite quick.
+</pre>
+
+<h3>Example 2: making a cookie-cutter subset grib file</h3>
+
+Making a cookie cutter subset of file can be done in parallel.
+
+<pre>
+ $ wgrib2ms 8 big_grid.grb -set_grib_type c3 -small_grib 10:40  20:60 small_grid.grb
+
+ The above runs 8 copies of wgrib2 to speed up the processing.  On
+an 8 core machine, the command will be quite quick.
+<pre>
+
+<h3>Observations</h3>
+<p>
+Using Centos 6.4 on a FX 8320 (8 core), there was little speed up with N &gt; 4 when
+using 1 MB grib messages. Using grib messages &lt; 64KB (pipe buffer size), the 
+processing scaled better with the number of streams.  Centos 6.4 has an old 
+kernel which limits the pipe size to 64KB. With a newer kernel, you
+can increase the pipe size which will help speed up the wgrib2m.  Some speedup
+may be realized if gmerge were properly threaded.
+
+<p>
+Code location: <a href="https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2_aux_progs/">https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2_aux_progs/</a>
+<p>
+See also:
+<a href="./new_grid.html">-new_grid</a>,
+<a href="./new_grid_order.html">-new_grid_order</a>,
+<a href="./new_grid_winds.html">-new_grid_winds</a>,
+<a href="./wgrib2ms.html">-wgrib2ms</a>,
+
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: March 15, 2017, March 23, 2018, March 16, 2020
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

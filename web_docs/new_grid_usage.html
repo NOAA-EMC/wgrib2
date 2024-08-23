@@ -1,0 +1,285 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2: -new_grid usage</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; wgrib2-new_grid usage</font>
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>wgrib2: -new_grid usage</h3>
+</font>
+
+
+<h3>Introduction</h3>
+
+<p>
+In an operational center, the model output has to be converted
+from the model grid to the various user grids.  Since the needs of
+the users are diverse, there are going to be many different grids.
+This page will show the steps for a fast (wall clock) interpolation.
+
+
+<h3>Step 1: Combine the Vector Quantities</h3>
+
+<p>
+There are two basic types of interpolations, scalar and vector.
+Processing can be made faster by combining the vectors into
+their own grib message.  The following script will
+use wgrib2 to put the various vectors into their own grib message.
+
+<pre>
+#!/bin/sh
+
+vectors="UGRD:VGRD:VUCSH:VVCSH:UFLX:VFLX:UGUST:VGUST:USTM:VSTM:VDFUA:VDFVA:MAXUV:MAXVW:UOGRD:VOGRD:UICE:VICE"
+
+wgrib2 $1 | sed -e 's/:UGRD:/:UGRDu:/' -e 's/:VGRD:/:UGRDv:/' \
+     -e 's/:VUCSH:/:VUCSHu:/' -e 's/:VVCSH:/:VUCSHv:/' \
+     -e 's/:UFLX:/:UFLXu:/' -e 's/:VFLX:/:UFLXv:/' \
+     -e 's/:UGUST:/:UGUSTu:/' -e 's/:VGUST:/:UGUSTv:/' \
+     -e 's/:USTM:/:USTMu:/' -e 's/:VSTM:/:USTMv:/' \
+     -e 's/:VDFUA:/:VDFUAu:/' -e 's/:VDFVA:/:VDFUAv:/' \
+     -e 's/:MAXUW:/:MAXUWu:/' -e 's/:MAXVW:/:MAXUVv:/' \
+     -e 's/:UOGRD:/:UOGRDu:/' -e 's/:VOGRD:/:UOGRDv:/' \
+     -e 's/:UICE:/:UICEu:/' -e 's/:VICE:/:UICEv:/' \
+| sort -t: -k3,3 -k5 -k4,4 | \
+        wgrib2 -i -mem_init 0 $1 @mem:0 -new_grid_vectors "$vectors" -submsg_uv $2.tmp
+</pre>
+
+<p>
+One optimization is "-mem_init 0 $1" in the last wgrib2.  This option
+reads the file $1 and saves into the memory file "@mem:0". Then wgrib2 processes the memory
+file which is much faster than the disk file when doing random access.
+
+
+<h3>Step 2a: Slow</h3>
+
+<p>
+A typical, one thread,  interpolation will look like this,
+
+<pre>
+config="-new_grid_winds earth -new_grid_interpolation bilinear -if :(VGTYP|SOTYP): -new_grid_interpolation neighbor -fi"
+vectors="UGRD:VGRD:VUCSH:VVCSH:UFLX:VFLX:UGUST:VGUST:USTM:VSTM:VDFUA:VDFVA:MAXUV:MAXVW:UOGRD:VOGRD:UICE:VICE"
+grid="latlon 0:360:1 -90:181:1"
+
+wgrib2 $2.tmp $config -new_grid_vectors "$vectors" -new_grid $grid $2
+</pre>
+
+<h3>Step 2b: Faster, Non-operational</h3>
+
+<p>
+Step 1 puts the vector quantities into their own grib message.  After Step 1, you can interpolate
+all the grib messages independently.  This embarrassingy parallel job can be run using the wgrib2mv.
+Wgrib2mv is an easy-to-use perl script that runs N copies of wgrib2 and combines the results. Converting
+the above wgrib2 script into a parallel command is easy.
+
+<pre>
+config="-new_grid_winds earth -new_grid_interpolation bilinear -if :(VGTYP|SOTYP): -new_grid_interpolation neighbor -fi "
+vectors="UGRD:VGRD:VUCSH:VVCSH:UFLX:VFLX:UGUST:VGUST:USTM:VSTM:VDFUA:VDFVA:MAXUV:MAXVW:UOGRD:VOGRD:UICE:VICE"
+grid="latlon 0:360:1 -90:181:1"
+
+wgrib2mv 2 $2.tmp $config -new_grid_vectors "$vectors" -new_grid $grid $2
+</pre>
+
+The only difference between the two script fragments is that "wgrib2" is replaced by "wgrib2mv N".
+(N is 2 for this example.)
+By using wgrib2mv, you are breaking the interpolation into 2 pieces.  Each wgrib2 does 50% of the
+interpolations and the program "gmerge" combines the output from the 2 copies of wgrib2.  
+Wgrib2mv does trivial parallelism and is limited by the number of cores on the node, the speed of
+the pipes and I/O speed.  
+
+<h3>Step 2c: Faster, Operational</h3>
+
+<p>
+Step 2b works on my linux box, why isn't it ready for operations?  The perl script, wgrib2mv,
+creates temporary files on /tmp which aren't allowed in NCEP operational jobs.  Some HPC
+machines require you to run the executables on a compute node.  For example, the cray machines
+require you to use "aprun".  Finally the output of wgrib2mv has all the vector quantities
+in their own grib message.  This unusual configuration will have to be changed for
+operations.
+
+<p> The first part is to modify the script from "wgrib2mv 2" to "wgrib2mv -2".  (2 is used
+in my example.)  Now wgrib2mv will write a script fragment,
+
+<pre>
+export OMP_NUM_THREADS=1
+mkfifo /tmp/11938.pipe.1.1 /tmp/11938.pipe.1.1.b
+wgrib2 -inv /dev/null /tmp/11938.pipe.1.1 -new_grid_vectors "UGRD:VGRD:VUCSH:VVCSH:UFLX:VFLX:UGUST:VGUST:
+ USTM:VSTM:VDFUA:VDFVA:MAXUV:MAXVW:UOGRD:VOGRD:UICE:VICE" -submsg_uv /tmp/11938.pipe.1.1.b &
+mkfifo /tmp/11938.pipe.2.1 /tmp/11938.pipe.2.1.b
+wgrib2 -inv /dev/null /tmp/11938.pipe.2.1 -new_grid_vectors "UGRD:VGRD:VUCSH:VVCSH:UFLX:VFLX:UGUST:VGUST:
+ USTM:VSTM:VDFUA:VDFVA:MAXUV:MAXVW:UOGRD:VOGRD:UICE:VICE" -submsg_uv /tmp/11938.pipe.2.1.b &
+gmerge junk.mv  /tmp/11938.pipe.1.1.b /tmp/11938.pipe.2.1.b &
+wgrib2 -for 1::2 -new_grid_vectors "UGRD:VGRD:VUCSH:VVCSH:UFLX:VFLX:UGUST:VGUST:USTM:VSTM:VDFUA:VDFVA:
+ MAXUV:MAXVW:UOGRD:VOGRD:UICE:VICE" "junk.tmp" "-new_grid_winds" "earth" "-new_grid_interpolation"
+ "bilinear" "-if" ":(VGTYP|SOTYP):" "-new_grid_interpolation" "neighbor" "-fi" "-new_grid" "latlon" "0:360:1" 
+ "-90:181:1" /tmp/11938.pipe.1.1 &
+wgrib2 -for 2::2 -new_grid_vectors "UGRD:VGRD:VUCSH:VVCSH:UFLX:VFLX:UGUST:VGUST:USTM:VSTM:VDFUA:VDFVA:
+ MAXUV:MAXVW:UOGRD:VOGRD:UICE:VICE" "junk.tmp" "-new_grid_winds" "earth" "-new_grid_interpolation"
+ "bilinear" "-if" ":(VGTYP|SOTYP):" "-new_grid_interpolation" "neighbor" "-fi" "-new_grid" "latlon" "0:360:1" 
+ "-90:181:1" /tmp/11938.pipe.2.1 &
+wait
+rm  /tmp/11938.pipe.1.1 /tmp/11938.pipe.1.1.b /tmp/11938.pipe.2.1 /tmp/11938.pipe.2.1.b
+</pre>
+<p>
+The number 11938 is the PID (process ID) that ran the wgrib2mv script.  The PID was
+used to create a unique filename for the various pipes.  However, on a multi-node
+machine, the PID is no longer a unique value and a different scheme will have to
+be used to create unique filenames.
+
+<p>  The script fragment should be considered a starting point to writing
+a job that will run in operations.  On a cray HPC, you will have to translate 
+the various "(wgrib2/gmerge) ... &"  in to a single aprun command.
+
+<p>
+See also: <a href="./mem_final.html">-mem_final</a>,
+ <a href="./wgrib2m.html">wgrib2mv</a>
+
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: June 17, 2016
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

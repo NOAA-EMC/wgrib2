@@ -1,0 +1,256 @@
+9/2015                             Wgrib2 Tricks for NCEP Users
+
+
+
+                                  Submessages and Field Numbers
+
+
+With NCO's convention (UGRD and VGRD are stored in one grib message), one has to learn about submessages.  
+Here is a wgrib2 inventory of an operational flux file.
+
+    bash-4.1$ wgrib2 gdas1.t06z.sfluxgrbf06.grb2 -s -n
+    1:0:n=1:d=2013080606:UFLX:surface:0-6 hour ave fcst:
+    ...
+    34:24952103:n=34:d=2013080606:LAND:surface:6 hour fcst:
+    35:24970687:n=35:d=2013080606:ICEC:surface:6 hour fcst:
+    36.1:25080764:n=36:d=2013080606:UGRD:10 m above ground:6 hour fcst:
+    36.2:25080764:n=37:d=2013080606:VGRD:10 m above ground:6 hour fcst:
+    37:26927400:n=38:d=2013080606:TMP:2 m above ground:6 hour fcst:
+    38:28256429:n=39:d=2013080606:SPFH:2 m above ground:6 hour fcst:
+    ...
+    107:62938976:n=109:d=2013080606:SUNSD:surface:0-6 hour acc fcst:
+
+In the above wgrib2 inventory, grib message 35 is the ice cover (ICEC).  Grib message 36 consists
+of two submessages, the first (36.1) is the 10 m UGRD and the second (36.2) is the 10 m VGRD field.
+The above inventory also shows the field number (n=N) which is simply the field number from 1 to 109.  
+Sometimes it is easier to access the fields by number rather than grib message number.  Note that
+the field number can be used the the -match and -if options because the field number is
+part of the match inventopry (-match_inv).
+
+Example of processing by grib record number and field numbers. (-for and -for_n)
+
+    To list grib messages 35..35, you can use the -for option
+
+    $ wgrib2 gdas1.t06z.sfluxgrbf06.grb2 -for 35:37
+
+   -for 35:37                  process grib message numbers 35..37, i.e., ICEC, UGRD, VGRD and TMP
+   -for_n 35:38                process field numbers 35..38, same as above
+
+   -for_n 34:36                process field numbers 34..36   i.e., LAND, ICEC, UGRD
+   -for 34:???                 cannot do the same with grib message numbers
+
+   -if "^36.1:"                process grib message 36.1, UGRD
+   -if ":n=36:"                process field 36, UGRD
+
+
+                                wgrib2 works one field at a time
+
+Usually wgrib2 processes data on a field by field basis.  So when you write out the grib file, the
+submessages are stored in its own message. For example
+
+     $ wgrib2 gdas1.t06z.sfluxgrbf06.grb2 -grib flx.new
+
+     $ wgrib2 flx.new 
+     1:0:d=2013080606:UFLX:surface:0-6 hour ave fcst:
+     ...
+     34:24952103:d=2013080606:LAND:surface:6 hour fcst:
+     35:24970687:d=2013080606:ICEC:surface:6 hour fcst:
+     36:25080764:d=2013080606:UGRD:10 m above ground:6 hour fcst:
+     37:26024344:d=2013080606:VGRD:10 m above ground:6 hour fcst:
+     38:26927513:d=2013080606:TMP:2 m above ground:6 hour fcst:
+     39:28256542:d=2013080606:SPFH:2 m above ground:6 hour fcst:
+     ...
+     109:62939202:d=2013080606:SUNSD:surface:0-6 hour acc fcst:
+
+In this example, the grib message number and the field number are the same.
+
+
+                 Merging UGRD and VGRD into the same GRIB Message
+
+In order to conform to NCO's U/V convention, you have to use the option -ncep_uv.  This 
+option works like -grib except it combines U V pairs into a single grib message.  In order
+to be combined, the U and V must have identical metadata except for being UGRD and VGRD and
+VGRD must follow the corresponding UGRD.
+
+Example 1: merge U, V in to the same grib message
+    Note: corresponding V must follow U
+
+    $ wgrib2 IN.grb -ncep_uv OUT.grb
+
+Example 2: extract data and merge U, V into the same grib message
+    Note: normally U and V are not merged
+
+    $ wgrib2 gdas1.t06z.sfluxgrbf06.grb2 -match ":10 m above ground" -ncep_uv junk
+    36.1:25080764:d=2013080606:UGRD:10 m above ground:6 hour fcst:
+    36.2:25080764:d=2013080606:VGRD:10 m above ground:6 hour fcst:
+    bash-4.1$ wgrib2 junk
+    1.1:0:d=2013080606:UGRD:10 m above ground:6 hour fcst:
+    1.2:0:d=2013080606:VGRD:10 m above ground:6 hour fcst:
+
+Example 3: change grid and merge U,V using pipes
+    By using pipes, you save time by avoiding using a temporary disk file.
+
+    $ wgrib2 gdas1.t06z.sfluxgrbf06.grb2 -new_grid_winds grid \
+      -new_grid ncep grid 2 - -inv /dev/null | wgrib2 - -ncep_uv junk
+      ...
+    $ wgrib2 junk |grep GRD
+    36.1:447235:d=2013080606:UGRD:10 m above ground:6 hour fcst:
+    36.2:447235:d=2013080606:VGRD:10 m above ground:6 hour fcst:
+    89.1:1111297:d=2013080606:UGRD:1 hybrid level:6 hour fcst:
+    89.2:1111297:d=2013080606:VGRD:1 hybrid level:6 hour fcst:
+
+    $ wgrib2 junk -grid -d 1
+    1:0:grid_template=0:winds(N/S):
+  	    lat-lon grid:(144 x 73) units 1e-06 input WE:NS output WE:SN res 48
+	    lat 90.000000 to -90.000000 by 2.500000
+	    lon 0.000000 to 357.500000 by 2.500000 #points=10512
+
+    The option "-new_grid ncep grid 2 -" interpolates the field to NCEP grid #2 and writes it to stdout
+    The option "-inv /dev/null" send the inventory to /dev/null instead of stdout
+    "wgrib2 -"  has wgrib2 read the grib file from stdin.
+
+
+
+                                                Copygb
+
+
+Wgrib2 can do a copygb of grib2 files.  Some things to remember.
+
+    1. Most NCEP grids use grid relative winds (-new_grid_winds grid) except when
+       it makes no difference (lat-lon, Mercator, Gaussian).  Then you should set
+       the wind direction to earth relative (-new_grid_winds earth).
+
+    2. Regional grids are usually WE:SN.  Global model grids are WE:NS.  To get a
+       WE:NS ordering, delta latitude should be negative.
+
+    3. Grib2 uses angles to micro-degrees.  Please coordinate within EMC in order to
+       use the same values.  We don't want nearly identical grid definitions being used.
+
+    4. The grib packing of the original file can be used by -set_grib_type same. Recommended
+
+    5. -new_grid retains the precision of the original file.
+
+    6. See code (ncep_grids.c) to see list of currently defined NCEP grids.  If want your 
+       favorite grid added to the code, submit an updated ncep_grids.c file.  Even fortran 
+       programmers can read ncep_grids.c.
+
+    7. The interpolation library (iplib) assumes a spherical earth.
+
+    8. Copygb uses a fixed radius of the earth.  wgrib2 uses the average radius of the 
+       earth as specified by the grib file.  This makes a difference in Lambert conformal, 
+       Mercator and polar stereographic.  wgrib2 tricks iplib to get variable radius.
+
+    9. Copygb's default is to only interpolate UGRD and VGRD as vector fields.  By
+       default, wgrib2 considers more fields to be vectors.  The list of vectors
+       has grown with time.  You should explicity specify the the vector fields by the 
+       -new_grid_vectors option.  To get copygb's default behavior use the option 
+       "-new_grid_vectors UGRD:VGRD".
+
+   10. The U-vector component must be followd by the V-vector component when interpoling.
+       For operational files, this is almost always true.  Copygb does not have this 
+       limitation.  If your file doesn't satisfy this restriction, you have to
+       sort the fields.  (See -new_grid documentation.)
+
+   11. Only a subset of grid types are supported.  If iplib supports that grid, you
+       can augment the code to handle it. Someone in the Mesoscale branch added
+       support for grids 32768 and 32769.  
+
+   11. All the iplib interpolation options except for spectral are supported.  Spectral
+       interpolation was turned off to decrease the executable size. 
+
+
+Example,
+
+   wgrib2 IN.grb -set_grib_type same -new_grid_winds grid -new_grid ncep grid 221 OUT.grb
+
+      This will produce a file with Us and Vs in separate grid message.
+
+   wgrib2 IN.grb -inv /dev/null -set_grib_type same -new_grid_winds grid -new_grid ncep grid 221 - \
+        | wgrib2 - -ncep_uv OUT.grb
+
+       This will produce a file with Us and Vs in one grib message and separate submessages.
+
+The above interpolations can be make faster up by multitasking wgrib2 using wgrib2m.
+
+
+                                 Fast Interpolation by wgrib2mv
+
+Wgrib2mv stands for wgrib2-multiple-vector.  Wgrib2mv divides the wgrib2 processing by running N
+copies of wgrib2.  This works well with regridding.  wgrib2mv is run by
+
+   wgrib2mv N (wgrib2 command line*)
+
+   * Restrictions: options not allowed 
+      1) create non-grib output (ex. netcdf, cvs)
+      2) need processing of all fields (ex. using rpn register to save fields)
+      3) multiple options write to the same file
+
+Wgrib2mv is a perl script that calls wgrib2. See the wgrib2m web page for more details.
+
+
+					Arbitrary vector pairs
+
+
+Wgrib2 v2.0.2 adds support for vector interpolation of arbitary vector pairs.  Previous versions
+only supported UGRD/VGRD and (all identified) vectors.
+
+   -new_grid_vectors now supports a list of vectors
+   
+   using wgrib2m with arbitrary list of vectors
+
+   a)  all vector pairs must be in same grib message
+
+         old:  wgrib2 old_grib -ncep_uv new_grib
+         new:  vectorlist="UGRD:VGRD:USTM:VSTM"
+         new:  wgrib2 -new_grid_vectors $vectorlist -submsg_uv new_grib
+
+   b) run wgrib2m
+         old: wgrib2m 5 new_grib -new_grid_winds earth -new_grid ncep grid 221 grd221
+         new: wgrib2m 5 new_grib -new_grid_vectors "$vectorlist" -new_grid_winds earth -new_grid ncep grid 221 grd221
+
+         note: old would have UGRD/VGRD paired up.
+         note: new would have UGRD/VGRD and USTM/VSTM paired up.
+
+
+	                                  Process id, model id
+
+To see the process id or model id, type
+
+	wgrib2 grib_file -processid
+
+To change the process id or model id, type
+
+	wgrib2 grib_File -set analysis_or_forecast_process_id N -grib new_grib_File
+
+        N = new process id (id)
+
+                                     Reference (initial) Date Code
+
+To see the analysis time or the time that the forecast started from, type
+
+	wgrib2 -s grib_file
+	 or
+	wgrib2 grib_file
+
+	The second version works because -s is automatically added to the 
+	command line when there are no inventory options.
+
+	ex.
+
+	wgrib2 rcdas.t18z.awip32.merged.grb2
+	1:0:d=2015012318:MSLET:mean sea level:anl:
+	2:81118:d=2015012318:PRMSL:mean sea level:anl:
+	...
+
+	The reference date code is shown after the "d=".
+
+	If you need to see the minutes, type 
+
+	wgrib2 grib_file -S
+
+If you need to change the reference date, type
+
+	wgrib grib_file -set_date YYYYMMDDHH -grib new_grib_file
+	 or
+	wgrib grib_file -set_date YYYYMMDDHHMMSS -grib new_grib_file
+

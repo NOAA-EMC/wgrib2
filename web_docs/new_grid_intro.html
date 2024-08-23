@@ -1,0 +1,436 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2: -new_grid intro</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; wgrib2-new_grid intro</font>
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>wgrib2: -new_grid intro</h3>
+</font>
+
+
+<h3>Introduction</h3>
+
+<p> The wgrib2 -new_grid option can regrid grib2 files which means it can convert from one grid
+to another.  For example, it can change from a global 0.25 degree grid to a
+one degree regional grid, or from a Lambert conformal grid to a lat-lon grid.  The -new_grid
+option can change winds between earth relative and grid relative.  You can use -new_grid
+to get point values using bilinear interpolation rather than the simple nearest neighbor
+interpolation that the <font color=red>-lon</font> uses.
+
+<h3>How to Interpolate</h3>
+
+<p> For many packages, interpolation is simple.  You give a field and the desired output
+grid.  Call the routine with the right arguments and the interpolation is done.  No fuss and no mess.
+But was there any problems?
+
+<h3>Problem 1: Integer values</h3>
+<p>  Some fields have integer values such as soil type and vegetation type.  Fractional
+values have no meaning.  For such fields, you have to change the interpolation method to
+nearest neighbor or most common value.
+
+<h3>Problem 2: Vector Fields</h3>
+<p> Near the poles, the zonal and meridional winds are discontinous.  Methods such as
+bilinear interpolation have problems.  One method is to convert the winds to vector,
+interpolate the vectors, and then convert the interpolated vectors into the zonal
+and meridional components.
+
+<h3>Problem 3: Global Conservation</h3>
+
+<p> When changing from one global grid to another global grid, you
+don't want to change the global precipitation or other global averages.
+The global precipitation is one of the more difficult fields to interpolate
+because of the small scale features of the precipitation.
+
+<h3>Problem 4: Extreme Values</h3>
+
+<p> Some fields have physical limatations on the extreme values. For example,
+the relative humidity will never be less than 0%, and will not be greater than 100%
+except in cases of super-saturation which is unexpected for large-scale fields.
+Some interpolation schemes can produce non-physical extreme values in regions of
+large gradients.
+
+<h3>Problem 5: Ringing</h3>
+<p>
+Spectral interpolation methods can producing "ringing" because of 
+<a href=https://en.wikipedia.org/wiki/Gibbs_phenomenon>>Gibbs phenomenon</a>.
+
+<h3>Problem 6: Unequal Variance</h3>
+
+<p>  With bilinear interpolation, the new grid point values
+are weighted average of the 4 surrounding grid points.  Suppose
+we take a simple model:
+
+<pre>
+   grid_value(i) = LS + e(i)   e(i) = Gaussian random error, mean 0, variance 1
+      grib_value are the 4 surrouding grids point from the original grid
+
+   new_grid_value = LS + sum(i=1..4) (a(i)*e(i))   where a(i) > 0 and sum of a(i) = 1
+                   = LS + a * e             e = Gaussian random error, mean 0, variance 1, '
+                                            0.5 <= a <= 1.0
+</pre>
+
+From this simple model, we see that the variance from the LS will vary depending whether the new grid point
+is in the exact middle of 4 points (a(i) = 0.25) or coincides with one of the points .  This unequal variance can
+show up in some calculations.  
+
+<h3>Problem 7: High to Low Resolutions: What do you want?</h3>
+
+<p> Suppose your forecast model has a 0.1 degree resolution and you want
+to convert it into 1x1 degree grid.  Each "grid cell" of the 1x1 degree
+grid will have about 100 model grid points.  Do you want a grid cell
+average (100 model grid points),  bilinear interpolation (weighted
+average of 4 model grid points) or something else.  The grid cell
+average will give you the large-scale field appropriate to the output grid.
+The bilinear interpolation will include small scales that are not
+resolved by the output grid.  Some users may want the grid cell average,
+some users may want the exact point values.  
+
+
+<h3>How problems are addressed with IPOLATES and wgrib2</h3>
+
+<h3>Answer 1: Integer-valued fields</h3>
+
+<p>
+To interpolate integer-valued fields like vegetation type and soil type, you
+add code fragment to wrib2 prior to interpolation;
+
+<pre>
+  -new_grid_interpolation bilinear \
+      -if ":(VGTYP|SOTYP):" -new_grid_interpolation neighbor -fi \
+
+  This code fragment set the interpolation type to bilinear.  For vegitation 
+   and soil types, the interpolation is changed to nearest neighbor.
+<pre>
+
+<h3>Answer 2: Scalar vs Vector</h3>
+
+<p> Wgrib2 has a built-in list of vector fields.  This list can be changed by the
+the <a href="./new_grid_vectors.html">new_grid_vectors</a> option.  The vectors
+fields will be interpolated using vector interpolation routines in the IPOLATES library.
+
+
+<h3>Answer 3: Global Conservation</h3>
+
+<p> To conserve the global mean, the interpolation needs to be changed to "budget" by
+
+<pre>
+-new_grid_interpolation budget
+</pre>
+
+This interpolation scheme figures out the size of the grid cell and divides in to
+a 5x5 grid and finds the interpolated value on the 5x5 grid using bilinear interpolation.
+The average of the 25 samples becomes the budget value.  As you would expect, the budget
+interpolation is much slower than the default bilinear interpolation.
+
+<h3>Problem 4: Extreme Values</h3>
+<p>
+To avoid extreme values with non-physical values, you should avoid spectral and 
+bicubic interpolation methods.
+
+
+<h3>Answer 5: Ringing</h3>
+<p>
+Avoid spectral interpolation.
+
+
+<h3>Answer 6: Unequal Variance</h3>
+
+<p> Spectral interpolation uses all the input grid points to derive any
+particular output grid point.  Probably a spectral interpolation with some
+spectral truncation will not show this unequal variance.  Of course,
+answers 4 and 5 suggested that you avoid spectral interpolation, while answer 8
+says the opposite. 
+
+
+<h3>Answer 7: High to Low Resolutions: What do you want?</h3>
+
+The answer to problem 7 is to know what you want and choose the
+appropriate interpolation method.
+
+<h3>Summary: Answers 1-7</h3>
+<p>
+From answers 1-7, you learn that there is no universal interpolation method.
+You need to know your problem and choose the best method for that problem.
+
+<p>
+
+
+<h3>What are Earth and Grid Relative Winds</h3>
+<p>
+In school, you learn that north was the direction to the North Pole which
+according to Google is a small Alaskan city near Fairbanks. (Google "North
+Pole location")  The non-numerical weather modellers would define a V
+(meridional) wind as a wind that is in the direction of the North Pole.
+This definition of North which is referred to as
+earth relative.
+
+<p>
+When you do numerical modelling, you think in terms of winds into the grid box.
+Here you can define north to be from point (i,j) to (i,j+1).  It makes life
+easier when doing the calculations in the numerical model.  The conversion
+between earth and grid relative winds requires a rotation of the wind vector
+by a location dependant angle.  For the lat-lon, Mercator and Gaussian grids,
+the grid and earth relative winds are the same.  For the polar stereographic,
+Lambert Conformal, rotated latlon grids, there is a location dependant rotation
+angle.
+
+<p>
+Grib specifies whether the vectors are earth or grid relative.  To transform
+to earth or grid relative winds, you use the
+<a  href="./new_grid_winds.html">-new_grid_winds</a> option.
+
+Strangely
+the grib standard doesn't specify which fields are vectors.  
+
+
+<h3>Specifying Earth vs Grid Relative Winds</h3>
+
+<p>
+It seems obvious that the default would to be regrid should write
+earth relative winds.   However, I work at NCEP and the default
+at NCEP is to use grid relative winds.  The only solution is to make
+everyone specify whether the output uses earth or grid relative winds.
+<a  href="./new_grid_winds.html">See</a>.
+
+<pre>
+-new_grid_winds earth
+-new_grid_winds grid
+</pre>
+
+<h3>Example</h3>
+
+The hard part of using the -new_grid option is that meridional component of
+the vector must follow the zonal component of the vector.  However, 
+
+<pre>
+$ wgrib2 test
+1:0:d=2015101200:UGRD:1 hybrid level:anl:
+2:414580:d=2015101200:PRMSL:mean sea level:anl:
+3:956558:d=2015101200:UGRD:2 hybrid level:anl:
+4:1357519:d=2015101200:VGRD:2 hybrid level:anl:
+<font color='brown'> Note that "UGRD:1 hybrid level" is not followed  by VGRD,
+    so it will not be interpolated.  "UGRD:2 hybrid level" is followed by VGRD 
+    and will be interpolated.</font>
+$ wgrib2 test -new_grid_winds earth -new_grid latlon 0:360:1 -90:181:1 gbl
+<font color='brown'>    0:360:1  start at 0E, 360 longitudes at 1 degree spacing
+    -90:181:1  start at 90S, 181 latitudes at 1 degree spacing </font>
+1:0:d=2015101200:UGRD:1 hybrid level:anl:
+2:414580:d=2015101200:PRMSL:mean sea level:anl:
+-new_grid: missing V, UGRD not interpolated
+<font color='brown'> VGRD:1 hybrid level was not found (previous vector)</font>
+3:956558:d=2015101200:UGRD:2 hybrid level:anl:
+4:1357519:d=2015101200:VGRD:2 hybrid level:anl:
+$ wgrib2 gbl
+1:0:d=2015101200:PRMSL:mean sea level:anl:
+2:41287:d=2015101200:UGRD:2 hybrid level:anl:
+3:73163:d=2015101200:VGRD:2 hybrid level:
+<font color='brown'> As expected UGRD 1 hybrid level is not regridded</font>
+$ wgrib2 gbl -d 1 -grid
+1:0:grid_template=0:winds(N/S):
+	lat-lon grid:(360 x 181) units 1e-06 input WE:SN output WE:SN res 48
+	lat -90.000000 to 90.000000 by 1.000000
+<font color='brown'> Worked, earth relative winds = winds(N/S) </font>
+</pre>
+
+<p> For of the operational NCEP model grib output, the vector fields are in
+the proper order.  If the vector fields are not in the correct order,
+the vector fields that are not in the correct order will be ignfored
+unless they are put into the right order.  (See <a href="https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/tricks.wgrib2">
+wgrib2 tricks</a>.  If you are lucky, the vector fields that are
+not in the right order is something that you don't need such as
+gravity wave drag or wind stresses.  
+
+<h3>Simple Command to Regrid</h3>
+<pre>
+<font color='red'>
+ wgrib2 IN.grb -set_grib_type PACKING -new_grid_winds earth -new_grid latlon LON0:NLON:DLON LAT0:NLAT:DLAT</font>
+
+    <a href="./set_grib_type.html">set grib type</a> PACKING
+        PACKING = s simple, fast, poor compression, very large software support
+                = c1  complex 1, large software support
+                = c2  complex 2, large software support
+                = c3  complex 3, large software support
+                = j   jpeg2000, slow, very good compression, very large software support
+                = a   aec, fast, new, small software support
+     <a href="./new_grid_winds.html">-new_grid_winds</a> earth
+               set output vectors to earth relative
+     <a href="./new_grid.html">-new_grid</a> 
+         latlon = write a lat-lon grid
+         LON0 = left longitude, 0..360
+         NLON = number of longitude in grid
+         DLON = spacing of longitudes (degrees), greater than zero
+         LAT0 = northern most or southern most latitude of grid
+         NLAT = number of latitudes
+         DLAT = spacing of latiudes,
+                  if LAT0 is the northern most latitude, DLAT should be negative
+                  if LAT0 is the northern most latitude, DLAT should be positive
+</pre>
+
+<p>
+This ends this introduction.  For more information, see
+the regular <a href="./new_grid.html">new_grid documentation</a>,
+
+<p>
+See also: 
+<a href="./new_grid.html">-new_grid</a>,
+<a href="./new_grid_interpolation.html">-new_grid_interpolation</a>,
+<a href="./new_grid_winds.html">-new_grid_winds</a>,
+<a href="./new_grid_vectors.html">-new_grid_vectors</a>,
+<a href="./lola.html">-lola</a>,
+<a href="./bin.html">-bin</a>,
+<a href="./import_bin.html">-import_bin</a>,
+<a href="./rpn.html">-rpn</a>,
+<a href="./grib_out.html">-grib_out</a>,
+<a href="./new_grid_usage.html">new_grid multi-core usage</a>,
+
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page written April 27, 2018
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

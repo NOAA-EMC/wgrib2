@@ -1,0 +1,254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2: all about OpenMP</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; wgrib2 all about OpenMP</font>
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>wgrib2: all about OpenMP</h3>
+</font>
+
+
+<h3>Introduction</h3>
+
+<p>
+Wgrib2 needs to run fast, and the only way to make wgrib2 run fast 
+is to use multiple cores.  Wgrib2 uses "OpenMP" to multithread its
+calculations.  Some parts of wgrib2 are scalar (jpeg2000,
+I/O) and see no speedup for using mutiple cores.  While other parts
+(-new_grid, -ens_processing, complex unpacking) see large speedups.
+Much effort has been made to parallelize time-consuming parts
+of the code.  In order to use OpenMP, the compilers must support
+at least OpenMP v3.1.  Some additional speedups can be obtained
+by compiling with AVX512 or AVX2 enabled and using a version of
+OpenMP that supports SIMD.
+<p>
+To check that your wgrib2 executable is OpenMP enabled, examine
+the output of $ wgrib2 -config
+
+<pre>
+ebis@landing2:~$ wgrib2 -config
+wgrib2 v3.1.4beta1 11/2023  Wesley Ebisuzaki, Reinoud Bokhorst, John Howard, Jaakko Hyvätti, Dusan Jovic, Daniel Lee, Kristian Nilssen, Karl Pfeiffer, Pablo Romero, Manfred Schwarb, Gregor Schee, Arlindo da Silva, Niklas Sondell, Sam Trahan, George Trojan, Sergey Varlamov
+..
+<font color=brown>OpenMP: control number of threads with environment variable OMP_NUM_THREADS</font>
+..
+</pre>
+
+If you don't have the line "OpenMP: control ..", then your copy of wgrib2 is not OpenMP enabled.
+
+<h3>Using OpenMP</h3>
+<p>
+You control the number of cores that OpenMP-enabled programs will use by the
+environment variable OPM_NUM_THREADS.  
+
+<pre>
+bash, sh
+   $ export OMP_NUM_THREADS=4
+csh
+   $ setenv OMP_NUM_THREADS 4
+</pre>
+<p>
+There is no hard-and-fast rule for the optimum number of
+threads to allocate to wgrib2.  For example, if I am
+running 4 copies of wgrib2 on a 4 core cpu, I would
+set OMP_NUM_THREADS to 1.  If I am running wgrib2 on
+a 128 core CPU with 30 other users, I may set OMP_NUM_THREADS
+to 4.  Generally the wgrib2 speed up is minimal for greater
+than 5 cores unless you are in heavy compute options
+that are well parallelized such as -new_grid and -ens_processing.
+
+
+<p>
+Wgrib2 uses 1 core in serial sections of the code and up
+to OMP_NUM_THREADS in the parallel sections of the code.
+Under normal situations, you want the unused cores
+(up to OMP_NUM_THREADS-1) to be made available for other
+jobs.  You do this by
+
+<pre>
+bash, sh
+  $ export OMP_WAIT_POLICY=PASSIVE
+csh
+  $ setenv OMP_WAIT_POLICY PASSIVE
+</pre>
+
+<p>
+On a HPC node where your jobs have sole use of the 
+(physical) CPU, you may want to set the OMP_WAIT_POLICY to ACTIVE.
+
+<h3>-ncpu</h3>
+The environment variable $OMP_NUM_THREADS can be overridden by the
+option <font color=brown>-ncpu N</font>.  
+<p>
+
+<h3>SIMD</h3>
+<p>
+OpenMP v4.0+ supports SIMD.  The current wgrib2 (5/2024) prefers
+multi-threading over SIMD because multi-threading can be used
+in more cases and SIMD has a limited vector length.  There are
+a limited number of cases where the outer loop is parallelized
+by multi-threading and the inner loop is parallelized by SIMD.
+It is hard to generalize about speed of multi-threading vs
+SIMD.  Multi-threading could have speed advantages when more
+than two memory controllers are present.
+<p>
+To best take advantage of SIMD, wgrib2 should be compiled with
+AVX-512 or AVX2 enabled (x86 cpus).
+
+<p>
+See also: <a href="./ncpu.html">-ncpu</a>,
+<a href="./speed.html">speed</a>,
+
+
+
+
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: June 2024
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+
