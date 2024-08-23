@@ -1,0 +1,90 @@
+                     wgrib2 cheap tricks
+
+Cheap tricks for wgrib which are something useful.
+
+
+#1 Find the global average precip (mm/day) from GFS
+
+   wgrib2 gfs.t00z.pgrb2.1p00.f024 -match PRATE -rpn "86400:*" -s -stats
+   242:14170129:d=2015111900:PRATE:surface:18-24 hour ave fcst::ndata=65160:undef=0:mean=2.86267:
+       min=0:max=448.762:cos_wt_mean=3.46938
+
+   The 18-24 hour forecasted precip is 3.469 mm/day
+
+
+#2 Find the tropical (15S-15N) average precip (mm/day) from GFS
+
+   wgrib2 gfs.t00z.pgrb2.1p00.f024 -match PRATE -rpn "86400:*" -undefine out-box 0:360 -15:15 -s -stats
+   242:14170129:d=2015111900:PRATE:surface:18-24 hour ave fcst::ndata=65160:undef=54000:mean=5.82379:
+      min=0:max=448.762:cos_wt_mean=5.83506
+
+#3 Grib2 files that are jpeg2000 compressed are so slowwwww to process.
+
+   You can convert the convert the jpeg2000-compressed files to complex-packed files which
+   are much faster to process.
+
+      ex.  wgrib2 LIS_NOAH32_NAM_2014030500.grib2 -set_grib_type c3 -grib_out LIS.fast
+
+  The only problem is that the jpeg2000 decoder is single-threaded and is so slowwwww.
+  I have a 4-core machine and three of the the cores are slacking off.  You can use all
+  the 4 cores by
+
+      ex.  wgrib2ms 4 LIS_NOAH32_NAM_2014030500.grib2 -set_grib_type c3 -grib_out LIS.fast
+      (for files with U/V in the same grib message, use wgrib2mv instead of wgrib2m)
+
+  reference: http://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/wgrib2m.html
+
+#4 make scripts smaller with:  cat *.grb | wgrib2 -
+    Here is a typical script that extracts the 500 mb HGT from a set of files
+
+original:
+    touch z500.grb ; rm z500.grb
+    for file in pgbanl.????????.grb
+    do
+        wgrib2 $file -match ":HGT:500 mb:" -append -grib z500.grb
+    done
+
+smaller:
+    cat pgbanl.????????.grb | wgrib2 - -match ":HGT:500 mb:" -grib z500.grb
+
+#5 compare two grib2 files (record by record)
+
+    wgrib2 file1 -var -lev -rpn "sto_1" -import_grib file2 -rpn "rcl_1:print_corr:print_rms"
+
+#6 A program is having problems reading a XXX encoded grib2 file.
+
+    Ideally all grib2 programs can read all the packing methods equally well.  However,
+    we live in the real world.  Most programs can handle simple packing quite well
+    because it is based on the grib1 packing and is simple.  To convert from a 
+    supported packing to simple packing, do
+
+       wgrib2 IN.grb -set_grib_type s -grib_out simple.grb
+
+    If you have a 6-core machine and need to show off by using 6 cores, try this
+       (Yes, I do have a 6-core machine. No, it is not my cell phone.)
+
+       wgrib2ms 6 IN.grb -set_grib_type s -grib_out simple.grb
+
+#6 want the 3 hourly GFS APCP and olr using -ncep_norm
+ 
+    cat gfs.t00z.pgrb2.1p00.f0?? | wgrib2 - -match '(:APCP:|:ULWRF:top of atmosphere:)' \
+      -if ':APCP:' -ncep_norm $HOME/apcp.grb2 \
+      -if ':ULWRF:top of atmosphere:' -ncep_norm $HOME/olr.grb2
+
+#7  I have 80 ensemble members and I want the ensemble mean global-mean precip.
+
+    cat flx_2010040112_fhr06_mem* | wgrib2 - -match PRATE -rpn 'rcl_1:+:sto_1' -if ':n=80:' -rpn "rcl_1:80:/:86400:*" -stats -fi
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^          ? ++++++++++++ ====================  *********** ######################### @@@@@@
+    ^^^   write 80 ensemble members to stdout
+    ?     read grib file from stdin
+    +++   only process PRATE fields
+    ===   register 1 is the sum of all fields (register 1 is intialized with zeros)
+    ***   if 80th field processed
+    ###   convert register 1 to mean and mm/day
+    @@@   write out statistics
+
+#8 Get rid of fields that only contain undefined grid points
+
+      wgrib2 IN.grb -max | grep -v ":max=undefined" | wgrib2 IN.grb -i -grib OUT.grb
+
+
