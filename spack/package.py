@@ -170,7 +170,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("libpng", when="@3.2: +png")
     depends_on("openjpeg", when="@3.2: +openjpeg")
 
-    @when("@:2 ^gmake@:4.1")
+    @when("@:2 ^gmake@:4.2")
 
     def patch(self):
         filter_file("\\\#define", "#define", "makefile")
