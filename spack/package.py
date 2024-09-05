@@ -170,6 +170,11 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("libpng", when="@3.2: +png")
     depends_on("openjpeg", when="@3.2: +openjpeg")
 
+    @when("@:2 ^gmake@:4.1")
+
+    def patch(self):
+        filter_file("\\\#define", "#define", "makefile")
+
     # Use Spack compiler wrapper flags
     def inject_flags(self, name, flags):
         if name == "cflags":
@@ -235,7 +240,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
 
     def build(self, pkg, spec, prefix):
         
-        make()
+        make("-j1")
 
         # Move wgrib2 executable to a tempoary directory
         mkdir("install")
