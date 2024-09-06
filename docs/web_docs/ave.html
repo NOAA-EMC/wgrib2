@@ -1,0 +1,518 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2: -ave, -fcst_ave</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; wgrib2-ncep_norm</font>
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>wgrib2: -ave, -fcst_ave</h3>
+</font>
+
+<img height="20" alt="News" src="../icons/new.png" width="60">
+<p> 
+With wgrib2 v2.0.7, 
+the <font color=brown>-ave</font> and <font color=brown>-fcst_ave</font> 
+now call the <font color="red">-time_processing</font> option.
+This option handles more statistical operations and more 
+Product Definition Templates (PDT).
+
+The old <font color=brown>-ave</font> and <font color=brown>-fcst_ave</font>  options will available as
+<font color=brown>-ave0</font> and <font color=brown>-fcst_ave0</font>.  I expect that
+these two options will be eliminated within a year of the release of v2.0.7.  
+
+
+<h3>Introduction</h3>
+
+<p>
+The <font color=brown>-ave</font> 
+and  <font color=brown>-fcst_ave</font> options are very similar;
+they both make temporal averages.
+The <font color=brown>-fcst_ave</font> option assumes that the
+reference (initial) time is constant and the verification time
+is increasing.
+The
+<font color=brown>-ave</font> option assumes the reference time
+is increasing and the difference between the verification and
+reference time is constant.
+
+<p>
+
+You would use <font color=brown>-fcst_ave</font> to temporally average
+a single forecast run.  For example, you have a 3 week forecast with
+output every 6 hours.  You could use <font color=brown>-fcst_ave</font> 
+to find the forecast for the second week.
+
+<p>
+You would use <font color=brown>-ave</font> to temporally average
+several analyses.  Suppose you have
+analyses every  6 hours and you want to find the analysis for the month.
+
+<p>
+The input grib file has to be processed in a special order.  Don't worry, 
+a grib file can be ordered very easily with the sort command.  wgrib2 reads the data
+sequentially and when ever it encounters a new variable/level/chemical-type,
+it starts the averaging process.  The length of the averaging depends on
+how many records it finds to average.  For example, to make a daily
+average, a file has to be in the following order.
+
+<pre>
+U500 2000-01-02 00Z             start ave
+U500 2000-01-02 06Z
+U500 2000-01-02 12Z
+U500 2000-01-02 18Z             end ave
+V500 2000-01-02 00Z             start ave
+V500 2000-01-02 06Z
+V500 2000-01-02 12Z
+V500 2000-01-02 18Z             end ave
+Z500 2000-01-02 00Z             start ave
+Z500 2000-01-02 06Z
+Z500 2000-01-02 12Z
+Z500 2000-01-02 18Z             end ave
+</pre>
+
+To make a daily average of the above file, you need to specify the
+output file and the time interval between samples.  The time
+units are the same as used by GrADS (hr, dy, mo, yr).
+
+<pre>
+<font color=brown>$ wgrib2 input.grb -ave 6hr out.grb</font>
+</pre>
+
+
+If the file is not sorted, you can use the unix sort by,
+
+<pre>
+<font color=brown>$ wgrib2 input.grb | sort -t: -k4,4 -k5,5 -k6,6 -k3,3 | \
+   wgrib2 -i input.grb -set_grib_type c3 -ave 6hr output.grb</font>
+</pre>
+
+If you want to make daily means from 4x daily monthly files
+and assuming that more than one variable/level is in the monthly file.
+
+<pre>
+<font color=brown>$ wgrib2 input.grb |  sed 's/\(:d=........\)/\1:/' | \
+  sort -t: -k3,3 -k5,5 -k6,6 -k7,7 -k4,4 | \
+  wgrib2 input.grb -i -set_grib_type c3 -ave 6hr daily.ave.grb</font>
+</pre>
+
+<p>
+Using <font color=brown>-fcst_ave</font>  is like using 
+<font color=brown>-ave</font>  except you use the verification
+time instead of the reference time.  To make an inventory that
+use the verification time instead of the reference time, you type, 
+
+<pre>
+<font color=brown>$ wgrib2 input.grb -vt -var -lev -misc </font>
+1:0:vt=2011040101:PRATE:surface:
+2:592224:vt=2011040102:PRATE:surface:
+3:1233694:vt=2011040103:PRATE:surface:
+4:1909322:vt=2011040104:PRATE:surface:
+5:2612620:vt=2011040105:PRATE:surface:
+</pre>
+
+The sed command will be alterered very slightly when making the
+sort (:d=) -> (:st=).
+
+<h3>Averaging several files using gmerge</h3>
+
+<p> If want to average several grib files, and the files have the 
+following properties:
+
+<ol>
+<li> No submessages.
+<li> No non-grib data between the grib messages.
+<li> Each file is for a different time.
+<li> Each file has corresponding grib messages in the same order
+</ol>
+<pre>
+Conditions 1 and 2 can be met using 
+
+      wgrib2 IN.grb -grib OUT.grb
+
+Condition 4 can be met using 
+      wgrib2 IN.grb | sort -k3 -t: | wgrib2 -i IN.grb -grib OUT.grb
+</pre>
+
+<p>
+Then you can use the gmerge program to produce a file in
+the correct order. The program gmerge is included with the
+wgrib2 distribution under grib2/aux_progs/.
+
+<pre>
+$ ls pgb.20170107??
+pgb.2017010700	pgb.2017010706	pgb.2017010712	pgb.2017010718
+
+$ gmerge - pgb.20170107?? | wgrib2 - -ave 6hr /tmp/daily.grb
+1:0:d=2017010700:APCP:surface:0-6 hour acc fcst:
+2:92905:d=2017010706:APCP:surface:0-6 hour acc fcst:
+3:185445:d=2017010712:APCP:surface:0-6 hour acc fcst:
+4:278666:d=2017010718:APCP:surface:0-6 hour acc fcst:
+5:371535:d=2017010700:ACPCP:surface:0-6 hour acc fcst:
+6:442127:d=2017010706:ACPCP:surface:0-6 hour acc fcst:
+7:514343:d=2017010712:ACPCP:surface:0-6 hour acc fcst:
+8:588096:d=2017010718:ACPCP:surface:0-6 hour acc fcst:
+9:661594:d=2017010700:NCPCP:surface:0-6 hour acc fcst:
+...
+
+$ wgrib2 /tmp/daily.grb 
+1:0:d=2017010700:APCP:surface:4@6 hour ave(0-6 hour acc fcst),missing=0:
+2:325115:d=2017010700:ACPCP:surface:4@6 hour ave(0-6 hour acc fcst),missing=0:
+3:715210:d=2017010700:NCPCP:surface:4@6 hour ave(0-6 hour acc fcst),missing=0:
+...
+</pre>
+
+
+
+<h3>Fast Averaging several files</h3>
+<p>
+Suppose we have a month of analyses at 3 hour intervals and want
+to make a monthly mean for Nov. 2014.  Using the above sorting approach, the steps
+would be
+
+<pre>
+1.  cat narr.201411????.grb2 >tmp.grb2
+2.  wgrib2 tmp.grb2 |  \
+3.     sort -t: -k4,4 -k5,5 -k6,6 -k3,3 | \
+4.     wgrib2 tmp.grb2 -i -set_grib_type c3 -ave 3hr narr.201411
+
+The first line creates a file with all the data.
+The second line make an inventory.
+The third line sorts the inventory in the order for -ave to process.
+The fourth line makes the average by processing data in the order
+  determined by the inventory created by line 3.
+</pre>
+
+<p>
+The above approach processes one average at a time and requires a
+minimal amout of memory.  However, if you count the I/O operations,
+you find that there are 4 I/O operations for every field as well as
+the writes of the monthly means.  In addition, the read (line 4) is
+random access.
+
+<p>
+The gmerge approach would look like
+
+<pre>
+1.  gmerge - narr.201411????.grb2 | \
+2.     wgrib2 - -set_grib_type c3 -ave 3hr narr.201411
+
+The first line creates a file with all the data.
+The second line makes the average by processing data from line 1.
+</pre>
+
+<p>
+For this to work, you would have to rewrite gmerge to that it can
+large number of input files.  For a monthly average of 3-hourly files,
+a typical linux system wouldn't have any problems.  For a 30-year
+climatology, the typical linux system would complain about the
+number of open files.
+
+<p>  The number of I/O operations with the gmerge is quite good,
+every input file is read one time.  The read would behave somewhere
+between a sequential read and a random read.  Another drawback
+is the input files much have the data in the same order.
+
+
+<p> The third method takes advantage of HPC file systems which
+are very fast for sequential reads of large files and terrible for
+random-access reads like used in the 
+the sort-of-the-index method.  Using this method for computing
+monthly means from 3-hourly NARR data was taking three quarters of
+an hour on a multi-million dollar machine.
+The problem was that the file system was optimized for large
+sequential reads rather than small random-access reads.
+The following shows another approach.
+
+
+<pre>
+1.  cat narr.201411????.grb2 | \
+2.     wgrib2 - \
+3.        -if_fs ":HGT:200 mb:" -ave 3hr narr.201411 \
+4.        -if_fs ":UGRD:200 mb:" -ave 3hr narr.201411 \
+5.        -if_fs ":VGRD:200 mb:" -ave 3hr narr.201411 \
+6.        -if_fs ":TMP:200 mb:" -ave 3hr narr.201411 
+
+The first line copies the data in chronological order and
+   writes it to the pipe.
+The second line has wgrib2 read the grib data from the pipe.
+The third line selects the Z200 fields and runs the averaging
+  option on it.  We are assuming the narr.* fields only have
+  one Z200 field and narr.201411???? puts the data into
+  chronological order.
+Lines 4-6 apply the averaging option to other fields.
+</pre>
+
+<p>
+The above approach computes the mean of Z200, U200, V200 and T200 data 
+at the same time with the use of more memory.
+The I/O consists of sequential read of all the files and the
+writes of the monthly means.  The above script only creates
+the mean of Z200, U200, V200 and T200 but you could write a 
+very long command line and compute the mean of all the fields in
+the file.  Here are the guts of a 
+bash script, fast_grib2_mean.sh,  which creates and runs the command line.
+
+<pre>
+1.  wgrib2 $1 -match_inv | cut -f4- -d: | sed -e 's/:n=.*//' &gt;$tmp
+2.  cmd="cat $* | $wgrib2 - -set_grib_type c3 "
+3.  while read line
+4.  do
+5.    cmd="$cmd -if_fs '$line' -ave $dt $out "
+6.  done &lt;$tmp
+7.  eval $cmd
+
+1. $1 is the first file to average.
+   Line 1 creates a file with the field names (minus date codes)
+2. cmd is the command line that is being built
+3. loop over all the lines in file $tmp
+5. generate the "-if_fs/-ave" for the cmd line
+   Older versions of the web paged used -if but that caused problems when
+   $line included metacharacters such as parentheses.
+6. bash syntax to have the while loop read from $tmp
+7. run the command line
+</pre>
+
+<p>
+Making the NARR monthly means using the above approach uses large
+sequential reads which is optimal for the HPC file system.  The run
+time went from 3/4 of an hour to maybe a minute.
+
+<h3>Fast Forecast Averaging</h3>
+
+<p>
+The previous shell script was for a fast averaging of many analyses.
+Sometimes one want to average several forecasts starting from
+the same initial time.  An example would producing a week-4 forecast.
+
+<pre>
+1.  $wgrib2 $1 -match_inv | cut -f4-5 -d:  &gt;$tmp
+2.  cmd="cat $* | $wgrib2 - -set_grib_type c3 "
+3.  while read line
+4.  do
+5.    cmd="$cmd -if_fs '$line' -fcst_ave $dt $out "
+6.  done &lt;$tmp
+7.  eval $cmd
+
+1. $1 is the first file to average.
+   Line 1 creates a file with the name and level for each field
+   It is assumed that the name and level is unique in the file.
+2. cmd is the command line that is being built
+3. loop over all the lines in file $tmp
+5. generate the "-if_fs/-fcst_ave" for the cmd line
+   Older versions of the web paged used -if but that caused problems when
+   $line included metacharacters such as parentheses.
+6. bash syntax to have the while loop read from $tmp
+7. run the command line
+</pre>
+<p> 
+Using the <font color=brown>-merge_fcst</font> option in a like
+manner to the <font color=brown>-fcst_ave</font> option. in a like
+
+
+
+<h3>Monthly Climatologies</h3>
+
+Once you can make an average, making a monthly climatology should be easy.  Except
+it isn't.  Here are some of the problems that I encountered.
+
+<ol>
+<li> February has 28 days except when it doesn't.  This causes problems because
+  wgrib2 -ave will not average 28 and 29 day intervals.
+<li> '116@6 hour ave(anl)' includes a regex metacharacter
+<li> the process id changed
+<li> the subcenter changed
+</ol>
+
+The solutions were:
+
+<ol>
+<li> rewrite the grib file with <br>
+          -if_fs '116@6 hour ave(anl)' -set_ftime2 '112@6 hour ave(anl)' -fi \<br>
+	  -if_fs '116@6 hour ave(6 hour fcst)' -set_ftime2 '112@6 hour ave(6 hour fcst)' -fi \<br>
+	  -if_fs '116@6 hour ave(3-6 hour acc fcst)' -set_ftime2 '112@6 hour ave(3-6 hour acc fcst)' -fi \<br>
+<li> Use -if_fs instead of -if
+<li> rewrite the file with -set analysis_or_forecast_process_id 180
+<li> rewrite the file with -set subcenter 0
+</ol>
+
+<p> 
+Finding items 3 and 4 was a pain.  Using undocumented option v98 helps.  However, the mismatches can
+now be uncoverted by using a verbose mode (&gt;0) and wgrib v2.0.6.
+
+
+<h3> Limitations by wgrib2 version</h3>
+<p>
+There is a limit in the maximum number of -if_fs/-ave clauses.  
+Wgrib2 v2.0.6 can process up to 2000 -if and 2000 -if_fs options and
+accept 10000 words on the command line.  Since each -if_fs/-ave clause takes 5 
+words on the command line and you need to include the name of the
+input file, you get a limit of 999 -if_fs/-ave clauses.  To speed up
+the code, the evaluation of the -if_fs options is done in parallel.
+
+
+<h3>Usage</h3>
+<p>
+
+<pre>
+-ave (time interval)  (output grib file)
+-fcst_ave (time interval)  (output grib file)
+
+   wgrib2 prior to v2.0.7 only works with PDT=4.0, 4.1 and 4.8
+    support for PDT 4.2 and 4.12 by -ave added 7.2016
+   wgrib2 v2.0.7 is limited by the -time_processing option
+</pre>
+
+<p>
+See also: 
+<a href="./merge_fcst.html">-merge_fcst</a>, 
+<a href="./time_processing.html">-time_processing</a>
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: Feb 12, 2018, July 26, 2018
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

@@ -1,0 +1,431 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2: -import_netcdf</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; wgrib2-import_netcdf</font>
+  </td>
+ </tr> 
+    <tr><td>&nbsp;</td></tr>
+  <tr>
+  <td>
+<font color=red>
+<h3 align=center>wgrib2: -import_netcdf (beta)</h3>
+</font>
+
+<p>
+The <font color=red>-import_netcdf</font> option is beta code which means
+that the syntax is not going to change.  This option
+has been in the code for a number of years but it is not a well-used
+option and there may be problems with your netcdf file.  Personally I
+would see if CDO can convert your file from netcdf to grib before
+trying <font color=red>-import_netcdf</font>.
+
+<p> My second use of this
+option (wgrib2 v3.0.0) improved the code. There were bug fixes and the 
+ability to import values stored in bytes and integers. The second use converted
+the OSTIA SST files from netcdf to grib.  The grib2 file was 8% of the original size.
+(92% size reduction).  The grib2 compression was extremely good, using only 0.97 bits
+to store each grid point value.  The grib compression was good because one field
+was a mask, ice concentration was mostly zero value, and the SST and SST error where 
+undefined over land and lakes.  The grid point values were unchanged in the conversion 
+from netcdf to grib because both the netcdf and grib files used the same precision.
+
+
+<h3>Introduction</h3>
+
+<p>
+Reading netcdf is easy if someone else writes the program to read the netcdf file.  
+Writing the code to read netcdf is something else.  
+The <font color=red>-import_netcdf</font> option allows you to read/import arbitrary
+netcdf variables into wgrib2.  The netcdf data that you read replaces the
+grid point values of the "grib record" that you also read in.  This is the
+standard operating procedure of the -import options.
+
+<p>
+A netcdf file can contain many variables.  In my sample file, there is one
+data varable "acpcp" and and 6 supporting variables.
+variables are
+<pre>
+    variable 0: time
+    variable 1: lat(x,y)                 latitude
+    variable 2: lon(x,y)                 longitude
+    variable 3: y                        integer
+    variable 4: x                        integer
+    variable 5: Lambert_Conformal        grid definition
+    variable 6: acpcp(x,y,time)          accumulated convective precip
+</pre>
+
+<p>
+Netcdf variables have dimensions which can
+be of arbitrary units.  For example the time is not stored as YYYYMMDDHHSS but
+could be stored as "nanoseconds since 1981-2-23", "fortnights since 1990-11-25 12:00 EST"
+or anything else you can imagine.  Geopotential height can have units of 
+meters, metres, inches, microns, nautical miles, chains, rods or any unit of length 
+in any language (ncdf supports unicode).  This is the joy of a standard that don't set
+standards.  (Netcdf is a standard but fails to standardize units of length.)
+
+<p>
+Variables in netcdf can be viewed as variable(dim-i,dim-j,..,dim-last) where
+the number of dimensions differ.  For example, in one dataset,
+X could be one-dimensional, latitude could be two dimensional and temperature
+could be 4 dimensional.
+
+<p>
+There is netcdf library code to read varaible(i0:i1, j0:j1, .. , last0:last1).
+With  <font color=red>-import_netcdf</font>, you specifiy the netcdf file,
+the netcdf variable and "i0:i1,..,last0:last1".  The code reads the data
+and uses it to overwrite the wgrib2's data register. For this option, you don't
+specify "i0:i1" but "i0" and "n", the number of to read (i1=i0+n-1).
+
+
+<h3>Tutorial: Variables in an unknown netcdf file</h3>
+
+<p>
+In this example, I am trying to read a NARR netcdf file produced by a 3rd party.
+As a first step, I want to list the variables in the netcdf file.
+
+<pre>
+acpcp.1979.nc = netcdf file
+
+small.grb2 = arbitary grib2 file (used so that -import_netcdf will run)
+asd = junk name that doesn't match a variable name or dimension specification
+
+sh-4.1$ wgrib2  ~/grib2/examples/small.grb2 -import_netcdf acpcp.1979.nc asd asd 
+import_netcdf: asd is not valid variable, valid variables are
+variable 0: time
+variable 1: lat
+variable 2: lon
+variable 3: y
+variable 4: x
+variable 5: Lambert_Conformal
+variable 6: acpcp
+
+In the above line, I am importing the variable "asd" from netcdf file "apcpc.1979.nc".
+As expected, "asd" is not a valid varaible, and I get an error message and the 
+desired list of valid variables.
+</pre>
+
+<h3>Tutorial: Unknown attributes and dimensions of a variable</h3>
+
+To get a variable description, you need to try to import a netcdf file. acpcp.1979.nc
+with a valid variable, acpcp, with an invalid dimension specification, "asd".
+
+<pre>
+bash-4.1$ wgrib2 ~/grib2/examples/small.grb2 -import_netcdf acpcp.1979.nc acpcp asd 
+ndims=3 var_type=5 #var_attributes 16
+acpcp.0 attr=GRIB_id type=3 len=1
+acpcp.1 attr=GRIB_name: ACPCP
+acpcp.2 attr=coordinates: lat lon
+acpcp.3 attr=dataset: NARR 3-hourly
+acpcp.4 attr=grid_mapping: Lambert_Conformal
+acpcp.5 attr=level_desc: Surface
+acpcp.6 attr=long_name: 3-hourly accumulated convective precipitation at Surface
+acpcp.7 attr=parent_stat: Other
+acpcp.8 attr=standard_name: convective_precipitation_amount
+acpcp.9 attr=statistic: Individual Obs
+acpcp.10 attr=units: kg/m^2
+acpcp.11 attr=valid_range type=5 len=2
+acpcp.12 attr=var_desc: convective precipitation accumulation
+acpcp.13 attr=missing_value type=5 len=1
+acpcp.14 attr=actual_range type=5 len=2
+acpcp.15 attr=_FillValue type=5 len=1
+_FillValue=9969209968386869046778552952102584320.000000 1 missing_value=-9969209968386869046778552952102584320.000000 1
+dimension mismatch asd, netcdf file has
+   dim 0 id=0 name=time recs=2920
+   dim 1 id=1 name=y recs=277
+   dim 2 id=2 name=x recs=349
+
+*** FATAL ERROR: import_netcdf: dimensions do not match ***
+</pre>
+
+By using an invalid dimension, the attributes and dimensions of the
+variable are listed. From the attributes, we see that the variable is
+a 3 hour accumulated convective precipitation. (Don't know whether it
+is the 0-3 hour accumulated forecast or n-n+3 hour hour forecast.)
+
+<p> Wgrib2 is using the C interface to the netcdf library.  So
+C conventions apply.  For example, indices start at zero such
+as the dimension number.
+
+<p>The dimension description shows that acpcp is is a 3 dimensional 
+variable, apcpcp(time, y, x).
+
+<h3>Tutorial: Grid of an unknown netcdf file</h3>
+
+We can get the description of the latitude by
+
+<pre>
+1:0bash-4.1$ wgrib2 ~/grib2/examples/small.grb2 -import_netcdf acpcp.1979.nc lat asd
+ndims=2 var_type=5 #var_attributes 5
+lat.0 attr=axis: Y
+lat.1 attr=coordinate_defines: point
+lat.2 attr=long_name: Latitude
+lat.3 attr=standard_name: latitude
+lat.4 attr=units: degrees_north
+_FillValue=0.000000 0 missing_value=0.000000 0
+dimension mismatch asd, netcdf file has
+   dim 0 id=1 name=y recs=277
+   dim 1 id=2 name=x recs=349
+
+*** FATAL ERROR: import_netcdf: dimensions do not match ***
+</pre>
+
+Similarily we can find the description of lon.  We see
+that lat(y,x) and lon(y, x).
+
+
+<h3>Tutorial: Projection of an unknown netcdf file</h3>
+
+The NARR grid is a Lambert Conformal grid.  The grid description is
+stored in the Lambert_Conformal variable.
+
+<pre>
+bash-4.1$ wgrib2 ~/grib2/examples/small.grb2 -import_netcdf acpcp.1979.nc Lambert_Conformal asd 
+ndims=0 var_type=4 #var_attributes 6
+Lambert_Conformal.0 attr=false_easting type=6 len=1
+Lambert_Conformal.1 attr=false_northing type=6 len=1
+Lambert_Conformal.2 attr=grid_mapping_name: lambert_conformal_conic
+Lambert_Conformal.3 attr=latitude_of_projection_origin type=6 len=1
+Lambert_Conformal.4 attr=longitude_of_central_meridian type=6 len=1
+Lambert_Conformal.5 attr=standard_parallel type=6 len=2
+_FillValue=0.000000 0 missing_value=0.000000 0
+WARNING: import_netcdf: size mismatch grib:4 netcdf:1
+data is padded
+1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+</pre>
+
+<h3>Tutorial: converting a netcdf field to grib2</h3>
+
+In our example, we have a NARR grid and we can find
+NARR grib1 files online from NCEI.  Using grb1to2.pl, we
+can convert a NARR file into grib2 and make a sample
+grib2 file.  This template will use the same grid
+as our netcdf file.  The following will read the 1st field from acpcp.1979.nc
+and convert it into grib2.
+
+<pre>
+bash-4.1$ wgrib2 narr.grb2 -import_netcdf acpcp.1979.nc acpcp "0:1:0:277:0:349" -set_var ACPCP \
+   -set_lev surface -set_date 1979010100 -set_ftime2 "0-3 hour acc fcst" -grib_out out.grb2
+ndims=3 var_type=5 #var_attributes 16
+acpcp.0 attr=GRIB_id type=3 len=1
+acpcp.1 attr=GRIB_name: ACPCP
+acpcp.2 attr=coordinates: lat lon
+acpcp.3 attr=dataset: NARR 3-hourly
+acpcp.4 attr=grid_mapping: Lambert_Conformal
+acpcp.5 attr=level_desc: Surface
+acpcp.6 attr=long_name: 3-hourly accumulated convective precipitation at Surface
+acpcp.7 attr=parent_stat: Other
+acpcp.8 attr=standard_name: convective_precipitation_amount
+acpcp.9 attr=statistic: Individual Obs
+acpcp.10 attr=units: kg/m^2
+acpcp.11 attr=valid_range type=5 len=2
+acpcp.12 attr=var_desc: convective precipitation accumulation
+acpcp.13 attr=missing_value type=5 len=1
+acpcp.14 attr=actual_range type=5 len=2
+acpcp.15 attr=_FillValue type=5 len=1
+_FillValue=9969209968386869046778552952102584320.000000 1 missing_value=-9969209968386869046778552952102584320.000000 1
+1:0:d=1979010100:ACPCP:surface:0-3 hour acc fcst:
+
+-import_netcdf acpcp.1979.nc acpcp "0:1:0:277:0:349"
+  0:1:0:277:349 = hyperslab specifier
+           0:1   for the 1st dimension (t), start at 0 and loop 1 time
+                  (if your file has multiple times, to get the second
+                  time, you use "1:1".)
+           0:277 for the 2nd dimension (y), start at 0 and loop 277 times
+           0:349 for the 3rd dimension (x), start at 0 and loop 349 times
+-set_var ACPCP                   change the grib variable name to ACPCP of the memory buffer
+-set_lev surface                 change the grib level to surface of the memory buffer
+-set_date 1979010100             change the reference data of the memory buffer
+-set_ftime2 "0-3 hour acc fcst"  change the time stamp of the memory buffer
+-grib_out out.grb2               write memory buffer to out.grb2
+
+-import_netcdf reads a hyberslab of dimension 1 x 277 x 349.  Now the narr.grb2 has
+a grid of 349 x 277.  You can check that the grib2 scan order is compatible with
+the netcdf scan order either by examining the lat/lon or by checking the netcdf
+file with the grib file obtained from another source.
+</pre>
+<p>
+The <font color="red">-import_netcdf</font> option is not convenient and
+takes some work to setup.  However, it did work and I was able to verify
+that the netcdf NARR file was the same as my grib copy.  For lat-lon netcdf files
+that follow the coards convention, using GrADS and the <a href="../g2grb.html">g2grb.gs</a>
+script is easier to use.
+
+<h3>Warnings</h3>
+<p>
+The <font color="red">-import_netcdf</font> option does very little
+error checking.  Suppose your netcdf hyper-cube is organized WE:NS,
+and your in-memory grid is WE:SN (default). The
+<font color="red">-import_netcdf</font> directly over-write the 
+in-memory grid with the netcdf hyper-cube.  The user is responsible
+it reordering the data (-rpn -yrev).  As of 3/2022, only WE:NS can
+be transformed to WE:SN.
+
+<h3>Usage</h3>
+<pre>
+-import_netcdf file variable "dim_list"
+                                 file     = netcdf file
+                                 variable = variable in the netcdf file
+                                 dim_list    = specification of the hyperslab to read
+                                 dim_list    = dim_spec:dim_spec:..:dim_spec
+                                 dim_spec    = dim_start:dim_loop
+                                 dim_start   = index for start of hyberslap starting at 0
+                                 dim_loop    = number time to loop
+</pre>
+
+<h3>More Examples</h3>
+
+See <a href="./netcdf_2_grib_ostia.html"?>Converting OSTIA SST in netcdf to grib</a>.
+
+<p>
+See also: 
+<a href="./import_binhtml">-import_bin</a>,
+<a href="./import_grib.html">-import_grib</a>,
+<a href="./import_grib_fs.html">-import_grib_fs</a>,
+<a href="./import_text.html">-import_text</a>,
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: Sep 18, 2017. Updated 1/8/2020, 9/2023
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

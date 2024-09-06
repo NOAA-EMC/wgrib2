@@ -1,0 +1,421 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - gribify_ieee: -ftim</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; gribify_ieee</font>
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>gribify using ieee</h3>
+</font>
+
+
+<h3>Introduction</h3>
+
+<p> Writing grib-2 files can be quite painful with all the libraries
+involved.  However, there is a type of grib which is relatively easy
+to write.  In this format, a single grib2 record looks like
+
+<pre>
+     (binary header)           variable number of bytes
+     (big endian ieee data)    4*ndata bytes
+     (binary trailer)          4 bytes, ascii '7777'
+</pre>
+
+You can obtain the header/trailer using the <font color=red>-grib_ieee</font> 
+option.
+
+<pre>
+   $ <font color=brown>wgrib2 -order raw -d 1 in.grb2 -grib_ieee out</font>
+   1:0:d=2008022101:APCP:surface:1 month fcst:
+   $ <font color=brown>ls out*</font>
+   out.grb  out.h  out.head  out.tail
+</pre>
+
+<p>The first line takes the first record of the file and creates
+<pre>
+   out.grb        ieee grib2 file (one record)
+   out.head       binary file with the header
+   out.tail       binary file with the trailer
+   out.h          C header
+</pre>
+
+<h3>Making a simple grib file</h3>
+
+Continuing our example, we need some big endian binary data (ieee.bin).
+We extract the ieee data (ieee.bin) using wgrib2.  Normally you
+would create the ieee data by another program.
+
+<pre>
+   $ wgrib2 -d 1 in.grb2 -no_header -ieee ieee.bin
+   1:0:d=2008022101:APCP:surface:1 month fcst:
+</pre>
+
+Once we have the field in big-endian ieee, we can make
+the grib file.
+
+<pre>
+   $ cat out.head ieee.bin out.tail &gt; first.grb
+   $ wgrib2 first.grb -grib_out second.grb
+   1:0:d=2008022101:APCP:surface:1 month fcst:
+</pre>
+
+The "cat" combines the header, data and trailer. The file,
+first.grb is a valid grib2 if there were no undefined values
+in "ieee.bin" (see the following section, "Undefined grid points").
+The wgrib2 converts any undefined grid points to a bit
+mask and uses a more common compression scheme.  
+Of course the example is pretty lame as it has the same date and 
+variable as the original file.  However that can be changed.
+
+<pre>
+   $ <font color=brown>wgrib2 second.grb -set_date 2008010100 -set_var SNOD -grib_out third.grb</font>
+   1:0:d=2008010100:SNOD:surface:1 month fcst:
+</pre>
+
+
+<h3>Making a grib file with C</h3>
+
+The header file may looks like this,
+
+<pre>
+unsigned char head[] = {
+ 71, 82, 73, 66, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 164, 234, 0, 0, 0, 21,
+ 1, 0, 7, 0, 1, 2, 1, 1, 7, 216, 4, 14, 0, 0, 0, 0, 1, 0, 0, 0,
+ 72, 3, 0, 0, 0, 41, 16, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 144, 0, 0, 0, 73, 0, 0, 0, 0, 0,
+ 0, 0, 0, 5, 93, 74, 128, 0, 0, 0, 0, 48, 133, 93, 74, 128, 21, 79, 4, 96,
+ 0, 38, 37, 160, 0, 38, 37, 160, 0, 0, 0, 0, 34, 4, 0, 0, 0, 0, 3, 5,
+ 2, 0, 180, 0, 0, 0, 1, 0, 0, 0, 0, 100, 0, 0, 1, 134, 160, 255, 0, 0,
+ 0, 0, 0, 0, 0, 0, 12, 5, 0, 0, 41, 16, 0, 4, 1, 0, 0, 0, 6, 6,
+ 255, 0, 0, 164, 69, 7,};
+
+unsigned char tail[4] = {55, 55, 55, 55};
+
+#define NDATA 10512
+#define SEC0 0
+#define DISCIPLINE 6
+#define EDITION 7
+#define SEC1 16
+#define CENTER 21
+#define SUBCENTER 23
+#define MASTERTABLE 25
+#define LOCALTABLE 25
+#define YEAR 28
+#define MONTH 30
+#define DAY 31
+#define HOUR 32
+#define MINUTE 33
+#define SECOND 34
+#define SEC3 37
+#define SEC4 109
+#define PRODUCTDEFTEMPLATENUM 116
+#define PRODUCTDEFTEMPLATE 118
+#define PRODUCTCATEGORY 118
+#define PRODUCTNUMBER 118
+#define SEC5 143
+#define SEC6 155
+#define SEC7 161
+</pre>
+
+The header has definition of the header and trailer and
+the location of selected elements in the header.  Here
+is an example that uses the above header (g2.6.h)
+
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include "g2.5.h"
+
+// Method #2 of writing a grib file
+//
+//  sample program to create a grib2 ieee file
+//  to convert to jpeg file, type wgrib2 in_file -grib_out out_file
+//
+// can also use wgrib2 to change the variable name, level and time
+//   by the set_* commands
+//
+// 4/2008 Wesley Ebisuzaki
+
+int main() {
+        FILE *grib;
+        float r;
+        char s[4], *t;
+        int i;
+
+        grib = fopen("test.grb", "wb");
+
+// to change octet N of section 4 to the value of K
+// add the following line:
+//      head[SEC4+(N-1)] = K;
+// the grib documentation starts numbering octets at 1
+// C uses 0 as the base
+
+        head[YEAR] = 2008 / 256;
+        head[YEAR+1] = 2008 % 256;
+        head[MONTH] = 2;
+        head[DAY] = 3;
+        head[HOUR] = 4;
+
+        head[DISCIPLINE] = 0;
+        head[PRODUCTCATEGORY] = 1;
+        head[PRODUCTNUMBER] = 2;
+
+        // write grib header
+
+        i = fwrite(head, 1, sizeof(head), grib);
+        printf("size of head = %d\n",i);
+
+        // for missing values, use the value NaN
+        // note: wgrib2 will convert 9.999e20 to missing
+        // write out IEEE big-endian data (NDATA)
+
+        // silly array -- needs to be in big-endian
+
+        r = 1.0;
+        t = (char *) &r;
+        // byte swap on a little endian machine
+        s[0] = t[3];
+        s[1] = t[2];
+        s[2] = t[1];
+        s[3] = t[0];
+        for (i = 0; i < NDATA; i++) {
+            fwrite(s,1,4,grib);
+        }
+
+        // write grib trailer
+
+        fwrite(tail,1,sizeof(tail),grib);
+        return 0;
+}
+</pre>
+
+<p>
+As with the first example, one should convert undefined grid points and the ieee packing
+to a more commonly used packing using "wgrib2 in.grb -grib_out out.grb".
+
+<p>
+In this example, in.grb2 happens to have the correct grid
+but wrong the center.  If you examine in.grb2, you see that it comes from 
+NCEP and you happen to be working in in Kiribati (196 in WMO table).  That can be easily fixed.
+
+<pre>
+   $ <font color=brown>wgrib2 in.grb2 -center</font>
+   1:0:center=US National Weather Service - NCEP (WMC)
+   $ <font color=brown>wgrib2 in.grb2 -set_center 196  -grib_out third.grb2</font>
+   1:0:d=2008022101:APCP:surface:1 month fcst:
+   $ <font color=brown>wgrib2 third.grb2 -center</font>
+   1:0:center=Kiribati (NMC)
+</pre>
+
+Are all the necessary <font color=red>-set_*</font> options available?
+Probably not as this this procedure for making grib file is
+a work in progress.  Send comments to wesley.ebisuzaki@noaa.gov.
+
+<h3>Getting the "template" grib2 file</h3>
+
+<p>The procedure depends on having a grib2 file with the
+correct grid. For common grids, you can often find a
+such a grib file.  Sometimes you can find a grib1 file
+and then you can use <h href='https://www.nco.ncep.noaa.gov/pmb/codes/GRIB2/'>
+cnvgrib</a> to convert the file into grib2.  As a last
+resort, one could take a grib1 file, convert it to
+the correct domain by the program copygb and then use
+cnvgrib.  
+Of course, the last resort is the hardest because it requires
+knowing the grid description in the arcane "GDS" format.
+(You'll have to read the fortran code and know a bit about grib1.)
+
+<p> 5/2010: wgrib2 can make regular lat-lon template files
+by the -lola option.
+
+<h3>Undefined grid points</h3>
+<p>
+In grib, undefined grid points are usually specified by a
+bit mask.  However, ieee floating point numbers can have a
+value of NaN or "not a number".  The current WMO documentation
+doesn't specify how to interpret a NaN, so wgrib2 interprets
+a NaN as undefined. Seems logical, doesn't?  Anyways I'll assume
+logic holds until WMO defines otherwise.  However,
+writing a NaN can be difficult in some languages.  So 
+one can use a special number as the undefined value.  If
+you use 9.999e20, you can fix the file by
+
+<pre>
+   wgrib2 in.grb2 -grib_out out.grb2
+</pre>
+
+If for some reason, you decided to use -999 as the undefined value,
+you can fix the file by
+
+<pre>
+   wgrib2 in.grb2 -undefine_val -999 -grib_out out.grb2
+</pre>
+
+
+<h3>Other grib decoders</h3>
+
+The ieee variation of grib2 is not supported by the NCEP fortran and C 
+libraries and programs based on those libraries.  You can convert to 
+a more standard packing by using wgrib2.
+
+<pre>
+   wgrib2 in.grb2 -grib_out out.grb2
+</pre>
+
+
+<h3>Warning</h3>
+Please check the results of gribifying your data.  This
+facility is very new and variations of grib files is many.
+Please plot the results.
+
+
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: Oct 30, 2008
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+
