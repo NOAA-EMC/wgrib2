@@ -8,11 +8,9 @@ import re
 
 from spack.package import *
 
-variant_map = {
+variant_map_common = {
     "netcdf3": "USE_NETCDF3",
     "netcdf4": "USE_NETCDF4",
-    "netcdf": "USE_NETCDF",
-    "spectral": "USE_SPECTRAL",
     "mysql": "USE_MYSQL",
     "udf": "USE_UDF",
     "regex": "USE_REGEX",
@@ -25,14 +23,25 @@ variant_map = {
     "openmp": "USE_OPENMP",
     "wmo_validation": "USE_WMO_VALIDATION",
     "ipolates": "USE_IPOLATES",
-    "disable_timezone": "DISABLE_TIMEZONE",
     "disable_alarm": "DISABLE_ALARM",
     "fortran_api": "MAKE_FTN_API",
     "disable_stat": "DISABLE_STAT",
     "openjpeg": "USE_OPENJPEG",
+    
+}
+
+variant_map_makefile = { 
+    "spectral": "USE_SPECTRAL",
+}
+
+variant_map_cmake = { 
+    "netcdf": "USE_NETCDF",
+    "disable_timezone": "DISABLE_TIMEZONE",
     "enable_docs": "ENABLE_DOCS",
 }
 
+variant_map_makefile.update(variant_map_common) 
+variant_map_cmake.update(variant_map_common)
 
 class Wgrib2(MakefilePackage, CMakePackage):
     """Utility for interacting with GRIB2 files"""
@@ -197,7 +206,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     parallel = False
 
     def cmake_args(self):
-        args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
+        args = [self.define_from_variant(variant_map_cmake[k], k) for k in variant_map_cmake]
         #        args.append(self.define_from_variant("BUILD_LIB", "lib"))
         #        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
 
@@ -226,7 +235,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
         if spec.satisfies("%clang") or spec.satisfies("%apple-clang"):
             makefile.filter(r"--fast-math", "-ffast-math")
 
-        for variant_name, makefile_option in variant_map.items():
+        for variant_name, makefile_option in variant_map_makefile.items():
             value = int(spec.variants[variant_name].value)
             makefile.filter(r"^%s=.*" % makefile_option, "{}={}".format(makefile_option, value))
 
@@ -255,7 +264,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
             makefile = FileFilter("makefile")
 
             # Disable all options
-            for variant_name, makefile_option in variant_map.items():
+            for variant_name, makefile_option in variant_map_makefile.items():
                 value = 0
                 makefile.filter(
                     r"^%s=.*" % makefile_option, "{}={}".format(makefile_option, value)
