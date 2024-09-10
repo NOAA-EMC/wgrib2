@@ -108,7 +108,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
         "ipolates",
         default=False,
         description="Use to interpolate to new grids",
-        when="@3.3:",
     )
     variant(
         "spectral", default=False, description="Spectral interpolation in -new_grid", when="@:3.1"
@@ -118,7 +117,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
         "fortran_api",
         default=True,
         description="Make wgrib2api which allows fortran code to read/write grib2",
-        when="@3.3:",
     )
     #   Not currently working for @3.2:
     #    variant("lib", default=True, description="Build library", when="@3.2:")
@@ -179,7 +177,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("libpng", when="@3.2: +png")
     depends_on("openjpeg", when="@3.2: +openjpeg")
 
-    @when("@:2 ^gmake@:4.2")
+    @when("@:2 ^gmake@4.2:")
 
     def patch(self):
         filter_file("\\\#define", "#define", "makefile")
@@ -273,7 +271,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
             # Need USE_REGEX in addition to MAKE_FTN_API to build lib
             makefile.filter(r"^MAKE_FTN_API=.*", "MAKE_FTN_API=1")
             makefile.filter(r"^USE_REGEX=.*", "USE_REGEX=1")
-            make("lib")
+            make("lib","-j1")
             mkdir(join_path("install", "lib"))
             mkdir(join_path("install", "include"))
 
