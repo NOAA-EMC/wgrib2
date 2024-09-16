@@ -32,11 +32,16 @@ option(FTP_TEST_FILES "Fetch and test with files on FTP site." OFF)
 option(FTP_LARGE_TEST_FILES "Fetch and test with very large files on FTP site." OFF)
 option(FTP_EXTRA_TEST_FILES "Fetch even more large files from FTP and test them." OFF)
 # MAKE_FTN_API should only be on when building library
-option(MAKE_FTN_API "add ftn api?" off)
+option(MAKE_FTN_API "add ftn api?" on)
 option(DISABLE_STAT "disable posix feature" off)
 set(BUILD_COMMENTS "stock build")
+
 option(BUILD_LIB "Build wgrib2 library?" on)
-option(BUILD_SHARED_LIB "Build shared library?" off)
+# if BUILD_LIB, then code is compiled as relocatable
+option(BUILD_SHARED_LIB "Build shared library?" on)
+# To create libwgrib2.so for python, you have to build with BUILD_SHARED_LIB off
+# and manually create libwgrib2.so from the needed *.a files
+
 option(BUILD_WGRIB "Build wgrib code?" off)
 
 # Developers can use this option to specify a local directory which
@@ -84,6 +89,10 @@ if(USE_G2CLIB)
   endif()
 endif()
 
+if (BUILD_SHARED_LIB AND NOT BUILD_LIB)
+   message(FATAL_ERROR "BUILD_SHARED_LIB is on but BUILD_LIB is off")
+endif()
+
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
 message(STATUS "Checking if the user want to use NCEPLIBS-ip...")
 if(USE_IPOLATES)
@@ -100,6 +109,10 @@ endif()
 if(USE_OPENJPEG AND USE_JASPER)
   message(FATAL_ERROR "USE_OPENJPEG OR USE_JASPER, not both")
 endif()
+
+
+
+
 
 message(STATUS "Checking if the user wants to use Jasper...")
 if(USE_JASPER)
