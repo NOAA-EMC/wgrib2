@@ -113,8 +113,10 @@ int dec_png_clone(unsigned char *pngbuf,int *width,int *height, unsigned char *c
     png_set_read_fn(png_ptr,(png_voidp)&read_io_ptr,(png_rw_ptr)user_read_data_clone);
 /*     png_init_io(png_ptr, fptr);   */
 
-/*     Read and decode PNG stream   */
+/*     support for larger grids   */
+    png_set_user_limits(png_ptr, PNG_WIDTH_MAX, PNG_HEIGHT_MAX);
 
+/*     Read and decode PNG stream   */
     png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
 
 /*     Get pointer to each row of image data   */

@@ -37,6 +37,10 @@
 #endif
 #endif
 
+/* parameters to PNG encode routine */
+#define PNG_WIDTH_MAX  100000000
+#define PNG_HEIGHT_MAX 100000
+
 
 /*  1/2007 M. Schwarb unsigned int ndata */
 
