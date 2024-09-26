@@ -1,0 +1,389 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2: -ndates</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; wgrib2-ndates</font>
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>wgrib2: -ndates</h3>
+</font>
+
+
+<h3>Introduction</h3>
+
+<p>
+The <font color=red>-ndates</font> option creates a list of date codes
+using a do-loop syntax.  This option has nothing to do with grib, but
+adding it to wgrib2 was trivial, and this option has been so helpful
+in scripting.  Anyways, if a Swiss army knife can have a
+bottle opener, wgrib2 can have a date code routine.  Anyways one less
+program to port is helpful.
+
+<p> Note that until wgrib2 v3.0.3, the number of date codes was limited
+by the stdout buffer size. (See wgrib2 -config.) Wgrib2 v3.1.4 allows 
+the optional equal sign option to include the terminating date code.
+
+<p>
+The <font color=red>-ndate</font> and <font color=red>-ndates</font> options 
+are initialization routines.  They are run when all the options are
+initialized.  Therefore they are run before reading the grib file.
+The <font color=red>-ndates_fmt</font> option has to preceed the 
+<font color=red>-ndates</font> option to alter the output format.
+
+<p>The wgrib2 command line can have multple <font color=red>-ndates</font> options.
+
+<pre>
+-ndates DATE DATE2 DT2     lt form
+-ndates DATE DT1 DT2       lt form
+-ndates DATE =DATE2 DT2    le form     wgrib2 v3.1.4
+-ndates DATE =DT1 DT2      le form     wgrib2 v3.1.4
+
+ DATE, DATE2 = YYYY, YYYYMM, YYYYMMDD, YYYYMMDDHH, YYYYMMDDHHmm, YYYYMMDDHHmmss
+ DT1, DT2 = (integer)(unit)  unit=yr,mo,dy,hr,mn   (same as GrADS)
+            note: DT must be positive and greater than zero
+
+If DT1 is given, then DATE2=DATE+DT1
+
+lt form:
+    C-meta:          for (date=DATE; date <font color='red'>&lt;</font> DATE2; date += DT2) print date;
+    Fortran-meta:    date=DATE
+  		     while (date &lt; DATE2)
+                        print date
+                        date=date+DT2
+                     endwhile
+
+le form:
+    C-meta:          for (date=DATE; date<font color='red'>&lt;=</font> DATE2; date += DT2) print date;
+    Fortran-meta:    date=DATE
+                     while (date &lt;= DATE2)
+                        print date
+                        date=date+DT2
+                     endwhile
+
+The only differences between the lt and le forms is the do-loop test clause.
+
+
+DATE=integer of the form YYYY, YYYYMM, YYYYMMDD, YYYYMMDDHH, YYYYMMDDHHmm, YYYYMMDDHHmmss
+                note: leading zeros cannot be replaced by spaces
+                YYYY = year (0000..9999), there were changes in the calendar (ex in 1752) which are ignored
+                MM = month (01..12)
+                DD = day (01..31)
+                HH = hour (00..23)
+                mm = minute (00..59)
+                ss = second (00..59), there are no provisions for leap seconds
+DT = (integer)(time unit)           "time unit" follows the GrADS convention
+               integer &gt; 0
+               time unit = yr (year)
+                           mo (month)
+                           dy (day)
+                           hr (hour)
+                           mn (minute)
+                           there is no seconds time unit defined by GrADS
+</pre>
+
+One useful feature of <font color=red>-ndates</font> is the format of the output date is
+appropriate for the input date code and DT2.  The format has the most precision for
+both the input date code and DT2.
+
+<pre>
+      Priority of the output format of the date codes (high to low)
+   output date code: YYYYMMDDHHmmss      if input date code is YYYYMMDDHHmmss
+   output date code: YYYYMMDDHHmm        if input date code is YYYYMMDDHHmm   or DT2 is in minutes (mn)
+   output date code: YYYYMMDDHH          if input date code is YYYYMMDDHH     or DT2 is in hours (hr)
+   output date code: YYYYMMDD            if input date code is YYYYMMDD       or DT2 is in days (dy)
+   output date code: YYYYMM              if input date code is YYYYMM         or DT2 is in months (mo)
+   output date code: YYYY                if input date code is YYYY           or DT2 is in years (yr)
+</pre>
+
+<h3>Examples</h3>
+
+Suppose you want a list of days for 2003.
+<pre>
+$ wgrib2 /dev/null -ndates 2003 2004 1dy
+ 20030101 20030102 ... 20231231
+
+ You could get the same result by
+$ wgrib2 /dev/null -ndates 2003 1yr 1dy
+
+Now suppose you want the output to include the hours, then
+
+$ wgrib2 /dev/null -ndates 2003 2004 24hr
+ 2003010100 2003010200 ... 2023123100
+</pre>
+
+Suppose that you want the list of day from April 2000 to December 2000 inclusive.
+Then you can use the inclusive form of -ndates.
+
+<pre>
+$ wgrib2 /dev/null -ndates 200004 =200012 1mo
+ 200004 ... 200012
+</pre>
+
+
+
+<h3>Usage</h3>
+<p>
+
+<pre>
+  lt form
+-ndates DATE DATE2 DT2
+-ndates DATE DT1 DT2
+  le form
+-ndates DATE =DATE2 DT2
+-ndates DATE =DT1 DT2
+
+Usually wgrib2 is given the null file of "/dev/null".  For windows,
+try using NUL.
+
+    DATE: YYYYMMDDHH or YYYYMMDDHHmm or YYYYMMDDHHmmss
+    DATE2: if DT1 is given, then DATE2 = DATE + DT1
+
+    DT1: ending dt
+    DT2: step dt
+    dt: (integer)Time_unit,   integer &gt; zero
+    Time_unit: yr (year)
+               mo (month)
+               dy (day)
+               hr (hour)
+               mn (minute)
+
+    prints a list of date codes
+
+    C-meta:    for (date=DATE; date &lt; DATE2; date += DT2) print date;
+    C-meta:    for (date=DATE; date &lt;= DATE2; date += DT2) print date;
+
+    the output date code has the precision necessary for DATE and DT2 and 
+    is converted into a string.  The date is printed out using the 
+    "ndates_fmt" format.  The default format is " %s".  (C format)
+</pre>
+
+
+
+<h3>Example</h3>
+<pre>
+        print date codes for 1 month, every day
+
+$ <font color='brown'>wgrib2 /dev/null -ndates 2019020100 1mo 1dy</font>
+ 2019020100 2019020200 2019020300 2019020400 2019020500 2019020600 2019020700 2019020800 
+2019020900 2019021000 2019021100 2019021200 2019021300 2019021400 2019021500 2019021600 
+2019021700 2019021800 2019021900 2019022000 2019022100 2019022200 2019022300 2019022400 
+2019022500 2019022600 2019022700 2019022800
+
+$ <font color='brown'>wgrib2 /dev/null -ndates 201902 1mo 1dy</font>
+ 20190201 20190202 20190203 20190204 20190205 20190206 20190207 20190208 20190209 20190210 
+20190211 20190212 20190213 20190214 20190215 20190216 20190217 20190218 20190219 20190220 
+20190221 20190222 20190223 20190224 20190225 20190226 20190227 20190228
+
+        print date codes for 1 day, every 6 hours
+
+$ <font color='brown'>wgrib2 /dev/null -ndates 2019020100 1dy 6hr</font>
+ 2019020100 2019020106 2019020112 2019020118
+
+$ <font color='brown'>wgrib2 /dev/null -ndates 20190201 1dy 6hr</font>
+ 2019020100 2019020106 2019020112 2019020118
+
+$ <font color='brown'>wgrib2 /dev/null -ndates 20190201 1dy 6hr</font>
+2019020100 2019020106 2019020112 2019020118
+
+$ <font color='brown'>wgrib2 /dev/null -ndates 2019020100 1dy 6hr</font>
+ 201902010000 201902010600 201902011200 201902011800
+
+      print the months from 202001 to 202012
+
+$ <font color='brown'>wgrib2 /dev/null -ndates 202001 202101 1mo</font>
+ 202001 202002 202003 202004 202005 202006 202007 202008 202009 202010 202011 202012
+$ <font color='brown'>wgrib2 /dev/null -ndates 202001 12mo 1mo</font>
+ 202001 202002 202003 202004 202005 202006 202007 202008 202009 202010 202011 202012
+</pre>
+ 
+<h3>Finding the Julian date (ordinal date)</h3>
+
+The ordinal date is the year and day of the year ranging
+from 1 and 366.  To get the day of the year from YYYYMMDD,
+you can use -ndates.
+
+<pre>
+wgrib2 /dev/null -ndates {YYYY-1}1231 {YYYYMMDD} 1dy | wc -w
+wgrib2 /dev/null -ndates {YYYY} ={YYYYMMDD} 1dy | wc -w               wgrib2 v3.1.4
+</pre>
+
+<h3>Date from the Julian date (ordinal date)</h3>
+
+Using wgrib2 to convert the date code to the Julian day is easy.
+<pre>
+year YYYY
+julian_date N
+
+wgrib2 /dev/null -ndate {YYYY} {N-1}dy`
+</pre>
+
+
+<h3>Length Limitations of wgrib2 v2.8.0-v3.0.2</h3>
+
+<p> 
+The text output of options is stored in a stdout buffer and written
+after the options are finished.  This speeds up processing because only
+one large write is done rather than many smaller writes and allows you
+to copy the output of inv options to other files by the -last and -last0 options.
+This limits the output of -ndates to 30000 bytes (wgrib2 v2.0.8) and 100,000 bytes
+(wgrib2 v3.0.0). Most people can live within the limitation.  However, I
+wanted to process years of data with hourly resolution encountered this
+limitation.  With wgrib2 v3.0.3+, ndates writes it output directly
+to stdin.
+This has no effect on -last and -last0 because this options only works when processing a 
+file, and -ndates works prior to processing the file.
+
+
+<p>
+See also: <a href="./ndates_fmt.html">-ndates_fmt</a>,
+<a href="./ndate.html">-ndate</a>
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: March 1, 2019, Feb 12, 2020, March 20, 2021, June 23, 2021, july 1, 2021, Nov 2023, Mar 2024
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

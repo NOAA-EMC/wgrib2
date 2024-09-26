@@ -1,0 +1,338 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <title>Climate Prediction Center - wgrib2: -ens_qc</title>
+  <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+  <meta content="NCEP Web Team" name="GENERATOR">
+  <meta name="keywords"
+  content="Climate,Climate Prediction Center,National Weather Service,National Oceanic &amp; Atmospheric Administration, NOAA,El Nino,La Nina,ENSO,climate outlooks,El Nino Advisory,La Nina Advisory,droughts,hurricanes,Threats Assessment,Drought Assessment,Drought Monitor,CLimate Diagnostics Bulletin,6-10 day outlook,8-14 day outlook, 6-10 day forecast,8-14 day forecast,MRF,UV Index,North Atlantic Oscillation,NAO,Pacific Decadal Oscillation,PDO,sea surface temperatures,SST,Palmer Drought Severity Index, African Desk,outlooks,expert assessments,monitoring,advisories,stratosphere,temperature,precipitation,snow cover,snowfall,soil moisture,OLR,ozone,degree days,CLIMATE,CLIMATE PREDICTION CENTER,EL NINO,LA NINA, CLIMATE OUTLOOKS,HURRICANES,ASSESSMENTS,SNOW,STRATOSPHERE,DROUGHT,OZONE,DEGREE DAYS">
+  <link href="/nwscwi/main.css" type="text/css" rel="STYLESHEET">
+</head>
+<body leftmargin="0" background="/nwscwi/background.gif" 
+      topmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/topbanner.jpg" border="0">
+  <tr>
+    <td align="right" height="19">
+      <a href="#contents"><img height="1" alt="Skip Navigation Links"
+         src="/nwscwi/skipgraphic.gif" width="1" border="0"></a>
+      <a href="https://www.nws.noaa.gov/" class="homepagelinks"><span class="nwslink">www.nws.noaa.gov</span></a>&nbsp;</td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" border="0">
+  <tr>
+    <td rowspan="2"><a href="https://www.noaa.gov/">
+      <img height="78" alt="NOAA logo - Click to go to the NOAA home page"
+      src="/nwscwi/noaaleft.jpg" width="85" border="0"></a></td>
+    <td align="left"><img height="20" alt="National Weather Service"
+      src="/nwscwi/nws_title.jpg" width="500" border="0"></td>
+    <td rowspan="2" width="100%" background="/nwscwi/ncep_bkgrnd.jpg">&nbsp;</td>
+    <td rowspan="2" align="right"><a href="https://www.nws.noaa.gov/">
+      <img height="78" alt="NWS logo - Click to go to the NWS home page"
+      src="/nwscwi/nwsright.jpg" width="85" border="0"></a></td>
+  </tr>
+  <tr>
+    <td><img height="58" alt="Climate Prediction Center" src="/nwscwi/cpc.jpg"
+             width="500" border="0"></td>    <!-- Put your center header image here. -->
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="100%" background="/nwscwi/navbkgrnd.gif" border="0">
+  <tr>
+    <td align="left" valign="top" width="94"><img height="23" alt="" src="/nwscwi/navbarleft.jpg" width
+="94" border="0"></td>
+    <td class="nav" align="center" width="15%">
+      <a href="/products/site_index.html" class="menu">Site Map</a></td> <!-- Build a text only sitemap, and link to it via this
+                                                    sitemap button just below the banner.
+                                                    The sitemap should include a heirarchy of links
+                                                    from NOAA, to the NWS, to NCEP, and then through your site. -->
+    <td class="nav" align="right" width="15%">
+      <a href="https://www.nws.noaa.gov/pa/" class="menu">News</a></td>
+    <td class="nav" id="menuitem" align="right" width="20%">
+      <a href="https://weather.gov/organization.php" class="menu">Organization</a></td>
+    <td class="yellow" align="right" width="20%">
+      <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+        <label for="search">Search</label>&nbsp;</td>
+    <td align="left" class="searchinput" width="20%" nowrap>
+      <input type="hidden" name="parsed" value="true">
+      <input type="hidden" name="rn" value="3">
+      <input type="hidden" name="in0" value="domain">
+      <input type="hidden" name="dom0" value="nws.noaa.gov, weather.gov, wrh.noaa.gov, srh.noaa.gov, crh.noaa.gov, prh.noaa.gov, arh.noaa.gov, alaska.net/~nwsar, erh.noaa.gov, ncep.noaa.gov, wwb.noaa.gov, spc.noaa.gov, nhc.noaa.gov, sec.noaa.gov, aviationweather.gov, aviationweather.noaa.gov, weather.noaa.gov, roc.noaa.gov, nohrsc.nws.gov, nwstc.noaa.gov, wdtb.noaa.gov, npmoc.navy.mil, ndbc.noaa.gov">
+      <input type="text" name="mw0" value="All NWS Search" id="search" size="20" maxlength="256">
+      <input type="submit" name="Go2" value="Go"></td>
+    <td width="10%">&nbsp;</form></td>
+    <td align="right" valign="bottom" width="24"><img height="23" alt="" src="/nwscwi/navbarendcap.jpg"
+ width="24" border="0"></td>
+  </tr>
+</table>
+<table cellspacing="0" cellpadding="0" width="670" border="0">
+  <tr valign="top">
+    <td width="137"><br>
+      <table cellspacing="0" cellpadding="2" width="137" border="0">
+        <!-- Do not remove this section. You will need this when the City,St/zip search is implemented nationwide.-->
+        <!-- <tr align="left" valign="top">
+                <td class="searchinput">
+                  <div id="Layer2" style="position:absolute; width:200px; height:115px; z-index:2; visibility: hidden">Search by city or zip code. Press enter or select the go button to submit request</div>
+                  <form method="POST" action="https://www.srh.noaa.gov/zipcity.php">
+                  <span class="yellow">Local forecast by<br>&quot;City, St&quot; or Zip Code</span><br>
+                  <input type="text" name="inputstring" size="9" value="City, St">
+                  <input type="submit" name="Go2" value="Go"></form></td>
+        </tr> -->
+         <tr>
+          <td class="searchinput" align="left">
+            <form action="https://www.firstgov.gov/fgsearch/index.jsp" name="query">
+             <label for="search"><span class="yellow">CPC Search</span></label>
+              <input type="hidden" name="parsed" value="true">
+              <input type="hidden" name="rn" value="3">
+              <input type="hidden" name="in0" value="domain">
+              <input type="hidden" name="dom0" value="www.cpc.ncep.noaa.gov">
+              <input type="text" name="mw0" id="search"  size="10" maxLength="256" value="CPC search">&nbsp;
+              <input type="submit" name="Go2" value="Go">
+          </form></td>
+         </tr>
+        <tr>
+          <td class="white">
+            <span class="yellow">About Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/mission.html" class="menu">Our Mission</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/who_we_are/" class="menu">Who We Are</a><br><br>
+            <span class="yellow">Contact Us</span><br>
+            &nbsp;&nbsp;&nbsp;<a href="/information/personnel/contacts.html" class="menu">CPC Information</a><br>
+            &nbsp;&nbsp;&nbsp;<a href="/comment-form.html" class="menu">CPC Web Team</a><br><br>           
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" align="center" width="533"><a name="contents"></a>
+
+<!-- Begin content area -->
+
+<table border="0" cellPadding="2" cellSpacing="0" align="center" width="533">
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+   <font face="Verdana,arial,serif" size="1"><a href="/index.html" class="homepagelinks"><strong>HOME</strong></a> &gt; <a href="/products/monitoring_and_data" class="homepagelinks">Monitoring_and_Data</a> &gt; <a href="/products/monitoring_and_data/oadata.html" class="homepagelinks">Oceanic and Atmospheric Data</a> &gt; <a href="/products/wesley/" class="homepagelinks">Reanalysis: Atmospheric Data</a> &gt; wgrib2-ens_qc</font>
+  </td>
+ </tr>
+ <tr><td>&nbsp;</td></tr>
+ <tr>
+  <td>
+<font color=red>
+<h3 align=center>wgrib2: -ens_qc</h3>
+</font>
+
+
+<h3>Introduction (wgrib2 v3.1.1)</h3>
+
+<p>
+The option <font color=brown>-ens_qc</font> tests the 
+ensemble members looking for extreme values, values that
+are extreme relative the spread of the ensemble members.
+This test is done for each grid point.  An unreasonable
+scaled extreme value provides a simple quality control
+for an egregiously bad ensemble member.
+<p>
+During the production of the Conventional Observations REanalsyis (CORe),
+a glitch was found where the upper-level ozone was two orders of magnitude 
+larger than expected.  The problem was caused by a single ensemble
+member which had an irreproducible problem which showed up in a single layer
+of a tracer.  The <font color=brown>-ens_qc</font> option was written to
+detect extreme values of the ensemble members for quality control.  
+In addition, <font color=brown>-ens_qc</font> 
+can be used to calculate the ensemble mean and spread faster
+than <font color=brown>-ens_processing</font>.
+
+<p>
+The option <font color=brown>-ens_qc</font> will QC ensemble
+members which limits this option to PDTs of 0, 1, 8, and 11.
+PDTs of 1 and 11 are explicity ensemble members. PDTs of 0 and
+8 are often used by the control runs.  The code should be updated
+to include other ensemble PDTs. 
+
+<p> The contents of the output files will vary depending the qc_version.
+As of 1/2022, only qc_version 1 has been defined.
+
+<pre>
+1) ens_mean,  sum(x(i))/n,  i=1..n where n is the number of ensemble members
+2) ens_spread, sqrt(sum((x(i)-em)**2)/n)  note: n is used rather than n-1
+3) ens_min = minimum value over all ensemble members (for each grid point)
+4) ens_max = maximum value over all ensemble members (for each grid point)
+5) scaled extreme value, max((ens_max-ens_mean),(ens_mean-ens_min))/ens_spread
+6) grid maximum of the scaled extreme value (single number)
+
+(1)-(4) are written to arg1, order: (3), (4), (1), (2)
+(5) is written to arg2
+(6) is written to arg3
+
+Note: the calculations are done grid point by grid point. If all the
+members have UNDEFINED values for a particular grid point, then variables
+1-5 are set to UNDEFINED for that grid point.  If the ensemble spread
+is zero, then the scaled extreme value is set to zero.  The calculation
+differs from -ens_processing which requires no missing values for all
+the ensemble members before calculating the various products. This
+will affect the calculation of the mean cloud top temperature some
+ensemble members are missing clouds.
+</pre>
+
+<p>
+The <font color=brown>-ens_qc</font> is unlike most wgrib2
+options in that this option can use large amounts of memory.  Suppose
+that you have an 80 member ensemble and are processing the tmp500 field.
+This option stores all 80 tmp500 fields in memory. As the size of the grid and the number
+of ensemble member increases, the required memory will increase.  
+
+<h3>Code Table 4.7</h3>
+<p>Grib Code Table 4.7 is used to specify whether the field
+is the ensemble mean, spread, min, max or scaled extreme value.
+The ensemble mean, spread, min and max are WMO defined values.
+For the scaled extreme value, wgrib2 is using the locally defined NCEP
+"extreme forecast index".  Since the NCEP documentation doesn't define
+the index, wgrib2 will be using the scaled extreme value.  So
+other uses of the "extreme forecast index" will differ.
+
+<p>
+The scaled extreme values are stored in 8 bits precision (two digits), 
+and can only be written if the original file is from NCEP because
+there is no equivalent WMO code for extreme value (1/2022).
+
+
+<h3>Definition of an Ensemble Member</h3>
+
+<p>
+The <font color=brown>-ens_qc</font> option uses the same defintion of ensemble member as
+<font color=brown>-ens_processing</font>.  Any grib message which is 
+not identified as an ensemble member is ignored by <font color=brown>-ens_qc</font>.
+So you cannot use <font color=brown>-ens_qc</font> on the ensemble-mean.
+The wgrib2 code [ed. written 3/2022 v3.1.1] that identifies ensemble member
+is unreasonably simplistic.   Ensemble members are identified by having a PDT
+of 0, 1, 8 and 11.  As a result, aerosols, chemical tracers, simulated satellite data,
+and post-processing of ensemble members are ignored.
+
+<h3>Order of Fields</h3>
+
+The <font color=brown>-ens_qc</font> requires fields to be in a specific order, 
+the same order as in <font color=brown>-ens_processing</font>.  Please
+see the documentation for <font color=brown>-ens_processing</font>.
+
+
+
+<h3>Usage</h3>
+<p>
+
+<pre>
+-ens_qc FILE1 FILE2 FILE3 QC_VERSION
+   FILE1 = ensemble min, ensemble max, ensemble mean, ensemble spread
+           output in grib2 format
+   FILE2 = if center == NCEP, (ensemble) scaled extreme value
+           output in grib2 format
+           if center != NCEP, no output is written
+   FILE3 = grid maximum of the (ensemble) scaled extreme value
+           text, single line per field
+   QC_VERSION = the type of QC to be run
+           1  only acceptable value (1/2021)
+</pre>
+
+<h3>Example</h3>
+<pre>
+$ gmerge - sfg_2014060500_fhr06_mem0* | wgrib2 - -ens_qc out1 out2 out3 1
+1:0:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+1
+2:183334:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+2
+3:366283:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+3
+4:549841:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+4
+5:733631:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+5
+...
+  gmerge - (list of ensemble members)
+           The output file is "-" which is a convention for stdin/stdout depending 
+             on the expectation. Since we expecting an output file, the "-" is stdout.
+           Takes the 1st grib message from each ensemble member and writes it to stdout.
+           Takes the 2nd grib message from each ensemble member and writes it to stdout.
+           etc
+           The gmerge step puts the data into proper order assuming,
+              the grib file contains no sub-messages,
+              the indivdual grib files are in the same order.
+           gmerge is not Windows compatilble.
+
+  wgrib2 - -ens_qc out1 out2 out3 1
+           The input file is "-" which is a convention for stdin/stdout depending 
+             on the expectation. Since we expecting an input file, the "-" is stdin.
+           writes min, max, mean and spread to out1
+           writes scaled extreme values to out2
+           writes grid maximum scale extreme value to out3
+
+  Note: piping grib data to stdout and from stdin should not work in Windows.
+  I have seen it work, and I have seen it fail. My standard practice is to
+  avoid pipes in Windows.
+
+$ wgrib2 out1
+1:0:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:min all members
+2:262325:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:max all members
+3:524650:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ens mean
+4:786975:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ens spread
+5:1000148:d=2014060412:UGRD:1-2 hybrid pressure layer:12 hour fcst:min all members
+...
+
+$ wgrib2 out2
+1:0:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:extreme forecast index
+2:131253:d=2014060412:UGRD:1-2 hybrid pressure layer:12 hour fcst:extreme forecast index
+3:262506:d=2014060412:UGRD:2-3 hybrid pressure layer:12 hour fcst:extreme forecast index
+...
+
+$ cat out3
+UGRD:0-1 hybrid pressure layer:max scaled extreme=7.454012
+UGRD:1-2 hybrid pressure layer:max scaled extreme=8.029185
+UGRD:2-3 hybrid pressure layer:max scaled extreme=7.936052
+...
+</pre>
+<h3>GrADS</h3>
+
+<p>  At the time of writing (1/2021), the files that
+are produced by
+ <font color=brown>-ens_qc</font>  cannot be displayed
+using the g2ctl/gribmap/GrADS set of programs.  However, they
+can be displayed by atl_g2ctl/alt_gmp/GrADS set of programs.
+
+<pre>
+  alt_g2ctl -short output >output.ctl
+  alt_gmp output.ctl
+  grads
+</pre>
+
+<p>
+See also: 
+<a href="./ens_processing.html">-ens_processing</a>,
+</td>
+</tr>
+
+
+<!--  End of Content area  -->
+<!--   ...............................................Footer Portion.........................................    -->
+ <tr>
+  <td>
+   <table width="500">
+    <tr>
+     <td colSpan="3"><hr></td>
+    </tr>
+    <TR vAlign="top">
+     <TD class="gray">
+      <A href="https://www.noaa.gov/" class="homepagelinks"><SPAN class="gray">NOAA/</SPAN></A>
+      <A href="https://www.nws.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Weather Service</SPAN></A><BR>
+      <A href="https://www.ncep.noaa.gov/" class="homepagelinks"><SPAN class="gray">National Centers for Environmental Prediction</SPAN></a><BR>
+        Climate Prediction Center<BR>
+        5830 University Research Court<BR>
+        College Park, Maryland 20740<BR>
+      <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
+        Page last modified: 1/2022
+     </TD>
+     <TD>
+      <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
+     </TD>
+     <TD align="right">
+      <A href="https://weather.gov/privacy.php" class="homepagelinks"> <SPAN class="gray">Privacy Policy</SPAN></A>
+     </TD>
+    </TR>
+   </table>
+  </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>

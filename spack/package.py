@@ -8,11 +8,9 @@ import re
 
 from spack.package import *
 
-variant_map = {
+variant_map_common = {
     "netcdf3": "USE_NETCDF3",
     "netcdf4": "USE_NETCDF4",
-    "netcdf": "USE_NETCDF",
-    "spectral": "USE_SPECTRAL",
     "mysql": "USE_MYSQL",
     "udf": "USE_UDF",
     "regex": "USE_REGEX",
@@ -25,14 +23,25 @@ variant_map = {
     "openmp": "USE_OPENMP",
     "wmo_validation": "USE_WMO_VALIDATION",
     "ipolates": "USE_IPOLATES",
-    "disable_timezone": "DISABLE_TIMEZONE",
     "disable_alarm": "DISABLE_ALARM",
     "fortran_api": "MAKE_FTN_API",
     "disable_stat": "DISABLE_STAT",
     "openjpeg": "USE_OPENJPEG",
+    
+}
+
+variant_map_makefile = { 
+    "spectral": "USE_SPECTRAL",
+}
+
+variant_map_cmake = { 
+    "netcdf": "USE_NETCDF",
+    "disable_timezone": "DISABLE_TIMEZONE",
     "enable_docs": "ENABLE_DOCS",
 }
 
+variant_map_makefile.update(variant_map_common) 
+variant_map_cmake.update(variant_map_common)
 
 class Wgrib2(MakefilePackage, CMakePackage):
     """Utility for interacting with GRIB2 files"""
@@ -46,6 +55,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     build_system(conditional("cmake", when="@3.2:"), conditional("makefile", when="@:3.1"))
 
     version("develop", branch="develop")
+    version("3.4.0", sha256="ecbce2209c09bd63f1bca824f58a60aa89db6762603bda7d7d3fa2148b4a0536")
     version("3.3.0", sha256="010827fba9c31f05807e02375240950927e9e51379e1444388153284f08f58e2")
     version("3.2.0", sha256="ac3ace77a32c2809cbc4538608ad64aabda2c9c1e44e7851da79764a6eb3c369")
     version(
@@ -83,16 +93,21 @@ class Wgrib2(MakefilePackage, CMakePackage):
         when="@:3.1",
     )
     variant(
-        "netcdf4", default=False, description="Link in netcdf4 library to write netcdf3/4 files"
+        "netcdf4", 
+        default=False, 
+        description="Link in netcdf4 library to write netcdf3/4 files",
+        when="@:3.3"
     )
     variant(
-        "netcdf", default=False, description="Link in netcdf4 library to write netcdf3/4 files"
+        "netcdf", 
+        default=False, 
+        description="Link in netcdf4 library to write netcdf3/4 files",
+        when="@3.4:"
     )
     variant(
         "ipolates",
         default=False,
         description="Use to interpolate to new grids",
-        when="@3.3:",
     )
     variant(
         "spectral", default=False, description="Spectral interpolation in -new_grid", when="@:3.1"
@@ -102,7 +117,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
         "fortran_api",
         default=True,
         description="Make wgrib2api which allows fortran code to read/write grib2",
-        when="@3.3:",
     )
     #   Not currently working for @3.2:
     #    variant("lib", default=True, description="Build library", when="@3.2:")
@@ -155,16 +169,18 @@ class Wgrib2(MakefilePackage, CMakePackage):
     conflicts("+netcdf3", when="+netcdf")
     conflicts("+openmp", when="%apple-clang")
 
-    depends_on("wget", type=("build"), when="@:3.1 +netcdf4")
-    depends_on("wget", type=("build"), when="@:3.1 +netcdf")
     depends_on("ip@5.1:", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
-    depends_on("netcdf-c", when="@3.2: +netcdf")
     depends_on("jasper@:2", when="@3.2: +jasper")
-    depends_on("zlib-api", when="+png")
-    depends_on("libpng", when="+png")
-    depends_on("openjpeg", when="+openjpeg")
+    depends_on("zlib-api", when="@3.2: +png")
+    depends_on("libpng", when="@3.2: +png")
+    depends_on("openjpeg", when="@3.2: +openjpeg")
+
+    @when("@:2 ^gmake@4.2:")
+
+    def patch(self):
+        filter_file("\\\#define", "#define", "makefile")
 
     # Use Spack compiler wrapper flags
     def inject_flags(self, name, flags):
@@ -188,7 +204,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     parallel = False
 
     def cmake_args(self):
-        args = [self.define_from_variant(variant_map[k], k) for k in variant_map]
+        args = [self.define_from_variant(variant_map_cmake[k], k) for k in variant_map_cmake]
         #        args.append(self.define_from_variant("BUILD_LIB", "lib"))
         #        args.append(self.define_from_variant("BUILD_SHARED_LIB", "shared"))
 
@@ -217,7 +233,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
         if spec.satisfies("%clang") or spec.satisfies("%apple-clang"):
             makefile.filter(r"--fast-math", "-ffast-math")
 
-        for variant_name, makefile_option in variant_map.items():
+        for variant_name, makefile_option in variant_map_makefile.items():
             value = int(spec.variants[variant_name].value)
             makefile.filter(r"^%s=.*" % makefile_option, "{}={}".format(makefile_option, value))
 
@@ -230,25 +246,8 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
         env.set("COMP_SYS", comp_sys)
 
     def build(self, pkg, spec, prefix):
-        # Get source files for netCDF4 builds
-        if self.spec.satisfies("+netcdf4"):
-            with working_dir(self.build_directory):
-                os.system(
-                    "wget https://downloads.unidata.ucar.edu/netcdf-c/4.8.1/netcdf-c-4.8.1.tar.gz"
-                )
-                os.system(
-                    "wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-1.12.1/src/hdf5-1.12.1.tar.gz"
-                )
-        if self.spec.satisfies("+netcdf"):
-            with working_dir(self.build_directory):
-                os.system(
-                    "wget https://downloads.unidata.ucar.edu/netcdf-c/4.8.1/netcdf-c-4.8.1.tar.gz"
-                )
-                os.system(
-                    "wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.12/hdf5-1.12.1/src/hdf5-1.12.1.tar.gz"
-                )
-
-        make()
+        
+        make("-j1")
 
         # Move wgrib2 executable to a tempoary directory
         mkdir("install")
@@ -263,7 +262,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
             makefile = FileFilter("makefile")
 
             # Disable all options
-            for variant_name, makefile_option in variant_map.items():
+            for variant_name, makefile_option in variant_map_makefile.items():
                 value = 0
                 makefile.filter(
                     r"^%s=.*" % makefile_option, "{}={}".format(makefile_option, value)
@@ -272,7 +271,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
             # Need USE_REGEX in addition to MAKE_FTN_API to build lib
             makefile.filter(r"^MAKE_FTN_API=.*", "MAKE_FTN_API=1")
             makefile.filter(r"^USE_REGEX=.*", "USE_REGEX=1")
-            make("lib")
+            make("lib","-j1")
             mkdir(join_path("install", "lib"))
             mkdir(join_path("install", "include"))
 
