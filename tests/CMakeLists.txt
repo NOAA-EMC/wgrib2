@@ -107,10 +107,17 @@ copy_test_data(ref_sec_len.gdaswave.t00z.wcoast.0p16.f000.grib2.txt)
 copy_test_data(ref_sec_len.simple_packing.grib2.txt)
 copy_test_data(ref_simple_packing.grib2.spread.txt)
 copy_test_data(ref_new_grid_gdt_32769.grib2)
+copy_test_data(png_4bits.png)
+copy_test_data(large_png.grb2)
+
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
 shell_test(run_wgrib2_rpn_tests)
+
+if (USE_PNG)
+  shell_test(run_wgrib2_png_tests)
+endif()
 
 if (USE_NETCDF)
   shell_test(run_wgrib2_netcdf4_tests)
