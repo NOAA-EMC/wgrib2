@@ -25,7 +25,7 @@ jobs:
       matrix:
         config:
         - {
-            options: "-DUSE_IPOLATES=ON"
+            options: "-DUSE_IPOLATES=ON -DBLA_VENDOR=OpenBLAS"
           }
         - {
             options: "-DUSE_AEC=ON"
@@ -48,8 +48,8 @@ jobs:
     - name: install
       run: |
         sudo apt-get update
-        sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
-        sudo apt-get install libpng-dev autotools-dev autoconf libaec-dev
+        sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config \
+          libpng-dev autotools-dev autoconf libaec-dev libopenblas-serial-dev
         if [ -z $(type -P gcc-${{ matrix.gcc-version }}) ]; then
           sudo apt-get install gcc-${{ matrix.gcc-version }} gfortran-${{ matrix.gcc-version }}
         fi
