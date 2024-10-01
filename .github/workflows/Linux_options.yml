@@ -50,13 +50,18 @@ jobs:
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
         sudo apt-get install libpng-dev autotools-dev autoconf libaec-dev
+        if [ -z $(type -P gcc-${{ matrix.gcc-version }}) ]; then
+          sudo apt-get install gcc-${{ matrix.gcc-version }} gfortran-${{ matrix.gcc-version }}
+        fi
+        echo "CC=gcc-${{ matrix.gcc-version }}" >> $GITHUB_ENV
+        echo "FC=gfortran-${{ matrix.gcc-version }}" >> $GITHUB_ENV
 
     - name: cache-jasper
       id: cache-jasper
       uses: actions/cache@v3
       with:
         path: ~/jasper
-        key: jasper-${{ runner.os }}-1.900.1
+        key: jasper-${{ runner.os }}-gcc${{ matrix.gcc-version }}-1.900.1
 
     - name: checkout-jasper
       if: steps.cache-jasper.outputs.cache-hit != 'true'
@@ -79,7 +84,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/ip
-        key: ip-${{ runner.os }}-develop
+        key: ip-${{ runner.os }}-gcc${{ matrix.gcc-version }}-develop
 
     - name: checkout-ip
       if: steps.cache-ip.outputs.cache-hit != 'true'
