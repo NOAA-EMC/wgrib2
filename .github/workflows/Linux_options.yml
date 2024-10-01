@@ -49,7 +49,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config \
-          libpng-dev autotools-dev autoconf libaec-dev libopenblas-serial-dev
+          libpng-dev autotools-dev autoconf libaec-dev libopenblas-serial-dev \
+          libopenjp2-7 libopenjp2-7-dev
         if [ -z $(type -P gcc-${{ matrix.gcc-version }}) ]; then
           sudo apt-get install gcc-${{ matrix.gcc-version }} gfortran-${{ matrix.gcc-version }}
         fi
