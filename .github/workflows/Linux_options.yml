@@ -19,9 +19,6 @@ concurrency:
 jobs:
   Linux_options:
     runs-on: ubuntu-latest
-    env:
-      FC: gfortran
-      CC: gcc
 
     strategy:
 #      fail-fast: true
@@ -42,6 +39,9 @@ jobs:
         - {
             options: "-DUSE_OPENJPEG=ON"
           }
+        gcc-version: [12]
+        include:
+          - gcc-version: [14]
           
     steps:
 
