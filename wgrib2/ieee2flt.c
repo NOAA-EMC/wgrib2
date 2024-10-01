@@ -2,7 +2,7 @@
 #include <math.h>
 #include "wgrib2.h"
 
-/* wesley ebisuzaki v0.2
+/* ieee2flt.c        10/2024 Public Domain wesley ebisuzaki
  *
  * takes 4 byte character string (single precision ieee big-endian)
  * and returns a float

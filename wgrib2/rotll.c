@@ -7,6 +7,8 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* 10/2024   Public Domain   Wesley Ebisuzaki */
+
 extern int latlon;
 extern double *lon, *lat;
 extern enum output_order_type output_order;

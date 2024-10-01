@@ -1,5 +1,5 @@
 #!/bin/sh
-
+#  10/2024  Public Domain  Wesley Ebisuzaki
 homedir=`pwd`
 PATH="$homedir:$PATH"
 dat=`date "+%Y%m%d"`

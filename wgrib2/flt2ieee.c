@@ -3,7 +3,8 @@
 #include <float.h>
 #include "wgrib2.h"
 
-/*
+/* flt2ieee.c  10/2024       Public Domain  Wesley Ebisuzaki
+ *
  * convert a float to an ieee single precision number v1.1
  * (big endian)
  *                      Wesley Ebisuzaki

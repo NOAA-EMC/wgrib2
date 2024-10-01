@@ -3,7 +3,8 @@
 #include "grb2.h"
 #include "wgrib2.h"
 
-/*
+/*  units.c         10/2024    Public Domain   Wesley Ebisuzaki
+ *
  * time range: ascii to int, int to ascii
  */
 

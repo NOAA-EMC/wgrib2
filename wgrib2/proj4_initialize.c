@@ -5,6 +5,11 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* proj4_initialize.c       10/2024 Public Domain  Dusan Jovic, Wesley Ebisuzaki
+ *
+ * initialize using Proj
+ */
+
 #ifdef USE_PROJ4
 
 #include "proj_api.h"

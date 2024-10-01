@@ -22,7 +22,7 @@
 # program "jq" (https://stedolan.github.io/jq)
 #
 # (c) 2020 Manfred Schwarb <schwarb@meteodat.ch>
-# Released under the General Public License Version 2 (GPLv2).
+# Released under the General Public License Version 3 (GPLv3).
 
 
 set +o posix

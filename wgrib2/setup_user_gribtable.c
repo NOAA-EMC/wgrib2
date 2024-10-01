@@ -3,6 +3,18 @@
 #include <string.h>
 #include "wgrib2.h"
 
+/* setup_user_gribtable.c        10/2024   Public Domain   Wesley Ebisuzaki
+ *
+ * read user defined grib table
+ * add user defined grib table to wgrib2's own grib table
+ *
+ * source of user defined gribtable
+ *
+ * $GRIB2TABLE      (environment variable)
+ * $grib2table      (environment variable)
+ * gribtable        (file)
+ */
+
 struct gribtable_s *user_gribtable = NULL;
 
 #define LINELEN 300

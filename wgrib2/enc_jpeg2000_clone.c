@@ -6,6 +6,8 @@
 #include <jasper/jasper.h>
 #define JAS_1_700_2
 
+/* 2004-12-16  Public Domain  Steve Gilbert */
+
 
 int enc_jpeg2000_clone(unsigned char *cin,int width,int height,int nbits,
                  int ltype, int ratio, int retry, char *outjpc, 
