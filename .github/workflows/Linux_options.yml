@@ -75,7 +75,7 @@ jobs:
       if: steps.cache-jasper.outputs.cache-hit != 'true'
       run: |
         cd jasper
-        ./configure --prefix=$HOME/jasper
+        CFLAGS=-Wno-implicit-function-declaration ./configure --prefix=$HOME/jasper
         make
         make install
 
