@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   Linux_options:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     strategy:
 #      fail-fast: true
@@ -41,7 +41,7 @@ jobs:
           }
         gcc-version: [12]
         include:
-          - gcc-version: [14]
+          - gcc-version: 14
           
     steps:
 
