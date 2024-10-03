@@ -6,7 +6,9 @@
 #include "wgrib2.h"
 #include "CodeTable4_4.h"
 
-
+/* subtime.c      10/2024  Public Domain Wesley Ebisuzaki
+ *  subtract two times
+ */
 #define  FEB29   (31+29)
 static int monthjday[13] = {
         0,31,59,90,120,151,181,212,243,273,304,334,365};

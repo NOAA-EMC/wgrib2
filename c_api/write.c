@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "c_wgrib2api.h"
 #define GRIDSIZE 1679
-
+/* 10/2024  Public Domain  Wesley Ebisuzaki */
 int main() {			/* simple program write grib2 file */
 	float data[GRIDSIZE];
 	char *template;

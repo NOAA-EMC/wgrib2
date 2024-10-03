@@ -1,4 +1,5 @@
 #!/bin/sh
+# 10/2024 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
 # This script updates wgrib2 with WMO code info.
 
 tab=$1

@@ -2,7 +2,7 @@
 #include <string.h>
 #include "c_wgrib2api.h"
 
-/*
+/*  10/2024   Public Domain   Wesley Ebisuzaki
  * handles arguments for wgrib2
  */
 

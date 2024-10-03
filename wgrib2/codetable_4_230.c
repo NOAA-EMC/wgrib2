@@ -1,4 +1,6 @@
 #include "wgrib2.h"
+/* 10/2024 public domain  Wesley Ebisuzaki */
+
 struct codetable_4_230 codetable_4_230_table[] = {
 {0, "Ozone"},
 {1, "Water vapour"},

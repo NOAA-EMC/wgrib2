@@ -145,6 +145,10 @@ extern unsigned int nx_, ny_;
 extern enum output_order_type output_order_wanted, output_order;
 enum wind_rotation_type wind_rotation;
 
+/*
+ * HEADER:111:new_grid_winds:misc:1:new_grid wind orientation: X = grid, earth (no default)
+ */
+
 int f_new_grid_winds(ARG1) {
     int *save;
     if (mode == -2) {
@@ -164,6 +168,10 @@ int f_new_grid_winds(ARG1) {
 
 static int interpol_type = 0;
 static int ipopt[20] = {-1,-1,0, 0,0,0, 0,0,0, 0};
+
+/*
+ * HEADER:111:new_grid_interpolation:misc:1:new_grid interpolation X=bilinear,bicubic,neighbor,budget,neighbor-budget
+ */
 
 int f_new_grid_interpolation(ARG1) {
    
@@ -193,6 +201,10 @@ int f_new_grid_interpolation(ARG1) {
    return 0;
 }
 
+/*
+ * HEADER:111:new_grid_format:misc:1:new_grid output format  X=bin,ieee,grib
+ */
+
 int f_new_grid_format(ARG1) {
     if (mode >= -1) {
 	if (strcmp(arg1,"grib") == 0) new_grid_format = grib;
@@ -202,6 +214,10 @@ int f_new_grid_format(ARG1) {
     }
     return 0;
 }
+
+/*
+ * HEADER:111:new_grid_ipopt:misc:1:new_grid ipopt values X=i1:i2..:iN N <= 20
+ */
 
 int f_new_grid_ipopt(ARG1) {
     int i, k, val, m;
@@ -262,6 +278,10 @@ unsigned char blank_sec1[21] = { 0,0,0,21,1,
                 255, 255,               // year
                 255, 255, 255, 255, 255, // month .. second
                 255, 255};
+/*
+ * HEADER:111:new_grid:output:4:bilinear interpolate: X=projection Y=x0:nx:dx Z=y0:ny:dy A=grib_file alpha
+ */
+
 
 int f_new_grid(ARG4) {
     struct local_struct *save;

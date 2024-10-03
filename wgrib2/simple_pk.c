@@ -13,7 +13,8 @@
 #define omp_get_num_threads()		1
 #endif
 
-/*
+/*  10/2024  Public Domain Wesley Ebisuzaki
+ *
  * write a grib-2 file 
  *
  * sec0..sec4 predefined sections 0 to 4

@@ -1,4 +1,6 @@
 #!/bin/sh
+# (c) 2020 Manfred Schwarb <schwarb@meteodat.ch>
+# Released under the General Public License Version 3 (GPLv3).
 
 # local_gribtable includes definitions for other than ECMWF
 # remove non-ECMWF definitions

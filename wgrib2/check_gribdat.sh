@@ -1,4 +1,6 @@
 #!/bin/sh
+# 10/2024   Public Domain  Wesley Ebisuzaki
+#
 # This script checks parameter info for wgrib2. This is a test script
 # that is manually run when updating the grib2 table from the NCO web
 # pages.

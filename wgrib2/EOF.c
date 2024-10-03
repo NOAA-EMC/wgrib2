@@ -5,6 +5,12 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* EOF.c       10/2024 Public Domain     Wesley Ebisuzaki
+ *
+ * EOF and error handling
+ */
+
+
 FILE *err_file;
 int err_int;
 

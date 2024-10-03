@@ -4,6 +4,11 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* Precision.c     10/2024  Public Domain    Wesley Ebisuzaki
+ *
+ * options dealing with the precision/scaling of input
+ */
+
 /*
  * HEADER:510:scaling:inv:0:scaling for packing (old format)
  */
