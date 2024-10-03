@@ -5,6 +5,15 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* Match_inv.c                        10/2024 Public Domain Wesley Ebisuzaki
+ *
+ * Various text tests (ex. -if, -not) compare a string to the match inventory.
+ * The match inventory is larger and has more items than the normal inventory.
+ *
+ * Since the match inventory cannot include everything, the option has
+ * been added to add extra data to the match inventory.
+ */
+
 int (*match_extra_fn[MATCH_EXTRA_FN])();
 void *match_extra_fn_local[MATCH_EXTRA_FN];
 int match_extra_fn_nargs[MATCH_EXTRA_FN];

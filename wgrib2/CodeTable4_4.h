@@ -1,4 +1,5 @@
 /* Code Table 4.4: Indicator of unit of time range */
+/* 10/2024  Public Domain  Wesley Ebisuzaki */
 
 #define MINUTE		0
 #define HOUR		1

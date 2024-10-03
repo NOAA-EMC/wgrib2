@@ -5,6 +5,24 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* Cyclic.c                 10/2024 Public Domain  Wesley Ebisuzaki
+ *
+ * routine for determining whether grid is cyclic
+ *  covers the entire longitude band evenly
+ *
+ * only applies to lat-lon, Mercator and Gaussian grids
+ *  any other grids?
+ *
+ * problem is made more difficult because NCEP grids can
+ *   1. have millidegree precision because they were converted from grib1
+ *   2. have less than microdegree precision because they often use single precision
+ *        for lat/lon calculations (centi-degrees in one case).
+ *
+ *   
+ * cyclic is needed to determine whether a grid has a E or W boundary
+ */
+
+
 /* NCEP dlat/dlon are only good to milli-degrees because
    they are converted from grib1 */
 

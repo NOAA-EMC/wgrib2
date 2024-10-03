@@ -5,7 +5,7 @@
 #include "fnlist.h"
 
 /*
- * Reset_delayed_error.c      12/2020 Wesley Ebisuzaki
+ * Reset_delayed_error.c      12/2020 Public Domain   Wesley Ebisuzaki
  *
  * wgrib2 v3.0.1 adds delayed fatal errors,
  * This allows the user to examine the grib message that caused the fatal

@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "c_wgrib2api.h"
 
+/* 10/2024 Public Domain  Wesley Ebisuzaki */
+
 int main() {                  /* simple program to read grib2 */
     long long int ndata;
     int ierr;
