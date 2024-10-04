@@ -1,3 +1,5 @@
+/* 10/2024  Public Domain  Wesley Ebisuzaki */
+
 enum projection_type {p_unknown, p_latlon, p_lambert_conic, p_polar_stereographic, 
    p_mercator, p_rotated_latlon, p_stretched_latlon, p_rotated_streched_latlon, p_lambert_azimuthal};
 

@@ -5,6 +5,11 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* Hybrid.c         10/2024 Public Domain    Wesley Ebisuzaki
+ *
+ * show hybrid coordinate metadata
+ */
+
 /*
  * HEADER:400:hybrid:inv:0:shows vertical coordinate parameters from Sec4 (assuming 2 var per level
  */

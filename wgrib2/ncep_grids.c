@@ -7,6 +7,15 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* ncep_grid.c            10/2024 Public Domain   Wesley Ebisuzaki
+ *
+ * the option -new_grid handles several grids
+ * 
+ * this routine alters the arguements to -new_grid
+ * which are in the form "ncep grid XXX" to one of the
+ * generic definitions understood by -new_grid.
+ */
+
 
 #ifdef USE_IPOLATES
 

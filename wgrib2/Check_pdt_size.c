@@ -4,6 +4,19 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* 
+ * Check_pdt_size.c     10/2024 Public Domain Wesley Ebisuzaki
+ *
+ * check_pdt_size(..) checks the size of the pdt
+ *   sees whether the actual size of the pdt is the expected value
+ *
+ * This check can be enabled or disabled by -check_pdt 1/0  (enable/disable)
+ *
+ * in theory, the pdt can be bigger than expected with no ill consequences
+ *  howerver, if the pdt is smaller than expectations, then any routine that
+ *  uses the pdt could be reading outside of the pdt.
+ */
+
 /*
  * HEADER:100:check_pdt_size:misc:1:check pdt size X=1 enable/default, X=0 disable
  */

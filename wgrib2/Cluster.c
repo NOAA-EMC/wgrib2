@@ -5,6 +5,12 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* Cluster.c    10/2024  Public Domain  Wesley Ebisuzaki
+ *
+ * options for showing cluster information
+ *
+ */
+
 /*
  * HEADER:-1:cluster:inv:0:cluster identifier
  */
@@ -72,4 +78,3 @@ int f_cluster_info(ARG0) {
 
     return 0;
 }
-

@@ -5,8 +5,8 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-
-/* some routines to check whether two fields are the same */
+/* test_sec.c        10/2024  Public Domain Wesley Ebisuzaki
+   some routines to check whether two fields are the same */
 
 
 int same_sec0(unsigned char **sec_a, unsigned char **sec_b) {
