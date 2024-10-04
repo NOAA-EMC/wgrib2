@@ -14,6 +14,6 @@ Modeling Center (EMC)](https://www.emc.ncep.noaa.gov/emc.php).
 
 ## Documentation for Previous Versions of wgrib2
 
-* [wgrib2 Version 3.4.0](ver-3.4.0/index.html)
+* [wgrib2 Version 3.4.0](ver-3.4.0/web_docs/index.html)
 
 
