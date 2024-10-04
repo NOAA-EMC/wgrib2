@@ -4,6 +4,10 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* Misc.c            10/2024 Public Domain  Wesley Ebisuzaki
+ *
+ * misc options
+ */
 extern enum input_type input;
 extern int header, dump_rec, dump_submsg;
 extern int mode;

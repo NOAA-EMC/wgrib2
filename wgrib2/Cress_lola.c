@@ -6,7 +6,7 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 /*
- * Cress_lola.c
+ * Cress_lola.c                  10/2024  Public Domain  Wesley Ebisuzaki
  *  use Cressman analysis to create a LOngitude LAtitude grid
  *
  */

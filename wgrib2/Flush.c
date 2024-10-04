@@ -4,6 +4,23 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* Flush.c          10/2024   Public Domain    Wesley Ebisuzaki
+ *
+ * Most C programs flush the output when the buffers are full.
+ * This is usually the efficient method.
+ *
+ * However, life is different when you start writting to pipe instead of disk files.
+ * In this case, you want to flush the output buffers at the end of the write.
+ * If you don't flush after every write, the pipe line can stall and never complete.
+ * Wgrib2 gets around the stalling pipeline by checking the output files to see
+ * whether is a pipe.  If so, it turns on the flush mode.  This causes a flush
+ * after all writes.
+ *
+ * The automatic detection for flush mode works well. However, it is stll
+ *  possible to turn on the flush mode manually which was done in the old
+ *  days.
+ */
+
 extern int flush_mode;
 
 

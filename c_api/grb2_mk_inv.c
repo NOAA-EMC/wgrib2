@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "c_wgrib2api.h"
 
+/* 10/2024  Public Domain  Wesley Ebisuzaki  */
 /* C transation of fortran grb2_mk_inv(..) */
 
 int grb2_mk_inv(char *grb, char *inv) {

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "grb2.h"
+/* 10/2024  Public Domain   Wesley Ebisuzaki */
 
 unsigned long int uint8(unsigned char *p) {
 

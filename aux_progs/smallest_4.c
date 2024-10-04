@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-//
+// 10/2024  Public  Domain   Wesley Ebisuzaki
 // 4 files .. same fields but with different packing
 // returns smaller of indiv fields
 //

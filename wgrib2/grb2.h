@@ -1,3 +1,5 @@
+/* grb2.h  10/2024  Public Domain   Wesley Ebisuzaki */
+
 #ifndef INT3
 #define INT3(a,b,c) ((1-(int) ((unsigned) (a & 0x80) >> 6)) * (int) (((a & 127) << 16)+(b<<8)+c))
 #endif

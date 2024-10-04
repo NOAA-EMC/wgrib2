@@ -23,7 +23,7 @@
  *        undefined values filled with UNDEFINED
  *
  * note: code assumes an integer >= 32 bits
- *
+ * 7/98        Public Domain  Wesley Ebisuzaki
  * 7/98 v1.2.1 fix bug for bitmaps and nbit >= 25 found by Larry Brasfield
  * 2/01 v1.2.2 changed jj from long int to double
  * 3/02 v1.2.3 added unpacking extensions for spectral data 

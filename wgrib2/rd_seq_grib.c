@@ -5,6 +5,22 @@
 #include <math.h>
 #include <float.h>
 
+/* rd_seq_grib.c   10/2024   Public Domain Wesley Ebisuzaki
+ *
+ * two ways to read a grib file
+ *  random access
+ *  sequentially
+ *
+ * ex random access
+ *    wgrib2 IN.grb | grep HGT | wgrib2 -i IN.grb -grib OUT.grb
+ *      reading in controlled by index
+ * ex sequential access
+ *    wgrib2  IN.grb -if "HGT:" -grib OUT.grb -endif
+ *
+ * Note: reading from pipes requires sequential access.
+ *       handling files > 2GB on a 32-bit CPU required sequential access
+ */
+
 #ifndef DISABLE_STAT
 #include <sys/types.h>
 #include <sys/stat.h>

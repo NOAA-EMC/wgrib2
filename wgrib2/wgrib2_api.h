@@ -1,4 +1,4 @@
-/* used by C and fortran callable_wgrib2 API */
+/* used by C and fortran callable_wgrib2 API  10/2024 Public Domain  Wesley Ebisuzaki */
 
 int wgrib2(int argc, const char **argv);
 int wgrib2a(char *arg1, ...);

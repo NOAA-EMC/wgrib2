@@ -7,6 +7,8 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* 10/2024 Public Domain   Wesley Ebisuzaki */
+
 #if defined USE_JASPER  || defined USE_OPENJPEG
 
 /*

@@ -3,6 +3,11 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* Sec1.c          10/2024   Public Domain    Wesley Ebisuzaki
+ *
+ * options dealing with section 1 of the grib file
+ */
+
 static const char *months = "janfebmaraprmayjunjulaugsepoctnovdec";
 extern int warn_nonzero_min_sec;
 

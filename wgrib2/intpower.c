@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include "wgrib2.h"
 
-/*
- * w. ebisuzaki
+/* intpower.c    10/2024 Public Domain Wesley Ebisuzaki
  *
  *  return x**y
  *

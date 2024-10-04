@@ -4,6 +4,12 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/* Ncpu.c            10/2024  Public Domain    Wesley Ebisuzaki
+ *
+ * set the maximum number of threads, override OMP_NUM_THREADS
+ *
+ */
+
 
 /*
  * HEADER:100:ncpu:setup:1:number of threads, default is environment variable OMP_NUM_THREADS/number of cpus

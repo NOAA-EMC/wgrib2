@@ -1,5 +1,6 @@
 #!/bin/sh
-
+# 10/2024  Public Domain   Wesley Ebisuzaki
+#
 # Script to convert grib2 table information from the
 # "gribtable" format to the "gribtable.dat" format.
 #
