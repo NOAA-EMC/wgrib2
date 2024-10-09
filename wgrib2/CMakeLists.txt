@@ -88,11 +88,12 @@ if(USE_NETCDF)
   target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
 endif()
 
-#if(USE_JASPER)
+if(USE_JASPER)
+  target_link_libraries(obj_lib PUBLIC g2c::g2c)
 #  include_directories(${JASPER_INCLUDE_DIR})
 #  target_include_directories(obj_lib PUBLIC ${JASPER_INCLUDE_DIR})
 #  target_link_libraries(obj_lib PUBLIC ${JASPER_LIBRARIES})
-#endif()
+endif()
 
 if(USE_PNG)
   target_link_libraries(obj_lib PUBLIC PNG::PNG)
@@ -100,10 +101,6 @@ endif()
 
 if(OpenMP_C_FOUND)
   target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
-endif()
-
-if(USE_G2CLIB)
-  target_link_libraries(obj_lib PUBLIC g2c::g2c)
 endif()
 
 if(USE_IPOLATES)
@@ -128,6 +125,7 @@ target_link_libraries(wgrib2_exe PRIVATE gctpc)
 if(USE_AEC)
   target_link_libraries(wgrib2_exe PRIVATE aec)
 endif()
+
 
 if(USE_OPENJPEG)
   include_directories(${OPENJPEG_INCLUDE_DIRS})
