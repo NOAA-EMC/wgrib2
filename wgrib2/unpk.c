@@ -49,15 +49,7 @@ int unpk_grib(unsigned char **sec, float *data) {
     int width, height;
 #endif
 
-#ifdef USE_JASPER
-    jas_image_t *image;
-    char *opts;
-    jas_stream_t *jpcstream;
-    jas_image_cmpt_t *pcmpt;
-    jas_matrix_t *jas_data;
-    int j, k;
-#endif
-#ifdef USE_OPENJPEG
+#if (defined USE_JASPER || defined USE_OPENJPEG)
     int *ifld, err;
     unsigned int kk;
 #endif
@@ -202,7 +194,25 @@ int unpk_grib(unsigned char **sec, float *data) {
 
 #ifdef USE_JASPER
 
-        image = NULL;
+    ifld = (int *) malloc(ndata * sizeof(int));
+	if (ifld == 0) fatal_error("unpk: memory allocation error","");
+	err = g2c_dec_jpeg2000((char *) sec[7]+5, (size_t) GB2_Sec7_size(sec)-5, ifld);
+	if (err != 0) fatal_error_i("dec_jpeg2000, error %d",err);
+
+    if (bitmap_flag == 0 || bitmap_flag == 254) {
+        mask_pointer = sec[6] + 6;
+        mask = 0;
+	    kk = 0;
+            for (ii = 0; ii < ndata; ii++) {
+                if ((ii & 7) == 0) mask = *mask_pointer++;
+                data[ii] = (mask & 128) ? ((ifld[kk++]*bin_scale)+reference)*dec_scale : UNDEFINED;
+                mask <<= 1;
+            }
+    }
+	else if (bitmap_flag != 255) {
+            fatal_error_i("unknown bitmap: %d", bitmap_flag);
+	}
+ /*       image = NULL;
 	opts = NULL;
         jpcstream=jas_stream_memopen((char *) sec[7]+5, (int) GB2_Sec7_size(sec)-5);
 	image = jpc_decode(jpcstream, opts);
@@ -241,7 +251,8 @@ int unpk_grib(unsigned char **sec, float *data) {
 	}
 	jas_matrix_destroy(jas_data);
 	jas_stream_close(jpcstream);
-	jas_image_destroy(image);
+	jas_image_destroy(image); */
+    free(ifld);
 	return 0;
 #endif
 #ifdef USE_OPENJPEG

@@ -163,11 +163,11 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
         outjpc = (char *) malloc(jpclen);
 
 #ifdef USE_JASPER
-        i = enc_jpeg2000_clone(cdata,ix,iy,nbits,ltype,ratio,retry,outjpc,jpclen);
+        i = g2c_enc_jpeg2000(cdata,ix,iy,nbits,ltype,ratio,retry,outjpc,jpclen);
         // we try to catch following error: "error: too few guard bits (need at least x)"
         if (i == -3) {
             retry = 1;
-            i = enc_jpeg2000_clone(cdata,ix,iy,nbits,ltype,ratio,retry,outjpc,jpclen);
+            i = g2c_enc_jpeg2000(cdata,ix,iy,nbits,ltype,ratio,retry,outjpc,jpclen);
         }
 	free(cdata);
 #endif

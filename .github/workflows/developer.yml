@@ -34,29 +34,6 @@ jobs:
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
         sudo apt-get install libpng-dev autotools-dev libaec-dev autoconf gcovr doxygen
 
-    - name: cache-jasper
-      id: cache-jasper
-      uses: actions/cache@v4
-      with:
-        path: ~/jasper
-        key: jasper-${{ runner.os }}-1.900.1
-
-    - name: checkout-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'
-      uses: actions/checkout@v4
-      with:
-        repository: jasper-software/jasper
-        path: jasper
-        ref: version-1.900.1
-
-    - name: build-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'
-      run: |
-        cd jasper
-        ./configure --prefix=$HOME/jasper
-        make
-        make install
-
     - name: checkout-ip
       uses: actions/checkout@v4
       with:
@@ -72,6 +49,22 @@ jobs:
         cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~
         make -j2
         make install        
+
+    - name: checkout-g2c
+      uses: actions/checkout@v4
+      with:
+        repository: NOAA-EMC/NCEPLIBS-g2c
+        path: g2c
+        ref: develop
+
+    - name: build-g2c
+      run: |
+        cd g2c
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/g2c -DCMAKE_PREFIX_PATH=~ -DUSE_JASPER=ON
+        make -j2
+        make install
 
     - name: checkout
       uses: actions/checkout@v4
@@ -93,7 +86,7 @@ jobs:
         export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/jasper" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON
+        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/g2c" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_G2CLIB=ON -DUSE_JASPER=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
