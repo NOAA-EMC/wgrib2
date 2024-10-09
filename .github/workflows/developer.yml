@@ -34,37 +34,13 @@ jobs:
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
         sudo apt-get install libpng-dev autotools-dev libaec-dev autoconf gcovr doxygen
 
-    - name: checkout-ip
-      uses: actions/checkout@v4
+    - name: "Build dependencies"
+      uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        repository: NOAA-EMC/NCEPLIBS-ip
-        path: ip
-        ref: develop
-
-    - name: build-ip
-      run: |
-        cd ip
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~
-        make -j2
-        make install        
-
-    - name: checkout-g2c
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-g2c
-        path: g2c
-        ref: develop
-
-    - name: build-g2c
-      run: |
-        cd g2c
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/g2c -DCMAKE_PREFIX_PATH=~ -DUSE_JASPER=ON
-        make -j2
-        make install
+        jasper-version: version-4.0.0
+        ip-version: develop
+        g2c-version: develop
+        g2c-cmake-args: -DUSE_JASPER=ON
 
     - name: checkout
       uses: actions/checkout@v4
@@ -86,7 +62,7 @@ jobs:
         export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/g2c" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_G2CLIB=ON -DUSE_JASPER=ON
+        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_G2CLIB=ON -DUSE_JASPER=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
