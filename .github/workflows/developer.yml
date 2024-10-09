@@ -40,7 +40,7 @@ jobs:
         jasper-version: version-4.0.0
         ip-version: develop
         g2c-version: develop
-        g2c-cmake-args: -DUSE_JASPER=ON
+        g2c-cmake-args: -DUSE_JASPER=ON -DBUILD_G2C=ON
 
     - name: checkout
       uses: actions/checkout@v4
