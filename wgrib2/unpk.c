@@ -16,9 +16,6 @@
    #include <png.h>
    int i;
 #endif
-#ifdef USE_JASPER
-   #include <jasper/jasper.h>
-#endif
 
 #ifdef USE_AEC
    #include <libaec.h>
