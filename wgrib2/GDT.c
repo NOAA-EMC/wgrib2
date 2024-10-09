@@ -7,7 +7,7 @@
 
 #ifdef USE_G2CLIB
 
-//#include "grib2.h"
+#include "grib2_int.h"
 g2int g2_unpack3(unsigned char *,g2int *,g2int **,g2int **,
                         g2int *,g2int **,g2int *);
 
