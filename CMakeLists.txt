@@ -75,7 +75,7 @@ endif()
 
 message(STATUS "Checking if user wants to use NCEPLIBS-g2c...")
 if(USE_G2CLIB) 
-  find_package(g2c REQUIRED)
+  find_package(g2c 1.9.0 CONFIG REQUIRED)
 
   if(USE_PNG) 
     message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
