@@ -89,7 +89,7 @@ if(USE_NETCDF)
 endif()
 
 if(USE_JASPER)
-  target_link_libraries(obj_lib PUBLIC g2c::g2c)
+#  target_link_libraries(obj_lib PUBLIC g2c::g2c)
 #  include_directories(${JASPER_INCLUDE_DIR})
 #  target_include_directories(obj_lib PUBLIC ${JASPER_INCLUDE_DIR})
 #  target_link_libraries(obj_lib PUBLIC ${JASPER_LIBRARIES})
@@ -126,6 +126,9 @@ if(USE_AEC)
   target_link_libraries(wgrib2_exe PRIVATE aec)
 endif()
 
+if(USE_JASPER)
+  target_link_libraries(wgrib2_exe PRIVATE g2c::g2c)
+endif()
 
 if(USE_OPENJPEG)
   include_directories(${OPENJPEG_INCLUDE_DIRS})
