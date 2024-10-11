@@ -88,13 +88,6 @@ if(USE_NETCDF)
   target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
 endif()
 
-if(USE_JASPER)
-#  target_link_libraries(obj_lib PUBLIC g2c::g2c)
-#  include_directories(${JASPER_INCLUDE_DIR})
-#  target_include_directories(obj_lib PUBLIC ${JASPER_INCLUDE_DIR})
-#  target_link_libraries(obj_lib PUBLIC ${JASPER_LIBRARIES})
-endif()
-
 if(USE_PNG)
   target_link_libraries(obj_lib PUBLIC PNG::PNG)
 endif()

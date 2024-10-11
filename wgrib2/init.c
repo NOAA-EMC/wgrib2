@@ -20,7 +20,7 @@
 #include "fnlist.h"
 
 #ifdef USE_G2CLIB
-#include <grib2.h>
+#include "grib2.h"
 extern gribfield *grib_data; extern int free_gribfield;			// flag for allocated gribfield
 #endif
 

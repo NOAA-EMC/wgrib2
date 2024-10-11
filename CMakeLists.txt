@@ -100,11 +100,6 @@ endif()
 message(STATUS "Checking if the user wants to use Jasper...")
 if(USE_JASPER)
   find_package(g2c 1.9.0 CONFIG REQUIRED)
-#  list(APPEND definitions_list -DUSE_JASPER)
-#  find_package(Jasper REQUIRED)
-#  if(JASPER_VERSION_STRING VERSION_GREATER_EQUAL "1.900.25")
-#    list(APPEND definitions_list -DJAS_VERSION_MAJOR=2)
-#  endif()
 endif()
 
 # Find required packages to use OpenJPEG
