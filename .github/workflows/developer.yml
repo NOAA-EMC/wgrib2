@@ -53,7 +53,7 @@ jobs:
       if: steps.cache-jasper.outputs.cache-hit != 'true'
       run: |
         cd jasper
-        ./configure --prefix=$HOME/jasper
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/jasper
         make
         make install
 
