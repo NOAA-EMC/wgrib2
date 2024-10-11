@@ -34,13 +34,60 @@ jobs:
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
         sudo apt-get install libpng-dev autotools-dev libaec-dev autoconf gcovr doxygen
 
-    - name: "Build dependencies"
-      uses: NOAA-EMC/ci-build-nceplibs@develop
+    - name: cache-jasper
+      id: cache-jasper
+      uses: actions/cache@v4
       with:
-        jasper-version: version-4.0.0
-        ip-version: develop
-        g2c-version: develop
-        g2c-cmake-args: -DBUILD_G2C=ON
+        path: ~/jasper
+        key: jasper-${{ runner.os }}-4.0.0
+
+    - name: checkout-jasper
+      if: steps.cache-jasper.outputs.cache-hit != 'true'
+      uses: actions/checkout@v4
+      with:
+        repository: jasper-software/jasper
+        path: jasper
+        ref: version-4.0.0
+
+    - name: build-jasper
+      if: steps.cache-jasper.outputs.cache-hit != 'true'
+      run: |
+        cd jasper
+        ./configure --prefix=$HOME/jasper
+        make
+        make install
+
+    - name: checkout-ip
+      uses: actions/checkout@v4
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip
+        path: ip
+        ref: develop
+
+    - name: build-ip
+      run: |
+        cd ip
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~
+        make -j2
+        make install
+
+    - name: checkout-g2c
+      uses: actions/checkout@v4
+      with:
+        repository: NOAA-EMC/NCEPLIBS-g2c
+        path: g2c
+        ref: develop
+  
+    - name: build-g2c
+      run: |
+        cd g2c
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/g2c -DCMAKE_PREFIX_PATH=~
+        make -j2
+        make install
 
     - name: checkout
       uses: actions/checkout@v4
@@ -62,7 +109,7 @@ jobs:
         export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'        
-        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON
+        cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/jasper;~/g2c" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v  --html-details --exclude ../tests --exclude CMakeFiles --print-summary -o test-coverage.html &> /dev/null
