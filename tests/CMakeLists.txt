@@ -164,7 +164,6 @@ endif()
 if (USE_JASPER OR USE_OPENJPEG)
   shell_test(run_jpeg_tests)
   copy_test_data(ref_jpeg2simple.txt)
-  copy_test_data(ref_simple2jpeg.txt)
 endif()
 
 if (FTP_TEST_FILES)

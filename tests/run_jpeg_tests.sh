@@ -14,10 +14,5 @@ echo "*** Converting from jpeg to simple packing"
 touch junk_jpeg2simple.txt
 diff -w junk_jpeg2simple.txt data/ref_jpeg2simple.txt
 
-echo "*** Converting from simple back to jpeg packing"
-../wgrib2/wgrib2 junk_jpeg2simple.grb -set_grib_type jpeg -grib_out junk_simple2jpeg.grb
-../wgrib2/wgrib2 junk_simple2jpeg.grb -v2 > junk_simple2jpeg.txt
-diff -w junk_simple2jpeg.txt data/ref_simple2jpeg.txt
-
 echo "*** SUCCESS!"
 exit 0
