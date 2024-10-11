@@ -194,7 +194,6 @@ int unpk_grib(unsigned char **sec, float *data) {
 	// decode jpeg2000
 
 #ifdef USE_JASPER
-
     ifld = (int *) malloc(ndata * sizeof(int));
 	if (ifld == 0) fatal_error("unpk: memory allocation error","");
 	err = g2c_dec_jpeg2000((char *) sec[7]+5, (size_t) GB2_Sec7_size(sec)-5, ifld);
@@ -213,46 +212,6 @@ int unpk_grib(unsigned char **sec, float *data) {
 	else if (bitmap_flag != 255) {
             fatal_error_i("unknown bitmap: %d", bitmap_flag);
 	}
- /*       image = NULL;
-	opts = NULL;
-        jpcstream=jas_stream_memopen((char *) sec[7]+5, (int) GB2_Sec7_size(sec)-5);
-	image = jpc_decode(jpcstream, opts);
-	if (image == NULL) fatal_error("jpeg2000 decoding", "");
-	pcmpt = image->cmpts_[0];
-        if (image->numcmpts_ != 1 ) 
-		fatal_error("unpk: Found color image.  Grayscale expected","");
-
-        jas_data=jas_matrix_create(jas_image_height(image), jas_image_width(image));
-        jas_image_readcmpt(image,0,0,0,jas_image_width(image), jas_image_height(image),jas_data);
-
-	// transfer data
-
-	k = ndata - pcmpt->height_ * pcmpt->width_;
-
-// #pragma omp parallel for private(ii,j)
-        for (ii=0;ii<pcmpt->height_;ii++) {
-            for (j=0;j<pcmpt->width_;j++) {
-//		data[k++] = (((jas_data->rows_[ii][j])*bin_scale)+reference)*dec_scale;
-		data[k+j+ii*pcmpt->width_] = (((jas_data->rows_[ii][j])*bin_scale)+reference)*dec_scale;
-	    }
-	}
-
-        if (bitmap_flag == 0 || bitmap_flag == 254) {
-	    k = ndata - pcmpt->height_ * pcmpt->width_;
-            mask_pointer = sec[6] + 6;
-            mask = 0;
-            for (ii = 0; ii < ndata; ii++) {
-                 if ((ii & 7) == 0) mask = *mask_pointer++;
-                 data[ii] = (mask & 128) ? data[k++] : UNDEFINED;
-                 mask <<= 1;
-            }
-        }
-	else if (bitmap_flag != 255) {
-            fatal_error_i("unknown bitmap: %d", bitmap_flag);
-	}
-	jas_matrix_destroy(jas_data);
-	jas_stream_close(jpcstream);
-	jas_image_destroy(image); */
     free(ifld);
 	return 0;
 #endif
