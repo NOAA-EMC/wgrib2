@@ -53,11 +53,9 @@ jobs:
       if: steps.cache-jasper.outputs.cache-hit != 'true'
       run: |
         cd jasper
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/jasper
-        make
-        make install
+        cmake -B build_dir -DCMAKE_INSTALL_PREFIX=~/jasper
+        cmake --build build_dir
+        cmake --install build_dir
 
     - name: checkout-ip
       uses: actions/checkout@v4
