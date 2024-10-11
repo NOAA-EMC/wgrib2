@@ -21,10 +21,6 @@
    #include <libaec.h>
 #endif
 
-#ifdef USE_JASPER
-   #include "grib2.h"
-#endif
-
 /*
  * unpack grib -- only some formats (code table 5.0) are supported
  *
