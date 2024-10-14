@@ -6,6 +6,7 @@
 
 /*
  * 2/2012 Public Domain: Wesley Ebisuzaki
+ * 10/2024               fix to handle all pdts Wesley Ebisuzaki
  */
 
 /*
@@ -13,24 +14,19 @@
  */
 
 int f_aerosol_size(ARG0) {
-    int pdt, type;
-    unsigned char *sec4;
+    unsigned char *ptr;
     double size1, size2;
-
+   
     if (mode >= 0) {
-	pdt = code_table_4_0(sec);
-	if (pdt < 44 || pdt > 48) return 0;
-	type = code_table_4_91(sec);
-	if (type == 255) return 0;
-        sec4 = sec[4];
-
-	size1 = scaled2dbl(INT1(sec4[14]), int4(sec4+15));
-	size2 = scaled2dbl(INT1(sec4[19]), int4(sec4+20));
+        ptr = code_table_4_91_location(sec);
+	if (ptr == NULL) return 0;
+	if (*ptr == 255) return 0;
+	size1 = scaled2dbl(INT1(ptr[1]), int4(ptr+2));
+	size2 = scaled2dbl(INT1(ptr[6]), int4(ptr+7));
 
 	sprintf(inv_out,"aerosol_size ");
 	inv_out += strlen(inv_out);
-	type = code_table_4_91(sec);
-        prt_code_table_4_91(type, size1, size2, inv_out);
+        prt_code_table_4_91(ptr[0], size1, size2, inv_out);
 
     }
     return 0;
@@ -40,23 +36,19 @@ int f_aerosol_size(ARG0) {
  */
 
 int f_aerosol_wavelength(ARG0) {
-    int pdt, type;
-    unsigned char *sec4;
+    unsigned char *ptr;
     double wave1, wave2;
 
     if (mode >= 0) {
-        pdt = code_table_4_0(sec);
-        if (pdt != 48) return 0;
-	type = code_table_4_91b(sec);
-	if (type == 255) return 0;
-        sec4 = sec[4];
-
-        wave1 = scaled2dbl(INT1(sec4[25]), int4(sec4+26));
-        wave2 = scaled2dbl(INT1(sec4[30]), int4(sec4+31));
+        ptr = code_table_4_91b_location(sec);
+	if (ptr == NULL) return 0;
+	if (*ptr == 255) return 0;
+	wave1 = scaled2dbl(INT1(ptr[1]), int4(ptr+2));
+	wave2 = scaled2dbl(INT1(ptr[6]), int4(ptr+7));
 
         sprintf(inv_out,"aerosol_wavelength ");
         inv_out += strlen(inv_out);
-        prt_code_table_4_91(type, wave1, wave2, inv_out);
+        prt_code_table_4_91(ptr[0], wave1, wave2, inv_out);
 
     }
     return 0;
