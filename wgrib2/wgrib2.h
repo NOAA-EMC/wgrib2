@@ -503,8 +503,6 @@ int scaling(unsigned char **sec, double *base, int *decimal, int *binary, int *n
 unsigned char *mk_bms(float *data, unsigned int *ndata);
 
 int dec_png_clone(unsigned char *pngbuf,int *width,int *height, unsigned char *cout, int *grib2_bit_depth, unsigned int ndata);
-int enc_jpeg2000_clone(unsigned char *cin,int width,int height,int nbits, int ltype, 
-	int ratio, int retry, char *outjpc, int jpclen);
 #ifdef USE_OPENJPEG
 int dec_jpeg2000_clone(char *injpc, int bufsize, int *outfld);
 int enc_jpeg2000_clone_float(float *data, int width, int height, int nbits,

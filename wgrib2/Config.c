@@ -4,9 +4,6 @@
 #include <ctype.h>
 #include <limits.h>
 #include "wgrib2.h"
-#ifdef USE_JASPER
-#include <jasper/jasper.h>
-#endif
 #include "grb2.h"
 #include "fnlist.h"
 
@@ -50,11 +47,8 @@ int f_config(ARG0) {
     strcat(inv_out, USE_AEC " is installed\n" );
 #endif
 #ifdef USE_JASPER
-    strcat(inv_out, "Jasper ");
-    strcat(inv_out, jas_getversion());
-    strcat(inv_out, " is installed\n");
+    strcat(inv_out,USE_JASPER " is installed\n");
     inv_out += strlen(inv_out);
-//    sprintf(inv_out,"JAS_VERSION_MAJOR=%d\n", JAS_VERSION_MAJOR);
 #endif
 #ifdef USE_OPENJPEG
     strcat(inv_out,USE_OPENJPEG " is installed\n");
