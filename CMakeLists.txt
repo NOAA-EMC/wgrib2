@@ -82,10 +82,6 @@ if(USE_G2CLIB)
   if(USE_PNG) 
     message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
   endif()
-
-  if(USE_JASPER) 
-    message(FATAL_ERROR "If USE_G2CLIB is on, USE_JASPER must be off")
-  endif()
 endif()
 
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
@@ -107,17 +103,13 @@ endif()
 
 message(STATUS "Checking if the user wants to use Jasper...")
 if(USE_JASPER)
-  list(APPEND definitions_list -DUSE_JASPER)
-  find_package(Jasper REQUIRED)
-  if(JASPER_VERSION_STRING VERSION_GREATER_EQUAL "1.900.25")
-    list(APPEND definitions_list -DJAS_VERSION_MAJOR=2)
-  endif()
+  find_package(g2c 1.9.0 CONFIG REQUIRED)
 endif()
 
 # Find required packages to use OpenJPEG
 message(STATUS "Checking if the user wants to use OpenJPEG...")
 if(USE_OPENJPEG)
-  find_package(OpenJPEG REQUIRED)
+find_package(OpenJPEG REQUIRED)
 endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
