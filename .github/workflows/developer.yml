@@ -21,7 +21,7 @@ jobs:
     env:
       FC: gfortran
       CC: gcc
-      LD_LIBRARY_PATH: /home/runner/jasper/lib/
+      LD_LIBRARY_PATH: "/home/runner/jasper/lib:/home/runner/g2c/lib"
 
     permissions:
       id-token: write

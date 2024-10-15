@@ -7,6 +7,10 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+#ifdef USE_JASPER
+    #include "grib2.h"
+#endif
+
 /* 10/2024 Public Domain   Wesley Ebisuzaki */
 
 #if defined USE_JASPER  || defined USE_OPENJPEG
