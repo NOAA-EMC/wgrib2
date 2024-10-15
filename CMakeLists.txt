@@ -7,8 +7,7 @@ cmake_minimum_required(VERSION 3.15)
 file(STRINGS "VERSION" pVersion)
 
 # Set up project with version number from VERSION file.
-#project(wgrib2 VERSION ${pVersion} LANGUAGES C)
-project(wgrib2 VERSION ${pVersion} LANGUAGES Fortran C)
+project(wgrib2 VERSION ${pVersion} LANGUAGES C)
 
 # Handle user build options.
 option(ENABLE_DOCS "Enable generation of doxygen-based documentation." OFF)
@@ -40,9 +39,9 @@ option(BUILD_LIB "Build wgrib2 library?" on)
 option(BUILD_SHARED_LIB "Build shared library?" off)
 option(BUILD_WGRIB "Build wgrib code?" off)
 
-#if (MAKE_FTN_API OR USE_IPOLATES)
-#  enable_language(Fortran)
-#endif()
+if (MAKE_FTN_API OR USE_IPOLATES)
+  enable_language(Fortran)
+endif()
 
 # Developers can use this option to specify a local directory which
 # holds the test files. They will be copied instead of fetching the
