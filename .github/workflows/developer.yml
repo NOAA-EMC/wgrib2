@@ -21,7 +21,7 @@ jobs:
     env:
       FC: gfortran
       CC: gcc
-      LD_LIBRARY_PATH: "/home/runner/jasper/lib/:/home/runner/g2c/include/"
+      LD_LIBRARY_PATH: "/home/runner/jasper/lib/"
 
     permissions:
       id-token: write
@@ -107,7 +107,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'
+        export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0 -I/home/runner/g2c/include'
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'
         cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="~/ip;~/jasper;~/g2c" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON
