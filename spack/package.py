@@ -170,6 +170,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     conflicts("+openmp", when="%apple-clang")
 
     depends_on("ip@5.1:", when="@develop +ipolates")
+    depends_on("lapack", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
     depends_on("jasper@:2", when="@3.2:3.4 +jasper")
@@ -177,6 +178,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("zlib-api", when="@3.2: +png")
     depends_on("libpng", when="@3.2: +png")
     depends_on("openjpeg", when="@3.2: +openjpeg")
+    
 
     @when("@:2 ^gmake@4.2:")
 
