@@ -32,7 +32,7 @@ jobs:
     - name: install
       run: |
         sudo apt-get update
-        sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config
+        sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config libopenblas-dev
         sudo apt-get install libpng-dev autotools-dev libaec-dev autoconf gcovr doxygen
 
     - name: cache-jasper
@@ -70,7 +70,7 @@ jobs:
         cd ip
         mkdir build
         cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~ -DBLA_VENDOR=OpenBLAS
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~
         make -j2
         make install
 
