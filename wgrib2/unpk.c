@@ -12,6 +12,10 @@
 #include "wgrib2.h"
 #include "grb2.h"
 
+#ifdef USE_JASPER
+    #include "grib2.h"
+#endif
+
 #ifdef USE_PNG
    #include <png.h>
    int i;
