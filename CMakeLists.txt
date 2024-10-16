@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.15)
 file(STRINGS "VERSION" pVersion)
 
 # Set up project with version number from VERSION file.
-project(wgrib2 VERSION ${pVersion} LANGUAGES Fortran C)
+project(wgrib2 VERSION ${pVersion} LANGUAGES C)
 
 # Handle user build options.
 option(ENABLE_DOCS "Enable generation of doxygen-based documentation." OFF)
@@ -43,6 +43,10 @@ option(BUILD_SHARED_LIB "Build shared library?" on)
 # and manually create libwgrib2.so from the needed *.a files
 
 option(BUILD_WGRIB "Build wgrib code?" off)
+
+if (MAKE_FTN_API OR USE_IPOLATES)
+  enable_language(Fortran)
+endif()
 
 # Developers can use this option to specify a local directory which
 # holds the test files. They will be copied instead of fetching the
@@ -83,10 +87,6 @@ if(USE_G2CLIB)
   if(USE_PNG) 
     message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
   endif()
-
-  if(USE_JASPER) 
-    message(FATAL_ERROR "If USE_G2CLIB is on, USE_JASPER must be off")
-  endif()
 endif()
 
 if (BUILD_SHARED_LIB AND NOT BUILD_LIB)
@@ -116,17 +116,13 @@ endif()
 
 message(STATUS "Checking if the user wants to use Jasper...")
 if(USE_JASPER)
-  list(APPEND definitions_list -DUSE_JASPER)
-  find_package(Jasper REQUIRED)
-  if(JASPER_VERSION_STRING VERSION_GREATER_EQUAL "1.900.25")
-    list(APPEND definitions_list -DJAS_VERSION_MAJOR=2)
-  endif()
+  find_package(g2c 1.9.0 CONFIG REQUIRED)
 endif()
 
 # Find required packages to use OpenJPEG
 message(STATUS "Checking if the user wants to use OpenJPEG...")
 if(USE_OPENJPEG)
-  find_package(OpenJPEG REQUIRED)
+find_package(OpenJPEG REQUIRED)
 endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
