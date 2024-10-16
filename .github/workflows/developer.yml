@@ -59,7 +59,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0 -I$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c/include'
+        export CFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0 -I\$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c/include'
         export FCFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'
         export FFLAGS='-Wall -g -fprofile-abs-path -fprofile-arcs -ftest-coverage -O0'
         cmake .. -DENABLE_DOCS=ON -DFTP_TEST_FILES=ON -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c" -DTEST_FILE_DIR=/home/runner/data -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON
