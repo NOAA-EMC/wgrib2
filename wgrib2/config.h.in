@@ -27,6 +27,7 @@
 #cmakedefine BUILD_LIB
 #cmakedefine BUILD_SHARED_LIB
 #cmakedefine BUILD_WGRIB
+#cmakedefine BUILD_EXTRA
 #cmakedefine TEST_FILE_DIR "@TEST_FILE_DIR@"
 
 #define BUILD_COMMENTS "@BUILD_COMMENTS@"
