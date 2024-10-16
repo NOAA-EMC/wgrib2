@@ -114,7 +114,7 @@ endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
 if(USE_OPENMP)
-  find_package(OpenMP)
+  find_package(OpenMP REQUIRED COMPONENTS C)
 endif()
 
 message(STATUS "Checking if the user wants to use PNG...")
