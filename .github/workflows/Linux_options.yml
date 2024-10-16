@@ -57,53 +57,10 @@ jobs:
         echo "CC=gcc-${{ matrix.gcc-version }}" >> $GITHUB_ENV
         echo "FC=gfortran-${{ matrix.gcc-version }}" >> $GITHUB_ENV
 
-    - name: cache-jasper
-      id: cache-jasper
-      uses: actions/cache@v3
+    - name: "Build dependencies"
+      uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        path: ~/jasper
-        key: jasper-${{ runner.os }}-gcc${{ matrix.gcc-version }}-1.900.1
-
-    - name: checkout-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'
-      uses: actions/checkout@v2
-      with:
-        repository: jasper-software/jasper
-        path: jasper
-        ref: version-1.900.1
-
-    - name: build-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'
-      run: |
-        cd jasper
-        CFLAGS="-Wno-implicit-function-declaration -Wno-incompatible-pointer-types" ./configure --prefix=$HOME/jasper
-        make
-        make install
-
-    - name: cache-ip
-      id: cache-ip
-      uses: actions/cache@v3
-      with:
-        path: ~/ip
-        key: ip-${{ runner.os }}-gcc${{ matrix.gcc-version }}-develop
-
-    - name: checkout-ip
-      if: steps.cache-ip.outputs.cache-hit != 'true'
-      uses: actions/checkout@v3
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip
-        path: ip
-        ref: develop
-
-    - name: build-ip
-      if: steps.cache-ip.outputs.cache-hit != 'true'
-      run: |
-        cd ip
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
-        make -j2
-        make install
+        ip-version: develop
 
     - name: checkout
       uses: actions/checkout@v2
@@ -115,6 +72,6 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
-        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/ip" ..
+        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" ..
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
