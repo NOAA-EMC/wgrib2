@@ -25,7 +25,7 @@ intpower.c Inv.c Inv_no.c Irr_grids.c itoshort_a.c JMA.c jpeg_pk.c
 Last.c lat2ij.c Latlon.c Level.c Limit.c Lola.c Lvl.c Macro.c
 manage_inv_out.c Match.c Match_fs.c Match_inv.c Mem_buffer.c Merge.c
 Misc.c missing.c mk_gdt.c Model_version_date.c Mod_grib.c
-Mysql.c Mysql_dump.c Mysql_speed.c Names.c ncep_grids.c NCEP_norm.c
+Names.c ncep_grids.c NCEP_norm.c
 NCEP_uv.c Ncpu.c Ndate.c Ndates.c Netcdf.c Netcdf_sup.c New_grid.c
 new_grid_lambertc.c New_grid_order.c openmp_util.c parse_loop.c
 parse_msg.c pdt_len.c Precision.c Prob.c Proj4.c proj4_initialize.c
