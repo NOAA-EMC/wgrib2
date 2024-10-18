@@ -110,7 +110,6 @@ copy_test_data(ref_new_grid_gdt_32769.grib2)
 copy_test_data(png_4bits.png)
 copy_test_data(large_png.grb2)
 
-
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
 shell_test(run_wgrib2_rpn_tests)
@@ -126,6 +125,13 @@ if (USE_NETCDF)
   copy_test_data(ref_tablenc.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
   copy_test_data(nctab.table)
 endif()
+
+if (BUILD_WGRIB)
+  shell_test(run_wgrib_tests)
+  copy_test_data(ref_ecmwf.jul.grb1)
+  copy_test_data(ref_ecmwf.jul.grb1.inv)
+endif()
+
 if (USE_IPOLATES)
   shell_test(run_ipolates_tests)
   copy_test_data(ref_new_grid_gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt)
