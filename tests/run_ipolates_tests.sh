@@ -219,5 +219,47 @@ echo "*** Testing conversion to Mercator grid"
 touch mercator_grid.txt
 diff -w mercator_grid.txt data/ref_mercator_grid.txt
 
+echo "*** Testing conversion to HRRR grid"
+../wgrib2/wgrib2 new_grid_test.grb -new_grid_winds earth -new_grid ncep grid hrrr new_grid_junk.grb
+../wgrib2/wgrib2 new_grid_junk.grb -grid -v2 -s > hrrr_grid.txt
+touch hrrr_grid.txt
+diff -w hrrr_grid.txt data/ref_hrrr_grid.txt
+
+echo "*** Testing conversion to NAM 12 grid"
+../wgrib2/wgrib2 new_grid_test.grb -new_grid_winds earth -new_grid ncep grid nam12 new_grid_junk.grb
+../wgrib2/wgrib2 new_grid_junk.grb -grid -v2 -s > nam12_grid.txt
+touch nam12_grid.txt
+diff -w nam12_grid.txt data/ref_nam12_grid.txt
+
+echo "*** Testing conversion to NCEP grid definition 130"
+../wgrib2/wgrib2 new_grid_test.grb -new_grid_winds earth -new_grid ncep grid 130 new_grid_junk.grb
+../wgrib2/wgrib2 new_grid_junk.grb -grid -v2 -s > ncep_grid_130.txt
+touch ncep_grid_130.txt
+diff -w ncep_grid_130.txt data/ref_new_grid_ncep_130.txt
+
+echo "*** Testing conversion to NCEP grid definition 132"
+../wgrib2/wgrib2 new_grid_test.grb -new_grid_winds earth -new_grid ncep grid 132 new_grid_junk.grb
+../wgrib2/wgrib2 new_grid_junk.grb -grid -v2 -s > ncep_grid_132.txt
+touch ncep_grid_132.txt
+diff -w ncep_grid_132.txt data/ref_new_grid_ncep_132.txt
+
+echo "*** Testing conversion to NCEP grid definition 187"
+../wgrib2/wgrib2 new_grid_test.grb -new_grid_winds earth -new_grid ncep grid 187 new_grid_junk.grb
+../wgrib2/wgrib2 new_grid_junk.grb -grid -v2 -s > ncep_grid_187.txt
+touch ncep_grid_187.txt
+diff -w ncep_grid_187.txt data/ref_new_grid_ncep_187.txt
+
+echo "*** Testing conversion to NCEP grid definition 197"
+../wgrib2/wgrib2 new_grid_test.grb -new_grid_winds earth -new_grid ncep grid 197 new_grid_junk.grb
+../wgrib2/wgrib2 new_grid_junk.grb -grid -v2 -s > ncep_grid_197.txt
+touch ncep_grid_197.txt
+diff -w ncep_grid_197.txt data/ref_new_grid_ncep_197.txt
+
+echo "*** Testing conversion to NCEP grid definition 236"
+../wgrib2/wgrib2 new_grid_test.grb -new_grid_winds earth -new_grid ncep grid 236 new_grid_junk.grb
+../wgrib2/wgrib2 new_grid_junk.grb -grid -v2 -s > ncep_grid_236.txt
+touch ncep_grid_236.txt
+diff -w ncep_grid_236.txt data/ref_new_grid_ncep_236.txt
+
 echo "*** SUCCESS!"
 exit 0
