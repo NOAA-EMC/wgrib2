@@ -85,7 +85,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ~/ip
-        key: ip-${{ runner.os }}-gcc${{ matrix.gcc-version }}-develop
+        key: ip-${{ runner.os }}-gcc${{ matrix.gcc-version }}-develop-2
 
     - name: checkout-ip
       if: steps.cache-ip.outputs.cache-hit != 'true'
@@ -102,7 +102,7 @@ jobs:
         mkdir build
         cd build
         cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
-        make -j2
+        make -j
         make install
 
     - name: checkout
@@ -116,5 +116,5 @@ jobs:
         mkdir b
         cd b
         cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/ip" ..
-        make VERBOSE=1
+        make -j VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
