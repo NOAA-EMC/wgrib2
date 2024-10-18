@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#ifdef CALLABLE_WGRIB2
+
 #include <setjmp.h>
-#endif
+
 #include "wgrib2.h"
 
 /*
@@ -17,9 +17,9 @@
  *         fprintf(ARGS)
  *         do_fatal_error_processing
  */
-#ifdef CALLABLE_WGRIB2
+
 extern jmp_buf fatal_err;
-#endif
+
 
 
 void fatal_error(const char *fmt, ...)
@@ -32,9 +32,9 @@ void fatal_error(const char *fmt, ...)
     va_end(arg);
 
     err_bin(1); err_string(1);
-#ifdef CALLABLE_WGRIB2
+
     longjmp(fatal_err,1);
-#endif
+
     exit(8);
     return;
 }
