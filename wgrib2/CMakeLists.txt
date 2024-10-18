@@ -92,7 +92,7 @@ if(USE_PNG)
   target_link_libraries(obj_lib PUBLIC PNG::PNG)
 endif()
 
-if(OpenMP_C_FOUND)
+if(USE_OPENMP)
   target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
 endif()
 
