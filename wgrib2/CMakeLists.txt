@@ -131,7 +131,7 @@ endif()
 ## target_link_libraries(obj_lib PUBLIC gctpc -lm)
 
 # Link to gctpc directly because object libraries do not link transitively
-target_link_libraries(wgrib2_exe PRIVATE gctpc)
+target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
 
 if(USE_AEC)
   target_link_libraries(wgrib2_exe PRIVATE ${LIBAEC_LIBRARIES})

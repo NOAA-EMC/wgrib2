@@ -110,10 +110,6 @@ if(USE_OPENJPEG AND USE_JASPER)
   message(FATAL_ERROR "USE_OPENJPEG OR USE_JASPER, not both")
 endif()
 
-
-
-
-
 message(STATUS "Checking if the user wants to use Jasper...")
 if(USE_JASPER)
   find_package(g2c 1.9.0 CONFIG REQUIRED)
