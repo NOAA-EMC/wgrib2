@@ -116,7 +116,7 @@ target_link_libraries(obj_lib PUBLIC gctpc -lm)
 target_link_libraries(wgrib2_exe PRIVATE gctpc)
 
 if(USE_AEC)
-  target_link_libraries(wgrib2_exe PRIVATE aec)
+  target_link_libraries(wgrib2_exe PRIVATE ${LIBAEC_LIBRARIES})
 endif()
 
 if(USE_JASPER)
