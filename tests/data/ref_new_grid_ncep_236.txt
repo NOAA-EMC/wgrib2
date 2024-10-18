@@ -1,0 +1,84 @@
+1:0:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl:
+2:15119:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,1) lvl2=(255,missing):0.01 mb:anl:
+3:30238:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl:
+4:45357:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,2) lvl2=(255,missing):0.02 mb:anl:
+5:60476:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl:
+6:73462:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,4) lvl2=(255,missing):0.04 mb:anl:
+7:88581:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl:
+8:103700:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,7) lvl2=(255,missing):0.07 mb:anl:
+9:118819:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl:
+10:131805:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,10) lvl2=(255,missing):0.1 mb:anl:
+11:144791:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl:
+12:157777:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,20) lvl2=(255,missing):0.2 mb:anl:
+13:170763:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:UGRD U-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl:
+14:181616:grid_template=30:winds(N/S):
+	Lambert Conformal: (151 x 113) input WE:SN output WE:SN res 48
+	Lat1 16.281000 Lon1 233.862000 LoV 265.000000
+	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+	LatSP -90.000000 LonSP 0.000000
+	North Pole (151 x 113) Dx 40635.250000 m Dy 40635.250000 m :12Z26apr2024:VGRD V-Component of Wind [m/s]:lvl1=(100,40) lvl2=(255,missing):0.4 mb:anl:
