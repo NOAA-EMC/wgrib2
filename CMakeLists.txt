@@ -32,7 +32,7 @@ option(FTP_TEST_FILES "Fetch and test with files on FTP site." OFF)
 option(FTP_LARGE_TEST_FILES "Fetch and test with very large files on FTP site." OFF)
 option(FTP_EXTRA_TEST_FILES "Fetch even more large files from FTP and test them." OFF)
 # MAKE_FTN_API should only be on when building library
-option(MAKE_FTN_API "add ftn api?" on)
+option(MAKE_FTN_API "add ftn api?" off)
 option(DISABLE_STAT "disable posix feature" off)
 set(BUILD_COMMENTS "stock build")
 
