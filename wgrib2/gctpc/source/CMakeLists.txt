@@ -1,3 +1,7 @@
+# note: this CMakelist.txt is for building the gctpc library
+#   wgrib2 now includes the library into the source compile
+#   so the wgrib2 library now include gctpc.  This makes it
+#   easier for users who want to use the wgrib2 library.
 
 set(src
   alberfor.c
@@ -76,7 +80,13 @@ set(src
   wviiinv.c
   )
 
+# if want shared library, had to make separate library
+# otherwise include gctpc in libwgrib2.a
+
 add_library(gctpc OBJECT ${src})
+if (BUILD_LIB)
+  set_property(TARGET gctpc PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
 
 target_include_directories(gctpc PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
