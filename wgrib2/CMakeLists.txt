@@ -2,6 +2,19 @@
 # subdirectory.
 #
 # Kyle Gerheiser, Edward Hartnett, Wesley Ebisuzaki
+#
+# if BUILD_SHARED_LIB
+#    ftn_api    -> shared library, interface to fortran
+#    wgrib2_lib -> shared  (includes gctpc)
+#
+# if !BUILD_SHARED_LIB
+#    ftn_api    -> static library, interface to fortran
+#    wgrib2_lib -> static library includeing gctpc
+#
+# note: in wgrib2 v3.1.3 or earlier, all the libraries
+#  incuding aec, jasper, etc were included with the wgrib2 library
+#  in github version, it is different.
+
 
 # sets lib_src
 set(lib_src AAIG.c AAIGlong.c addtime.c aec_pk.c Aerosol.c Alarm.c
@@ -44,13 +57,15 @@ Type_reftime.c UDF.c Undefine.c units.c Unix_time.c Unmerge_fcst.c
 unpk_0.c unpk.c unpk_complex.c unpk_run_length.c update_sec3.c
 update_sec4.c v1_v2_if.c VerfTime.c Warn_old_g2lib.c Waves.c
 wgrib2_api.c wgrib2.c Wind_dir.c Wind_speed.c Wind_uv.c Write_sec.c
-Wrt_grib.c wrtieee.c wxtext.c)
+Wrt_grib.c wrtieee.c wxtext.c
+)
+
+include_directories(gctpc/source/include)
+add_subdirectory(gctpc)
 
 if(MAKE_FTN_API)
   add_subdirectory(ftn_api)
 endif()
-
-add_subdirectory(gctpc)
 
 # make this an object lib so we can re-use most of object files
 # The only files that differ are ${callable_src} which are compiled
@@ -67,25 +82,27 @@ configure_file (
 
 if(BUILD_LIB)
 
-  # with -DCALLABLE_WGRIB2 for the lib
   if(BUILD_SHARED_LIB)
-    add_library(wgrib2_lib SHARED ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
+    add_library(wgrib2_lib SHARED ${lib_src} )
+    set_property(TARGET wgrib2_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
   else()
-    add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc> ${callable_src})
+    add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc> )
+#    add_library(wgrib2_lib STATIC ${lib_src} )
+    set_property(TARGET wgrib2_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
   endif()
 
   # library and executable have same name (wgrib2) but different target names
   set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
-  target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
+  # target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
 endif()
 
 
-# without -DCALLABLE_WGRIB2 for the executable
-add_executable(wgrib2_exe ${callable_src})
+add_executable(wgrib2_exe wgrib2_main.c)
 set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
 if(USE_NETCDF)
   target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
+  target_link_libraries(wgrib2_exe PUBLIC NetCDF::NetCDF_C)
 endif()
 
 if(USE_PNG)
@@ -98,6 +115,7 @@ endif()
 
 if(USE_IPOLATES)
   target_link_libraries(obj_lib PUBLIC ip::ip_d)
+  target_link_libraries(wgrib2_exe PUBLIC ip::ip_d)
 
   # Link to the Fortran runtime library for each compiler if using ip2.
   # The wgrib2 exectuable is created using the C compiler and
@@ -110,13 +128,13 @@ if(USE_IPOLATES)
   
 endif()
 
-target_link_libraries(obj_lib PUBLIC gctpc -lm)
+## target_link_libraries(obj_lib PUBLIC gctpc -lm)
 
-# Link to gctpc directly because oobject libraries do not link transitively
-target_link_libraries(wgrib2_exe PRIVATE gctpc)
+# Link to gctpc directly because object libraries do not link transitively
+target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
 
 if(USE_AEC)
-  target_link_libraries(wgrib2_exe PRIVATE aec)
+  target_link_libraries(wgrib2_exe PRIVATE ${LIBAEC_LIBRARIES})
 endif()
 
 if(USE_JASPER)
@@ -130,10 +148,11 @@ if(USE_OPENJPEG)
 endif()
 
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
+# target_link_libraries(wgrib2_exe PRIVATE wgrib2_lib)
 
 if(BUILD_LIB)
   set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2/wgrib2_meta.h)
-  target_link_libraries(wgrib2_lib PUBLIC gctpc)
+##   target_link_libraries(wgrib2_lib PUBLIC gctpc)
   set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
   target_compile_definitions(wgrib2_lib PUBLIC ${definitions_list})
   
@@ -154,8 +173,5 @@ install(
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-
-
 
 
