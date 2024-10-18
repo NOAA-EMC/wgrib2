@@ -35,8 +35,13 @@ option(FTP_EXTRA_TEST_FILES "Fetch even more large files from FTP and test them.
 option(MAKE_FTN_API "add ftn api?" off)
 option(DISABLE_STAT "disable posix feature" off)
 set(BUILD_COMMENTS "stock build")
+
 option(BUILD_LIB "Build wgrib2 library?" on)
-option(BUILD_SHARED_LIB "Build shared library?" off)
+# if BUILD_LIB, then code is compiled as relocatable
+option(BUILD_SHARED_LIB "Build shared library?" on)
+# To create libwgrib2.so for python, you have to build with BUILD_SHARED_LIB off
+# and manually create libwgrib2.so from the needed *.a files
+
 option(BUILD_WGRIB "Build wgrib code?" off)
 
 if (MAKE_FTN_API OR USE_IPOLATES)
@@ -82,6 +87,10 @@ if(USE_G2CLIB)
   if(USE_PNG) 
     message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
   endif()
+endif()
+
+if (BUILD_SHARED_LIB AND NOT BUILD_LIB)
+   message(FATAL_ERROR "BUILD_SHARED_LIB is on but BUILD_LIB is off")
 endif()
 
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
