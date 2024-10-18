@@ -102,6 +102,9 @@ set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
 if(USE_NETCDF)
   target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
+  if(BUILD_SHARED_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC NetCDF::NetCDF_C)
+  endif()
   target_link_libraries(wgrib2_exe PUBLIC NetCDF::NetCDF_C)
 endif()
 
@@ -111,6 +114,9 @@ endif()
 
 if(USE_OPENMP)
   target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
+  if(BUILD_SHARED_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC OpenMP::OpenMP_C)
+  endif()
 endif()
 
 if(USE_IPOLATES)
