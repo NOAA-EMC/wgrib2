@@ -112,5 +112,18 @@ echo "*** Testing write/read section"
 touch secs.txt
 diff -w secs.txt simple.txt 
 
+
+echo "*** test pdt 48 ***"
+n=`../wgrib2/wgrib2 ./data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -d 1 -set_pdt +48  -set_byte 4 12 00:12:0 | grep -c "aerosol_size"`
+if [ "$n" -ne 1 ] ; then
+ exit 1
+fi
+set -x
+echo "*** test pdt 49 ***"
+n=`../wgrib2/wgrib2 ./data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -d 1 -set_pdt +49  -set_byte 4 12 00:12:0 | grep -c "aerosol_size"`
+if [ "$n" -ne 1 ] ; then
+ exit 1
+fi
+
 echo "*** SUCCESS!"
 exit 0
