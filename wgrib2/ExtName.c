@@ -188,9 +188,8 @@ int f_misc(ARG0) {
 	strcat(inv_out,":");
 	inv_out += strlen(inv_out);
     }
-    if (pdt == 48) {
+    if (pdt == 48 || pdt == 49) {	/* aerosol with optical properties */
         f_aerosol_size(call_ARG0(inv_out,NULL));
-        strcat(inv_out,":");
 	inv_out += strlen(inv_out);
         f_aerosol_wavelength(call_ARG0(inv_out,NULL));
         strcat(inv_out,":");
