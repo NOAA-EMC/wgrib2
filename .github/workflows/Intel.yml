@@ -1,0 +1,101 @@
+# This is the Intel workflow for the wgrib2 project. This
+# tests with Intel Classic and oneAPI.
+#
+# Alex Richert, 22 Oct 2024
+name: Intel
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+# Cancel in-progress workflows when pushing to a branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Linux_options:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        compilers: ["oneapi", "classic"]
+          
+    steps:
+
+    - name: install
+      run: |
+        sudo apt-get update
+        sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config \
+          libpng-dev autotools-dev autoconf libaec-dev libopenblas-serial-dev \
+          libopenjp2-7 libopenjp2-7-dev
+
+    - name: "Install Intel"
+      uses: NOAA-EMC/ci-install-intel-toolkit@develop
+      with:
+        compiler-setup: ${{ matrix.compilers }}
+
+    - name: cache-jasper
+      id: cache-jasper
+      uses: actions/cache@v4
+      with:
+        path: ~/jasper
+        key: jasper-${{ runner.os }}-${{ matrix.compilers }}-1.900.1
+
+    - name: checkout-jasper
+      if: steps.cache-jasper.outputs.cache-hit != 'true'
+      uses: actions/checkout@v4
+      with:
+        repository: jasper-software/jasper
+        path: jasper
+        ref: version-1.900.1
+
+    - name: build-jasper
+      if: steps.cache-jasper.outputs.cache-hit != 'true'
+      run: |
+        cd jasper
+        CFLAGS="-Wno-implicit-function-declaration -Wno-incompatible-pointer-types" ./configure --prefix=$HOME/jasper
+        make
+        make install
+
+    - name: cache-ip
+      id: cache-ip
+      uses: actions/cache@v4
+      with:
+        path: ~/ip
+        key: ip-${{ runner.os }}-${{ matrix.compilers }}-develop
+
+    - name: checkout-ip
+      if: steps.cache-ip.outputs.cache-hit != 'true'
+      uses: actions/checkout@v4
+      with:
+        repository: NOAA-EMC/NCEPLIBS-ip
+        path: ip
+        ref: develop
+
+    - name: build-ip
+      if: steps.cache-ip.outputs.cache-hit != 'true'
+      run: |
+        cd ip
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
+        make -j2
+        make install
+
+    - name: checkout
+      uses: actions/checkout@v4
+      with: 
+        path: wgrib2
+
+    - name: build
+      run: |
+        cd wgrib2
+        mkdir b
+        cd b
+        cmake -DCMAKE_PREFIX_PATH="~/ip" .. -DUSE_OPENMP=OFF
+        make VERBOSE=1
+        ctest --verbose --output-on-failure --rerun-failed
