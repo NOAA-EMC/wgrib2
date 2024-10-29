@@ -11,13 +11,13 @@ project(wgrib2 VERSION ${pVersion} LANGUAGES C)
 
 # Handle user build options.
 option(ENABLE_DOCS "Enable generation of doxygen-based documentation." OFF)
-option(USE_NETCDF "Use NetCDF" on)
+option(USE_NETCDF "Use NetCDF" off)
 option(USE_REGEX "Use Regex?" on)
 option(USE_TIGGE "Use tigge?" on)
 option(USE_MYSQL "Use MySQL?" off)
 option(USE_IPOLATES "Use Ipolates" off)
 option(USE_UDF "Use UDF?" off)
-option(USE_OPENMP "Use OpenMP?" on)
+option(USE_OPENMP "Use OpenMP?" off)
 option(USE_PROJ4 "Use Proj4?" off)
 option(USE_WMO_VALIDATION "Use WMO Validation?" off)
 option(DISABLE_TIMEZONE "Disable posix Timezone?" off)
@@ -35,8 +35,13 @@ option(FTP_EXTRA_TEST_FILES "Fetch even more large files from FTP and test them.
 option(MAKE_FTN_API "add ftn api?" off)
 option(DISABLE_STAT "disable posix feature" off)
 set(BUILD_COMMENTS "stock build")
+
 option(BUILD_LIB "Build wgrib2 library?" on)
-option(BUILD_SHARED_LIB "Build shared library?" off)
+# if BUILD_LIB, then code is compiled as relocatable
+option(BUILD_SHARED_LIB "Build shared library?" on)
+# To create libwgrib2.so for python, you have to build with BUILD_SHARED_LIB off
+# and manually create libwgrib2.so from the needed *.a files
+
 option(BUILD_WGRIB "Build wgrib code?" off)
 option(BUILD_EXTRA "Build user-contributed code" on)
 
@@ -62,15 +67,18 @@ endif()
 include(GNUInstallDirs)
 
 message(STATUS "Setting compiler flags...")
-if(CMAKE_C_COMPILER_ID MATCHES "^(Intel)$")
+if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
   set(CMAKE_C_FLAGS "-g -traceback ${CMAKE_C_FLAGS} -DIFORT")
+  if(CMAKE_C_COMPILER_ID MATCHES "^(IntelLLVM)$")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Rno-debug-disables-optimization")
+  endif()
   set(CMAKE_C_FLAGS_DEBUG "-O0")
 elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU)$")
   set(CMAKE_C_FLAGS "-g ${CMAKE_C_FLAGS} -DGFORTRAN")
   set(CMAKE_C_FLAGS_DEBUG "-O0")
 endif()
 
-if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel)$")
+if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
   set(CMAKE_Fortran_FLAGS "-g -traceback ${CMAKE_Fortran_FLAGS}")
   set(CMAKE_Fortran_FLAGS_DEBUG "-O0")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
@@ -83,6 +91,10 @@ if(USE_G2CLIB)
   if(USE_PNG) 
     message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
   endif()
+endif()
+
+if (BUILD_SHARED_LIB AND NOT BUILD_LIB)
+   message(FATAL_ERROR "BUILD_SHARED_LIB is on but BUILD_LIB is off")
 endif()
 
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
@@ -115,13 +127,7 @@ endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
 if(USE_OPENMP)
-  find_package(OpenMP)
-  if(OpenMP_CXX_FOUND)
-     target_link_libraries(MyTarget PUBLIC OpenMP::OpenMP_CXX)
-  endif()
-#  if(OpenMP_Fortran_FOUND)
-#     target_link_libraries(MyTarget PUBLIC OpenMP::OpenMP_Fortran)
-#  endif()
+  find_package(OpenMP REQUIRED COMPONENTS C)
 endif()
 
 message(STATUS "Checking if the user wants to use PNG...")

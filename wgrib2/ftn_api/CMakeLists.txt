@@ -13,21 +13,26 @@ set(c_src
   fort_wgrib2.c
   )
 
-add_library(wgrib2_api ${fortran_src} ${c_src})
+if (BUILD_SHARED_LIB)
+   add_library(wgrib2_ftn_api SHARED ${fortran_src} ${c_src})
+else()
+   add_library(wgrib2_ftn_api STATIC ${fortran_src} ${c_src})
+   set_property(TARGET wgrib2_ftn_api PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
 
 set(module_dir "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}")
-set_target_properties(wgrib2_api PROPERTIES Fortran_MODULE_DIRECTORY ${module_dir})
+set_target_properties(wgrib2_ftn_api PROPERTIES Fortran_MODULE_DIRECTORY ${module_dir})
 
-target_include_directories(wgrib2_api
+target_include_directories(wgrib2_ftn_api
     PUBLIC $<BUILD_INTERFACE:${module_dir}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
 
-target_link_libraries(wgrib2_api PUBLIC wgrib2_lib)  
+target_link_libraries(wgrib2_ftn_api PUBLIC wgrib2_lib)  
 
 install(DIRECTORY ${module_dir} DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 install(
-  TARGETS wgrib2_api
+  TARGETS wgrib2_ftn_api
   EXPORT wgrib2_exports
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

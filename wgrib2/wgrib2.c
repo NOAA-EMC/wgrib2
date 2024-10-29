@@ -1,4 +1,7 @@
-/* wgrib2 main module:  public domain 2005 w. ebisuzaki
+/* wgrib2:  public domain 2005 w. ebisuzaki
+ *          originally the main of the wgrib2 utility
+ *          later became main or routine depending on CALLABLE_WGRIB2
+ *          finally wgrib2 utility became a wrapper that calls the wgrib2 routine
  *
  * CHECK code is now duplicated
  *  if (decode) -- check before decoding
@@ -17,10 +20,9 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-#ifdef CALLABLE_WGRIB2
+
 #include <setjmp.h>
 jmp_buf fatal_err;
-#endif
 
 #include "grb2.h"
 #include "wgrib2.h"
@@ -116,16 +118,8 @@ int version_if;		/* 0-old stype 1-modern if */
  * simple wgrib for GRIB2 files
  *
  */
-#ifndef CALLABLE_WGRIB2
-
-int main(int argc, const char **argv) {
-
-#else
 
 int wgrib2(int argc, const char **argv) {
-
-#endif
-
 
 //WNE    FILE *in;
     struct seq_file in_file;
@@ -176,9 +170,9 @@ int wgrib2(int argc, const char **argv) {
     data = NULL;
 //    ddata = NULL;
 
-#ifdef CALLABLE_WGRIB2
+
     if (setjmp(fatal_err)) {
-	fprintf(stderr,"*** arg list to wgrib2:");
+	fprintf(stderr,"*** arg list to wgrib2(..):");
 	for (i=0; i < argc; i++) {
 	    fprintf(stderr," %s", argv[i]);
 	}
@@ -186,9 +180,9 @@ int wgrib2(int argc, const char **argv) {
 	if (ndata && data != NULL) free(data);
 	ndata=0;
 	if (in_file.file_type != NOT_OPEN) fclose_file(&in_file);
-	return 1;
+	return 8;
     }
-#endif
+
 
     /* no arguments .. help screen */
     if (argc == 1) {
@@ -565,7 +559,7 @@ int wgrib2(int argc, const char **argv) {
 		if (GDS_max_size) free(old_gds);
 		GDS_max_size = i + 100;		/* add 100 just to avoid excessive memory allocations */
     		if ((old_gds = (unsigned char *) malloc(GDS_max_size) ) == NULL) {
-			fatal_error("memory allocation problem old_gds in wgrib2.main for %s",in_file.filename);
+			fatal_error("memory allocation problem old_gds in wgrib2(..) for %s",in_file.filename);
 		}
 	    }
 #ifdef IS_OPENMP_4_0
@@ -692,7 +686,7 @@ int wgrib2(int argc, const char **argv) {
                     data = (float *) malloc(sizeof(float) * (size_t) ndata);
                     if (data == NULL) {
 			ndata = 0;
-			fatal_error("main: memory allocation failed data","");
+			fatal_error("wgrib2(..): memory allocation failed data","");
 		    }
 		}
                 else { data = NULL; }

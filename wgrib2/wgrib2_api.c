@@ -3,7 +3,6 @@
 #include <stdarg.h>
 #include "wgrib2.h"
 
-#ifdef CALLABLE_WGRIB2 
 
 /* 
    sort of like the command line version of wgrib2
@@ -43,4 +42,3 @@ int wgrib2a(char *arg1, ...) {
     return i;
 }
 
-#endif

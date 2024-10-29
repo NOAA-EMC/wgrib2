@@ -12,8 +12,6 @@ Wgrib2 is maintained as a collaboration between [Climate Prediction
 Center (CPC)](https://www.cpc.ncep.noaa.gov/) and the [Environmental
 Modeling Center (EMC)](https://www.emc.ncep.noaa.gov/emc.php).
 
-## Documentation for Previous Versions of wgrib2
-
-* [wgrib2 Version 3.4.0](ver-3.4.0/index.html)
+[Documentation Index](web_docs/index.html)
 
 
