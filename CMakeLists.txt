@@ -121,7 +121,7 @@ endif()
 # Find required packages to use OpenJPEG
 message(STATUS "Checking if the user wants to use OpenJPEG...")
 if(USE_OPENJPEG)
-find_package(OpenJPEG REQUIRED)
+  find_package(g2c 1.9.0 CONFIG REQUIRED)
 endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")

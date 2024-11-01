@@ -22,7 +22,7 @@ Alias.c Ave_test.c Ave_var.c Bbox.c bitstream.c Box_ave.c
 Check_pdt_size.c Checksum.c Cluster.c cname.c codetable_4_230.c
 CodeTable.c Code_Values.c Code_Values_JMA.c complex_pk.c Config.c
 copy.c crc32.c Cress_lola.c Csv.c Csv_long.c cubed_sphere2ll.c
-CubeFace2global.c Cyclic.c Data.c decenc_openjpeg.c dec_png_clone.c
+CubeFace2global.c Cyclic.c Data.c dec_png_clone.c
 Dump.c Earth.c Else.c End.c Endif.c Ensemble.c
 Ens_processing.c Ens_qc.c EOF.c Export_lonlat.c ExtName.c
 fatal_error.c Fcst_ave.c ffopen.c Fi.c File.c Fix_CFSv2_fcst.c
@@ -143,14 +143,9 @@ if(USE_AEC)
   target_link_libraries(wgrib2_exe PRIVATE ${LIBAEC_LIBRARIES})
 endif()
 
-if(USE_JASPER)
+if(USE_JASPER OR USE_OPENJPEG)
   target_link_libraries(obj_lib PUBLIC g2c::g2c)
   target_link_libraries(wgrib2_exe PRIVATE g2c::g2c)
-endif()
-
-if(USE_OPENJPEG)
-  include_directories(${OPENJPEG_INCLUDE_DIRS})
-  target_link_libraries(wgrib2_exe PRIVATE ${OPENJPEG_LIBRARIES})
 endif()
 
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)

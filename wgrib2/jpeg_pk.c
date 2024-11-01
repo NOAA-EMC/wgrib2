@@ -7,14 +7,11 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-#ifdef USE_JASPER
-    #include "grib2.h"
-#endif
-
 /* 10/2024 Public Domain   Wesley Ebisuzaki */
 
 #if defined USE_JASPER  || defined USE_OPENJPEG
 
+    #include "grib2.h"
 /*
  *  writes out jpeg2000 compressed grib message
  */
@@ -31,9 +28,7 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
     int i, k, nbits, nbytes;
     int ltype, ratio, retry;
     char *outjpc;
-#ifdef USE_JASPER
     unsigned char *cdata, *p;
-#endif
 
     /* required passed sections */
     sec0 = sec[0];
@@ -124,7 +119,6 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
         nbytes = (nbits + 7) / 8;
         if (nbytes > 4) fatal_error_i("jpeg2000_grib_out number of bytes is %d > 4", nbytes);
 
-#ifdef USE_JASPER
         /* floats -> integers -> bytes */
 
         cdata = (unsigned char *) malloc(nbytes * (size_t) n_defined);
@@ -156,9 +150,6 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
 	    }
         }
 
-//    jas_init();
-#endif
-
         ltype = 0;
         ratio = 1;
         retry = 0;
@@ -166,7 +157,6 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
         jpclen = 4*n_defined+200;
         outjpc = (char *) malloc(jpclen);
 
-#ifdef USE_JASPER
         i = g2c_enc_jpeg2000(cdata,ix,iy,nbits,ltype,ratio,retry,outjpc,jpclen);
         // we try to catch following error: "error: too few guard bits (need at least x)"
         if (i == -3) {
@@ -174,10 +164,6 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
             i = g2c_enc_jpeg2000(cdata,ix,iy,nbits,ltype,ratio,retry,outjpc,jpclen);
         }
 	free(cdata);
-#endif
-#ifdef USE_OPENJPEG
-        i = enc_jpeg2000_clone_float(data,ix,iy,nbits,ltype,ratio,retry,outjpc,jpclen);
-#endif
 
 	if (i <= 0) fatal_error_i("enc_jpeg error %d", i);
     }
