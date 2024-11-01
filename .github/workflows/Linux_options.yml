@@ -131,6 +131,7 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
+        export CFLAGS='-I/home/runner/g2c/include'
         cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/ip;~/g2c" ..
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
