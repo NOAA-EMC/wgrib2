@@ -177,8 +177,8 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("g2c", when="@develop +jasper")
     depends_on("zlib-api", when="@3.2: +png")
     depends_on("libpng", when="@3.2: +png")
-    depends_on("openjpeg", when="@3.2: +openjpeg")
-    
+    depends_on("openjpeg", when="@3.2:3.4 +openjpeg")
+    depends_on("g2c +openjpeg", when="@develop +openjpeg")
 
     @when("@:2 ^gmake@4.2:")
 

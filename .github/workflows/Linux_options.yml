@@ -105,6 +105,22 @@ jobs:
         make -j2
         make install
 
+    - name: checkout-g2c
+      uses: actions/checkout@v4
+      with:
+        repository: NOAA-EMC/NCEPLIBS-g2c
+        path: g2c
+        ref: develop
+  
+    - name: build-g2c
+      run: |
+        cd g2c
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/g2c -DUSE_OPENJPEG=ON -DUSE_JASPER=OFF
+        make -j2
+        make install
+
     - name: checkout
       uses: actions/checkout@v2
       with: 
@@ -115,6 +131,6 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
-        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/ip" ..
+        cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="~/ip;~/g2c" ..
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
