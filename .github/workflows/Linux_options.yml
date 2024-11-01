@@ -117,7 +117,7 @@ jobs:
         cd g2c
         mkdir build
         cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/g2c -DUSE_OPENJPEG=ON -DUSE_JASPER=OFF
+        cmake .. -DCMAKE_INSTALL_PREFIX=~/g2c -DUSE_OpenJPEG=ON -DUSE_Jasper=OFF
         make -j2
         make install
 
