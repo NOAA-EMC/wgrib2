@@ -48,6 +48,7 @@ int unpk_grib(unsigned char **sec, float *data) {
 
 #ifdef USE_PNG
     int width, height, i;
+    g2int w8, h8;
 #endif
 
 #if (defined USE_JASPER || defined USE_OPENJPEG)
@@ -252,15 +253,17 @@ int unpk_grib(unsigned char **sec, float *data) {
             fatal_error("unpk: png decode allocation error", "");
 
 	//i = (int) dec_png_clone(sec[7]+5, &width, &height, (unsigned char *) c, &nbits, ndata);
-    i = (int) g2c_dec_png(sec[7]+5, &width, &height, (unsigned char *) c);
+    i = (int) dec_png(sec[7]+5, &w8, &h8, (unsigned char *) c);
 	if (i) fatal_error_i("unpk: png decode error %d",i);
+    width = w8;
+    height = h8;
 	mask_pointer = (bitmap_flag == 255) ? NULL : sec[6] + 6;
 
 //	check sizes
 
 	if (mask_pointer == NULL) {
 	    if (ndata != width*height) 
-    		fatal_error_i("png size mismatch w*h=%d", ndata); //width*height);
+    		fatal_error_i("png size mismatch w*h=%d", width*height);
 	}
 	else {
 	    if (ndata != width*height + missing_points(mask_pointer, GB2_Sec3_npts(sec)) )
