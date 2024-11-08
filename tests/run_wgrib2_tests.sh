@@ -125,5 +125,27 @@ if [ "$n" -ne 1 ] ; then
  exit 1
 fi
 
+echo "*** test import_ieee big-endian ***"
+
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -ieee ieee.bin -inv ieee.inv -d 1
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -d 1 -rpn 0 -import_ieee ieee.bin -grib_out ieee.grb
+line=`../wgrib2/wgrib2 -d 1 data/ref_simple_packing.grib2 -rpn sto_1 -import_ieee ieee.bin -rpn "rcl_1:print_rms"`
+
+if [ `echo "$line" | grep -c ":rpn_rms=0:"` -ne 1 ] ; then
+  exit 1
+fi
+
+echo "*** test import_ieee little-endian ***"
+
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -little_endian -ieee ieee.bin.le -inv ieee.inv.le -d 1
+../wgrib2/wgrib2 data/ref_simple_packing.grib2 -little_endian -d 1 -rpn 0 -import_ieee ieee.bin.le -grib_out ieee.grb.le
+line=`../wgrib2/wgrib2 -little_endian -d 1 data/ref_simple_packing.grib2 -rpn sto_1 -import_ieee ieee.bin.le -rpn "rcl_1:print_rms"`
+
+if [ `echo "$line" | grep -c ":rpn_rms=0:"` -ne 1 ] ; then
+  exit 1
+fi
+
+
+
 echo "*** SUCCESS!"
 exit 0

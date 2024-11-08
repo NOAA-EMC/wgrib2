@@ -3,13 +3,13 @@
 #include "wgrib2.h"
 
 /*
- * rdieee_file: reads a big/little endian file with optional header
+ * rdieee_file: reads a big/little endian ieee file with optional header
  *
  * 10/2008 Public domain Wesley Ebisuzaki
  */
 
 /* BSIZ number of floats to process at one time */
-#define BSIZ 4096
+#define BSIZ 8*4096
 
 extern int ieee_little_endian;
 
@@ -33,15 +33,14 @@ int rdieee_file(float *array, unsigned int n, int header, struct seq_file *input
 	if (l != nbytes) fatal_error("rdieee: bad header","");
     }
 
-    while (n > 0) {
-	j =  n < BSIZ ? n : BSIZ;
+    for (i = 0; i < n; i += BSIZ) {
+	j = n-i > BSIZ ? BSIZ : n-i;
 	if (fread_file(buff,1,4*j,input) != 4*j) fatal_error("rdieee: data read","");
 	if (ieee_little_endian) swap_buffer(buff, 4*j);
-#pragma omp parallel for private(i) schedule(static)
-	for (i = 0; i < j; i++) {
-	    array[i] = ieee2flt(buff + 4*i);
-	}
-	n = n - j;
+#pragma omp parallel for private(l) schedule(static)
+	for (l = 0; l < j; l++) {
+	    array[i+l] = ieee2flt(buff + 4*l);
+  	}
     }
 
     if (header) {
