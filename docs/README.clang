@@ -23,29 +23,5 @@ you are using an old version of RedHat or Ubuntu, it is probably time to
 update to a newer version.  AOCC will work on intel cpus.
 
 
-    https://developer.amd.com/amd-aocc/
+Only the AOCC version of the clang compilers are tested. (12/2024)
 
-To compile with AOCC
-  export CC=clang
-  export FC=flang
-  make
-
-To compile for Zen3 with AOCC
-  export CC=clang
-  export FC=flang
-  export CFFLAGS=-march=znversion3
-  export FFLAGS=-march=znversion3
-  make
-
-AOCC: Jasper does not compile correctly.  Use OpenJPEG to support jpeg2000.
-      OpenJPEG requires Cmake
-
-   USE_JASPER=0
-   USE_OPENJPEG=1
-
-Netcdf4 does not compile correctly. Must use
-
-   USE_NETCDF3=1
-   USE_NETCDF4=0
-
-Shared libraries work on linux (Ubuntu 20.04LTS)

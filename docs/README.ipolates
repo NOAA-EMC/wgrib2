@@ -1,3 +1,26 @@
+                          IPOLATES: 12/2024
+
+Wgrib2 v3.5.0 now uses NCEPLIB:ip v5.1+.  This means the the ip
+library is now current, maintained and supported by the NCEPlibs
+team.  Believe or not "supported" is actually an important word!
+With the older IP grib1 and IP grib2 libraries, high priority support 
+was for operational codes and a lower priority for internal users.
+
+IP v5.1 adds (1) standard C interface to fortran codes in IP, and
+support for NCEP and WMO defined rotated lat-lon grids.
+
+Wgrib2 v3.5.0 drops the suport for older grib1 and grib2 IP libraries.
+Otherwise, the use of the ipolates library remains the same as 
+default the double-precision grib2 IP library.  
+
+The spectral library is included with NCEPLIB:ip and their no
+longer an option to use the IPlib without including the SPlib.
+(SP wass originally not included because some SPlib was of unknown
+origin. 10 years later, the major code was identified as open 
+source, and the minor code was simple recoded.)
+
+-----------------------------------------------------------------
+
                  IPOLATES: grid interpolation library   8/2018
 
 IPOLATES is a fortran library from NCEP that interpolates between 

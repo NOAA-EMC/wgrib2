@@ -1,4 +1,4 @@
-                                OpenMP                    revised 7.2016, 1.2020, 10.2023
+                           OpenMP                    revised 7.2016, 1.2020, 10.2023, 12.2024
 
 OpenMP is a shared-memory parallel-programming API.  As the grid dimensions get larger,
 the need for parallel computing becomes more important.  With OpenMP, wgrib2 will use
@@ -13,24 +13,25 @@ You can control the number of cores used by the environment variable OMP_NUM_THR
 
 Status: requires OpenMP v3.1 or greater
 wgrib2 v3.1.3: allows code to be written for SIMD and GPUs
-               only SIMD is present in v3.1.3
-
+               SIMD used in in wgrib2 v3.1.3; however, only in the few
+                places. Limited to SIMD loops inside of threaded loops.
+               Short loops should parallelized by SIMD to avoid the 
+                OpenMP overhead.
 Hints:
      complex-packing reading is parallelized
-     complex-packing writing is partly parallelized.
+     complex-packing writing is slightly parallelized.
      simple-packing is parallelized
      jpeg2000, png, AEC are not parallelized because they depends on external libraries
-     geolocation is parallelized except when using Proj4.
+      (jpeg2000 may have some parallelizations depending on libraries used)
+     geolocation is parallelized except when using Proj.
      Running multiple copies of wgrib2 can be done along with OpenMP.
      Nodes with 24+ cores should have environment variable OMP_NUM_THREADS set to
-      a number less than the number of cores. Little perforance gain for
+      a number less than the number of free cores. Little perforance gain for
       a large number of cores.
      NUMA should be considered.
      wgrib2ms/wgrib2mv is faster than using wgrib2 with OpenMP.  
         really fast: wgrib2ms/wgrib2mv with AEC compression
-
-Future:
-     wgrib2 allows writting SIMD and GPU code through OpenMP pragmas.
-     Wgrib2 is frequently I/O bound, and the run time is usually quite fast.
-       So speeding up wgrib2 will have little impact.  Consider writing
-       SIMD and gpu code for wgrib2 an exercise on non-trivial code.
+     Most sections of wgrib2 do not scale well over a handfull of cores;
+      however, a couple of codes (-ens_processing) is both computationally
+      intensive, and hightly parallelized and it can use as many cores
+      as you give it.

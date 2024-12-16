@@ -1,0 +1,15 @@
+                  How to submit questions?
+
+Questions are now handled by github
+
+https://github.com/NOAA-EMC/wgrib2
+
+Select the issue tab.  You might want to see if the
+problem has been previously addressed.
+
+Why do you want to submit questions by github vs the old way?
+  - multiple people can answer
+  - you can help train these muiltiple people
+        (only one is an experienced wgrib2 user)
+  - solved issues are documented and can help others
+
