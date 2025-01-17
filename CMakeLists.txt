@@ -32,7 +32,7 @@ option(FTP_TEST_FILES "Fetch and test with files on FTP site." OFF)
 option(FTP_LARGE_TEST_FILES "Fetch and test with very large files on FTP site." OFF)
 option(FTP_EXTRA_TEST_FILES "Fetch even more large files from FTP and test them." OFF)
 # MAKE_FTN_API should only be on when building library
-option(MAKE_FTN_API "add ftn api?" off)
+option(MAKE_FTN_API "add ftn api?" on)
 option(DISABLE_STAT "disable posix feature" off)
 set(BUILD_COMMENTS "stock build")
 
@@ -99,7 +99,7 @@ endif()
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
 message(STATUS "Checking if the user want to use NCEPLIBS-ip...")
 if(USE_IPOLATES)
-  find_package(ip 5.1.0 CONFIG REQUIRED)
+  find_package(ip 5.2.0 CONFIG REQUIRED)
   list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib_d")
   # list(APPEND definitions_list -DUSE_IPOLATES)
 endif()
