@@ -116,7 +116,10 @@ endif()
 
 if(USE_IPOLATES)
   target_link_libraries(obj_lib PUBLIC ip::ip_d)
-  target_link_libraries(wgrib2_exe PUBLIC ip::ip_d)
+  if (BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC ip::ip_d)
+  endif()
+  # target_link_libraries(wgrib2_exe PUBLIC ip::ip_d)
 
   # Link to the Fortran runtime library for each compiler if using ip2.
   # The wgrib2 exectuable is created using the C compiler and
@@ -138,9 +141,11 @@ if(USE_AEC)
   target_link_libraries(wgrib2_exe PRIVATE ${LIBAEC_LIBRARIES})
 endif()
 
-if(USE_JASPER OR USE_OPENJPEG OR USE_PNG)
+if(USE_JASPER OR USE_OPENJPEG OR USE_PNG OR USE_G2C)
   target_link_libraries(obj_lib PUBLIC g2c::g2c)
-  target_link_libraries(wgrib2_exe PRIVATE g2c::g2c)
+  # target_link_libraries(wgrib2_lib PUBLIC g2c::g2c)
+  target_link_libraries(wgrib2_lib PRIVATE g2c::g2c)
+  # target_link_libraries(wgrib2_exe PRIVATE g2c::g2c)
 endif()
 
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
