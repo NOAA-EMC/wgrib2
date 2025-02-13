@@ -99,7 +99,7 @@ endif()
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
 message(STATUS "Checking if the user want to use NCEPLIBS-ip...")
 if(USE_IPOLATES)
-  find_package(ip 5.1.0 CONFIG REQUIRED)
+  find_package(ip 5.2.0 CONFIG REQUIRED)
   list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib_d")
   # list(APPEND definitions_list -DUSE_IPOLATES)
 endif()
@@ -115,13 +115,13 @@ endif()
 
 message(STATUS "Checking if the user wants to use Jasper...")
 if(USE_JASPER)
-  find_package(g2c 1.9.0 CONFIG REQUIRED)
+  find_package(g2c 2.1.0 CONFIG REQUIRED)
 endif()
 
 # Find required packages to use OpenJPEG
 message(STATUS "Checking if the user wants to use OpenJPEG...")
 if(USE_OPENJPEG)
-  find_package(g2c 1.9.0 CONFIG REQUIRED)
+  find_package(g2c 2.1.0 CONFIG REQUIRED)
 endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
@@ -131,7 +131,7 @@ endif()
 
 message(STATUS "Checking if the user wants to use PNG...")
 if(USE_PNG)
-  find_package(g2c 1.9.0 CONFIG REQUIRED)
+  find_package(g2c 2.1.0 CONFIG REQUIRED)
 endif()
 
 # Find required packages to use AEC

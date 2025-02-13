@@ -116,6 +116,7 @@ endif()
 
 if(USE_IPOLATES)
   target_link_libraries(obj_lib PUBLIC ip::ip_d)
+  target_link_libraries(wgrib2_lib PUBLIC ip::ip_d)
   target_link_libraries(wgrib2_exe PUBLIC ip::ip_d)
 
   # Link to the Fortran runtime library for each compiler if using ip2.
