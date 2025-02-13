@@ -82,6 +82,6 @@ jobs:
           wgrib2/build/*.css
 
     - name: Upload built documentation
-      uses: actions/upload-pages-artifact@v1
+      uses: actions/upload-pages-artifact@v3
       with:
         path: wgrib2/build/docs/html  # Path to the built site files
