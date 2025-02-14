@@ -1,3 +1,0 @@
-    case 0: string="Total Wave Spectrum (combined wind waves and swell)"; break;
-    case 1: string="Generalized Partition"; break;
-    case 255: string="Missing"; break;

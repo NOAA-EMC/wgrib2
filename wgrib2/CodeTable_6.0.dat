@@ -1,3 +1,0 @@
-case     0: string="A bit map applies to this product and is specified in this Section"; break;
-case   254: string="A bit map defined previously in the same GRIB message applies to this product"; break;
-case   255: string="A bit map does not apply to this product"; break;

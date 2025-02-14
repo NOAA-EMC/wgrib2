@@ -1,8 +1,0 @@
-Compiling wgrib2 with netcdf3 on a 32-bit OS is problematical.
-The compile fails when the netcdf does a self test.  This problem
-has been observed with cygwin and 32-bit ubuntu 13.04.  Note
-that 64-bit Ubuntu 12.04 and 13.04 work fine.  
-
-Sugested work around.  Compile with netcdf4 support.
-
-

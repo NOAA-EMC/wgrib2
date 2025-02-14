@@ -1,4 +1,0 @@
-gnu:  default development compilers
-
-If you compile without OPENMP (the default), then you will see warnings 
-about Ignoring #pragma omp ....  This is normal.  

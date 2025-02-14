@@ -1,3 +1,0 @@
-case     0: string="Anomaly correlation"; break;
-case     1: string="Root mean square"; break;
-case   255: string="Missing"; break;

@@ -1,3 +1,0 @@
-case     0: string="Floating point"; break;
-case     1: string="Integer"; break;
-case   255: string="Missing"; break;
