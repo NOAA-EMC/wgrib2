@@ -107,7 +107,7 @@ endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
 if(USE_OPENMP)
-  find_package(OPENMP REQUIRED COMPONENTS C)
+  find_package(OpenMP REQUIRED COMPONENTS C)
 endif()
 
 # Find required packages to use AEC

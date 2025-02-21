@@ -40,7 +40,7 @@ jobs:
       run: |
         find /Library/Frameworks/ -name "png*"
         sudo rm -rf /Library/Frameworks/Mono.framework
-        brew install jasper libpng jpeg-turbo openjpeg libaec libomp
+        brew install jasper libpng jpeg-turbo openjpeg libaec libomp-dev
 
     - name: "Build dependencies"
       uses: NOAA-EMC/ci-build-nceplibs@develop
