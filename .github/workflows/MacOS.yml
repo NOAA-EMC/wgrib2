@@ -59,7 +59,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        #export CFLAGS='-L/opt/homebrew/opt/libomp/lib -I/opt/homebrew/opt/libomp/include'
+        export CFLAGS='-L/opt/homebrew/opt/libomp/lib -I/opt/homebrew/opt/libomp/include'
         cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DUSE_AEC=ON -DUSE_PNG=ON -DUSE_JASPER=${{matrix.jasper}} -DUSE_OPENJPEG=${{matrix.openjpeg}} -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON -DUSE_OPENMP=ON
         make VERBOSE=1
     
