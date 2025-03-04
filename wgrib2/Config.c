@@ -31,7 +31,7 @@ int f_config(ARG0) {
     int i;
 
     inv_out[0] = 0;
-    strcat(inv_out, "wgrib2 " WGRIB2_VERSION "\n    " BUILD_COMMENTS "\n\n");
+    strcat(inv_out, "wgrib2 " WGRIB2_VERSION "\n    " BUILD_COMMENTS "\n     CMAKE_BUILD_TYPE: " BUILD_TYPE "\n");
 
     inv_out += strlen(inv_out);
     sprintf(inv_out,"Compiled on %s %s\n\n",__TIME__,__DATE__);
@@ -205,13 +205,16 @@ strcat(inv_out, "  spherical geolocation is enabled\n");
 
 #ifdef CC
     strcat(inv_out,"C compiler: " CC "\n");
-    strcat(inv_out,"  CPPFLAGS=" CPPFLAGS "\n");
+    strcat(inv_out,"  export CFLAGS=" CPPFLAGS "\n");
 #endif
 
-#ifdef FORTRAN
-    strcat(inv_out,"Fortran compiler: " FORTRAN "\n");
-    strcat(inv_out,"  FFLAGS=" FFLAGS "\n");
+#ifdef FORTRAN_USED
+    if (strcmp(FORTRAN_USED,"") != 0) {
+       strcat(inv_out,"Fortran compiler: " FORTRAN "\n");
+       strcat(inv_out,"  export FFLAGS=" FFLAGS "\n");
+    }
 #endif
+
 #ifdef USE_OPENMP
     strcat(inv_out,"OpenMP: control number of threads with environment variable OMP_NUM_THREADS\n");
 #else

@@ -159,25 +159,9 @@ if (BUILD_WGRIB)
   add_subdirectory(wgrib)
 endif()
 
-message(STATUS "Setting compiler flags...")
-if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-  set(CMAKE_C_FLAGS "-g -traceback ${CMAKE_C_FLAGS} -DIFORT")
-  if(CMAKE_C_COMPILER_ID MATCHES "^(IntelLLVM)$")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Rno-debug-disables-optimization")
-  endif()
-  set(CMAKE_C_FLAGS_DEBUG "-O0")
-elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
-  set(CMAKE_C_FLAGS "-g ${CMAKE_C_FLAGS} -DGFORTRAN")
-  set(CMAKE_C_FLAGS_DEBUG "-O0")
-endif()
-
-if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-  set(CMAKE_Fortran_FLAGS "-g -traceback ${CMAKE_Fortran_FLAGS}")
-  set(CMAKE_Fortran_FLAGS_DEBUG "-O0")
-elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
-  set(CMAKE_Fortran_FLAGS "-g -fbacktrace ${CMAKE_Fortran_FLAGS}")
-  set(CMAKE_Fortran_FLAGS_DEBUG "-ggdb -O0")
-endif()
+#  to set compiler flags
+#  see wgrib2/CMakeLists.txt
+#
 
 # Turn on unit testing.
 include(CTest)
