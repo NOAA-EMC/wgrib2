@@ -22,7 +22,7 @@ ALGORITHM REFERENCES
 #include "cproj.h"
 
 void for_init(long outsys, long outzone, double *outparm, long outspheroid,
-        char *fn27, char *fn83, long *iflg, long (*for_trans[])()) {
+        char *fn27, char *fn83, long *iflg, long (*for_trans[])(double, double, double *, double *)) {
 
 //  void for_init(outsys,outzone,outparm,outspheroid,fn27,fn83,iflg,for_trans)
 //  
