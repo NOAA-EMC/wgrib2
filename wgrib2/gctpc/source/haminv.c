@@ -37,13 +37,15 @@ static double false_northing;	/* y offset in meters			*/
 
 /* Initialize the HAMMER projection
   -------------------------------*/
-long haminvint(r, center_long,false_east,false_north) 
-
-double r; 			/* (I) Radius of the earth (sphere) 	*/
-double center_long;		/* (I) Center longitude 		*/
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long haminvint(double r, double center_long, double false_east,
+        double false_north) {
+//long haminvint(r, center_long,false_east,false_north) 
+//
+//double r; 			/* (I) Radius of the earth (sphere) 	*/
+//double center_long;		/* (I) Center longitude 		*/
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -63,13 +65,14 @@ return(OK);
 
 /* HAMMER inverse equations--mapping x,y to lat/long
   ------------------------------------------------*/
-long haminv(x, y, lon, lat)
-double x;			/* (O) X projection coordinate */
-double y;			/* (O) Y projection coordinate */
-double *lon;			/* (I) Longitude */
-double *lat;			/* (I) Latitude */
-
-{
+long haminv(double x, double y, double *lon, double *lat) {
+//long haminv(x, y, lon, lat)
+//double x;			/* (O) X projection coordinate */
+//double y;			/* (O) Y projection coordinate */
+//double *lon;			/* (I) Longitude */
+//double *lat;			/* (I) Latitude */
+//
+//{
 double fac;
 
 /* Inverse equations

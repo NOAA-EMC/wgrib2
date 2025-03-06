@@ -37,13 +37,15 @@ static double false_northing;	/* y offset in meters			*/
 
 /* Initialize the Van Der Grinten projection
   ----------------------------------------*/
-long vandginvint(r, center_long,false_east,false_north) 
-
-double r; 			/* (I) Radius of the earth (sphere) 	*/
-double center_long;		/* (I) Center longitude 		*/
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long vandginvint(double r, double center_long, double false_east,
+        double false_north) {
+//long vandginvint(r, center_long,false_east,false_north) 
+//
+//double r; 			/* (I) Radius of the earth (sphere) 	*/
+//double center_long;		/* (I) Center longitude 		*/
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 R = r;
@@ -62,13 +64,13 @@ return(OK);
 
 /* Van Der Grinten inverse equations--mapping x,y to lat/long
   ---------------------------------------------------------*/
-long vandginv(x, y, lon, lat)
-double x;			/* (O) X projection coordinate */
-double y;			/* (O) Y projection coordinate */
-double *lon;			/* (I) Longitude */
-double *lat;			/* (I) Latitude */
-
-{
+long vandginv(double x, double y, double *lon, double *lat) {
+//long vandginv(x, y, lon, lat)
+//double x;			/* (O) X projection coordinate */
+//double y;			/* (O) Y projection coordinate */
+//double *lon;			/* (I) Longitude */
+//double *lat;			/* (I) Latitude */
+//{
 double xx,yy,xys,c1,c2,c3;
 double a1;
 double m1;

@@ -241,6 +241,7 @@ long obleqfor(double lon, double lat, double *x, double *y);
 long obleqinvint(double r, double center_long, double center_lat,
 	double shape_m, double shape_n, double angle, double false_east,
 	double false_north);
+long obleqinv(double x, double y, double *lon, double *lat);
 long omerforint(double r_maj, double r_min, double scale_fact,
 	double azimuth, double lon_orig, double lat_orig, double false_east,
 	double false_north, double lon1, double lat1, double lon2, double lat2,
@@ -334,7 +335,9 @@ long tminv(double x, double y, double *lon, double *lat);
 long untfz(long inunit, long outunit, double *factor);
 long utmforint(double r_maj, double r_min, double scale_fact, long zone); 
 long utmfor(double lon, double lat, double *x, double *y);
+
 long utminvint(double r_maj, double r_min, double scale_fact, long zone);
+long utminv(double x, double y, double *lon, double *lat);
 long vandgforint(double r, double center_long, double false_east,
 	double false_north);
 long vandgfor( double lon, double lat, double *x, double *y);

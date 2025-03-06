@@ -42,6 +42,10 @@
  * HEADER:000:ave:output:2:average X=time step Y=output v2
  */
 int f_ave(ARG2) {
+    if (mode == -1) 
+        return f_time_processing(init_ARG4(inv_out,local,"0","1",arg1,arg2));
+    if (mode == -2) 
+        return f_time_processing(fin_ARG4(inv_out,local,"0","1",arg1,arg2));
     return f_time_processing(call_ARG4(inv_out,local,"0","1",arg1,arg2));
 }
 
@@ -49,6 +53,10 @@ int f_ave(ARG2) {
  * HEADER:000:fcst_ave:output:2:average X=time step Y=output v2
  */
 int f_fcst_ave(ARG2) {
+    if (mode == -1) 
+        return f_time_processing(init_ARG4(inv_out,local,"0","2",arg1,arg2));
+    if (mode == -1) 
+        return f_time_processing(call_ARG4(inv_out,local,"0","2",arg1,arg2));
     return f_time_processing(call_ARG4(inv_out,local,"0","2",arg1,arg2));
 }
 

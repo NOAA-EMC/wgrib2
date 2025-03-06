@@ -21,17 +21,21 @@ ALGORITHM REFERENCES
 *******************************************************************************/
 #include "cproj.h"
 
-void for_init(outsys,outzone,outparm,outspheroid,fn27,fn83,iflg,for_trans)
+void for_init(long outsys, long outzone, double *outparm, long outspheroid,
+        char *fn27, char *fn83, long *iflg, long (*for_trans[])()) {
 
-long outsys;		/* output system code				*/
-long outzone;		/* output zone number				*/
-double *outparm;	/* output array of projection parameters	*/
-long outspheroid;	/* output spheroid				*/
-char *fn27;		/* NAD 1927 parameter file			*/
-char *fn83;		/* NAD 1983 parameter file			*/
-long *iflg;		/* status flag					*/
-long (*for_trans[])();	/* forward function pointer			*/
-{
+//  void for_init(outsys,outzone,outparm,outspheroid,fn27,fn83,iflg,for_trans)
+//  
+//  long outsys;		/* output system code				*/
+//  long outzone;		/* output zone number				*/
+//  double *outparm;	/* output array of projection parameters	*/
+//  long outspheroid;	/* output spheroid				*/
+//  char *fn27;		/* NAD 1927 parameter file			*/
+//  char *fn83;		/* NAD 1983 parameter file			*/
+//  long *iflg;		/* status flag					*/
+//  long (*for_trans[])();	/* forward function pointer			*/
+//  {
+
 long zone;		/* zone number					*/
 double azimuth;		/* azimuth					*/
 double alf;		/* SOM angle					*/
@@ -62,36 +66,6 @@ long mode;		/* which initialization method  to use A or B	*/
 
 	/* Function declarations for function pointer use
 	-----------------------------------------------*/
-long utmfor();
-long stplnfor();
-long alberfor();
-long lamccfor();
-long merfor();
-long psfor();
-long polyfor();
-long eqconfor();
-long tmfor();
-long sterfor();
-long lamazfor();
-long azimfor();
-long gnomfor();
-long orthfor();
-long gvnspfor();
-long sinfor();
-long equifor();
-long millfor();
-long vandgfor();
-long omerfor();
-long somfor();
-long hamfor();
-long robfor();
-long goodfor();
-long molwfor();
-long imolwfor();
-long alconfor();
-long wivfor();
-long wviifor();
-long obleqfor();
 
 /* Initialize forward transformations
 -----------------------------------*/

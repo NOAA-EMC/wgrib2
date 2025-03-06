@@ -75,7 +75,7 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
     double false_north;
     double dx, dy;
     double x0, y0;
-    long int (*inv_fn)();
+    long int (*inv_fn)(double, double, double *, double *);
     double *llat, *llon, rlon, rlat;
 
     int nnx, nny, nres, nscan, is_spherical;

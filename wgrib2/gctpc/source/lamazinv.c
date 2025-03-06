@@ -42,13 +42,15 @@ static double false_northing;	/* y offset in meters			*/
 
 /* Initialize the Lambert Azimuthal Equal Area projection
   ------------------------------------------------------*/
-long lamazinvint(r, center_long, center_lat,false_east,false_north) 
-double r; 			/* (I) Radius of the earth (sphere) 	*/
-double center_long;		/* (I) Center longitude 		*/
-double center_lat;		/* (I) Center latitude 			*/
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long lamazinvint(double r, double center_long, double center_lat,
+        double false_east, double false_north) {
+//long lamazinvint(r, center_long, center_lat,false_east,false_north) 
+//double r; 			/* (I) Radius of the earth (sphere) 	*/
+//double center_long;		/* (I) Center longitude 		*/
+//double center_lat;		/* (I) Center latitude 			*/
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 R = r;
@@ -70,12 +72,13 @@ return(OK);
 
 /* Lambert Azimuthal Equal Area inverse equations--mapping x,y to lat,long 
   -----------------------------------------------------------------------*/
-long lamazinv(x, y, lon, lat)
-double x;		/* (I) X projection coordinate */
-double y;		/* (I) Y projection coordinate */
-double *lon;		/* (O) Longitude */
-double *lat;		/* (O) Latitude */
-{
+long lamazinv(double x, double y, double *lon, double *lat) {
+//long lamazinv(x, y, lon, lat)
+//double x;		/* (I) X projection coordinate */
+//double y;		/* (I) Y projection coordinate */
+//double *lon;		/* (O) Longitude */
+//double *lat;		/* (O) Latitude */
+//{
 double Rh;
 double z;		/* Great circle dist from proj center to given point */
 double sin_z;		/* Sine of z */

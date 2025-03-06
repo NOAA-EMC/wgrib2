@@ -57,8 +57,8 @@ static long outpj[MAXPROJ + 1];		/* output projection array	*/
 static long outdat[MAXPROJ + 1];	/* output dataum array		*/
 static long outzn[MAXPROJ + 1];		/* output zone array		*/
 static double pdout[MAXPROJ+1][COEFCT];	/* output projection parm array	*/
-static long (*for_trans[MAXPROJ + 1])();/* forward function pointer array*/
-static long (*inv_trans[MAXPROJ + 1])();/* inverse function pointer array*/
+static long (*for_trans[MAXPROJ + 1])(double,double,double *,double *);/* forward function pointer array*/
+static long (*inv_trans[MAXPROJ + 1])(double,double,double *,double *);/* inverse function pointer array*/
 
 			/* Table of unit codes as specified by state
 			   laws as of 2/1/92 for NAD 1983 State Plane
@@ -69,31 +69,37 @@ static long NADUT[134] = {1, 5, 1, 1, 5, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 2,
 			  1, 1, 5, 2, 1, 2, 5, 1, 2, 2, 2, 1, 1, 1, 5, 2, 1, 5,
 			  2, 2, 5, 2, 1, 1, 5, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2};
 
-void gctp(incoor,insys,inzone,inparm,inunit,inspheroid,ipr,efile,jpr,pfile,
-	outcoor, outsys,outzone,outparm,outunit,outspheroid,fn27,fn83,iflg)
+void gctp(double *incoor, long *insys, long *inzone, double *inparm,
+        long *inunit, long *inspheroid, long *ipr, char *efile, long *jpr,
+        char *pfile, double *outcoor, long *outsys, long *outzone,
+        double *outparm, long *outunit, long *outspheroid, char fn27[],
+        char fn83[], long *iflg) {
 
-double *incoor;		/* input coordinates				*/
-long *insys;		/* input projection code			*/
-long *inzone;		/* input zone number				*/
-double *inparm;		/* input projection parameter array		*/
-long *inunit;		/* input units					*/
-long *inspheroid;	/* input spheroid 				*/
-long *ipr;		/* printout flag for error messages. 0=screen, 1=file,
-			   2=both*/
-char *efile;		/* error file name				*/
-long *jpr;		/* printout flag for projection parameters 0=screen, 
-			   1=file, 2 = both*/
-char *pfile;		/* error file name				*/
-double *outcoor;	/* output coordinates				*/
-long *outsys;		/* output projection code			*/
-long *outzone;		/* output zone					*/
-double *outparm;	/* output projection array			*/
-long *outunit;		/* output units					*/
-long *outspheroid;	/* output spheroid				*/
-char fn27[];		/* file name of NAD 1927 parameter file		*/
-char fn83[]; 	 	/* file name of NAD 1983 parameter file		*/
-long *iflg;		/* error flag					*/
-{
+//void gctp(incoor,insys,inzone,inparm,inunit,inspheroid,ipr,efile,jpr,pfile,
+//	outcoor, outsys,outzone,outparm,outunit,outspheroid,fn27,fn83,iflg)
+
+//double *incoor;		/* input coordinates				*/
+//long *insys;		/* input projection code			*/
+//long *inzone;		/* input zone number				*/
+//double *inparm;		/* input projection parameter array		*/
+//long *inunit;		/* input units					*/
+//long *inspheroid;	/* input spheroid 				*/
+//long *ipr;		/* printout flag for error messages. 0=screen, 1=file,
+//			   2=both*/
+//char *efile;		/* error file name				*/
+//long *jpr;		/* printout flag for projection parameters 0=screen, 
+//			   1=file, 2 = both*/
+//char *pfile;		/* error file name				*/
+// double *outcoor;	/* output coordinates				*/
+//long *outsys;		/* output projection code			*/
+//long *outzone;		/* output zone					*/
+//double *outparm;	/* output projection array			*/
+//long *outunit;		/* output units					*/
+//long *outspheroid;	/* output spheroid				*/
+//char fn27[];		/* file name of NAD 1927 parameter file		*/
+//char fn83[]; 	 	/* file name of NAD 1983 parameter file		*/
+//long *iflg;		/* error flag					*/
+//{
 double x;		/* x coordinate 				*/
 double y;		/* y coordinate					*/
 double factor;		/* conversion factor				*/

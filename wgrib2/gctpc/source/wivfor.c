@@ -32,12 +32,14 @@ static double false_northing;	/* y offset				*/
 
 /* Initialize the Wagner IV projection
   ------------------------------------*/
-long wivforint(r, center_long,false_east,false_north) 
-double r; 			/* (I) Radius of the earth (sphere) */
-double center_long;		/* (I) Center longitude */
-double false_east;		/* x offset				*/
-double false_north;		/* y offset				*/
-{
+long wivforint(double r, double center_long, double false_east,
+        double false_north) {
+//long wivforint(r, center_long,false_east,false_north) 
+//double r; 			/* (I) Radius of the earth (sphere) */
+//double center_long;		/* (I) Center longitude */
+//double false_east;		/* x offset				*/
+//double false_north;		/* y offset				*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 R = r;
@@ -56,12 +58,13 @@ return(OK);
 
 /* Wagner IV forward equations--mapping lat,long to x,y
   ----------------------------------------------------*/
-long wivfor(lon, lat, x, y)
-double lon;			/* (I) Longitude */
-double lat;			/* (I) Latitude */
-double *x;			/* (O) X projection coordinate */
-double *y;			/* (O) Y projection coordinate */
-{
+long wivfor(double lon, double lat, double *x, double *y) {
+//long wivfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude */
+//double lat;			/* (I) Latitude */
+//double *x;			/* (O) X projection coordinate */
+//double *y;			/* (O) Y projection coordinate */
+//{
 double delta_lon;	/* Delta longitude (Given longitude - center */
 double theta;
 double delta_theta;

@@ -32,14 +32,16 @@ static double false_easting;	/* x offset in meters			*/
 
 /* Initialize the Equirectangular projection
   ----------------------------------------*/
-long equiinvint(r_maj,center_lon,lat1,false_east,false_north) 
-
-double r_maj;			/* major axis			*/
-double center_lon;		/* center longitude		*/
-double lat1;			/* latitude of true scale	*/
-double false_east;		/* x offset in meters		*/
-double false_north;		/* y offset in meters		*/
-{
+long equiinvint(double r_maj, double center_lon, double lat1,
+        double false_east, double false_north) {
+//long equiinvint(r_maj,center_lon,lat1,false_east,false_north) 
+//
+//double r_maj;			/* major axis			*/
+//double center_lon;		/* center longitude		*/
+//double lat1;			/* latitude of true scale	*/
+//double false_east;		/* x offset in meters		*/
+//double false_north;		/* y offset in meters		*/
+//{
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -62,12 +64,13 @@ return(OK);
 
 /* Equirectangular inverse equations--mapping x,y to lat/long
   ---------------------------------------------------------*/
-long equiinv(x, y, lon, lat)
-double x;			/* (O) X projection coordinate 	*/
-double y;			/* (O) Y projection coordinate 	*/
-double *lon;			/* (I) Longitude 		*/
-double *lat;			/* (I) Latitude 		*/
-{
+long equiinv(double x, double y, double *lon, double *lat) {
+//long equiinv(x, y, lon, lat)
+//double x;			/* (O) X projection coordinate 	*/
+//double y;			/* (O) Y projection coordinate 	*/
+//double *lon;			/* (I) Longitude 		*/
+//double *lat;			/* (I) Latitude 		*/
+//{
 
 /* Inverse equations
   -----------------*/

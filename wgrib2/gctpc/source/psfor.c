@@ -40,16 +40,17 @@ ALGORITHM REFERENCES
 
 /* Initialize the Polar Stereographic projection
   --------------------------------------------*/
-long psforint(r_maj,r_min,c_lon,c_lat,false_east,false_north) 
-
-double r_maj;				/* major axis			*/
-double r_min;				/* minor axis			*/
-double c_lon;				/* center longitude		*/
-double c_lat;				/* center latitude		*/
-double false_east;			/* x offset in meters		*/
-double false_north;			/* y offset in meters		*/
-
-{
+long psforint(double r_maj, double r_min, double c_lon, double c_lat,
+        double false_east, double false_north) {
+//long psforint(r_maj,r_min,c_lon,c_lat,false_east,false_north) 
+//
+//double r_maj;				/* major axis			*/
+//double r_min;				/* minor axis			*/
+//double c_lon;				/* center longitude		*/
+//double c_lat;				/* center latitude		*/
+//double false_east;			/* x offset in meters		*/
+//double false_north;			/* y offset in meters		*/
+// {
 double temp;				/* temporary variable		*/
 double con1;				/* temporary angle		*/
 double sinphi;				/* sin value			*/
@@ -91,13 +92,14 @@ return(OK);
 
 /* Polar Stereographic forward equations--mapping lat,long to x,y
   --------------------------------------------------------------*/
-long psfor(lon, lat, x, y)
-double lon;			/* (I) Longitude 		*/
-double lat;			/* (I) Latitude 		*/
-double *x;			/* (O) X projection coordinate 	*/
-double *y;			/* (O) Y projection coordinate 	*/
-
-{
+long psfor( double lon, double lat, double *x, double *y) {
+//long psfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude 		*/
+//double lat;			/* (I) Latitude 		*/
+//double *x;			/* (O) X projection coordinate 	*/
+//double *y;			/* (O) Y projection coordinate 	*/
+//
+//{
 double con1;			/* adjusted longitude		*/
 double con2;			/* adjusted latitude		*/
 double rh;			/* height above ellipsoid	*/

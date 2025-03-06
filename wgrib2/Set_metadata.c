@@ -44,7 +44,6 @@ int f_set_metadata(ARG1) {
     else if (mode >= 0) {
         save = *local;
 	if (fgets_file(line, STRING_SIZE+1, save) == NULL) return 1;
-        // i = set_metadata_string(CALL_ARG0, line);
         i = set_metadata_string(call_ARG1(inv_out,local,line));
 	if (i) fatal_error("set_metadata: processing %s", line);
     }
@@ -58,7 +57,6 @@ int f_set_metadata(ARG1) {
 int f_set_metadata_str(ARG1) {
    int i;
    if (mode  < 0) return 0;
-   // i = set_metadata_string(CALL_ARG0, arg1);
    i = set_metadata_string(call_ARG1(inv_out,local,arg1));
    if (i != 0) fatal_error("set_metadata_str: %s", arg1);
    return 0;

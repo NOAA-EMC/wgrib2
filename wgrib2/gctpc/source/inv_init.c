@@ -21,17 +21,19 @@ ALGORITHM REFERENCES
 *******************************************************************************/
 #include "cproj.h"
 
-void inv_init(insys,inzone,inparm,inspheroid,fn27,fn83,iflg,inv_trans)
-
-long insys;		/* input system code				*/
-long inzone;		/* input zone number				*/
-double *inparm;		/* input array of projection parameters		*/
-long inspheroid;	/* input spheroid code				*/
-char *fn27;		/* NAD 1927 parameter file			*/
-char *fn83;		/* NAD 1983 parameter file			*/
-long *iflg;		/* status flag					*/
-long (*inv_trans[])();	/* inverse function pointer			*/
-{
+void inv_init(long insys, long inzone, double *inparm, long inspheroid,
+        char *fn27, char *fn83, long *iflg, long (*inv_trans[])()) {
+//void inv_init(insys,inzone,inparm,inspheroid,fn27,fn83,iflg,inv_trans)
+//
+//long insys;		/* input system code				*/
+//long inzone;		/* input zone number				*/
+//double *inparm;		/* input array of projection parameters		*/
+//long inspheroid;	/* input spheroid code				*/
+//char *fn27;		/* NAD 1927 parameter file			*/
+//char *fn83;		/* NAD 1983 parameter file			*/
+//long *iflg;		/* status flag					*/
+//long (*inv_trans[])();	/* inverse function pointer			*/
+//{
 long zone;		/* zone number					*/
 double azimuth;		/* azimuth					*/
 double angle;		/* rotation anlge				*/
@@ -62,36 +64,6 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
 
 	/* Function declarations for inverse function pointer
 	---------------------------------------------------*/
-long utminv();
-long stplninv();
-long alberinv();
-long lamccinv();
-long merinv();
-long psinv();
-long polyinv();
-long eqconinv();
-long tminv();
-long sterinv();
-long lamazinv();
-long aziminv();
-long gnominv();
-long orthinv();
-long gvnspinv();
-long sininv();
-long equiinv();
-long millinv();
-long vandginv();
-long omerinv();
-long sominv();
-long haminv();
-long robinv();
-long goodinv();
-long molwinv();
-long imolwinv();
-long alconinv();
-long wivinv();
-long wviiinv();
-long obleqinv();
 
 /* Initialize inverse transformations
 -----------------------------------*/

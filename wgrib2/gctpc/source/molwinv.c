@@ -32,12 +32,14 @@ static double false_northing;	/* y offset in meters			*/
 
 /* Initialize the Mollweide projection
   ------------------------------------*/
-long molwinvint(r, center_long, false_east, false_north) 
-double r; 			/* (I) Radius of the earth (sphere) */
-double center_long;		/* (I) Center longitude */
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long molwinvint(double r, double center_long, double false_east,
+        double false_north) {
+//long molwinvint(r, center_long, false_east, false_north) 
+//double r; 			/* (I) Radius of the earth (sphere) */
+//double center_long;		/* (I) Center longitude */
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 false_easting = false_east;
@@ -56,12 +58,13 @@ return(OK);
 
 /* Mollweide inverse equations--mapping x,y to lat,long 
   ----------------------------------------------------*/
-long molwinv(x, y, lon, lat)
-double x;		/* (I) X projection coordinate */
-double y;		/* (I) Y projection coordinate */
-double *lon;		/* (O) Longitude */
-double *lat;		/* (O) Latitude */
-{
+long molwinv(double x, double y, double *lon, double *lat) {
+//long molwinv(x, y, lon, lat)
+//double x;		/* (I) X projection coordinate */
+//double y;		/* (I) Y projection coordinate */
+//double *lon;		/* (O) Longitude */
+//double *lat;		/* (O) Latitude */
+//{
 double theta;
 double arg;
 

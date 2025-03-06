@@ -46,17 +46,20 @@ static double ind;		/* spherical flag			*/
 
 /* Initialize the Transverse Mercator (TM) projection
   -------------------------------------------------*/
-long tmforint(r_maj,r_min,scale_fact,center_lon,center_lat,false_east,
-	false_north) 
-
-double r_maj;			/* major axis			*/
-double r_min;			/* minor axis			*/
-double scale_fact;		/* scale factor			*/
-double center_lon;		/* center longitude		*/
-double center_lat;		/* center latitude		*/
-double false_east;		/* x offset in meters		*/
-double false_north;		/* y offset in meters		*/
-{
+long tmforint(double r_maj, double r_min, double scale_fact,
+        double center_lon, double center_lat, double false_east,
+        double false_north) {
+//long tmforint(r_maj,r_min,scale_fact,center_lon,center_lat,false_east,
+//	false_north) 
+//
+//double r_maj;			/* major axis			*/
+//double r_min;			/* minor axis			*/
+//double scale_fact;		/* scale factor			*/
+//double center_lon;		/* center longitude		*/
+//double center_lat;		/* center latitude		*/
+//double false_east;		/* x offset in meters		*/
+//double false_north;		/* y offset in meters		*/
+//{
 double temp;			/* temporary variable		*/
 
 /* Place parameters in static storage for common use
@@ -99,12 +102,13 @@ return(OK);
    Note:  The algorithm for TM is exactly the same as UTM and therefore
 	  if a change is implemented, also make the change to UTMFOR.c
   --------------------------------------------------------------*/
-long tmfor(lon, lat, x, y)
-double lon;			/* (I) Longitude 		*/
-double lat;			/* (I) Latitude 		*/
-double *x;			/* (O) X projection coordinate 	*/
-double *y;			/* (O) Y projection coordinate 	*/
-{
+long tmfor(double lon, double lat, double *x, double *y) {
+//long tmfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude 		*/
+//double lat;			/* (I) Latitude 		*/
+//double *x;			/* (O) X projection coordinate 	*/
+//double *y;			/* (O) Y projection coordinate 	*/
+//{
 double delta_lon;	/* Delta longitude (Given longitude - center 	*/
 double sin_phi, cos_phi;/* sin and cos value				*/
 double al, als;		/* temporary values				*/

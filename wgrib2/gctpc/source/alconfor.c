@@ -45,13 +45,15 @@ static long n;
 
 /* Initialize the ALASKA CONFORMAL projection
   -----------------------------------------*/
-long alconforint(r_maj,r_min,false_east,false_north) 
-
-double r_maj; 			/* Major axis			 	*/
-double r_min; 			/* Minor axis			 	*/
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long alconforint( double r_maj, double r_min, double false_east,
+        double false_north) {
+//long alconforint(r_maj,r_min,false_east,false_north) 
+//
+//double r_maj; 			/* Major axis			 	*/
+//double r_min; 			/* Minor axis			 	*/
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 double es;
 double chi;
 double esphi;
@@ -100,13 +102,13 @@ return(OK);
 
 /* ALASKA CONFORMAL forward equations--mapping lat,long to x,y
   ----------------------------------------------------------*/
-long alconfor(lon, lat, x, y)
-double lon;			/* (I) Longitude */
-double lat;			/* (I) Latitude */
-double *x;			/* (O) X projection coordinate */
-double *y;			/* (O) Y projection coordinate */
-
-{
+long alconfor(double lon, double lat, double *x, double *y) {
+//long alconfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude */
+//double lat;			/* (I) Latitude */
+//double *x;			/* (O) X projection coordinate */
+//double *y;			/* (O) Y projection coordinate */
+//{
 double dlon;
 double sinlon,coslon;
 double sinphi,cosphi;

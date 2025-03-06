@@ -33,12 +33,14 @@ static double false_northing;	/* y offset in meters			*/
 
 /* Initialize the Mollweide projection
   ------------------------------------*/
-long molwforint(r, center_long,false_east,false_north)
-double r; 			/* (I) Radius of the earth (sphere) 	*/
-double center_long;		/* (I) Center longitude 		*/
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long molwforint(double r, double center_long, double false_east,
+        double false_north) {
+//long molwforint(r, center_long,false_east,false_north)
+//double r; 			/* (I) Radius of the earth (sphere) 	*/
+//double center_long;		/* (I) Center longitude 		*/
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 false_easting = false_east;
@@ -57,12 +59,13 @@ return(OK);
 
 /* Mollweide forward equations--mapping lat,long to x,y
   ----------------------------------------------------*/
-long molwfor(lon, lat, x, y)
-double lon;			/* (I) Longitude */
-double lat;			/* (I) Latitude */
-double *x;			/* (O) X projection coordinate */
-double *y;			/* (O) Y projection coordinate */
-{
+long molwfor(double lon, double lat, double *x, double *y) {
+//long molwfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude */
+//double lat;			/* (I) Latitude */
+//double *x;			/* (O) X projection coordinate */
+//double *y;			/* (O) Y projection coordinate */
+//{
 double delta_lon;	/* Delta longitude (Given longitude - center */
 double theta;
 double delta_theta;

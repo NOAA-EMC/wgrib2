@@ -60,13 +60,14 @@ static long nad83[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,
 		5001,5002,5003,5004,5005,5006,5007,5008,5009,5200,0000,5400};                                             
 /* Initialize the State Plane projection
   ------------------------------------*/
-long stplninvint( zone,sphere,fn27,fn83)
-
-long   zone;		/* zone number */
-long   sphere;		/* spheroid number */
-char   *fn27;		/* name of file containing the NAD27 parameters */
-char   *fn83; 		/* name of file containing the NAD83 parameters */
-{
+long stplninvint(long zone, long sphere, char *fn27, char *fn83) {
+//long stplninvint( zone,sphere,fn27,fn83)
+//
+//long   zone;		/* zone number */
+//long   sphere;		/* spheroid number */
+//char   *fn27;		/* name of file containing the NAD27 parameters */
+//char   *fn83; 		/* name of file containing the NAD83 parameters */
+//{
 long ind;		/* index for the zone */
 long i;			/* loop control variable */
 long nadval;		/* datum value for the report (27 or 83) */
@@ -231,16 +232,17 @@ if (id == 4)
 
 return(OK);
 }
-
+
 
 /* State Plane inverse equations--mapping x,y to lat/long
   -----------------------------------------------------*/
-long stplninv(x, y, lon, lat)
-double x;			/* (O) X projection coordinate 	*/
-double y;			/* (O) Y projection coordinate 	*/
-double *lon;			/* (I) Longitude 		*/
-double *lat;			/* (I) Latitude 		*/
-{
+long stplninv(double x, double y, double *lon, double *lat) {
+//long stplninv(x, y, lon, lat)
+//double x;			/* (O) X projection coordinate 	*/
+//double y;			/* (O) Y projection coordinate 	*/
+//double *lon;			/* (I) Longitude 		*/
+//double *lat;			/* (I) Latitude 		*/
+//{
 long iflg;
 
 /* Inverse equations

@@ -68,7 +68,7 @@
  *
  */
 
-static long int (*forward_fn)();
+static long int (*forward_fn)(double, double, double *, double *);
 static double dx, dy, inv_dx, inv_dy, x_0, y_0, x00, xN;
 static unsigned int gdt;
 static int nx, ny;

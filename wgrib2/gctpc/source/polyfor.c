@@ -36,15 +36,17 @@ static double false_easting;	/* x offset in meters			*/
 
 /* Initialize the POLYCONIC projection
   ----------------------------------*/
-long polyforint(r_maj,r_min,center_lon,center_lat,false_east,false_north) 
-
-double r_maj;			/* major axis			*/
-double r_min;			/* minor axis			*/
-double center_lon;		/* center longitude		*/
-double center_lat;		/* center latitude		*/
-double false_east;		/* x offset in meters		*/
-double false_north;		/* y offset in meters		*/
-{
+long polyforint(double r_maj, double r_min, double center_lon,
+        double center_lat, double false_east, double false_north) {
+//long polyforint(r_maj,r_min,center_lon,center_lat,false_east,false_north) 
+//
+//double r_maj;			/* major axis			*/
+//double r_min;			/* minor axis			*/
+//double center_lon;		/* center longitude		*/
+//double center_lat;		/* center latitude		*/
+//double false_east;		/* x offset in meters		*/
+//double false_north;		/* y offset in meters		*/
+//{
 double temp;			/* temporary variable		*/
 
 /* Place parameters in static storage for common use
@@ -78,12 +80,13 @@ return(OK);
 
 /* Polyconic forward equations--mapping lat,long to x,y
   ---------------------------------------------------*/
-long polyfor(lon, lat, x, y)
-double lon;			/* (I) Longitude 		*/
-double lat;			/* (I) Latitude 		*/
-double *x;			/* (O) X projection coordinate 	*/
-double *y;			/* (O) Y projection coordinate 	*/
-{
+long polyfor(double lon, double lat, double *x, double *y) {
+//long polyfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude 		*/
+//double lat;			/* (I) Latitude 		*/
+//double *x;			/* (O) X projection coordinate 	*/
+//double *y;			/* (O) Y projection coordinate 	*/
+//{
 double sinphi, cosphi;	/* sin and cos value				*/
 double con, ml;		/* cone constant, small m			*/
 double ms;		/* small m					*/

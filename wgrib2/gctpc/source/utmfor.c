@@ -46,16 +46,17 @@ static double ind;		/* spherical flag			*/
 
 /* Initialize the Universal Transverse Mercator (UTM) projection
   -------------------------------------------------------------*/
-long utmforint(r_maj,r_min,scale_fact,zone)
-
-double r_maj;			/* major axis				*/
-double r_min;			/* minor axis				*/
-double scale_fact;		/* scale factor				*/
-long   zone;			/* zone number				*/
-{
+long utmforint(double r_maj, double r_min, double scale_fact, long zone) {
+//long utmforint(r_maj,r_min,scale_fact,zone)
+//
+//double r_maj;			/* major axis				*/
+//double r_min;			/* minor axis				*/
+//double scale_fact;		/* scale factor				*/
+//long   zone;			/* zone number				*/
+//{
 double temp;			/* temporary variable			*/
 
-if ((abs(zone) < 1) || (abs(zone) > 60))
+if ((labs(zone) < 1) || (labs(zone) > 60))
    {
    p_error("Illegal zone number","utm-forint");
    return(11);
@@ -64,7 +65,7 @@ r_major = r_maj;
 r_minor = r_min;
 scale_factor = scale_fact;
 lat_origin = 0.0;
-lon_center = ((6 * abs(zone)) - 183) * D2R;
+lon_center = ((6 * labs(zone)) - 183) * D2R;
 false_easting = 500000.0;
 false_northing = (zone < 0) ? 10000000.0 : 0.0;
 
@@ -96,12 +97,13 @@ return(OK);
    Note:  The algorithm for UTM is exactly the same as TM and therefore
 	  if a change is implemented, also make the change to TMFOR.c
   -----------------------------------------------------------------------*/
-long utmfor(lon, lat, x, y)
-double lon;			/* (I) Longitude 		*/
-double lat;			/* (I) Latitude 		*/
-double *x;			/* (O) X projection coordinate 	*/
-double *y;			/* (O) Y projection coordinate 	*/
-{
+long utmfor(double lon, double lat, double *x, double *y) {
+//long utmfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude 		*/
+//double lat;			/* (I) Latitude 		*/
+//double *x;			/* (O) X projection coordinate 	*/
+//double *y;			/* (O) Y projection coordinate 	*/
+//{
 double delta_lon;	/* Delta longitude (Given longitude - center 	*/
 double sin_phi, cos_phi;/* sin and cos value				*/
 double al, als;		/* temporary values				*/

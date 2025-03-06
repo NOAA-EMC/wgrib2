@@ -136,16 +136,16 @@ static double minor[SPHDCT] = {
 
 /* Finds the correct ellipsoid axis
 ---------------------------------*/
-
-void sphdz(isph,parm,r_major,r_minor,radius)
-
-
-long isph;		/* spheroid code number				*/
-double *parm;		/* projection parameters			*/
-double *r_major;	/* major axis					*/
-double *r_minor;	/* minor axis					*/
-double *radius;		/* radius					*/
-{
+void sphdz(long isph, double *parm, double *r_major, double *r_minor,
+        double *radius) {
+//void sphdz(isph,parm,r_major,r_minor,radius)
+//
+//long isph;		/* spheroid code number				*/
+//double *parm;		/* projection parameters			*/
+//double *r_major;	/* major axis					*/
+//double *r_minor;	/* minor axis					*/
+//double *radius;		/* radius					*/
+//{
 
 double t_major;		/* temporary major axis				*/
 double t_minor;		/* temporary minor axis				*/

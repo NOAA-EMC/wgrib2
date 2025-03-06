@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
@@ -12,9 +13,12 @@
  *
  * Since the match inventory cannot include everything, the option has
  * been added to add extra data to the match inventory.
+ *
+ * 2/2025: didn't finialize for functions with 2 args
+ *         C23 needs prototypes
  */
 
-int (*match_extra_fn[MATCH_EXTRA_FN])();
+int (*match_extra_fn[MATCH_EXTRA_FN])(ARG8);
 void *match_extra_fn_local[MATCH_EXTRA_FN];
 int match_extra_fn_nargs[MATCH_EXTRA_FN];
 char *match_extra_fn_arg1[MATCH_EXTRA_FN] = { NULL } ;
@@ -46,11 +50,11 @@ int f_match_inv_add(ARG3) {
 	/* add args to table and intialize fn() */
         if (functions[j].nargs == 0 && functions[j].type == inv) {
 	    // initialize fn(..)
-            match_extra_fn[match_extra_fn_n](-1, NULL, NULL, 0, inv_out, &(match_extra_fn_local[match_extra_fn_n]));
+            match_extra_fn[match_extra_fn_n](init_ARG0(inv_out, &(match_extra_fn_local[match_extra_fn_n])));
         }
         else if (functions[j].nargs == 1 && functions[j].type == inv) {
 	    // initialize fn(..)
-            match_extra_fn[match_extra_fn_n](-1, NULL, NULL, 0, inv_out, &(match_extra_fn_local[match_extra_fn_n]),arg1);
+            match_extra_fn[match_extra_fn_n](init_ARG1(inv_out, &(match_extra_fn_local[match_extra_fn_n]),arg1));
             i = strlen(arg1) + 1;
             if ((match_extra_fn_arg1[match_extra_fn_n] = (char *) malloc(i)) == NULL) 
 		fatal_error("match_inv_add: memory allocation","");
@@ -58,7 +62,7 @@ int f_match_inv_add(ARG3) {
         }
         else if (functions[j].nargs == 2 && functions[j].type == inv) {
 	    // initialize fn(..)
-            match_extra_fn[match_extra_fn_n](-1, NULL, NULL, 0, inv_out, &(match_extra_fn_local[match_extra_fn_n]),arg1,arg2);
+            match_extra_fn[match_extra_fn_n](init_ARG2(inv_out, &(match_extra_fn_local[match_extra_fn_n]),arg1,arg2));
             i = strlen(arg1) + 1;
             if ((match_extra_fn_arg1[match_extra_fn_n] = (char *) malloc(i)) == NULL) 
 		fatal_error("match_inv_add: memory allocation","");
@@ -75,9 +79,12 @@ int f_match_inv_add(ARG3) {
     else if (mode == -2) {	/* finalize all the functions */
 	for (j = 0; j < match_extra_fn_n; j++) {
 	    if (match_extra_fn_nargs[j] == 0)
-                match_extra_fn[j](-1, NULL, NULL, 0, inv_out, &(match_extra_fn_local[j]));
+                match_extra_fn[j](fin_ARG0(inv_out, &(match_extra_fn_local[j])));
 	    else if (match_extra_fn_nargs[j] == 1)
-                match_extra_fn[j](-1, NULL, NULL, 0, inv_out, &(match_extra_fn_local[j]), match_extra_fn_arg1[j] );
+                match_extra_fn[j](fin_ARG1(inv_out, &(match_extra_fn_local[j]), match_extra_fn_arg1[j] ));
+	    else if (match_extra_fn_nargs[j] == 2)
+                match_extra_fn[j](fin_ARG2(inv_out, &(match_extra_fn_local[j]), match_extra_fn_arg1[j], 
+                     match_extra_fn_arg2[j] ));
 	}
 	for (j = 0; j < match_extra_fn_n; j++) {
 	    if (match_extra_fn_arg1[j] != NULL) {
@@ -130,7 +137,7 @@ int f_match_inv(ARG0) {
  * HEADER:100:Match_inv:inv:0:same as -match_inv except d=YYYYMMDDHH <-> D=YYYYMMDDHHmmss
  */
 int f_Match_inv(ARG0) {
-   if (mode < 0) {
+    if (mode < 0) {
 	warn_nonzero_min_sec = 0;
 	return 0;
     }
@@ -219,12 +226,11 @@ int match_inv(int type_datecode, ARG0) {
 	/* added 8/2017 */
         for (j = 0; j < match_extra_fn_n; j++) {
 	    if (match_extra_fn_nargs[j] == 0) 
-                match_extra_fn[j](mode, sec, data, ndata, inv_out, &(match_extra_fn_local[j]));
+                match_extra_fn[j](call_ARG0(inv_out, &(match_extra_fn_local[j])));
 	    else if (match_extra_fn_nargs[j] == 1) 
-                match_extra_fn[j](mode, sec, data, ndata, inv_out, &(match_extra_fn_local[j]),match_extra_fn_arg1[j]);
+                match_extra_fn[j](call_ARG1(inv_out, &(match_extra_fn_local[j]),match_extra_fn_arg1[j]));
 	    else if (match_extra_fn_nargs[j] == 2) 
-                match_extra_fn[j](mode, sec, data, ndata, inv_out, &(match_extra_fn_local[j]),
-			match_extra_fn_arg1[j], match_extra_fn_arg2[j]);
+                match_extra_fn[j](call_ARG2(inv_out, &(match_extra_fn_local[j]), match_extra_fn_arg1[j], match_extra_fn_arg2[j]));
             strcat(inv_out,":");
             inv_out += strlen(inv_out);
 	}

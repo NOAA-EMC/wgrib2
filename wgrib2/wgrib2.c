@@ -10,6 +10,8 @@
  * 1/2007 mods M. Schwarb: unsigned int ndata
  * 2/2008 WNE add -if support
  * 2/2008 WNE fixed bug in processing of submessages
+ * 2/2025 WNE previously could be main() or wgrib2().  Now only wgrib2()
+ *            the main() version became wgrib2_main.c
  */
 
 #include <stdio.h>
@@ -37,7 +39,6 @@ int free_gribfield;			// flag for allocated gribfield
 int initial_call = 1;
 
 /* #define DEBUG */
-// #define DEBUG
 #define CHECK
 
 /* global variables .. can be modified by funtions */
@@ -121,7 +122,6 @@ int version_if;		/* 0-old stype 1-modern if */
 
 int wgrib2(int argc, const char **argv) {
 
-//WNE    FILE *in;
     struct seq_file in_file;
     unsigned char *msg, *sec[10];	/* sec[9] = last valid bitmap */
     long int last_pos;
@@ -155,7 +155,6 @@ int wgrib2(int argc, const char **argv) {
 
     if (initial_call) {		/* only done 1st time */
 	setup_user_gribtable();
-//      jas_init();
 //      gctpc initialiation
         init(-1,-1,"gctpc_error.txt", "gctpc_param.txt");
         initial_call = 0;
@@ -267,59 +266,48 @@ int wgrib2(int argc, const char **argv) {
 
     /* initialize options,  mode = -1 */
 
-#ifdef DEBUG
-    fprintf(stderr,"going to init options,  narglist %d\n",narglist);
-#endif
-
-    for (j = 0; j < narglist; j++) {
-	new_inv_out();	/* inv_out[0] = 0; */
-	n_arg = functions[arglist[j].fn].nargs;
-        err = 0;
-    }
-
-    /* initialize options,  mode = -1 */
+    /* initialize options,  execute with mode = -1 */
 
 #ifdef DEBUG
     fprintf(stderr,"going to init options,  narglist %d\n",narglist);
 #endif
-
     for (j = 0; j < narglist; j++) {
 	new_inv_out();	/* inv_out[0] = 0; */
 	n_arg = functions[arglist[j].fn].nargs;
         err = 0;
 #ifdef DEBUG
-    fprintf(stderr,"going to init option %s\n", functions[arglist[j].fn].name);
+    fprintf(stderr,"going to init option %s %d\n", functions[arglist[j].fn].name, n_arg);
 #endif
-        if (n_arg == 0) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j);
-	else if (n_arg == 1) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j,
-		new_argv[arglist[j].i_argc]);
-	else if (n_arg == 2) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j,
-		new_argv[arglist[j].i_argc],new_argv[arglist[j].i_argc+1]);
-	else if (n_arg == 3) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j,
-		new_argv[arglist[j].i_argc],new_argv[arglist[j].i_argc+1],new_argv[arglist[j].i_argc+2]);
-	else if (n_arg == 4) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j,
-		new_argv[arglist[j].i_argc],new_argv[arglist[j].i_argc+1],
-		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3]);
-	else if (n_arg == 5) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j,
-		new_argv[arglist[j].i_argc],new_argv[arglist[j].i_argc+1],
+        if (n_arg == 0) err = functions[arglist[j].fn].fn(init_ARG0(inv_out,local+j));
+	else if (n_arg == 1) err = functions[arglist[j].fn].fn(init_ARG1(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ]));
+	else if (n_arg == 2) err = functions[arglist[j].fn].fn(init_ARG2(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1]));
+	else if (n_arg == 3) err = functions[arglist[j].fn].fn(init_ARG3(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2]));
+	else if (n_arg == 4) err = functions[arglist[j].fn].fn(init_ARG4(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2] ,new_argv[arglist[j].i_argc+3]));
+	else if (n_arg == 5) err = functions[arglist[j].fn].fn(init_ARG5(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3], 
+                new_argv[arglist[j].i_argc+4]));
+	else if (n_arg == 6) err = functions[arglist[j].fn].fn(init_ARG6(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
 		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-		new_argv[arglist[j].i_argc+4]);
-	else if (n_arg == 6) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j,
-		new_argv[arglist[j].i_argc],new_argv[arglist[j].i_argc+1],
-		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-		new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5]);
-	else if (n_arg == 7) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j,
-		new_argv[arglist[j].i_argc],new_argv[arglist[j].i_argc+1],
-		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-		new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
-		new_argv[arglist[j].i_argc+6]);
-	else if (n_arg == 8) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j,
-		new_argv[arglist[j].i_argc],new_argv[arglist[j].i_argc+1],
+		new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5]));
+	else if (n_arg == 7) err = functions[arglist[j].fn].fn(init_ARG7(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
 		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
 		new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
-		new_argv[arglist[j].i_argc+6], new_argv[arglist[j].i_argc+7]);
+		new_argv[arglist[j].i_argc+6]));
+	else if (n_arg == 8) err = functions[arglist[j].fn].fn(init_ARG8(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
+		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
+		new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
+		new_argv[arglist[j].i_argc+6], new_argv[arglist[j].i_argc+7]));
 
-        // if(inv_out[0] != 0)  fprintf(inv_file, "%s", inv_out);
         if(inv_out[0] != 0) {
 	    fwrite_file(inv_out, 1, strnlen(inv_out,INV_BUFFER), &inv_file);
 	}
@@ -405,9 +393,6 @@ int wgrib2(int argc, const char **argv) {
 	    }
 
             if (pos != last_pos) {
-// //	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq(sec, in, &pos, &len, &num_submsgs);
-//	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
-//		else if (in_file.file_type == DISK) msg = rd_grib2_msg(sec, in, &pos, &len, &num_submsgs);
 	        msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
 	        if (msg == NULL) {
                     fatal_error_i("grib message #%d not found for %s", msg_no,in_file.filename);
@@ -441,9 +426,6 @@ int wgrib2(int argc, const char **argv) {
 	}
         else if (input == all_mode) {
 	    if (submsg == 0) {
-// //	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq(sec, in, &pos, &len, &num_submsgs);
-//	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
-//		else if (in_file.file_type == DISK) msg = rd_grib2_msg(sec, in, &pos, &len, &num_submsgs);
 	        msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
 		if (msg == NULL) break;
                 submsg = 1;
@@ -451,9 +433,6 @@ int wgrib2(int argc, const char **argv) {
 	    else if (submsg > num_submsgs) {
 		pos += len;
                 msg_no++;
-// //	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq(sec, in, &pos, &len, &num_submsgs);
-//	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
-//		else if (in_file.file_type == DISK) msg = rd_grib2_msg(sec, in, &pos, &len, &num_submsgs);
 	        msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
 		if (msg == NULL) break;
                 submsg = 1;
@@ -600,6 +579,7 @@ int wgrib2(int argc, const char **argv) {
 	/* Decode NDFD WxText */
 	if (WxText) mk_WxKeys(sec);
 
+	// some operatonal files need to be fixed
 	// any fixes to raw grib message before decode need to be placed here
 	if (fix_ncep_2_flag) fix_ncep_2(sec);
 	if (fix_ncep_3_flag) fix_ncep_3(sec);
@@ -789,6 +769,10 @@ int wgrib2(int argc, const char **argv) {
         // fprintf(inv_file, "%s", inv_out);
         fwrite_file(inv_out, 1, strnlen(inv_out,INV_BUFFER), &inv_file);
 
+#ifdef DEBUG
+    fprintf(stderr,"inv_out = %s\n", inv_out);
+#endif
+
 	for (j = 0; j < narglist; j++) {
 
 	    /* skip execution if run_flag == 0 */
@@ -819,46 +803,46 @@ int wgrib2(int argc, const char **argv) {
             // if (functions[arglist[j].fn].type == inv) fprintf(inv_file, "%s", item_deliminator);
             if (functions[arglist[j].fn].type == inv) fwrite_file(item_deliminator, 1, strlen(item_deliminator), &inv_file);
             if (functions[arglist[j].fn].type != setup) {
-		new_inv_out();	// inv_out[0] = 0;
+                new_inv_out();   // inv_out[0] = 0;
 	        n_arg = functions[arglist[j].fn].nargs;
-		if (n_arg == 0) 
-                    functions[arglist[j].fn].fn(mode, sec, data, ndata, inv_out, local+j);
-		else if (n_arg == 1)
-		    functions[arglist[j].fn].fn(mode, sec, data, ndata, inv_out, local+j,
-			 new_argv[arglist[j].i_argc]);
-		else if (n_arg == 2)
-		    functions[arglist[j].fn].fn(mode, sec, data, ndata, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1]);
-		else if (n_arg == 3)
-		    functions[arglist[j].fn].fn(mode, sec, data, ndata, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2]);
-		else if (n_arg == 4)
-		    functions[arglist[j].fn].fn(mode, sec, data, ndata, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3]);
-		else if (n_arg == 5)
-		    functions[arglist[j].fn].fn(mode, sec, data, ndata, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-			new_argv[arglist[j].i_argc+4]);
-		else if (n_arg == 6)
-		    functions[arglist[j].fn].fn(mode, sec, data, ndata, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-			new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5]);
-		else if (n_arg == 7)
-		    functions[arglist[j].fn].fn(mode, sec, data, ndata, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-			new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
-			new_argv[arglist[j].i_argc+6]);
-		else if (n_arg == 8)
-		    functions[arglist[j].fn].fn(mode, sec, data, ndata, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-			new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
-			new_argv[arglist[j].i_argc+6], new_argv[arglist[j].i_argc+7]);
+                if (n_arg == 0) functions[arglist[j].fn].fn(call_ARG0(inv_out,local+j));
+
+                else if (n_arg == 1) functions[arglist[j].fn].fn(call_ARG1(inv_out,local+j,
+                    new_argv[arglist[j].i_argc  ]));
+
+                else if (n_arg == 2) functions[arglist[j].fn].fn(call_ARG2(inv_out,local+j,
+                    new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1]));
+
+                else if (n_arg == 3) functions[arglist[j].fn].fn(call_ARG3(inv_out,local+j,
+                    new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                    new_argv[arglist[j].i_argc+2]));
+
+                else if (n_arg == 4) functions[arglist[j].fn].fn(call_ARG4(inv_out,local+j,
+                    new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                    new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3]));
+
+                else if (n_arg == 5) functions[arglist[j].fn].fn(call_ARG5(inv_out,local+j,
+                    new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                    new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
+                    new_argv[arglist[j].i_argc+4]));
+
+                else if (n_arg == 6) functions[arglist[j].fn].fn(call_ARG6(inv_out,local+j,
+                    new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                    new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
+                    new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5]));
+
+                else if (n_arg == 7) functions[arglist[j].fn].fn(call_ARG7(inv_out,local+j,
+                    new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                    new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
+                    new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
+                    new_argv[arglist[j].i_argc+6]));
+
+                else if (n_arg == 8) functions[arglist[j].fn].fn(call_ARG8(inv_out,local+j,
+                    new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                    new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
+                    new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
+                    new_argv[arglist[j].i_argc+6], new_argv[arglist[j].i_argc+7]));
+
 
         	// if(inv_out[0] != 0)  fprintf(inv_file, "%s", inv_out);
         	if(inv_out[0] != 0) {
@@ -903,49 +887,55 @@ int wgrib2(int argc, const char **argv) {
     /* finalize all functions, call with mode = -2 */
 
     err = 0;
+    if (ndata != 0) {
+	ndata = 0;
+	free(data);
+	data = NULL;
+    }
+
     for (j = 0; j < narglist; j++) {
-//        if (functions[arglist[j].fn].type != setup) {
+        mode = -2;
 	    n_arg = functions[arglist[j].fn].nargs;
 	    new_inv_out();	// inv_out[0] = 0;
-	    if (n_arg == 0) 
-                err |= functions[arglist[j].fn].fn(-2, NULL, NULL, 0, inv_out, local+j);
-	    else if (n_arg == 1)
-		err |= functions[arglist[j].fn].fn(-2, NULL, NULL, 0, inv_out, local+j,
-			new_argv[arglist[j].i_argc]);
-	    else if (n_arg == 2)
-		err |= functions[arglist[j].fn].fn(-2, NULL, NULL, 0, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1]);
-	    else if (n_arg == 3)
-		err |= functions[arglist[j].fn].fn(-2, NULL, NULL, 0, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2]);
-	    else if (n_arg == 4)
-		err |= functions[arglist[j].fn].fn(-2, NULL, NULL, 0, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3]);
-	    else if (n_arg == 5)
-		err |= functions[arglist[j].fn].fn(-2, NULL, NULL, 0, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-			new_argv[arglist[j].i_argc+4]);
-	    else if (n_arg == 6)
-		err |= functions[arglist[j].fn].fn(-2, NULL, NULL, 0, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-			new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5]);
-	    else if (n_arg == 7)
-		err |= functions[arglist[j].fn].fn(-2, NULL, NULL, 0, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-			new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
-			new_argv[arglist[j].i_argc+6]);
-	    else if (n_arg == 8)
-		err |= functions[arglist[j].fn].fn(-2, NULL, NULL, 0, inv_out, local+j,
-			new_argv[arglist[j].i_argc], new_argv[arglist[j].i_argc+1],
-			new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
-			new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
-			new_argv[arglist[j].i_argc+6], new_argv[arglist[j].i_argc+7]);
-            // if (inv_out[0]) fprintf(stderr, "%s\n", inv_out);
+
+            if (n_arg == 0) err |= functions[arglist[j].fn].fn(fin_ARG0(inv_out,local+j));
+
+            else if (n_arg == 1) err |= functions[arglist[j].fn].fn(fin_ARG1(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ]));
+
+            else if (n_arg == 2) err |= functions[arglist[j].fn].fn(fin_ARG2(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1]));
+
+            else if (n_arg == 3) err |= functions[arglist[j].fn].fn(fin_ARG3(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2]));
+
+            else if (n_arg == 4) err |= functions[arglist[j].fn].fn(fin_ARG4(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3]));
+			
+            else if (n_arg == 5) err |= functions[arglist[j].fn].fn(fin_ARG5(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
+                new_argv[arglist[j].i_argc+4]));
+
+            else if (n_arg == 6) err |= functions[arglist[j].fn].fn(fin_ARG6(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
+                new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5]));
+
+            else if (n_arg == 7) err |= functions[arglist[j].fn].fn(fin_ARG7(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
+                new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
+                new_argv[arglist[j].i_argc+6]));
+            
+            else if (n_arg == 8) err |= functions[arglist[j].fn].fn(fin_ARG8(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
+                new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
+                new_argv[arglist[j].i_argc+6], new_argv[arglist[j].i_argc+7]));
+
             if (inv_out[0]) fprintf(stderr, "%s%s", inv_out, end_inv);
 //        }
     }

@@ -48,16 +48,17 @@ static long ind;		/* sphere flag value			*/
 
 /* Initialize the Universal Transverse Mercator (UTM) projection
   -------------------------------------------------------------*/
-long utminvint(r_maj,r_min,scale_fact,zone)
-
-double r_maj;			/* major axis				*/
-double r_min;			/* minor axis				*/
-double scale_fact;		/* scale factor				*/
-long zone;			/* zone number				*/
-{
+long utminvint(double r_maj,double r_min,double scale_fact,long zone) {
+//long utminvint(r_maj,r_min,scale_fact,zone)
+//
+//double r_maj;			/* major axis				*/
+//double r_min;			/* minor axis				*/
+//double scale_fact;		/* scale factor				*/
+//long zone;			/* zone number				*/
+//{
 double temp;			/* temprorary variables			*/
 
-if ((abs(zone) < 1) || (abs(zone) > 60))
+if ((labs(zone) < 1) || (labs(zone) > 60))
    {
    p_error("Illegal zone number","utm-invint");
    return(11);
@@ -66,7 +67,7 @@ r_major = r_maj;
 r_minor = r_min;
 scale_factor = scale_fact;
 lat_origin = 0.0;
-lon_center = ((6 * abs(zone)) - 183) * D2R;
+lon_center = ((6 * labs(zone)) - 183) * D2R;
 false_easting = 500000.0;
 false_northing = (zone < 0) ? 10000000.0 : 0.0;
 
@@ -99,12 +100,13 @@ return(OK);
    Note:  The algorithm for UTM is exactly the same as TM and therefore
 	  if a change is implemented, also make the change to TMINV.c
   -----------------------------------------------------------------------*/
-long utminv(x, y, lon, lat)
-double x;		/* (I) X projection coordinate 			*/
-double y;		/* (I) Y projection coordinate 			*/
-double *lon;		/* (O) Longitude 				*/
-double *lat;		/* (O) Latitude 				*/
-{
+long utminv(double x, double y, double *lon, double *lat) {
+//long utminv(x, y, lon, lat)
+//double x;		/* (I) X projection coordinate 			*/
+//double y;		/* (I) Y projection coordinate 			*/
+//double *lon;		/* (O) Longitude 				*/
+//double *lat;		/* (O) Latitude 				*/
+//{
 double con,phi;		/* temporary angles				*/
 double delta_phi;	/* difference between longitudes		*/
 long i;			/* counter variable				*/

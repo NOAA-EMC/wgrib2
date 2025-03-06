@@ -37,13 +37,15 @@ static double false_northing;	/* y offset in meters			*/
 
 /* Initialize the Miller Cylindrical projection
   -------------------------------------------*/
-long millforint(r, center_long,false_east,false_north) 
-
-double r; 			/* (I) Radius of the earth (sphere) 	*/
-double center_long;		/* (I) Center longitude 		*/
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long millforint(double r, double center_long, double false_east,
+        double false_north) {
+//long millforint(r, center_long,false_east,false_north) 
+//
+//double r; 			/* (I) Radius of the earth (sphere) 	*/
+//double center_long;		/* (I) Center longitude 		*/
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 R = r;
@@ -62,13 +64,14 @@ return(OK);
 
 /* Miller Cylindrical forward equations--mapping lat,long to x,y
   ------------------------------------------------------------*/
-long millfor(lon, lat, x, y)
-double lon;			/* (I) Longitude */
-double lat;			/* (I) Latitude */
-double *x;			/* (O) X projection coordinate */
-double *y;			/* (O) Y projection coordinate */
-
-{
+long millfor(double lon, double lat, double *x, double *y) {
+//long millfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude */
+//double lat;			/* (I) Latitude */
+//double *x;			/* (O) X projection coordinate */
+//double *y;			/* (O) Y projection coordinate */
+//
+//{
 double dlon;
 
 /* Forward equations

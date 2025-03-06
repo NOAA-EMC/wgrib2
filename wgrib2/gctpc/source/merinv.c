@@ -37,15 +37,17 @@ static double false_easting;	/* x offset in meters			*/
 
 /* Initialize the Mercator projection
   -----------------------------------*/
-long merinvint(r_maj,r_min,center_lon,center_lat,false_east,false_north) 
-
-double r_maj;			/* major axis			*/
-double r_min;			/* minor axis			*/
-double center_lon;		/* center longitude		*/
-double center_lat;		/* center latitude		*/
-double false_east;		/* x offset in meters		*/
-double false_north;		/* y offset in meters		*/
-{
+long merinvint(double r_maj, double r_min, double center_lon, double center_lat,
+        double false_east, double false_north) {
+//long merinvint(r_maj,r_min,center_lon,center_lat,false_east,false_north) 
+//
+//double r_maj;			/* major axis			*/
+//double r_min;			/* minor axis			*/
+//double center_lon;		/* center longitude		*/
+//double center_lat;		/* center latitude		*/
+//double false_east;		/* x offset in meters		*/
+//double false_north;		/* y offset in meters		*/
+//{
 double temp;			/* temporary variable		*/
 
 /* Place parameters in static storage for common use
@@ -75,12 +77,13 @@ return(OK);
 
 /* Mercator inverse equations--mapping x,y to lat/long
   --------------------------------------------------*/
-long merinv(x, y, lon, lat)
-double x;			/* (O) X projection coordinate 	*/
-double y;			/* (O) Y projection coordinate 	*/
-double *lon;			/* (I) Longitude 		*/
-double *lat;			/* (I) Latitude 		*/
-{
+long merinv(double x, double y, double *lon, double *lat) {
+//long merinv(x, y, lon, lat)
+//double x;			/* (O) X projection coordinate 	*/
+//double y;			/* (O) Y projection coordinate 	*/
+//double *lon;			/* (I) Longitude 		*/
+//double *lat;			/* (I) Latitude 		*/
+//{
 double ts;		/* small t value				*/
 long flag;		/* error flag 					*/
 

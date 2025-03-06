@@ -41,15 +41,17 @@ static double false_northing;	/* y offset in meters			*/
 
 /* Initialize the General Vertical Near-Side Perspective projection
   ---------------------------------------------------------------*/
-long gvnspinvint(r, h,center_long, center_lat,false_east,false_north) 
-
-double r; 			/* (I) Radius of the earth (sphere) 	*/
-double h;			/* height above sphere			*/
-double center_long;		/* (I) Center longitude 		*/
-double center_lat;		/* (I) Center latitude 			*/
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long gvnspinvint(double r, double h, double center_long, double center_lat,
+        double false_east, double false_north) {
+//long gvnspinvint(r, h,center_long, center_lat,false_east,false_north) 
+//
+//double r; 			/* (I) Radius of the earth (sphere) 	*/
+//double h;			/* height above sphere			*/
+//double center_long;		/* (I) Center longitude 		*/
+//double center_lat;		/* (I) Center latitude 			*/
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 R = r;
@@ -74,14 +76,13 @@ return(OK);
 /* General Vertical Near-Side Perspective inverse equations--mapping 
    x,y to lat/long
   ----------------------------------------------------------------*/
-long gvnspinv(x, y, lon, lat)
-
-double x;			/* (O) X projection coordinate */
-double y;			/* (O) Y projection coordinate */
-double *lon;			/* (I) Longitude */
-double *lat;			/* (I) Latitude */
-
-{
+long gvnspinv(double x, double y, double *lon, double *lat) {
+//long gvnspinv(x, y, lon, lat)
+//double x;			/* (O) X projection coordinate */
+//double y;			/* (O) Y projection coordinate */
+//double *lon;			/* (I) Longitude */
+//double *lat;			/* (I) Latitude */
+//{
 double rh;
 double r;
 double con;

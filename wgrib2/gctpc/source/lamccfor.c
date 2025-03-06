@@ -39,17 +39,19 @@ ALGORITHM REFERENCES
 
 /* Initialize the Lambert Conformal conic projection
   ------------------------------------------------*/
-long lamccforint(r_maj,r_min,lat1,lat2,c_lon,c_lat,false_east,false_north)
-
-double r_maj;                   /* major axis                           */
-double r_min;                   /* minor axis                           */
-double lat1;                    /* first standard parallel              */
-double lat2;                    /* second standard parallel             */
-double c_lon;                   /* center longitude                     */
-double c_lat;                   /* center latitude                      */
-double false_east;              /* x offset in meters                   */
-double false_north;             /* y offset in meters                   */
-{
+long lamccforint(double r_maj, double r_min, double lat1, double lat2,
+        double c_lon, double c_lat, double false_east, double false_north) {
+//long lamccforint(r_maj,r_min,lat1,lat2,c_lon,c_lat,false_east,false_north)
+//
+//double r_maj;                   /* major axis                           */
+//double r_min;                   /* minor axis                           */
+//double lat1;                    /* first standard parallel              */
+//double lat2;                    /* second standard parallel             */
+//double c_lon;                   /* center longitude                     */
+//double c_lat;                   /* center latitude                      */
+//double false_east;              /* x offset in meters                   */
+//double false_north;             /* y offset in meters                   */
+//{
 double sin_po;                  /* sin value                            */
 double cos_po;                  /* cos value                            */
 double con;                     /* temporary variable                   */
@@ -110,13 +112,14 @@ return(OK);
 }
 /* Lambert Conformal conic forward equations--mapping lat,long to x,y
   -----------------------------------------------------------------*/
-long lamccfor(lon, lat, x, y)
-double lon;                     /* (I) Longitude                */
-double lat;                     /* (I) Latitude                 */
-double *x;                      /* (O) X projection coordinate  */
-double *y;                      /* (O) Y projection coordinate  */
-
-{
+long lamccfor(double lon, double lat, double *x, double *y) {
+//long lamccfor(lon, lat, x, y)
+//double lon;                     /* (I) Longitude                */
+//double lat;                     /* (I) Latitude                 */
+//double *x;                      /* (O) X projection coordinate  */
+//double *y;                      /* (O) Y projection coordinate  */
+//
+//{
 double con;                     /* temporary angle variable             */
 double rh1;                     /* height above ellipsoid               */
 double sinphi;                  /* sin value                            */

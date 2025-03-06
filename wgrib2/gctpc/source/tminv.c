@@ -48,17 +48,20 @@ static long ind;		/* sphere flag value			*/
 
 /* Initialize the Transverse Mercator (TM) projection
   -------------------------------------------------------------*/
-long tminvint(r_maj,r_min,scale_fact,center_lon,center_lat,false_east,
-	false_north)
-
-double r_maj;			/* major axis			*/
-double r_min;			/* minor axis			*/
-double scale_fact;		/* scale factor			*/
-double center_lon;		/* center longitude		*/
-double center_lat;		/* center latitude		*/
-double false_east;		/* x offset in meters		*/
-double false_north;		/* y offset in meters		*/
-{
+long tminvint(double r_maj, double r_min, double scale_fact,
+        double center_lon, double center_lat, double false_east,
+        double false_north) {
+//long tminvint(r_maj,r_min,scale_fact,center_lon,center_lat,false_east,
+//	false_north)
+//
+//double r_maj;			/* major axis			*/
+//double r_min;			/* minor axis			*/
+//double scale_fact;		/* scale factor			*/
+//double center_lon;		/* center longitude		*/
+//double center_lat;		/* center latitude		*/
+//double false_east;		/* x offset in meters		*/
+//double false_north;		/* y offset in meters		*/
+//{
 double temp;			/* temporary variable		*/
 
 /* Place parameters in static storage for common use
@@ -99,12 +102,13 @@ return(OK);
    Note:  The algorithm for UTM is exactly the same as TM and therefore
           if a change is implemented, also make the change to UTMINV.c
   --------------------------------------------------------------*/
-long tminv(x, y, lon, lat)
-double x;		/* (I) X projection coordinate 			*/
-double y;		/* (I) Y projection coordinate 			*/
-double *lon;		/* (O) Longitude 				*/
-double *lat;		/* (O) Latitude 				*/
-{
+long tminv(double x, double y, double *lon, double *lat) {
+//long tminv(x, y, lon, lat)
+//double x;		/* (I) X projection coordinate 			*/
+//double y;		/* (I) Y projection coordinate 			*/
+//double *lon;		/* (O) Longitude 				*/
+//double *lat;		/* (O) Latitude 				*/
+//{
 double con,phi;		/* temporary angles				*/
 double delta_phi;	/* difference between longitudes		*/
 long i;			/* counter variable				*/

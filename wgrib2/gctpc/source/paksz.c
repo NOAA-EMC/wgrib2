@@ -50,11 +50,12 @@ ALGORITHM REFERENCES
 
 /* Convert DMS packed angle into deg 
 ----------------------------------*/
-double paksz(ang,iflg)
-
-double ang;		/* angle which in DMS		*/
-long *iflg;		/* error flag number		*/
-{
+double paksz(double ang, long *iflg) {
+//double paksz(ang,iflg)
+//
+//double ang;		/* angle which in DMS		*/
+//long *iflg;		/* error flag number		*/
+//{
 double fac;		/* sign flag			*/
 double deg;		/* degree variable		*/
 double min;		/* minute variable		*/

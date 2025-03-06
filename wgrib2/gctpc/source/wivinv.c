@@ -31,12 +31,14 @@ static double false_northing;	/* y offset				*/
 
 /* Initialize the Wagner IV projection
   ------------------------------------*/
-long wivinvint(r, center_long,false_east,false_north) 
-double r; 			/* (I) Radius of the earth (sphere) */
-double center_long;		/* (I) Center longitude */
-double false_east;		/* x offset				*/
-double false_north;		/* y offset				*/
-{
+long wivinvint(double r, double center_long, double false_east,
+        double false_north) {
+//long wivinvint(r, center_long,false_east,false_north) 
+//double r; 			/* (I) Radius of the earth (sphere) */
+//double center_long;		/* (I) Center longitude */
+//double false_east;		/* x offset				*/
+//double false_north;		/* y offset				*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 R = r;
@@ -55,12 +57,13 @@ return(OK);
 
 /* Wagner IV inverse equations--mapping x,y to lat,long 
   ----------------------------------------------------*/
-long wivinv(x, y, lon, lat)
-double x;		/* (I) X projection coordinate */
-double y;		/* (I) Y projection coordinate */
-double *lon;		/* (O) Longitude */
-double *lat;		/* (O) Latitude */
-{
+long wivinv(double x, double y, double *lon, double *lat) {
+//long wivinv(x, y, lon, lat)
+//double x;		/* (I) X projection coordinate */
+//double y;		/* (I) Y projection coordinate */
+//double *lon;		/* (O) Longitude */
+//double *lat;		/* (O) Latitude */
+//{
 double theta;
 
 /* Inverse equations

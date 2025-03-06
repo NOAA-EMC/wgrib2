@@ -36,17 +36,20 @@ static double cos_lat_o;
 static double false_easting;
 static double false_northing;
 
-long obleqforint(r, center_long, center_lat, shape_m, shape_n, angle,
-	false_east, false_north)
-
-double r;
-double center_long;
-double center_lat;
-double shape_m,shape_n;
-double angle;
-double false_east;
-double false_north;
-{
+long obleqforint(double r, double center_long, double center_lat,
+        double shape_m, double shape_n, double angle, double false_east,
+        double false_north) {
+//long obleqforint(r, center_long, center_lat, shape_m, shape_n, angle,
+//	false_east, false_north)
+//
+//double r;
+//double center_long;
+//double center_lat;
+//double shape_m,shape_n;
+//double angle;
+//double false_east;
+//double false_north;
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 R = r;
@@ -75,14 +78,15 @@ offsetp(false_easting,false_northing);
 sincos(lat_o, &sin_lat_o, &cos_lat_o);
 return(OK);
 }
-
-long obleqfor(lon, lat, x, y)
 
-double lon;		/* (I) Longitude */
-double lat;		/* (I) Latitude */
-double *x;		/* (O) X projection coordinate */
-double *y;		/* (O) Y projection coordinate */
-{
+long obleqfor(double lon, double lat, double *x, double *y) {
+//long obleqfor(lon, lat, x, y)
+//
+//double lon;		/* (I) Longitude */
+//double lat;		/* (I) Latitude */
+//double *x;		/* (O) X projection coordinate */
+//double *y;		/* (O) Y projection coordinate */
+//{
 double delta_lon;
 double sin_delta_lon;
 double cos_delta_lon;

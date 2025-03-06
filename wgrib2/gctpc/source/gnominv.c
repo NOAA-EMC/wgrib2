@@ -40,14 +40,16 @@ static double false_northing;	/* y offset in meters			*/
 
 /* Initialize the Gnomonic projection
   ---------------------------------*/
-long gnominvint(r, center_long, center_lat,false_east,false_north) 
-
-double r; 			/* (I) Radius of the earth (sphere) 	*/
-double center_long;		/* (I) Center longitude 		*/
-double center_lat;		/* (I) Center latitude 			*/
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long gnominvint(double r, double center_long, double center_lat,
+        double false_east, double false_north) {
+//long gnominvint(r, center_long, center_lat,false_east,false_north) 
+//
+//double r; 			/* (I) Radius of the earth (sphere) 	*/
+//double center_long;		/* (I) Center longitude 		*/
+//double center_lat;		/* (I) Center latitude 			*/
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 R = r;
@@ -69,13 +71,13 @@ return(OK);
 
 /* Gnomonic inverse equations--mapping x,y to lat/long
   --------------------------------------------------*/
-long gnominv(x, y, lon, lat)
-double x;			/* (O) X projection coordinate */
-double y;			/* (O) Y projection coordinate */
-double *lon;			/* (I) Longitude */
-double *lat;			/* (I) Latitude */
-
-{
+long gnominv(double x, double y, double *lon, double *lat) {
+//long gnominv(x, y, lon, lat)
+//double x;			/* (O) X projection coordinate */
+//double y;			/* (O) Y projection coordinate */
+//double *lon;			/* (I) Longitude */
+//double *lat;			/* (I) Latitude */
+//{
 double rh;
 double z,sinz,cosz;
 double con;

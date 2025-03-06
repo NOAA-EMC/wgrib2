@@ -40,17 +40,19 @@ ALGORITHM REFERENCES
 
 /* Initialize the Albers projection
   -------------------------------*/
-long alberinvint(r_maj,r_min,lat1,lat2,lon0,lat0,false_east,false_north)
-
-double r_maj;                   /* major axis                           */
-double r_min;                   /* minor axis                           */
-double lat1;                    /* first standard parallel              */
-double lat2;                    /* second standard parallel             */
-double lon0;                    /* center longitude                     */
-double lat0;                    /* center lattitude                     */
-double false_east;              /* x offset in meters                   */
-double false_north;             /* y offset in meters                   */
-{
+long alberinvint( double r_maj, double r_min, double lat1, double lat2,
+        double lon0, double lat0, double false_east, double false_north) {
+//long alberinvint(r_maj,r_min,lat1,lat2,lon0,lat0,false_east,false_north)
+//
+//double r_maj;                   /* major axis                           */
+//double r_min;                   /* minor axis                           */
+//double lat1;                    /* first standard parallel              */
+//double lat2;                    /* second standard parallel             */
+//double lon0;                    /* center longitude                     */
+//double lat0;                    /* center lattitude                     */
+//double false_east;              /* x offset in meters                   */
+//double false_north;             /* y offset in meters                   */
+//{
 double sin_po,cos_po;		/* sine and cos values			*/
 double con;			/* temporary variable			*/
 double temp;			/* temporary variable			*/
@@ -111,12 +113,13 @@ return(OK);
 
 /* Albers Conical Equal Area inverse equations--mapping x,y to lat/long
   -------------------------------------------------------------------*/
-long alberinv(x, y, lon, lat)
-double x;			/* (O) X projection coordinate 	*/
-double y;			/* (O) Y projection coordinate 	*/
-double *lon;			/* (I) Longitude 		*/
-double *lat;			/* (I) Latitude 		*/
-{
+long alberinv( double x, double y, double *lon, double *lat) {
+//long alberinv(x, y, lon, lat)
+//double x;			/* (O) X projection coordinate 	*/
+//double y;			/* (O) Y projection coordinate 	*/
+//double *lon;			/* (I) Longitude 		*/
+//double *lat;			/* (I) Latitude 		*/
+//{
 double rh1;			/* height above ellipsoid	*/
 double qs;			/* function q			*/
 double con;			/* temporary sign value		*/

@@ -10,7 +10,6 @@ set(src
   alconinv.c
   azimfor.c
   aziminv.c
-  br_gctp.c
   cproj.c
   eqconfor.c
   eqconinv.c

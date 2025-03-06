@@ -38,17 +38,19 @@ ALGORITHM REFERENCES
 
 /* Initialize the Lambert Conformal Conic projection
   ------------------------------------------------*/
-long lamccinvint(r_maj,r_min,lat1,lat2,c_lon,c_lat,false_east,false_north)
-
-double r_maj;				/* major axis			*/
-double r_min;				/* minor axis			*/
-double lat1;				/* first standard parallel	*/
-double lat2;				/* second standard parallel	*/
-double c_lon;				/* center longitude		*/
-double c_lat;				/* center latitude		*/
-double false_east;			/* x offset in meters		*/
-double false_north;			/* y offset in meters		*/
-{
+long lamccinvint(double r_maj, double r_min, double lat1, double lat2,
+        double c_lon, double c_lat, double false_east, double false_north) {
+//long lamccinvint(r_maj,r_min,lat1,lat2,c_lon,c_lat,false_east,false_north)
+//
+//double r_maj;				/* major axis			*/
+//double r_min;				/* minor axis			*/
+//double lat1;				/* first standard parallel	*/
+//double lat2;				/* second standard parallel	*/
+//double c_lon;				/* center longitude		*/
+//double c_lat;				/* center latitude		*/
+//double false_east;			/* x offset in meters		*/
+//double false_north;			/* y offset in meters		*/
+//{
 double sin_po;				/* sin value			*/
 double cos_po;				/* cos value			*/
 double con;				/* temporary sin value		*/
@@ -112,13 +114,14 @@ return(OK);
 
 /* Lambert Conformal Conic inverse equations--mapping x,y to lat/long
   -----------------------------------------------------------------*/
-long lamccinv(x , y, lon, lat)
-double x;			/* (O) X projection coordinate 	*/
-double y;			/* (O) Y projection coordinate 	*/
-double *lon;			/* (I) Longitude 		*/
-double *lat;			/* (I) Latitude 		*/
-
-{
+long lamccinv(double x, double y, double *lon, double *lat) {
+//long lamccinv(x , y, lon, lat)
+//double x;			/* (O) X projection coordinate 	*/
+//double y;			/* (O) Y projection coordinate 	*/
+//double *lon;			/* (I) Longitude 		*/
+//double *lat;			/* (I) Latitude 		*/
+//
+//{
 double rh1;			/* height above ellipsoid	*/
 double con;			/* sign variable		*/
 double ts;			/* small t			*/

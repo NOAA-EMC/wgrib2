@@ -43,15 +43,17 @@ static double false_northing;	/* y offset in meters			*/
 
 /* Initialize the General Vertical Near-Side Perspective projection
   ---------------------------------------------------------------*/
-long gvnspforint(r, h,center_long, center_lat,false_east,false_north) 
-
-double r; 			/* (I) Radius of the earth (sphere) 	*/
-double h;			/* height above sphere			*/
-double center_long;		/* (I) Center longitude 		*/
-double center_lat;		/* (I) Center latitude 			*/
-double false_east;		/* x offset in meters			*/
-double false_north;		/* y offset in meters			*/
-{
+long gvnspforint(double r, double h, double center_long, double center_lat,
+        double false_east, double false_north) {
+//long gvnspforint(r, h,center_long, center_lat,false_east,false_north) 
+//
+//double r; 			/* (I) Radius of the earth (sphere) 	*/
+//double h;			/* height above sphere			*/
+//double center_long;		/* (I) Center longitude 		*/
+//double center_lat;		/* (I) Center latitude 			*/
+//double false_east;		/* x offset in meters			*/
+//double false_north;		/* y offset in meters			*/
+//{
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
 R = r;
@@ -76,13 +78,14 @@ return(OK);
 /* General Vertical Near-Side Perspective forward equations--mapping 
    lat,long to x,y
   ----------------------------------------------------------------*/
-long gvnspfor(lon, lat, x, y)
-double lon;			/* (I) Longitude */
-double lat;			/* (I) Latitude */
-double *x;			/* (O) X projection coordinate */
-double *y;			/* (O) Y projection coordinate */
-
-{
+long gvnspfor(double lon, double lat, double *x, double *y) {
+//long gvnspfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude */
+//double lat;			/* (I) Latitude */
+//double *x;			/* (O) X projection coordinate */
+//double *y;			/* (O) Y projection coordinate */
+//
+//{
 double dlon;
 double sinphi,cosphi;
 double coslon;
