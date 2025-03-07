@@ -4,7 +4,7 @@ set -e
 echo ""
 
 echo "*** JPEG File"
-../wgrib2/wgrib2 temp_jpeg_test_file.grib2 -stats
+../wgrib2/wgrib2 data/temp_jpeg_test_file.grib2 -stats
 
 echo "**********************************"
 echo "*** PNG File"
