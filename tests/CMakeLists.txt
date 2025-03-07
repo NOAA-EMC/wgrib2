@@ -110,7 +110,7 @@ copy_test_data(ref_new_grid_gdt_32769.grib2)
 copy_test_data(png_4bits.png)
 copy_test_data(large_png.grb2)
 copy_test_data(ref_c3_overflow.grib2)
-copy_test_data(LARGECAT220250305_12_1443copy.grib2)
+copy_test_data(temp_jpeg_test_file.grib2)
 
 shell_test(run_stats_test)
 # Run these shell tests.
