@@ -3,8 +3,8 @@
 set -e
 echo ""
 
-echo "*** JPEG File"
-../wgrib2/wgrib2 LARGECAT220250305_12_1443copy.grib2 -stats
+#echo "*** JPEG File"
+#../wgrib2/wgrib2 LARGECAT220250305_12_1443copy.grib2 -stats
 
 echo "**********************************"
 echo "*** PNG File"
