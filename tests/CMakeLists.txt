@@ -114,6 +114,7 @@ copy_test_data(ref_c3_overflow.grib2)
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
 shell_test(run_wgrib2_rpn_tests)
+shell_test(run_wgrib2_update_table_tests)
 
 if (USE_PNG)
   shell_test(run_wgrib2_png_tests)

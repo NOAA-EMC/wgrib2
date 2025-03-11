@@ -1,0 +1,17 @@
+MRMS = multi-radar multi-sensor system
+  NOAAA National  Severe Storm Laboratory
+
+Original MRMS grib table was obtained from their website and converted by "hand".
+  wgrib2 2.0.3: 11/2015
+
+3/2025: Manfred Schwarb wrote get_mrms.sh to download the MRMS gribtable (thanks Manfred)
+  from Nat. Severe Storm Lab. (NSSL) github site.
+
+--------------
+get_mrms.sh is hardwired to retreive UserTable_MRMS_v12.2.csv
+This will have to be changed to retrieve future versions of the mrms grib table.
+------------------
+3/2025: steps used to update MRMS_gribtable.dat
+
+  ./get_mrms.sh MRMS_gribtable                   -- downloads, convert and write MRMS_gribtable
+  ../../make_gribtable.sh MRMS_gribtable         .. converts MRMS_gribtalbe to MRMS_gribtable.dat

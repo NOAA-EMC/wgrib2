@@ -1,0 +1,149 @@
+209:10:0:255:161:1:2:0:NLDNCG001minAvgDensity:CG Average Lightning Density 1-min - NLDN:flashes/km^2/min
+209:10:0:255:161:1:2:1:NLDNCG005minAvgDensity:CG Average Lightning Density 5-min - NLDN:flashes/km^2/min
+209:10:0:255:161:1:2:2:NLDNCG015minAvgDensity:CG Average Lightning Density 15-min - NLDN:flashes/km^2/min
+209:10:0:255:161:1:2:3:NLDNCG030minAvgDensity:CG Average Lightning Density 30-min - NLDN:flashes/km^2/min
+209:10:0:255:161:1:2:5:LightningProbabilityNext30minGrid:Lightning Probability 0-30 minutes - NLDN:%
+209:10:0:255:161:1:2:6:LightningProbabilityNext60minGrid:Lightning Probability 0-30 minutes - NLDN:%
+209:10:0:255:161:1:2:7:LightningJumpGrid:Rapid lightning increases and decreases :non-dim
+209:10:0:255:161:1:2:8:LightningJumpGridMax005min:Rapid lightning increases and decreases over 5-minutes :non-dim
+209:10:0:255:161:1:3:0:MergedAzShear0to2kmAGL:Azimuth Shear 0-2km AGL:0.001/s
+209:10:0:255:161:1:3:1:MergedAzShear3to6kmAGL:Azimuth Shear 3-6km AGL:0.001/s
+209:10:0:255:161:1:3:2:RotationTrack30min:Rotation Track 0-2km AGL 30-min:0.001/s
+209:10:0:255:161:1:3:3:RotationTrack60min:Rotation Track 0-2km AGL 60-min:0.001/s
+209:10:0:255:161:1:3:4:RotationTrack120min:Rotation Track 0-2km AGL 120-min:0.001/s
+209:10:0:255:161:1:3:5:RotationTrack240min:Rotation Track 0-2km AGL 240-min:0.001/s
+209:10:0:255:161:1:3:6:RotationTrack360min:Rotation Track 0-2km AGL 360-min:0.001/s
+209:10:0:255:161:1:3:7:RotationTrack1440min:Rotation Track 0-2km AGL 1440-min:0.001/s
+209:10:0:255:161:1:3:14:RotationTrackML30min:Rotation Track 3-6km AGL 30-min:0.001/s
+209:10:0:255:161:1:3:15:RotationTrackML60min:Rotation Track 3-6km AGL 60-min:0.001/s
+209:10:0:255:161:1:3:16:RotationTrackML120min:Rotation Track 3-6km AGL 120-min:0.001/s
+209:10:0:255:161:1:3:17:RotationTrackML240min:Rotation Track 3-6km AGL 240-min:0.001/s
+209:10:0:255:161:1:3:18:RotationTrackML360min:Rotation Track 3-6km AGL 360-min:0.001/s
+209:10:0:255:161:1:3:19:RotationTrackML1440min:Rotation Track 3-6km AGL 1440-min:0.001/s
+209:10:0:255:161:1:3:26:SHI:Severe Hail Index:index
+209:10:0:255:161:1:3:27:POSH:Prob of Severe Hail:%
+209:10:0:255:161:1:3:28:MESH:Maximum Estimated Size of Hail (MESH):mm
+209:10:0:255:161:1:3:29:MESHMax30min:MESH Hail Swath 30-min:mm
+209:10:0:255:161:1:3:30:MESHMax60min:MESH Hail Swath 60-min:mm
+209:10:0:255:161:1:3:31:MESHMax120min:MESH Hail Swath 120-min:mm
+209:10:0:255:161:1:3:32:MESHMax240min:MESH Hail Swath 240-min:mm
+209:10:0:255:161:1:3:33:MESHMax360min:MESH Hail Swath 360-min:mm
+209:10:0:255:161:1:3:34:MESHMax1440min:MESH Hail Swath 1440-min:mm
+209:10:0:255:161:1:3:37:VILMax120min:VIL Swath 120-min:kg/m^2
+209:10:0:255:161:1:3:40:VILMax1440min:VIL Swath 1440-min:kg/m^2
+209:10:0:255:161:1:3:41:VIL:Vertically Integrated Liquid:kg/m^2
+209:10:0:255:161:1:3:42:VILDensity:Vertically Integrated Liquid Density:g/m^3
+209:10:0:255:161:1:3:43:VII:Vertically Integrated Ice:kg/m^2
+209:10:0:255:161:1:3:44:EchoTop18:Echo Top - 18 dBZ:km MSL
+209:10:0:255:161:1:3:45:EchoTop30:Echo Top - 30 dBZ:km MSL
+209:10:0:255:161:1:3:46:EchoTop50:Echo Top - 50 dBZ:km MSL
+209:10:0:255:161:1:3:47:EchoTop60:Echo Top - 60 dBZ:km MSL
+209:10:0:255:161:1:3:48:H50AboveM20C:Thickness [50 dBZ top - (-20C)]:km
+209:10:0:255:161:1:3:49:H50Above0C:Thickness [50 dBZ top - 0C]:km
+209:10:0:255:161:1:3:50:H60AboveM20C:Thickness [60 dBZ top - (-20C)]:km
+209:10:0:255:161:1:3:51:H60Above0C:Thickness [60 dBZ top - 0C]:km
+209:10:0:255:161:1:3:52:Reflectivity0C:Isothermal Reflectivity at 0C:dBZ
+209:10:0:255:161:1:3:53:ReflectivityM5C:Isothermal Reflectivity at -5C:dBZ
+209:10:0:255:161:1:3:54:ReflectivityM10C:Isothermal Reflectivity at -10C:dBZ
+209:10:0:255:161:1:3:55:ReflectivityM15C:Isothermal Reflectivity at -15C:dBZ
+209:10:0:255:161:1:3:56:ReflectivityM20C:Isothermal Reflectivity at -20C:dBZ
+209:10:0:255:161:1:3:57:ReflectivityAtLowestAltitude:ReflectivityAtLowestAltitude:dBZ
+209:10:0:255:161:1:3:57:ReflectivityAtLowestAltitude5km:ReflectivityAtLowestAltitude resampled from 1 to 5km resolution:dBZ
+209:10:0:255:161:1:3:58:MergedReflectivityAtLowestAltitude:Non Quality Controlled Reflectivity At Lowest Altitude:dBZ
+209:10:0:255:161:1:6:0:PrecipFlag:Surface Precipitation Type (Convective, Stratiform, Tropical, Hail, Snow):flag
+209:10:0:255:161:1:6:1:PrecipRate:Radar Precipitation Rate:mm/hr
+209:10:0:255:161:1:6:2:RadarOnlyQPE01H:Radar precipitation accumulation 1-hour:mm
+209:10:0:255:161:1:6:3:RadarOnlyQPE03H:Radar precipitation accumulation 3-hour:mm
+209:10:0:255:161:1:6:4:RadarOnlyQPE06H:Radar precipitation accumulation 6-hour:mm
+209:10:0:255:161:1:6:5:RadarOnlyQPE12H:Radar precipitation accumulation 12-hour:mm
+209:10:0:255:161:1:6:6:RadarOnlyQPE24H:Radar precipitation accumulation 24-hour:mm
+209:10:0:255:161:1:6:7:RadarOnlyQPE48H:Radar precipitation accumulation 48-hour:mm
+209:10:0:255:161:1:6:8:RadarOnlyQPE72H:Radar precipitation accumulation 72-hour:mm
+209:10:0:255:161:1:6:30:MultiSensorQPE01HPass1:Multi-sensor accumulation 1-hour (1-hour latency):mm
+209:10:0:255:161:1:6:31:MultiSensorQPE03HPass1:Multi-sensor accumulation 3-hour (1-hour latency):mm
+209:10:0:255:161:1:6:32:MultiSensorQPE06HPass1:Multi-sensor accumulation 6-hour (1-hour latency):mm
+209:10:0:255:161:1:6:33:MultiSensorQPE12HPass1:Multi-sensor accumulation 12-hour (1-hour latency):mm
+209:10:0:255:161:1:6:34:MultiSensorQPE24HPass1:Multi-sensor accumulation 24-hour (1-hour latency):mm
+209:10:0:255:161:1:6:35:MultiSensorQPE48HPass1:Multi-sensor accumulation 48-hour (1-hour latency):mm
+209:10:0:255:161:1:6:36:MultiSensorQPE72HPass1:Multi-sensor accumulation 72-hour (1-hour latency):mm
+209:10:0:255:161:1:6:37:MultiSensorQPE01HPass2:Multi-sensor accumulation 1-hour (2-hour latency):mm
+209:10:0:255:161:1:6:38:MultiSensorQPE03HPass2:Multi-sensor accumulation 3-hour (2-hour latency):mm
+209:10:0:255:161:1:6:39:MultiSensorQPE06HPass2:Multi-sensor accumulation 6-hour (2-hour latency):mm
+209:10:0:255:161:1:6:40:MultiSensorQPE12HPass2:Multi-sensor accumulation 12-hour (2-hour latency):mm
+209:10:0:255:161:1:6:41:MultiSensorQPE24HPass2:Multi-sensor accumulation 24-hour (2-hour latency):mm
+209:10:0:255:161:1:6:42:MultiSensorQPE48HPass2:Multi-sensor accumulation 48-hour (2-hour latency):mm
+209:10:0:255:161:1:6:43:MultiSensorQPE72HPass2:Multi-sensor accumulation 72-hour (2-hour latency):mm
+209:10:0:255:161:1:6:44:SyntheticPrecipRateID:Method IDs for blended single and dual-pol derived precip rates :flag
+209:10:0:255:161:1:6:45:RadarOnlyQPE15M:Radar precipitation accumulation 15-minute:mm
+209:10:0:255:161:1:6:46:RadarOnlyQPESince12Z:Radar precipitation accumulation since 12Z:mm
+209:10:0:255:161:1:7:0:ModelSurfaceTemp:Model Surface temperature:C
+209:10:0:255:161:1:7:1:ModelWetBulbTemp:Model Surface wet bulb temperature:C
+209:10:0:255:161:1:7:2:WarmRainProbability:Probability of warm rain:%
+209:10:0:255:161:1:7:3:Model0degCHeight:Model Freezing Level Height:m MSL
+209:10:0:255:161:1:7:4:BrightBandTopHeight:Brightband Top Height:m AGL
+209:10:0:255:161:1:7:5:BrightBandBottomHeight:Brightband Bottom Height:m AGL
+209:10:0:255:161:1:8:0:RadarQualityIndex:Radar Quality Index:non-dim
+209:10:0:255:161:1:8:1:GaugeInflIndex01HPass1:Gauge Influence Index for 1-hour QPE (1-hour latency):non-dim
+209:10:0:255:161:1:8:2:GaugeInflIndex03HPass1:Gauge Influence Index for 3-hour QPE (1-hour latency):non-dim
+209:10:0:255:161:1:8:3:GaugeInflIndex06HPass1:Gauge Influence Index for 6-hour QPE (1-hour latency):non-dim
+209:10:0:255:161:1:8:4:GaugeInflIndex12HPass1:Gauge Influence Index for 12-hour QPE (1-hour latency):non-dim
+209:10:0:255:161:1:8:5:GaugeInflIndex24HPass1:Gauge Influence Index for 24-hour QPE (1-hour latency):non-dim
+209:10:0:255:161:1:8:6:GaugeInflIndex48HPass1:Gauge Influence Index for 48-hour QPE (1-hour latency):non-dim
+209:10:0:255:161:1:8:7:GaugeInflIndex72HPass1:Gauge Influence Index for 72-hour QPE (1-hour latency):non-dim
+209:10:0:255:161:1:8:8:SeamlessHSR:Seamless Hybrid Scan Reflectivity with VPR correction:dBZ
+209:10:0:255:161:1:8:9:SeamlessHSRHeight:Height of Seamless Hybrid Scan Reflectivity:km AGL
+209:10:0:255:161:1:8:10:RadarAccumulationQualityIndex01H:Radar 1-hour QPE Accumulation Quality:non-dim
+209:10:0:255:161:1:8:11:RadarAccumulationQualityIndex03H:Radar 3-hour QPE Accumulation Quality:non-dim
+209:10:0:255:161:1:8:12:RadarAccumulationQualityIndex06H:Radar 6-hour QPE Accumulation Quality:non-dim
+209:10:0:255:161:1:8:13:RadarAccumulationQualityIndex12H:Radar 12-hour QPE Accumulation Quality:non-dim
+209:10:0:255:161:1:8:14:RadarAccumulationQualityIndex24H:Radar 24-hour QPE Accumulation Quality:non-dim
+209:10:0:255:161:1:8:15:RadarAccumulationQualityIndex48H:Radar 48-hour QPE Accumulation Quality:non-dim
+209:10:0:255:161:1:8:16:RadarAccumulationQualityIndex72H:Radar 72-hour QPE Accumulation Quality:non-dim
+209:10:0:255:161:1:8:17:GaugeInflIndex01HPass2:Gauge Influence Index for 1-hour QPE (2-hour latency):non-dim
+209:10:0:255:161:1:8:18:GaugeInflIndex03HPass2:Gauge Influence Index for 3-hour QPE (2-hour latency):non-dim
+209:10:0:255:161:1:8:19:GaugeInflIndex06HPass2:Gauge Influence Index for 6-hour QPE (2-hour latency):non-dim
+209:10:0:255:161:1:8:20:GaugeInflIndex12HPass2:Gauge Influence Index for 12-hour QPE (2-hour latency):non-dim
+209:10:0:255:161:1:8:21:GaugeInflIndex24HPass2:Gauge Influence Index for 24-hour QPE (2-hour latency):non-dim
+209:10:0:255:161:1:8:22:GaugeInflIndex48HPass2:Gauge Influence Index for 48-hour QPE (2-hour latency):non-dim
+209:10:0:255:161:1:8:23:GaugeInflIndex72HPass2:Gauge Influence Index for 72-hour QPE (2-hour latency):non-dim
+209:10:0:255:161:1:9:0:MergedReflectivityQC:3D Reflectivty Mosaic - 33 CAPPIS (500-19000m):dBZ
+209:10:0:255:161:1:9:3:MergedRhoHV:3D RhoHV Mosaic - 33 CAPPIS (500-19000m):non-dim
+209:10:0:255:161:1:9:4:MergedZdr:3D Zdr Mosaic - 33 CAPPIS (500-19000m):dB
+209:10:0:255:161:1:10:0:MergedReflectivityQCComposite:Composite Reflectivity Mosaic (optimal method):dBZ
+209:10:0:255:161:1:10:0:MergedReflectivityQCComposite5km:Composite Reflectivity Mosaic (optimal method) resampled from 1 to 5km:dBZ
+209:10:0:255:161:1:10:1:HeightCompositeReflectivity:Height of Composite Reflectivity Mosaic (optimal method):m MSL
+209:10:0:255:161:1:10:2:LowLevelCompositeReflectivity:Low-Level Composite Reflectivity Mosaic (0-4km):dBZ
+209:10:0:255:161:1:10:3:HeightLowLevelCompositeReflectivity:Height of Low-Level Composite Reflectivity Mosaic (0-4km):m MSL
+209:10:0:255:161:1:10:4:LayerCompositeReflectivityLow:Layer Composite Reflectivity Mosaic 0-24kft (low altitude):dBZ
+209:10:0:255:161:1:10:5:LayerCompositeReflectivityHigh:Layer Composite Reflectivity Mosaic 24-60 kft (highest altitude):dBZ
+209:10:0:255:161:1:10:6:LayerCompositeReflectivitySuper:Layer Composite Reflectivity Mosaic 33-60 kft (super high altitude):dBZ
+209:10:0:255:161:1:10:7:CREF1HRMAX:Composite Reflectivity Hourly Maximum:dBZ
+209:10:0:255:161:1:10:9:LayerCompositeReflectivityANC:Layer Composite Reflectivity Mosaic (2-4.5km) (for ANC):dBZ
+209:10:0:255:161:1:10:10:BREF1HRMAX:Base Reflectivity Hourly Maximum:dBZ
+209:10:0:255:161:1:11:0:MergedBaseReflectivityQC:Base Reflectivity Mosaic (optimal method):dBZ
+209:10:0:255:161:1:11:1:MergedReflectivityComposite:Raw Composite Reflectivity Mosaic (max ref):dBZ
+209:10:0:255:161:1:11:2:MergedReflectivityQComposite:Composite Reflectivity Mosaic (max ref):dBZ
+209:10:0:255:161:1:11:3:MergedBaseReflectivity:Raw Base Reflectivity Mosaic (optimal method):dBZ
+209:10:0:255:161:1:12:0:FLASHCRESTMAXUNITSTREAMFLOW:FLASH QPE-CREST Unit Streamflow:m^3/s/km^2
+209:10:0:255:161:1:12:1:FLASHCRESTMAXSTREAMFLOW:FLASH QPE-CREST Streamflow:m^3/s
+209:10:0:255:161:1:12:2:FLASHCRESTMAXSOILSAT:FLASH QPE-CREST Soil Saturation:%
+209:10:0:255:161:1:12:4:FLASHSACMAXUNITSTREAMFLOW:FLASH QPE-SAC Unit Streamflow:m^3/s/km^2
+209:10:0:255:161:1:12:5:FLASHSACMAXSTREAMFLOW:FLASH QPE-SAC Streamflow:m^3/s
+209:10:0:255:161:1:12:6:FLASHSACMAXSOILSAT:FLASH QPE-SAC Soil Saturation:%
+209:10:0:255:161:1:12:14:FLASHQPEARI30M:FLASH QPE Average Recurrence Interval 30-min:years
+209:10:0:255:161:1:12:15:FLASHQPEARI01H:FLASH QPE Average Recurrence Interval 01H:years
+209:10:0:255:161:1:12:16:FLASHQPEARI03H:FLASH QPE Average Recurrence Interval 03H:years
+209:10:0:255:161:1:12:17:FLASHQPEARI06H:FLASH QPE Average Recurrence Interval 06H:years
+209:10:0:255:161:1:12:18:FLASHQPEARI12H:FLASH QPE Average Recurrence Interval 12H:years
+209:10:0:255:161:1:12:19:FLASHQPEARI24H:FLASH QPE Average Recurrence Interval 24H:years
+209:10:0:255:161:1:12:20:FLASHQPEARIMAX:FLASH QPE Average Recurrence Interval Maximum:years
+209:10:0:255:161:1:12:26:FLASHQPEFFG01H:FLASH QPE-to-FFG Ratio 01H:non-dim
+209:10:0:255:161:1:12:27:FLASHQPEFFG03H:FLASH QPE-to-FFG Ratio 03H:non-dim
+209:10:0:255:161:1:12:28:FLASHQPEFFG06H:FLASH QPE-to-FFG Ratio 06H:non-dim
+209:10:0:255:161:1:12:29:FLASHQPEFFGMAX:FLASH QPE-to-FFG Ratio Maximum:non-dim
+209:10:0:255:161:1:12:39:FLASHHPMAXUNITSTREAMFLOW:FLASH QPE-Hydrophobic Unit Streamflow:m^3/s/km^2
+209:10:0:255:161:1:12:40:FLASHHPMAXSTREAMFLOW:FLASH QPE-Hydrophobic Streamflow:m^3/s
+209:10:0:255:161:1:13:0:ANCConvectiveLikelihood:Likelihood of convection over the next 01H:non-dim
+209:10:0:255:161:1:13:1:ANCFinalForecast:01H reflectivity forecast:dBZ
+209:10:0:255:161:1:14:0:LVL3HREET:Level III High Resolution Enhanced Echo Top mosaic:kft
+209:10:0:255:161:1:14:1:LVL3HighResVIL:Level III High Resouion VIL mosaic:kg/m^2
