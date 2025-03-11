@@ -351,7 +351,6 @@ double adjust_lon(double x)
 
 //double x;		/* Angle in radians			*/
 {
-long temp;
 long count = 0;
 for(;;)
   {

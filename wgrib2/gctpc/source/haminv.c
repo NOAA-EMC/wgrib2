@@ -46,7 +46,6 @@ long haminvint(double r, double center_long, double false_east,
 //double false_east;		/* x offset in meters			*/
 //double false_north;		/* y offset in meters			*/
 //{
-long i;
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -74,7 +73,6 @@ long haminv(double x, double y, double *lon, double *lat) {
 //double *lat;			/* (I) Latitude */
 //
 //{
-double dlon;
 double fac;
 
 /* Inverse equations

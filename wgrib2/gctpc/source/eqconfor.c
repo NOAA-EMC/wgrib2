@@ -29,7 +29,7 @@ static double r_minor;		/* minor axis 				*/
 static double lon_center;	/* Center longitude (projection center) */
 static double lat_origin;	/* center latitude			*/
 static double e0,e1,e2,e3;	/* eccentricity constants		*/
-static double e,es,esp;		/* eccentricity constants		*/
+static double e,es;		/* eccentricity constants		*/
 static double ml0;		/* small value m			*/
 static double false_northing;	/* y offset in meters			*/
 static double false_easting;	/* x offset in meters			*/

@@ -44,7 +44,6 @@ long orthforint(double r_maj, double center_lon, double center_lat,
 //double false_east;		/* x offset in meters		*/
 //double false_north;		/* y offset in meters		*/
 //{
-double temp;			/* temporary variable		*/
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/

@@ -74,7 +74,6 @@ long imolwinv(double x, double y, double *lon, double *lat) {
 //double *lat;		/* (O) Latitude */
 //{
 double theta;
-double temp;
 long region;
 
 /* Inverse equations

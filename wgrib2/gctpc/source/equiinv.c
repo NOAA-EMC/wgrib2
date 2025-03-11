@@ -42,7 +42,6 @@ long equiinvint(double r_maj, double center_lon, double lat1,
 //double false_east;		/* x offset in meters		*/
 //double false_north;		/* y offset in meters		*/
 //{
-double temp;			/* temporary variable		*/
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -72,11 +71,6 @@ long equiinv(double x, double y, double *lon, double *lat) {
 //double *lon;			/* (I) Longitude 		*/
 //double *lat;			/* (I) Latitude 		*/
 //{
-double sinphi, cosphi;	/* sin and cos value				*/
-double dlon;		/* delta longitude value			*/
-double coslon;		/* cos of longitude				*/
-double ksp;		/* scale factor					*/
-double g;		
 
 /* Inverse equations
   -----------------*/

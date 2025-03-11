@@ -24,7 +24,6 @@ ALGORITHM REFERENCES
 
 /* Variables common to all subroutines in this code file
   -----------------------------------------------------*/
-static double azimuth;
 static double r_major;		/* major axis 				*/
 static double r_minor;		/* minor axis 				*/
 static double scale_factor;	/* scale factor				*/
@@ -72,7 +71,7 @@ double ts1,ts2;
 double h,l;
 double j,p,dlon;
 double f,g,gama;
-double sinphi,cosphi;
+double sinphi;
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -94,7 +93,6 @@ bl = sqrt(1.0 + es * pow(cos_p20,4.0)/(1.0 - es));
 al = r_major * bl * scale_factor * com / con;
 if (fabs(lat_origin) < EPSLN)
    {
-   ts = 1.0;
    d = 1.0;
    el = 1.0;
    }
@@ -219,11 +217,9 @@ long omerfor(double lon, double lat, double *x, double *y) {
 //double *x;			/* (O) X projection coordinate 	*/
 //double *y;			/* (O) Y projection coordinate 	*/
 //{
-double theta;		/* angle					*/
-double sin_phi, cos_phi;/* sin and cos value				*/
-double b;		/* temporary values				*/
-double c, t, tq;	/* temporary values				*/
-double con, n, ml;	/* cone constant, small m			*/
+double sin_phi; /* sin and cos value				*/
+double t;       /* temporary values				*/
+double con;     /* cone constant, small m			*/
 double q,us,vl;
 double ul,vs;
 double s;

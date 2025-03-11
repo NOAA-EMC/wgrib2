@@ -85,7 +85,6 @@ long merinv(double x, double y, double *lon, double *lat) {
 //double *lat;			/* (I) Latitude 		*/
 //{
 double ts;		/* small t value				*/
-double sin_phii;	/* sin value					*/
 long flag;		/* error flag 					*/
 
 

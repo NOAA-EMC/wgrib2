@@ -165,10 +165,10 @@ long somfor(double lon, double lat, double *x, double *y) {
 //double *x;		/* (O) X projection coordinate 	*/
 //double *y;		/* (O) Y projection coordinate 	*/
 //{
-long n,i,l;
+long n,l;
 double delta_lon;
-double rlm,tabs,tlam,xlam,c,xlamt,ab2,sc1,ab1,xlamp,sav;
-double d,sdsq,sd,tanlg,xtan,tphi,dp,dd,ds,rlm2;
+double rlm,tabs,tlam,xlam,c,xlamt,ab2,ab1,xlamp,sav;
+double d,sdsq,sd,tanlg,xtan,tphi,dp,rlm2;
 double scl,tlamp,conv,delta_lat,radlt,radln;
 double temp;
 char   errorbuf[80];
@@ -195,8 +195,10 @@ L230:  sav=tlamp;
        xlamp=radln+p21*tlamp;
        ab1=cos(xlamp);
        if(fabs(ab1)<conv) xlamp=xlamp-1.e-7;
-       if(ab1>=0.0) scl=1.0;
-       if(ab1<0.0) scl= -1.0;
+       if(ab1>=0.0)
+	 scl=1.0;
+       else
+	 scl= -1.0;
        ab2=tlamp-(scl)*sin(tlamp)*HALF_PI;
 L240:  xlamt=radln+p21*sav;
        c=cos(xlamt);
@@ -227,9 +229,7 @@ L260:  sprintf(errorbuf,"50 iterations without conv\n");
 
 /* tlam computed - now compute tphi
   --------------------------------*/
-L300: ds=sin(tlam);
-      dd=ds*ds;
-      dp=sin(radlt);
+L300: dp=sin(radlt);
       tphi=asin(((1.0-es)*ca*dp-sa*cos(radlt)*sin(xlamt))/sqrt(1.0-es*dp*dp));
 
 /* compute x and y

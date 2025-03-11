@@ -53,8 +53,6 @@ long alconinvint( double r_maj, double r_min, double false_east,
 //double false_east;		/* x offset in meters			*/
 //double false_north;		/* y offset in meters			*/
 //{
-long i;
-double temp;
 double es;
 double chi;
 double esphi;
@@ -69,7 +67,6 @@ lon_center = -152.0 * D2R;
 lat_center = 64.0 * D2R;
 n = 6;
 
-temp = r_minor / r_major;
 es = .006768657997291094;
 e = sqrt(es);
 
@@ -110,8 +107,6 @@ long alconinv( double x, double y, double *lon, double *lat) {
 //double *lon;			/* (I) Longitude */
 //double *lat;			/* (I) Latitude */
 //{
-double dlon;
-double sinlon,coslon;
 double esphi;
 double r;
 double s;
@@ -123,8 +118,8 @@ double ci;
 double cr;
 double di;
 double dr;
-double arn;
-double ain;
+double arn = 0.0;  /* silence compiler */
+double ain = 0.0;  /* silence compiler */
 double crn;
 double cin;
 double fxyr;

@@ -24,7 +24,6 @@ ALGORITHM REFERENCES
 
 /* Variables common to all subroutines in this code file
   -----------------------------------------------------*/
-static double azimuth;
 static double r_major;		/* major axis 				*/
 static double r_minor;		/* minor axis 				*/
 static double scale_factor;	/* scale factor				*/
@@ -70,7 +69,7 @@ double con,com;
 double h,l,ts1,ts2;
 double j,p,dlon;
 double f,g,gama;
-double sinphi,cosphi;
+double sinphi;
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -217,16 +216,11 @@ long omerinv(double x, double y, double *lon, double *lat) {
 //double *lon;			/* (I) Longitude 		*/
 //double *lat;			/* (I) Latitude 		*/
 //{
-double delta_lon;	/* Delta longitude (Given longitude - center 	*/
 double theta;		/* angle					*/
-double delta_theta;	/* adjusted longitude				*/
-double sin_phi, cos_phi;/* sin and cos value				*/
-double b;		/* temporary values				*/
-double c, t, tq;	/* temporary values				*/
-double con, n, ml;	/* cone constant, small m			*/
+double t;	/* temporary values				*/
+double con;	/* cone constant, small m			*/
 double vs,us,q,s,ts1;
-double vl,ul,bs;
-double dlon;
+double vl,ul;
 long   flag;
 
 /* Inverse equations

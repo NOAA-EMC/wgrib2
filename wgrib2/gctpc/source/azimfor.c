@@ -28,8 +28,6 @@ ALGORITHM REFERENCES
 static double r_major;		/* major axis 				*/
 static double lon_center;	/* Center longitude (projection center) */
 static double lat_origin;	/* center latitude			*/
-static double e0,e1,e2,e3;	/* eccentricity constants		*/
-static double e,es,esp;		/* eccentricity constants		*/
 static double false_northing;	/* y offset in meters			*/
 static double false_easting;	/* x offset in meters			*/
 static double sin_p12;		/* sin of center latitude		*/
@@ -47,7 +45,6 @@ long azimforint( double r_maj, double center_lon, double center_lat,
 // double false_east;		/* x offset in meters		*/
 // double false_north;		/* y offset in meters		*/
 // {
-double temp;			/* temporary variable		*/
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/

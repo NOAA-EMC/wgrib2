@@ -54,8 +54,6 @@ long alconforint( double r_maj, double r_min, double false_east,
 //double false_east;		/* x offset in meters			*/
 //double false_north;		/* y offset in meters			*/
 //{
-long i;
-double temp;
 double es;
 double chi;
 double esphi;
@@ -123,8 +121,8 @@ double ar;
 double ai;
 double br;
 double bi;
-double arn;
-double ain;
+double arn = 0.0;  /* silence compiler */
+double ain = 0.0;  /* silence compiler */
 double chi;
 double r;
 long j;

@@ -46,7 +46,6 @@ long hamforint(double r, double center_long, double false_east,
 //double false_east;		/* x offset in meters			*/
 //double false_north;		/* y offset in meters			*/
 //{
-long i;
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/

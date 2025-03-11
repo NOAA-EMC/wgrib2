@@ -110,8 +110,6 @@ long tmfor(double lon, double lat, double *x, double *y) {
 //double *y;			/* (O) Y projection coordinate 	*/
 //{
 double delta_lon;	/* Delta longitude (Given longitude - center 	*/
-double theta;		/* angle					*/
-double delta_theta;	/* adjusted longitude				*/
 double sin_phi, cos_phi;/* sin and cos value				*/
 double al, als;		/* temporary values				*/
 double b;		/* temporary values				*/

@@ -69,18 +69,6 @@ static long NADUT[134] = {1, 5, 1, 1, 5, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 2,
 			  1, 1, 5, 2, 1, 2, 5, 1, 2, 2, 2, 1, 1, 1, 5, 2, 1, 5,
 			  2, 2, 5, 2, 1, 1, 5, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2};
 
-static long NAD83[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,
-                404,405,406,0000,501,502,503,600,700,901,902,903,1001,1002,
-                5101,5102,5103,5104,5105,1101,1102,1103,1201,1202,1301,1302,
-                1401,1402,1501,1502,1601,1602,1701,1702,1703,1801,1802,1900,
-                2001,2002,2101,2102,2103,2111,2112,2113,2201,2202,2203,2301,
-                2302,2401,2402,2403,2500,0000,0000,2600,0000,2701,2702,2703,
-                2800,2900,3001,3002,3003,3101,3102,3103,3104,3200,3301,3302,
-                3401,3402,3501,3502,3601,3602,3701,3702,3800,3900,0000,4001,
-                4002,4100,4201,4202,4203,4204,4205,4301,4302,4303,4400,4501,
-                4502,4601,4602,4701,4702,4801,4802,4803,4901,4902,4903,4904,
-                5001,5002,5003,5004,5005,5006,5007,5008,5009,5200,0000,5400};
-
 void gctp(double *incoor, long *insys, long *inzone, double *inparm,
         long *inunit, long *inspheroid, long *ipr, char *efile, long *jpr,
         char *pfile, double *outcoor, long *outsys, long *outzone,
@@ -117,11 +105,9 @@ double y;		/* y coordinate					*/
 double factor;		/* conversion factor				*/
 double lon;		/* longitude					*/
 double lat;		/* latitude					*/
-double temp;		/* temporary variable				*/
 long i,j;		/* loop counters				*/
 long ininit_flag;	/* input initilization flag			*/
 long outinit_flag;	/* output initilization flag			*/
-long ind;		/* temporary var used to find state plane zone 	*/
 long unit;		/* temporary unit variable			*/
 double temparr[COEFCT];	/* temporary projection array 			*/
 

@@ -79,7 +79,6 @@ double g,gsq;
 double m,msq;
 double con;
 double costh,sinth;
-double temp;
 
 /* Forward equations
   -----------------*/

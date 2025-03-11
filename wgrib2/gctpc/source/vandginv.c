@@ -71,9 +71,7 @@ long vandginv(double x, double y, double *lon, double *lat) {
 //double *lon;			/* (I) Longitude */
 //double *lat;			/* (I) Latitude */
 //{
-double dlon;
 double xx,yy,xys,c1,c2,c3;
-double al,asq;
 double a1;
 double m1;
 double con;

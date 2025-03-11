@@ -73,7 +73,6 @@ long millinv(double x, double y, double *lon, double *lat) {
 //double *lat;			/* (I) Latitude */
 //
 //{
-double dlon;
 
 /* Inverse  equations
   ------------------*/

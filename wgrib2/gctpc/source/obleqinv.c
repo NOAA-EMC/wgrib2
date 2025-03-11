@@ -92,8 +92,6 @@ double z;
 double sin_z;
 double cos_z;
 double Az;
-double sin_Az;
-double cos_Az;
 double temp;			/* Re-used temporary variable */
 double x_prime;
 double y_prime;

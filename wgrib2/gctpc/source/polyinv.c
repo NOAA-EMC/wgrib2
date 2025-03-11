@@ -32,7 +32,7 @@ static double r_minor;		/* minor axis 				*/
 static double lon_center;	/* Center longitude (projection center) */
 static double lat_origin;	/* center latitude			*/
 static double e0,e1,e2,e3;	/* eccentricity constants		*/
-static double e,es,esp;		/* eccentricity constants		*/
+static double e,es;		/* eccentricity constants		*/
 static double ml0;		/* small value m			*/
 static double false_northing;	/* y offset in meters			*/
 static double false_easting;	/* x offset in meters			*/
@@ -90,11 +90,9 @@ long polyinv(double x, double y, double *lon, double *lat) {
 //double *lon;			/* (I) Longitude 		*/
 //double *lat;			/* (I) Latitude 		*/
 //{
-double sin_phi, cos_phi;/* sin and cos value				*/
 double al;		/* temporary values				*/
 double b;		/* temporary values				*/
 double c;		/* temporary values				*/
-double con, ml;		/* cone constant, small m			*/
 long iflg;		/* error flag					*/
 
 /* Inverse equations
@@ -102,7 +100,6 @@ long iflg;		/* error flag					*/
 x -= false_easting;
 y -= false_northing;
 al = ml0 + y/r_major;
-iflg = 0;
 if (fabs(al) <= .0000001)
    {
    *lon = x/r_major + lon_center;

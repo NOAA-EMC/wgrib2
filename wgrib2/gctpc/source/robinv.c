@@ -127,7 +127,6 @@ double yy;
 double p2;
 double u,v,t,c;
 double phid;
-double temp;
 double y1;
 long ip1;
 long i;
