@@ -118,8 +118,8 @@ double ci;
 double cr;
 double di;
 double dr;
-double arn;
-double ain;
+double arn = 0.0;  /* silence compiler */
+double ain = 0.0;  /* silence compiler */
 double crn;
 double cin;
 double fxyr;

@@ -93,7 +93,6 @@ bl = sqrt(1.0 + es * pow(cos_p20,4.0)/(1.0 - es));
 al = r_major * bl * scale_factor * com / con;
 if (fabs(lat_origin) < EPSLN)
    {
-   ts = 1.0;
    d = 1.0;
    el = 1.0;
    }
@@ -219,8 +218,8 @@ long omerfor(double lon, double lat, double *x, double *y) {
 //double *y;			/* (O) Y projection coordinate 	*/
 //{
 double sin_phi; /* sin and cos value				*/
-double t;	/* temporary values				*/
-double con;	/* cone constant, small m			*/
+double t;       /* temporary values				*/
+double con;     /* cone constant, small m			*/
 double q,us,vl;
 double ul,vs;
 double s;

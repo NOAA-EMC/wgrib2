@@ -195,8 +195,10 @@ L230:  sav=tlamp;
        xlamp=radln+p21*tlamp;
        ab1=cos(xlamp);
        if(fabs(ab1)<conv) xlamp=xlamp-1.e-7;
-       if(ab1>=0.0) scl=1.0;
-       if(ab1<0.0) scl= -1.0;
+       if(ab1>=0.0)
+	 scl=1.0;
+       else
+	 scl= -1.0;
        ab2=tlamp-(scl)*sin(tlamp)*HALF_PI;
 L240:  xlamt=radln+p21*sav;
        c=cos(xlamt);

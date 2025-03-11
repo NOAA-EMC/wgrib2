@@ -100,7 +100,6 @@ long iflg;		/* error flag					*/
 x -= false_easting;
 y -= false_northing;
 al = ml0 + y/r_major;
-iflg = 0;
 if (fabs(al) <= .0000001)
    {
    *lon = x/r_major + lon_center;

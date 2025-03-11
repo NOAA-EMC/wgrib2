@@ -224,6 +224,10 @@ if (id == 4)
    false_east = table[7];
    false_north = table[8];
    mode = 1;
+   lon1 = -9999.0;  /* silence compiler */
+   lat1 = -9999.0;  /* silence compiler */
+   lon2 = -9999.0;  /* silence compiler */
+   lat2 = -9999.0;  /* silence compiler */
    omerforint(r_maj,r_min,scale_fact,azimuth,lon_orig,lat_orig,false_east,
               false_north,lon1,lat1,lon2,lat2,mode);
    }

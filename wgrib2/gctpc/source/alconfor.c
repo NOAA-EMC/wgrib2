@@ -121,8 +121,8 @@ double ar;
 double ai;
 double br;
 double bi;
-double arn;
-double ain;
+double arn = 0.0;  /* silence compiler */
+double ain = 0.0;  /* silence compiler */
 double chi;
 double r;
 long j;

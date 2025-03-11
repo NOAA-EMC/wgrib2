@@ -216,8 +216,10 @@ dlon=xlamt-p21*tlon;
 
 /* Compute geodetic latitude
   -------------------------*/
-if(fabs(sa)<1.e-7)dlat=asin(bigk/sqrt((1.0-es)*(1.0-es)+es*bigk2));
-if(fabs(sa)>=1.e-7)dlat=atan((tan(tlon)*cos(xlamt)-ca*sin(xlamt))/((1.0-es)*sa));
+if(fabs(sa)<1.e-7)
+  dlat=asin(bigk/sqrt((1.0-es)*(1.0-es)+es*bigk2));
+else
+  dlat=atan((tan(tlon)*cos(xlamt)-ca*sin(xlamt))/((1.0-es)*sa));
 *lon = adjust_lon(dlon+lon_center);
 *lat = dlat;
 return(OK);
