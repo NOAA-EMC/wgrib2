@@ -151,7 +151,7 @@ endif()
 
 if(USE_JASPER OR USE_OPENJPEG OR USE_PNG)
   target_link_libraries(obj_lib PUBLIC g2c::g2c)
-  target_link_libraries(wgrib2_exe PRIVATE g2c::g2c)
+  target_link_libraries(wgrib2_exe PUBLIC g2c::g2c)
   if(BUILD_LIB)
     target_link_libraries(wgrib2_lib PUBLIC g2c::g2c)
   endif()
