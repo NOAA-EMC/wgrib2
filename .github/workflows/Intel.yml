@@ -40,7 +40,7 @@ jobs:
     - name: "Build dependencies"
       uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        jasper-version: develop
+        jasper-version: version-4.2.4
         ip-version: develop
         g2c-version: develop
 
