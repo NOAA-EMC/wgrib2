@@ -44,7 +44,6 @@ jobs:
         jasper-version: version-4.0.0
         ip-version: develop
         g2c-version: develop
-        g2c-cmake-args: -DUSE_PNG=ON
 
     - name: checkout
       uses: actions/checkout@v4
@@ -53,6 +52,7 @@ jobs:
 
     - name: build
       run: |
+        ulimit -s unlimited
         cd wgrib2
         mkdir b
         cd b
