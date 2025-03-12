@@ -40,10 +40,9 @@ jobs:
     - name: "Build dependencies"
       uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        jasper-version: version-4.0.0
+        jasper-version: develop
         ip-version: develop
         g2c-version: develop
-        #g2c-cmake-args: 
 
     - name: checkout
       uses: actions/checkout@v4
