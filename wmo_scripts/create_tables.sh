@@ -2,11 +2,10 @@
 #  10/2024  Public Domain  Wesley Ebisuzaki
 homedir=`pwd`
 PATH="$homedir:$PATH"
-dat=`date "+%Y%m%d"`
 
 scriptlist=`ls $homedir/get_*.sh`
-mkdir -p tables_$dat
-cd tables_$dat
+mkdir -p tables.tmp
+cd tables.tmp
 
 indx=0
 for script in $scriptlist; do

@@ -7,4 +7,6 @@ case     5: string="Probability of event equal to lower limit"; break;
 case     6: string="Probability of event in above normal category"; break;
 case     7: string="Probability of event in near normal category"; break;
 case     8: string="Probability of event in below normal category"; break;
+case     9: string="Probability based on counts of categorical boolean"; break;
+case    10: string="Probability of event within the quantile of the probability distribution function"; break;
 case   255: string="Missing"; break;

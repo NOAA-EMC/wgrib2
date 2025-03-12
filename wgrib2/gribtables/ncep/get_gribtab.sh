@@ -16,11 +16,12 @@
 #     column  9: Abbreviation
 #     column 10: Description (parameter name)
 #     column 11: Unit
-# - Entries with parameter numbers smaller than 192 are printed
-#   with Master Table Version equal 1.
-# - Entries with parameter numbers greater than or equal 192 are declared
-#   as NCEP-only with Master Table Version equal 0 and columns 5 and 6
-#   set as "7" and "0".
+# - Entries with parameter categories smaller than 192 are printed
+#   with Master Table Version equal 1 (operational table)
+#   and columns 5 and 6 set as "0" (WMO) and "0" (no local table used).
+# - Entries with parameter categories greater than or equal 192 are declared
+#   as NCEP-only with Master Table Version equal 0 (experimental)
+#   and columns 5 and 6 set as "7" (NCEP) and "1" (local table).
 # - Apostrophes of all sorts are removed, as they provoke problems in shells.
 # - Units are converted to a more human readable format.
 #
@@ -87,34 +88,36 @@ for line in $disc_lines; do
       exit
     fi    
     cat "$subtable" | tr -s "[:cntrl:]" "[ *]" | sed '{
-        s/Height of Convective Cloud Top[^<]*/&<\/td>/g 
-        s/\(<\/t[dh]>\|<br>\)\s*<t[dh][^<]*>/	/ig
-        s/<t[dh][^<]*>/\
-/ig
-        s/<br>//ig
-        s/&nbsp\;/ /ig
-        s/&#8217\;//g
-        s/&#176\;/deg/g
-        s/&#176/deg/g
-        s/&#181/u/g
-        s/&#956/u/g
-        s/&#937/Omega/g
-        s/&#952\;/theta/g
-        s/&#8747\;/int/g
-        s/\o042//g
-        s/\o047//g
-        s/\o140//g
-        s/&micro\;g/10-6g/g
-        s/<[/]*span[^<]*>//ig
-        s/<\/center>/\
-/ig
-        s/<[^<]*>//ig
-        s/<\/sup//g
-      }' | grep "^[0-9]" | grep -vi "reserved" > "$subtable_prep"
+      s/<\/tr>/\n/ig
+      s/<tr>/\n/ig
+      s/<td[^<]*>/\t/ig
+      s/<\/sup>\?//g
+      s/&nbsp;\?/ /ig
+      s/&#176;\?/deg/g    # Degree Sign
+      s/&#181;\?/u/g      # Micro Sign
+      s/&#928;\?/Pi/g     # Greek Capital Letter Pi
+      s/&#937;\?/Omega/g  # Greek Capital Letter Omega
+      s/&#952;\?/theta/g  # Greek Small Letter Theta
+      s/&#956;\?/u/g      # Greek Small Letter Mu
+      s/&#8217;\?//g      # Right Single Quotation Mark
+      s/&#8747;\?/int/g   # Integral
+      s/\o042//g
+      s/\o047//g
+      s/\o140//g
+      s/&deg;\?/deg/g
+      s/&micro;g/10-6g/ig
+    }' | sed '{
+      s/<[^<]*>//g
+      s/^ *\t//
+      s/ *$//
+      s/ *\t/\t/g
+    }' | grep "^[0-9]" | grep -vi "reserved" > "$subtable_prep"
+
     if { grep -qi "use another" "$subtable_prep" ;}; then
       echo "ATTENTION: Deprecated parameters without abbrev in $url." \
            "Maybe need of manual inspection."
     fi
+    ##if { grep -q "Eastward turbulent surface stress" "$subtable" ;}; then echo $url; fi
     cat "$subtable_prep" | awk -F"\t" -v d="$disc" -v c="$pcat" \
       -v ds="$discstr" '{ \
         abbr=gensub(" ","","g",$4); \
@@ -123,7 +126,7 @@ for line in $disc_lines; do
         descr=gensub(" *[*]*$","","g",descr); \
         unit=gensub(" ","","g",$3); \
         if (unit~/^[sS]ee|^[cC]ode/) unit="-"; \
-        if ($1<192 && c < 192) { for (mtab=1; mtab<2; ++mtab) \
+        if (d<192 && c<192 && $1<192) { for (mtab=1; mtab<2; ++mtab) \
            { printf "%g:%g:%g:%g:%g:%g:%g:%g:%s:%s:%s\n", \
                     d,mtab,0,255,0,0,c,$1,abbr,descr,unit } } \
         else if ($1<255) \
@@ -132,7 +135,7 @@ for line in $disc_lines; do
       }' | tr -s " " | sed '{
           s/::/:-:/g
           s/:$/:-/
-          s|:(kgm-3)(ms-1)$|:(kg/m^3)(m/s)|
+          s|:(kgm-3)(ms-1)$|:kg/m^2/s|
           s|:(m2ssr)-1$|:1/(m^2s*sr)|
           s|:(m2ssreV)-1$|:1/(m^2s*sr*eV)|
           s|:(m2ssreV/nuc)-1$|:1/(m^2s*sr*eV/nuc)|
@@ -143,12 +146,19 @@ for line in $disc_lines; do
           s|:Bqm-2$|:Bq/m^2|
           s|:Bqm-3$|:Bq/m^3|
           s|:Bqsm-3$|:Bqs/m^3|
+          s|:Bqs-1$|:Bq/s|
+          s|:day-1$|:1/day|
           s|:DegreeTrue$|:deg|i
           s|:degreeperday$|:K/day|
           s|:degtrue$|:deg|
+          s|deg[EN]|deg|
+          s|degc|degC|
+          s|:Deg|:deg|
+          s|:&deg|:deg|
           s|:Jkg-1$|:J/kg|
           s|:Jm-2$|:J/m^2|
           s|:Jm-2K$|:J/m^2*K|
+          s|:Jm-2s-1$|:J/m^2/s|
           s|:K[*]ms-1$|:K*m/s|
           s|:Km2kg-1s-1$|:K*m^2/kg/s|
           s|:Km-1$|:K/m|
@@ -162,6 +172,7 @@ for line in $disc_lines; do
           s|:Pa2/s2$|:Pa^2/s^2|
           s|:Sm-1$|:S/m|
           s|:Vm-1$|:V/m|
+          s|:Wm-1$|:W/m|
           s|:Wm-1sr-1$|:W/m/sr|
           s|:Wm-2$|:W/m^2|
           s|:Wm-2Hz-1$|:W/m^2/Hz|
@@ -171,13 +182,19 @@ for line in $disc_lines; do
           s|:integer$|:Integer|
           s|:d$|:day|
           s|:h-1$|:1/h|
+          s|:gkgm-2s-1$|:g*kg/m^2/s|
+          s|:gkg-1m-2s-1$|:g/kg/m^2/s|
+          s|:gkg-1m$|:g/kg*m|
+          s|:gkg-1s-1$|:g/kg/s|
           s|:kg-1$|:1/kg|
           s|:kg-2s-1$|:1/kg^2/s|
           s|:kgday-1$|:kg/day|
           s|:kgkg-1$|:kg/kg|
           s|:kgkg-1s-1$|:kg/kg/s|
           s|:kgkg-1ms-1$|:kg/kg*m/s|
+          s|:kgkg-1m$|:kg/kg*m|
           s|:kgm-1$|:kg/m|
+          s|:kgm-1s-1$|:kg/m/s|
           s|:[Kk]gm-2$|:kg/m^2|
           s|:kgm-2s-1$|:kg/m^2/s|
           s|:kgm-3$|:kg/m^3|
@@ -193,13 +210,19 @@ for line in $disc_lines; do
           s|:m-2s-1$|:1/m^2/s|
           s|:m-2srad-1$|:1/m^2*s/rad|
           s|:m2$|:m^2|
+          s|:m2/3 s-1|:m^(2/3)/s|
+          s|:m2srad-1|:m^2*s/rad|
+          s|:m2m-2$|:m^2/m^2|
           s|:m2/s2$|:m^2/s^2|
           s|:m2kg-1s-1$|:m^2/kg/s|
           s|:m2s-1$|:m^2/s|
           s|:m2s-2$|:m^2/s^2|
           s|:m3$|:m^3|
-          s|:m3s-1$|:m^3/s|
+          s|:m3m-2$|:m^3/m^2|
           s|:m3m-3$|:m^3/m^3|
+          s|:m3m-2s-1$|:m^3/m^2/s|
+          s|:m2/3s-1$|:m^(2/3)/s|
+          s|:m3s-1$|:m^3/s|
           s|:m3s-1m-1$|:m^3/s/m|
           s|:mm6/m3$|:mm^6/m^3|
           s|:mm6m-3$|:mm^6/m^3|
@@ -210,29 +233,36 @@ for line in $disc_lines; do
           s|:molmol-1$|:mol/mol|
           s|:ms-1$|:m/s|
           s|:ms-2$|:m/s^2|
+          s|:nSvh-1|:nSv/h|
           s|:s-1$|:1/s|
           s|:s-2$|:1/s^2|
           s|:sm-1$|:s/m|
           s|:[Pp]am$|:Pa*m|
+          s|Moisture(non-frozen)|Moisture (non-frozen)|
+          s|Cease(Soil Moisture)|Cease (Soil Moisture)|
+          s|Onset(Soil Moisture)|Onset (Soil Moisture)|
           s|see note [^:]*:|:|
           s|:categorical$|:Categorical|
           s|:psuperday$|:psu/day|
           s|:proportion$|:Proportion|
           s|:numeric$|:Numeric|
           s|:Numeric.*$|:Numeric|
-          s| *(See Note [1-9])||i
-          s| *See Note [1-9]||i
-          s| See Note||i
-          s|deg[EN]|deg|
-          s|degc|degC|
-          s|:Deg|:deg|
-          s|:&deg|:deg|
+          s|:Numberm-2|:Number/m^2|
+          s|:Personm-2|:Number/m^2|
+          s|:Bitesperdayperperson|:bites/day/person|
           s| \* - Parameter deprecated:|:|
+          s| *(Parameter Deprecated, see Note [1-9])||i
+          s|[ ,]*(See Note [1-9])||i
+          s| *See Note [1-9]||i
+          s| *(see Note)||i
+          s| See Note||i
+          s| *(see Local Use Note A)||i
           s| (Defined In Section 1)||i
         }' | sed '{
-          s|[.]:|:|g
+          s|[.,]:|:|g
           s|<br:|:|
           s|Pblackominant|Predominant|
+          s|Coveblack|Covered|
           s|0:0:0:255:7:1:1:197:MCONV:|0:0:0:255:7:1:1:197:MDIV:|
           s|0:1:0:255:0:0:1:22:CLWMR:|0:1:0:255:0:0:1:22:CLMR:|
           s|0:1:0:255:0:0:1:87:SPRATE:|0:1:0:255:0:0:1:87:STPRATE:|

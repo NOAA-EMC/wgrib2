@@ -12,6 +12,7 @@ case    92: classification="Sentinel-3"; break;
 case   121: classification="ADEOS"; break;
 case   122: classification="GCOM"; break;
 case   241: classification="GOES"; break;
+case   251: classification="TROPICS"; break;
 case   261: classification="JASON"; break;
 case   271: classification="GMS"; break;
 case   272: classification="MTSAT"; break;

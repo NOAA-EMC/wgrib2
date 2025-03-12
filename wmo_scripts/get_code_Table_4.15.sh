@@ -4,7 +4,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="../wgrib2/CodeTable_4.15.dat"
+outfile="CodeTable_4.15.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 4.15: Type of spatial processing used to arrive at given data value from the source data

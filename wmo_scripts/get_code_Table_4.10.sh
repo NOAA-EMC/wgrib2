@@ -4,7 +4,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="../wgrib2/CodeTable_4.10.dat"
+outfile="CodeTable_4.10.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 4.10: Type of statistical processing
@@ -31,8 +31,10 @@ wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_4_10_CodeTable_en.csv" -O- | sed '{
         case  10: wgrib2name="standardized anomaly"; break
         case  11: wgrib2name="summation"; break
         case  12: wgrib2name="return period"; break
+        case  13: wgrib2name="median"; break
         case 100: wgrib2name="severity"; break
         case 101: wgrib2name="mode"; break
+        case 102: wgrib2name="index processing"; break
         case 255: wgrib2name="missing"; break
         default: { print "ERROR: missing switch statement for",num > "/dev/stderr"; exit 1 }
       }

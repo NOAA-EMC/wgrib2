@@ -4,7 +4,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="../wgrib2/CodeTable_3.21.dat"
+outfile="CodeTable_3.21.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 3.21: Vertical dimension coordinate values definition

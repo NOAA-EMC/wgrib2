@@ -4,7 +4,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="../wgrib2/CodeTable_4.208.dat"
+outfile="CodeTable_4.208.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 4.208: Turbulence

@@ -4,7 +4,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="../wgrib2/CodeTable_1.2.dat"
+outfile="CodeTable_1.2.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 1.2: Significance of reference time

@@ -4,7 +4,7 @@
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="../wgrib2/CodeTable_4.3.dat"
+outfile="CodeTable_4.3.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---GRIB2 Code Table 4.3: Type of generating process
@@ -40,6 +40,7 @@ wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_4_3_CodeTable_en.csv" -O- | sed '{
         case  19: wgrib2name="first guess"; break
         case  20: wgrib2name="analysis increment"; break  # analysis minus first guess
         case  21: wgrib2name="initialization increment for analysis"; break  # initialized analysis minus analysis
+        case  22: wgrib2name="blended forecast"; break  # initialized analysis minus analysis
         case 255: wgrib2name="missing"; break
         default: { print "ERROR: missing switch statement for",num > "/dev/stderr"; exit 1 }
       }

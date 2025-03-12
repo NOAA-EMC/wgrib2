@@ -4,7 +4,7 @@
 
 urlbase="https://github.com/wmo-im/BUFR4"
 
-outfile="../wgrib2/BUFRTable_0_02_020.dat"
+outfile="BUFRTable_0_02_020.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
 #---BUFR Code Table 02 020: Satellite classification

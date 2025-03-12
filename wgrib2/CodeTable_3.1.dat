@@ -31,6 +31,7 @@ case   101: string="General unstructured grid"; break;
 case   110: string="Equatorial azimuthal equidistant projection"; break;
 case   120: string="Azimuth-range projection"; break;
 case   140: string="Lambert azimuthal equal area projection"; break;
+case   150: string="Hierarchical Equal Area isoLatitude Pixelization grid (HEALPix)"; break;
 case  1000: string="Cross-section grid with points equally spaced on the horizontal"; break;
 case  1100: string="Hovmoller diagram grid with points equally spaced on the horizontal"; break;
 case  1200: string="Time section grid"; break;

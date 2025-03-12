@@ -28,4 +28,5 @@ case   196: if (center == NCEP) string="perturbed analysis for ensemble initiali
 case   197: if (center == NCEP) string="ensemble agreement scale probability"; else string="undefined"; break;
 case   198: if (center == NCEP) string="post-processed deterministic-expert-weighted forecast"; else string="undefined"; break;
 case   199: if (center == NCEP) string="ens fcst based on counting"; else string="undefined"; break;
+case    22: string="blended forecast"; break;  // Blended forecast
 case   255: string="missing"; break;  // Missing
