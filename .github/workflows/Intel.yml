@@ -26,65 +26,24 @@ jobs:
           
     steps:
 
-    - name: install
+    - name: install-dependencies
       run: |
         sudo apt-get update
         sudo apt-get install libnetcdf-dev libnetcdff-dev netcdf-bin pkg-config \
-          libpng-dev autotools-dev autoconf libaec-dev libopenblas-serial-dev \
-          libopenjp2-7 libopenjp2-7-dev
+          libpng-dev zlib1g-dev libjpeg-dev autotools-dev autoconf libaec-dev \
+          libopenblas-serial-dev 
 
     - name: "Install Intel"
       uses: NOAA-EMC/ci-install-intel-toolkit@develop
       with:
         compiler-setup: ${{ matrix.compilers }}
 
-    - name: cache-jasper
-      id: cache-jasper
-      uses: actions/cache@v4
+    - name: "Build dependencies"
+      uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        path: ~/jasper
-        key: jasper-${{ runner.os }}-${{ matrix.compilers }}-1.900.1
-
-    - name: checkout-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'
-      uses: actions/checkout@v4
-      with:
-        repository: jasper-software/jasper
-        path: jasper
-        ref: version-1.900.1
-
-    - name: build-jasper
-      if: steps.cache-jasper.outputs.cache-hit != 'true'
-      run: |
-        cd jasper
-        CFLAGS="-Wno-implicit-function-declaration -Wno-incompatible-pointer-types" ./configure --prefix=$HOME/jasper
-        make
-        make install
-
-    - name: cache-ip
-      id: cache-ip
-      uses: actions/cache@v4
-      with:
-        path: ~/ip
-        key: ip-${{ runner.os }}-${{ matrix.compilers }}-develop
-
-    - name: checkout-ip
-      if: steps.cache-ip.outputs.cache-hit != 'true'
-      uses: actions/checkout@v4
-      with:
-        repository: NOAA-EMC/NCEPLIBS-ip
-        path: ip
-        ref: develop
-
-    - name: build-ip
-      if: steps.cache-ip.outputs.cache-hit != 'true'
-      run: |
-        cd ip
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=~/ip -DCMAKE_PREFIX_PATH=~/sp
-        make -j2
-        make install
+        jasper-version: version-4.0.0
+        ip-version: develop
+        g2c-version: develop
 
     - name: checkout
       uses: actions/checkout@v4
@@ -96,6 +55,6 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
-        cmake -DCMAKE_PREFIX_PATH="~/ip" .. -DUSE_OPENMP=OFF
+        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c" .. -DMAKE_FTN_API=ON -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON -DUSE_PNG=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
