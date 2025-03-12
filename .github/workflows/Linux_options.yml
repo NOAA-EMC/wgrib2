@@ -74,7 +74,7 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
-        export CFLAGS='-I/home/runner/work/wgrib2/wgrib2/nceplibs/NCEPLIBS-g2c/include'
+        #export CFLAGS='-I/home/runner/work/wgrib2/wgrib2/nceplibs/NCEPLIBS-g2c/include'
         cmake ${{ matrix.config.options }} -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c" ..
 
         make VERBOSE=1
