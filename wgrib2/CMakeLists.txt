@@ -190,7 +190,7 @@ endif()
 target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
-target_include_directories(obj_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}>"
+target_include_directories(wgrib2_exe PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}>"
                                                      $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 
 if(BUILD_LIB)
