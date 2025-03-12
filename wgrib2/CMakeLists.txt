@@ -190,7 +190,12 @@ endif()
 target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
+target_include_directories(obj_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}>"
+                                                     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
+
 if(BUILD_LIB)
+  target_include_directories(wgrib2_lib PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}>"
+                                                      $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
   set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2/wgrib2_meta.h)
   target_link_libraries(wgrib2_lib PUBLIC gctpc -lm)
   set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
