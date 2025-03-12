@@ -44,6 +44,7 @@ jobs:
         jasper-version: version-4.0.0
         ip-version: develop
         g2c-version: develop
+        g2c-cmake-args: -DUSE_PNG=ON
 
     - name: checkout
       uses: actions/checkout@v4
@@ -55,6 +56,6 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
-        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c" .. -DMAKE_FTN_API=ON -DUSE_NETCDF4=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON -DUSE_PNG=ON
+        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c" .. -DMAKE_FTN_API=ON -DUSE_NETCDF=ON -DUSE_AEC=ON -DUSE_IPOLATES=ON -DUSE_JASPER=ON -DUSE_PNG=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
