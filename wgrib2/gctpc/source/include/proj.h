@@ -170,7 +170,7 @@ long equiinvint(double r_maj, double center_lon, double lat1,
 	double false_east, double false_north);
 long equiinv(double x, double y, double *lon, double *lat);
 void for_init(long outsys, long outzone, double *outparm, long outspheroid,
-	char *fn27, char *fn83, long *iflg, long (*for_trans[])());
+	char *fn27, char *fn83, long *iflg, long (*for_trans[])(double, double, double *, double *));
 void gctp(double *incoor, long *insys, long *inzone, double *inparm,
 	long *inunit, long *inspheroid, long *ipr, char *efile, long *jpr,
 	char *pfile, double *outcoor, long *outsys, long *outzone,
@@ -203,7 +203,7 @@ long imolwfor(double lon, double lat, double *x, double *y);
 long imolwinvint(double r);
 long imolwinv(double x, double y, double *lon, double *lat);
 void inv_init(long insys, long inzone, double *inparm, long inspheroid,
-	char *fn27, char *fn83, long *iflg, long (*inv_trans[])());
+	char *fn27, char *fn83, long *iflg, long (*inv_trans[])(double, double, double *, double *));
 long lamazforint(double r, double center_long, double center_lat,
 	double false_east, double false_north);
 long lamazfor(double lon, double lat, double *x, double *y);

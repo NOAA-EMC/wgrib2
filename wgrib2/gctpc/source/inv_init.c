@@ -22,7 +22,7 @@ ALGORITHM REFERENCES
 #include "cproj.h"
 
 void inv_init(long insys, long inzone, double *inparm, long inspheroid,
-        char *fn27, char *fn83, long *iflg, long (*inv_trans[])()) {
+        char *fn27, char *fn83, long *iflg, long (*inv_trans[])(double, double, double *, double *)) {
 //void inv_init(insys,inzone,inparm,inspheroid,fn27,fn83,iflg,inv_trans)
 //
 //long insys;		/* input system code				*/

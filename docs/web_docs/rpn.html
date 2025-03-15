@@ -443,22 +443,36 @@ Printing operators
    print_rms    write cosine weighted RMS(R(TOP-1)-R(TOP))
 </pre>
 
-<h3>Example 7: Merging</h3>
+<h3>Example 7: Quilting/Merging</h3>
 
 <p>
-Suppose that we have a nested model, we have a low resolution TMP2m from the
-the outer model and a high-resolution TMP2m from the nested model.  Now we
-want a field that uses the TMP2m in the nested-model domain and the TMP2m from
-the outer model elsewhere.  To do this, you need to convert both fields to a
-common grid.  Then you use "-rpn merge".  Make sure that both domains are 
-contained in the common grid as this is a requirement of the interpolation library.
+Suppose that we have 4 forecast systems with different domains and resolutions.  
+We have the NAM, ARPEGE and the ALADIN regional models and the global GFS.
+We want a grid that combines the 4 forecasts with a high to low priority.
+
+<p>
+The 4 forecasts have different fields and resolutions in their grib files.  So
+the first step is select a specific field and convert it to a common grid.
 
 <pre>
-   wgrib2 OUTER.T2m -new_grid_winds earth -new_grid A B C A1.grb
-   wgrib2 NESTED.T2m -new_grid_winds earth -new_grid A B C A2.grb
-   wgrib2 A2.grb -rpn sto_1 -import_grib A1.GRB -rpn "rcl_1:merge" \
-    -grib_out MERGED.T2m
+$ rm NAM_TEMP2M.grb ARPEGE_TEMP2M.grb ALADIN_TEMP2M.grb GFS_TEMP2M.grb
+$ wgrib2 NAM.grb -match ":TMP:2 m above ground:" -new_grid_winds earth -new_grid A B C NAM_TEMP2M.grb
+$ wgrib2 ARPEGE.grb -match ":TMP:2 m above ground:" -new_grid_winds earth -new_grid A B C ARPEGE_TEMP2M.grb
+$ wgrib2 ALADIN.grb -match ":TMP:2 m above ground:" -new_grid_winds earth -new_grid A B C ALADIN_TEMP2M.grb
+$ wgrib2 GFS.grb -match ":TMP:2 m above ground:" -new_grid_winds earth -new_grid A B C GFS_TEMP2M.grb
+
+  A, B and C are some -new_grid parameters
+  Make sure that the new grid include all 4 forecasts domaines.
+  Check to that files are not empty or missing.
+
+$ wgrib2 NAM_TEMP2M.grb -rpn sto_1 \
+   -import_grib ARPEGE_TEMP2M.grb -rpn "rcl_1:merge:sto_1" \
+   -import_grib ALADIN_TEMP2M.grb -rpn "rcl_1:merge:sto_1" \
+   -import_grib GFS_TEMP2M.grb -rpn "rcl_1:merge:sto_1" \
+   -grib_out WX_TEMP2M_QUILT.grb
 </pre>
+
+The priority from high to low is NAM, ARPEGE, ALADIN and GFS.
 
 
 <h3>Example 8: Land Mask</h3>
@@ -558,7 +572,7 @@ See also:
         5830 University Research Court<BR>
         College Park, Maryland 20740<BR>
       <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
-        Page last modified: Aug 4, 2016, Oct 10, 2018, July 11, 2020, July 11, 2021, April 2024
+        Page last modified: Aug 4, 2016, Oct 10, 2018, July 11, 2020, July 11, 2021, April 2024, Mar 2025
      </TD>
      <TD>
       <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
