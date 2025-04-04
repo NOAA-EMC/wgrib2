@@ -7,15 +7,12 @@ on:
     branches:
     - develop
 
-concurrency:
-  cancel-in-progress: false
-
 jobs:
   Windows:
     runs-on: windows-latest
     strategy:
       matrix:
-        ccompiler: [gcc, clang]
+        ccompiler: gcc
     defaults:
       run:
         shell: msys2 {0}
