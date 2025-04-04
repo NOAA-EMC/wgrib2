@@ -1,0 +1,57 @@
+name: Windows
+on:
+  push:
+    branches:
+    - develop
+  pull_request:
+    branches:
+    - develop
+
+jobs:
+  Windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        ccompiler: [gcc, clang]
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+    - name: install-dependencies
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-clang
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-ninja
+          mingw-w64-x86_64-libaec
+          mingw-w64-x86_64-libpng
+          mingw-w64-x86_64-openjpeg2
+
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        path: wgrib2
+
+    - name: build
+      run: |
+        if [[ ${{ matrix.ccompiler }} == "clang" ]]; then
+          export CC=clang
+        elif [[ ${{ matrix.ccompiler }} == "gcc" ]]; then
+          export CC=gcc
+        fi
+        cd wgrib2
+        mkdir build
+        cd build
+        # Windows CI fails when building with shared libs, turn off
+        cmake   ..
+        cmake --build .
+
+    - name: test
+      run: |
+        cd wgrib2/build
+        ctest  --output-on-failure --extra-verbose --output-log log.txt
