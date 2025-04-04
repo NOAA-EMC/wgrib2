@@ -48,7 +48,7 @@ jobs:
         mkdir build
         cd build
         # Windows CI fails when building with shared libs, turn off
-        cmake   ..
+        cmake -DDISABLE_ALARM=ON  ..
         cmake --build .
 
     - name: test
