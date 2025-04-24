@@ -40,7 +40,7 @@ int check_time(int year, int month, int day, int hour, int minute, int second) {
 
     if (hour < 0 || hour > 23) return 4;
     if (minute < 0 || minute > 59) return 5;
-    if (second < 0 || minute > 59) return 6;
+    if (second < 0 || second > 59) return 6;
     return check_datecode(year, month, day);
 }
 
