@@ -302,8 +302,6 @@ struct function functions[] = {
    {"ave_var",f_ave_var, output, 2, "average/std dev/min/max X=time step, Y=output", 000},
    {"bin",f_bin, output, 1, "write binary data to X", 100},
    {"cress_lola",f_cress_lola, output, 4, "lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=radius1:radius2:..:radiusN", 111},
-   {"csv",f_csv, output, 1, "make comma separated file, X=file (WxText enabled)", 100},
-   {"csv_long",f_csv_long, output, 1, "make comma separated file, X=file (WxText enabled)", 100},
    {"cubeface2global",f_cubeface2global, output, 2, "write faces X as global cubed grid to Y: X=list of faces to exclude", 100},
    {"ens_processing",f_ens_processing, output, 2, "ave/min/max/spread X=output Y=0/1 default/CORe", 000},
    {"ens_qc",f_ens_qc, output, 4, "simple qc ensemble members X=stats.grb Y=extreme.grb Z=extreme.txt A=1 (qc_version)", 000},
@@ -397,6 +395,8 @@ struct function functions[] = {
    {"tigge",f_tigge, setup, 0, "use modified-TIGGE grib table", 100},
    {"transient",f_transient, setup, 1, "make file X transient, CW2", 100},
    #ifdef BUILD_EXTRA
+   {"csv",f_csv, output, 1, "make comma separated file, X=file (WxText enabled)", 100},
+   {"csv_long",f_csv_long, output, 1, "make comma separated file, X=file (WxText enabled)", 100},
    {"mysql",f_mysql, output, 5, "H=[host] U=[user] P=[password] D=[db] T=[table]", 100},
    {"mysql_dump",f_mysql_dump, output, 7, "H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]", 100},
    {"mysql_speed",f_mysql_speed, output, 7, "H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]", 100},
