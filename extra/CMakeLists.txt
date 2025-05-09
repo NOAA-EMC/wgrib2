@@ -4,9 +4,7 @@
 # It optionally builds all user-contributed (non-operational) 
 # codes if BUILD_EXTRA=ON.
 
-set(src Bbox.c Csv.c Csv_long.c Mysql.c Mysql_dump.c Mysql_speed.c
-PyInv.c
-)
+set(src Bbox.c Csv.c Csv_long.c Mysql.c Mysql_dump.c Mysql_speed.c PyInv.c)
 
 include_directories(../wgrib2/)
 
