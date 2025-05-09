@@ -160,7 +160,6 @@ struct function functions[] = {
    {"proj4_ij2ll",f_proj4_ij2ll, inv, 2, "X=x Y=y, converts to (i,j) to lon-lat using proj.4 (experimental) we:sn", 100},
    {"proj4_ll2i",f_proj4_ll2i, inv, 2, "x=lon y=lat, converts to (i) using proj.4 (experimental) 1..ndata", 100},
    {"proj4_ll2ij",f_proj4_ll2ij, inv, 2, "x=lon y=lat, converts lon-lat (i,j) using proj.4 (experimental)", 100},
-   {"pyinv",f_pyinv, inv, 0, "miscelaneous metadata for pywgrib2_XXX (experimental)", 200},
    {"radius",f_radius, inv, 0, "radius of Earth", 100},
    {"range",f_range, inv, 0, "print out location of record in bytes, 0 = first byte", 100},
    {"reset_delayed_error",f_reset_delayed_error, inv, 0, "clear reset_delayed_error flag", 100},
@@ -400,6 +399,7 @@ struct function functions[] = {
    {"mysql",f_mysql, output, 5, "H=[host] U=[user] P=[password] D=[db] T=[table]", 100},
    {"mysql_dump",f_mysql_dump, output, 7, "H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]", 100},
    {"mysql_speed",f_mysql_speed, output, 7, "H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]", 100},
+   {"pyinv",f_pyinv, inv, 0, "miscelaneous metadata for pywgrib2_XXX (experimental)", 200},
    #endif
 };
  

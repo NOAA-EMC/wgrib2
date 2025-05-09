@@ -60,7 +60,7 @@ Names.c ncep_grids.c NCEP_norm.c
 NCEP_uv.c Ncpu.c Ndate.c Ndates.c Netcdf.c Netcdf_sup.c New_grid.c
 new_grid_lambertc.c New_grid_order.c openmp_util.c parse_loop.c
 parse_msg.c pdt_len.c Precision.c Prob.c Proj4.c proj4_initialize.c
-proj4_transform.c PyInv.c Range.c rdieee_file.c rd_inventory.c
+proj4_transform.c Range.c rdieee_file.c rd_inventory.c
 rd_seq_grib.c read_latlon.c Reduced_gaussian_grid.c
 Reset_delayed_error.c rotll.c RPN.c save_string.c Scaling_0001.c
 Scan.c Sec0.c Sec1.c Sec3.c sec3_grids.c Sec4.c Sec5.c Sec6.c

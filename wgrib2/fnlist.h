@@ -166,7 +166,6 @@ int f_processid(ARG0);
 int f_proj4_ij2ll(ARG2);
 int f_proj4_ll2i(ARG2);
 int f_proj4_ll2ij(ARG2);
-int f_pyinv(ARG0);
 int f_radius(ARG0);
 int f_range(ARG0);
 int f_reset_delayed_error(ARG0);
