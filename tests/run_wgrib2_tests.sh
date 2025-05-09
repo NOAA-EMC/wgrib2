@@ -147,5 +147,14 @@ fi
 
 ../wgrib2/wgrib2 data/ref_c3_overflow.grib2 -set_grib_type c3 -set_grib_max_bits 25 -grib_out c3_overflow.grib2
 
+echo "*** test import_ieee little-endian ***"
+
+echo "*** test set_prob ***"
+line=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -d 1 -set_prob 1 2 3  222.2 0`
+echo "$line"
+if [ "$line" != '1:0:d=2009060500:TMP:500 mb:180 hour fcst:prob >222.2:prob fcst 1/2' ] ; then
+  exit 1
+fi
+
 echo "*** SUCCESS!"
 exit 0

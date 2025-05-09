@@ -64,18 +64,14 @@ int f_set_prob(ARG5) {
     if (arg4 != NULL && strcmp(arg4,"") != 0) {
         value = atof(arg4);
         best_scaled_value(value, &scale, &val);
-	scaled_char(scale,  value, p+1);
-        // p[1] = scale & 255;
-        // uint_char(val, p+2);
+	scaled_char(scale,  val, p+1);
     }
 
     // encode upper limit
     if (arg5 != NULL && strcmp(arg5,"") != 0) {
         value = atof(arg5);
-        best_scaled_value(value, &scale,&val);
+        best_scaled_value(value, &scale, &val);
 	scaled_char(scale, val, p+6);
-        // p[6] = scale & 255;
-        // uint_char(val, p+7);
     }
     return 0;
 }
