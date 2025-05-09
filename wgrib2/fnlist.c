@@ -315,7 +315,6 @@ struct function functions[] = {
    {"gribtable_used",f_gribtable_used, output, 1, "write out sample gribtable as derived from grib file, X=file", 100},
    {"gridout",f_gridout, output, 1, "text file with grid: i j lat lon (1st record)", 100},
    {"ieee",f_ieee, output, 1, "write (default:big-endian) IEEE data to X", 100},
-   {"ijbox",f_ijbox, output, 4, "grid values in bounding box X=i1:i2[:di] Y=j1:j2[:dj] Z=file A=[bin|text|spread]", 100},
    {"ijsmall_grib",f_ijsmall_grib, output, 3, "make small domain grib file X=ix0:ix1 Y=iy0:iy1 Z=file", 100},
    {"irr_grid",f_irr_grid, output, 3, "make irregular grid (GDT=130 not adopted), nearest neighbor, X=lon-lat list Y=radius (km) Z=output grib file", 100},
    {"lola",f_lola, output, 4, "lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=[bin|text|spread|grib]", 100},
@@ -396,6 +395,7 @@ struct function functions[] = {
    #ifdef BUILD_EXTRA
    {"csv",f_csv, output, 1, "make comma separated file, X=file (WxText enabled)", 100},
    {"csv_long",f_csv_long, output, 1, "make comma separated file, X=file (WxText enabled)", 100},
+   {"ijbox",f_ijbox, output, 4, "grid values in bounding box X=i1:i2[:di] Y=j1:j2[:dj] Z=file A=[bin|text|spread]", 100},
    {"mysql",f_mysql, output, 5, "H=[host] U=[user] P=[password] D=[db] T=[table]", 100},
    {"mysql_dump",f_mysql_dump, output, 7, "H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]", 100},
    {"mysql_speed",f_mysql_speed, output, 7, "H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]", 100},

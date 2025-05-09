@@ -321,7 +321,6 @@ int f_grib_out_irr2(ARG5);
 int f_gribtable_used(ARG1);
 int f_gridout(ARG1);
 int f_ieee(ARG1);
-int f_ijbox(ARG4);
 int f_ijsmall_grib(ARG3);
 int f_irr_grid(ARG3);
 int f_lola(ARG4);

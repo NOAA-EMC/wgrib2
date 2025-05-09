@@ -37,7 +37,7 @@ endif()
 
 # sets lib_src
 set(lib_src AAIG.c AAIGlong.c addtime.c aec_pk.c Aerosol.c Alarm.c
-Alias.c Ave_test.c Ave_var.c Bbox.c bitstream.c Box_ave.c
+Alias.c Ave_test.c Ave_var.c bitstream.c Box_ave.c
 Check_pdt_size.c Checksum.c Cluster.c cname.c codetable_4_230.c
 CodeTable.c Code_Values.c Code_Values_JMA.c complex_pk.c Config.c
 copy.c crc32.c Cress_lola.c cubed_sphere2ll.c

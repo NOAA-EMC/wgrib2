@@ -6,6 +6,7 @@
 
 int f_csv(ARG1);
 int f_csv_long(ARG1);
+int f_ijbox(ARG4);
 int f_mysql(ARG5);
 int f_mysql_dump(ARG7);
 int f_mysql_speed(ARG7);
