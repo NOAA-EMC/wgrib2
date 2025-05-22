@@ -13,10 +13,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
+
+extern bool library_mode;
+extern Forecast_period *global_forecast_period;
 
 static const char *months = "janfebmaraprmayjunjulaugsepoctnovdec";
 
@@ -152,6 +156,20 @@ int f_start_ft(ARG0) {
                sprintf(inv_out,"%2.2dZ%2.2d%c%c%c%4.4d", hour,day,months[month*3-3],
                 months[month*3-2], months[month*3-1], year);
             }
+            if (library_mode) {
+                if (global_forecast_period != NULL) {
+                    if (global_forecast_period->start_year == 0) {
+                        global_forecast_period->start_year = year;
+                        global_forecast_period->start_month = month;
+                        global_forecast_period->start_day = day;
+                        global_forecast_period->start_hour = hour;
+                    }
+                    global_forecast_period->end_year = year;
+                    global_forecast_period->end_month = month;
+                    global_forecast_period->end_day = day;
+                    global_forecast_period->end_hour = hour;
+                }
+            }
         }
         else {
             sprintf(inv_out,"start_ft=?");
@@ -175,6 +193,20 @@ int f_start_FT(ARG0) {
             else {
                sprintf(inv_out,"%2.2d_%2.2dZ%2.2d%c%c%c%4.4d", hour,minute,day,months[month*3-3],
                 months[month*3-2], months[month*3-1], year);
+            }
+            if (library_mode) {
+                if (global_forecast_period != NULL) {
+                    if (global_forecast_period->start_year == 0) {
+                        global_forecast_period->start_year = year;
+                        global_forecast_period->start_month = month;
+                        global_forecast_period->start_day = day;
+                        global_forecast_period->start_hour = hour;
+                    }
+                    global_forecast_period->end_year = year;
+                    global_forecast_period->end_month = month;
+                    global_forecast_period->end_day = day;
+                    global_forecast_period->end_hour = hour;
+                }
             }
         }
         else {

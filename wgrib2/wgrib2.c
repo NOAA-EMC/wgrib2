@@ -115,6 +115,7 @@ struct seq_file in_file;
 
 bool library_mode = false; /* set to true when calling from cgo to disable output */
 Wind_grid *global_wind_grid; /* wind grid that will be returned to cgo */
+Forecast_period *global_forecast_period; /* forecast period that will be returned to cgo */
 
 /*
  * wgrib2
@@ -1066,6 +1067,21 @@ void Extract_wind_grid(const char* filename, Wind_grid *grid) {
 
 	// on remballe
 	fclose_file(&in_file);
+}
+
+void Get_forecast_period(const char* filename, Forecast_period *period) {
+	library_mode = true;
+	global_forecast_period = period;
+	if (global_forecast_period == NULL) {
+		fprintf(stderr, "\n*** FATAL ERROR: Forecast period is NULL\n");
+	}
+	// get start of forecast periods
+	const char *argv[3] = {"wgrib2", (char *) filename, "-start_ft"};
+	err = wgrib2(3, argv);
+	if (err != 0) {
+		free(period);
+		return;
+	}
 }
 
 void add_barometric_altitude(const int value) {

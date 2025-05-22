@@ -720,9 +720,21 @@ typedef struct s_wind_grid {
     wind_cell *cells; // 1D array for 4D data: t, z, y, x
 } Wind_grid;
 
+typedef struct s_forecast_period {
+    int start_year;
+    int start_month;
+    int start_day;
+    int start_hour;
+    int end_year;
+    int end_month;
+    int end_day;
+    int end_hour;
+} Forecast_period;
+
 void add_barometric_altitude(int value);
 void add_timestamp(int timestamp);
 void Extract_wind_grid(const char* filename, Wind_grid *grid);
+void Get_forecast_period(const char* filename, Forecast_period *period);
 int starts_with_bar_alt(const char *new_inv_out, int bar_alt);
 void populate_nb_bar_alts_and_nb_times();
 
