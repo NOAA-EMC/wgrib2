@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['v1_5felse',['v1_else',['../v1__v2__if_8c.html#aa13597261962e1178d98b177247ed210',1,'v1_else(void):&#160;v1_v2_if.c'],['../wgrib2_8h.html#aa13597261962e1178d98b177247ed210',1,'v1_else(void):&#160;v1_v2_if.c']]],
+  ['v1_5felseif',['v1_elseif',['../v1__v2__if_8c.html#ae028f8c22ea550e3a7894efaca481e5a',1,'v1_elseif(void):&#160;v1_v2_if.c'],['../wgrib2_8h.html#ae028f8c22ea550e3a7894efaca481e5a',1,'v1_elseif(void):&#160;v1_v2_if.c']]],
+  ['v1_5fendif',['v1_endif',['../v1__v2__if_8c.html#a8e95321b331d76f70ccf9eaee726ef9c',1,'v1_endif(void):&#160;v1_v2_if.c'],['../wgrib2_8h.html#a8e95321b331d76f70ccf9eaee726ef9c',1,'v1_endif(void):&#160;v1_v2_if.c']]],
+  ['v1_5fif',['v1_if',['../v1__v2__if_8c.html#a359412b8eab6dbd6ddea451de9f71fca',1,'v1_if(void):&#160;v1_v2_if.c'],['../wgrib2_8h.html#a359412b8eab6dbd6ddea451de9f71fca',1,'v1_if(void):&#160;v1_v2_if.c']]],
+  ['v1_5fv2_5fif_2ec',['v1_v2_if.c',['../v1__v2__if_8c.html',1,'']]],
+  ['valid_5fdx_5fdy',['valid_dx_dy',['../grid__id_8h.html#a2ca7f14550eb8811fc2fdf689f7b6583',1,'grid_type']]],
+  ['valid_5fxn_5fyn',['valid_xn_yn',['../grid__id_8h.html#aad3a15a9006f643a9e94063500f9680d',1,'grid_type']]],
+  ['valid_5fxy_5flist',['valid_xy_list',['../grid__id_8h.html#af584b3ff0c0ca6baa060e0d268f975bd',1,'grid_type']]],
+  ['vandgfor',['vandgfor',['../cproj_8h.html#a42adeec5850754715879b5a3a44c3e42',1,'vandgfor(double lon, double lat, double *x, double *y):&#160;vandgfor.c'],['../vandgfor_8c.html#a42adeec5850754715879b5a3a44c3e42',1,'vandgfor(double lon, double lat, double *x, double *y):&#160;vandgfor.c']]],
+  ['vandgfor_2ec',['vandgfor.c',['../vandgfor_8c.html',1,'']]],
+  ['vandgforint',['vandgforint',['../cproj_8h.html#a84acddf9b369bcd547b9af6652007e3a',1,'vandgforint(double r, double center_long, double false_east, double false_north):&#160;vandgfor.c'],['../vandgfor_8c.html#a84acddf9b369bcd547b9af6652007e3a',1,'vandgforint(double r, double center_long, double false_east, double false_north):&#160;vandgfor.c']]],
+  ['vandginv',['vandginv',['../cproj_8h.html#a50beb907f7529f4e08aa8b863a1edd63',1,'vandginv(double x, double y, double *lon, double *lat):&#160;vandginv.c'],['../vandginv_8c.html#a50beb907f7529f4e08aa8b863a1edd63',1,'vandginv(double x, double y, double *lon, double *lat):&#160;vandginv.c']]],
+  ['vandginv_2ec',['vandginv.c',['../vandginv_8c.html',1,'']]],
+  ['vandginvint',['vandginvint',['../cproj_8h.html#a8701505983ee508d89eb4d0eaf380f65',1,'vandginvint(double r, double center_long, double false_east, double false_north):&#160;vandginv.c'],['../vandginv_8c.html#a8701505983ee508d89eb4d0eaf380f65',1,'vandginvint(double r, double center_long, double false_east, double false_north):&#160;vandginv.c']]],
+  ['variable_5fdim',['variable_dim',['../Cyclic_8c.html#a8702fa6b29f78cb9b867e983284c5e51',1,'variable_dim():&#160;Sec3.c'],['../geo_8c.html#a8702fa6b29f78cb9b867e983284c5e51',1,'variable_dim():&#160;Sec3.c'],['../Reduced__gaussian__grid_8c.html#a8702fa6b29f78cb9b867e983284c5e51',1,'variable_dim():&#160;Sec3.c'],['../Sec3_8c.html#a8702fa6b29f78cb9b867e983284c5e51',1,'variable_dim():&#160;Sec3.c']]],
+  ['vc',['vc',['../wgrib2nc_8h.html#a41e8766215d1b562f7d9c39fe7716c40',1,'g2nc_table']]],
+  ['vector',['VECTOR',['../RPN_8c.html#ac6e89954deaa373db52a91ac6db50884',1,'RPN.c']]],
+  ['vectors',['vectors',['../init_8c.html#ab6de54710c9ae14f2b9b935c1fdc3c84',1,'vectors():&#160;New_grid.c'],['../New__grid__order_8c.html#ab6de54710c9ae14f2b9b935c1fdc3c84',1,'vectors():&#160;New_grid.c'],['../Submsg__uv_8c.html#ab6de54710c9ae14f2b9b935c1fdc3c84',1,'vectors():&#160;New_grid.c']]],
+  ['verf_5ftime',['Verf_time',['../VerfTime_8c.html#abd013fe1515343bfdefaf2f98d485ae0',1,'Verf_time(unsigned char **sec, struct full_date *date):&#160;VerfTime.c'],['../wgrib2_8h.html#abd013fe1515343bfdefaf2f98d485ae0',1,'Verf_time(unsigned char **sec, struct full_date *date):&#160;VerfTime.c']]],
+  ['verftime',['verftime',['../VerfTime_8c.html#ab8ecbcd046b3871ab53bf8aaa3cd9ec6',1,'verftime(unsigned char **sec, int *year, int *month, int *day, int *hour, int *minute, int *second):&#160;VerfTime.c'],['../wgrib2_8h.html#ab8ecbcd046b3871ab53bf8aaa3cd9ec6',1,'verftime(unsigned char **sec, int *year, int *month, int *day, int *hour, int *minute, int *second):&#160;VerfTime.c']]],
+  ['verftime_2ec',['VerfTime.c',['../VerfTime_8c.html',1,'']]],
+  ['version',['VERSION',['../gmerge_8c.html#a1c6d5de492ac61ad29aec7aa9a436bbf',1,'gmerge.c']]],
+  ['version_5fftime',['version_ftime',['../Config_8c.html#ae601685993ea229ed6973f534f2226cc',1,'version_ftime():&#160;Ftime.c'],['../Ftime_8c.html#ae601685993ea229ed6973f534f2226cc',1,'version_ftime():&#160;Ftime.c'],['../Set__metadata_8c.html#ae601685993ea229ed6973f534f2226cc',1,'version_ftime():&#160;Ftime.c']]],
+  ['version_5fif',['version_if',['../wgrib2_8c.html#ab1e5626ffb9892046ae8bff110e17a71',1,'wgrib2.c']]],
+  ['vgrint',['VGRINT',['../cproj_8h.html#a0c5eedc4cfdf1ef8c474ecc1e4cb4721',1,'cproj.h']]]
+];
