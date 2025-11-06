@@ -1,0 +1,24 @@
+/* Code Table 4.213A is an extension abopted by 557WW, codifying NCAR Hybrid 
+   STATSGO/FAO soil type categories */
+    case 0: string="Reserved"; break;
+    case 1: string="Sand"; break;
+    case 2: string="Loamy Sand"; break;
+    case 3: string="Sandy Loam"; break;
+    case 4: string="Silt Loam"; break;
+    case 5: string="Silt"; break;
+    case 6: string="Loam"; break;
+    case 7: string="Sandy Clay Loam"; break;
+    case 8: string="Silty Clay Loam"; break;
+    case 9: string="Clay Loam"; break;
+    case 10: string="Sandy Clay"; break;
+    case 11: string="Silty Clay"; break;
+    case 12: string="Clay"; break;
+    case 13: string="Organic Material"; break;
+    case 14: string="Water"; break;
+    case 15: string="Bedrock"; break;
+    case 16: string="Other (land-ice)"; break;
+    case 17: string="Playa"; break;
+    case 18: string="Lava"; break;
+    case 19: string="White Sand"; break;
+
+    case 255: string="Missing"; break;

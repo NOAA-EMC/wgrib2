@@ -1,0 +1,20 @@
+/* Code Table 4.230A is an extension abopted by 557WW, for Soil Type */
+    case 1: string="sand"; break;
+    case 2: string="loamy-sand"; break;
+    case 3: string="sandy loam"; break;
+    case 4: string="silt-loam"; break;
+    case 5: string="silt"; break;
+    case 6: string="loam"; break;
+    case 7: string="sandy clay loam"; break;
+    case 8: string="silty clay loam"; break;
+    case 9: string="clay loam"; break;
+    case 10: string="sandy clay"; break;
+    case 11: string="silty clay"; break;
+    case 12: string="clay"; break;
+    case 13: string="organic materials"; break;
+    case 14: string="water"; break;
+    case 15: string="bedrock"; break;
+    case 16: string="other (land-ice)"; break;
+
+
+

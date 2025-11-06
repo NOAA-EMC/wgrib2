@@ -150,7 +150,10 @@ class Wgrib2(MakefilePackage, CMakePackage):
         when="@:3.1",
     )
     variant(
-        "aec", default=True, description="Use the libaec library for packing with GRIB2 template"
+        "aec", 
+        default=True, 
+        description="Use the libaec library for packing with GRIB2 template",
+        when="@:3.8",
     )
     variant(
         "g2c",
@@ -206,10 +209,10 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("fortran", type="build")
 
     depends_on("ip@5.2:", when="@develop +ipolates")
-    depends_on("g2c@2.2.0:", when="@3.7: +g2c_low")
-    depends_on("g2c@2.2.0:", when="@3.7: +g2c_high")
+    depends_on("g2c@2.3.0:", when="@develop +g2c_low")
+    depends_on("g2c@2.3.0:", when="@develop +g2c_high")
     depends_on("lapack", when="@develop +ipolates")
-    depends_on("libaec@1.0.6:", when="@3.2: +aec")
+    depends_on("libaec@1.0.6:", when="@3.2:3.8 +aec")
     # Options to use netcdf3 or netcdf4 merged into a single option with v3.4.0
     depends_on("netcdf-c", when="@3.4: +netcdf")
     depends_on("netcdf-c", when="@3.2:3.3 +netcdf4")
@@ -220,7 +223,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("g2c +png", when="@3.5: +png")
     depends_on("openjpeg", when="@3.2:3.4 +openjpeg")
     depends_on("g2c +openjpeg", when="@3.5: +openjpeg")
-    requires("^g2c@1.9:", when="@3.5: ^g2c")
+    #requires("^g2c@1.9:", when="@3.5: ^g2c")
 
     @when("@:2 ^gmake@4.2:")
 

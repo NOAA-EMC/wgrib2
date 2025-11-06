@@ -64,6 +64,12 @@ static double cosaz;		/**< Cos of azimuth */
  * - 201 :: Input data error
  * - 202 :: Input data error
  * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/1993 | T. Mittan | Initial implementation
+ * 9/2025 | W. Ebisuzaki | defined f
+ *
  * @author T. Mittan @date March, 1993
  */
 long omerforint(double r_maj, double r_min, double scale_fact,
@@ -118,6 +124,9 @@ if (fabs(lat_origin) < EPSLN)
    {
    d = 1.0;
    el = 1.0;
+   /* W. Ebisuzaki: define f  */
+   /* when ts==1 and d==1 then f=1 to be consistent with else .. endif */
+   f = 1.0;
    }
 else
    {

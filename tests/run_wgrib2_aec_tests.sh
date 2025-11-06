@@ -1,5 +1,5 @@
 #!/bin/sh
-# This checks the use of AEC compression, only available if USE_AEC is turned on in CMake.
+# This checks the use of AEC compression, only available if AEC is enabled in g2c build.
 #
 # Alyson Stahl, 4/18/24
 

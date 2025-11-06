@@ -1,0 +1,19 @@
+/* Code Table 4.228 is an extension abopted by 557WW, for the Satellite Merged
+Precipitation Analysis */
+    case 0: string="none"; break;
+    case 1: string="Conventional"; break;
+    case 2: string="Goes"; break;
+    case 3: string="Goes+Conventional"; break;
+    case 4: string="DMSP"; break;
+    case 5: string="DMSP+Conventional"; break;
+    case 6: string="DMSP+Goes"; break;
+    case 7: string="DMSP+Goes+Conventional"; break;
+    case 8: string="Tiros"; break;
+    case 9: string="Tiros+Conventional"; break;
+    case 10: string="Tiros+Goes"; break;
+    case 11: string="Tiros+Goes+Conventional"; break;
+    case 12: string="Tiros+DMSP"; break;
+    case 13: string="Tiros+DMSP+Conventional"; break;
+    case 14: string="Tiros+DMSP+Goes"; break;
+    case 15: string="Tiros+DMSP+Goes+Conventional"; break;
+

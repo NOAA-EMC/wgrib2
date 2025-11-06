@@ -31,7 +31,6 @@ option(DISABLE_ALARM "Disable Alarm?" off)
 set(USE_NAMES "NCEP")
 option(USE_G2CLIB_HIGH "Use g2c high-level decoder (-g2clib 2)?" off)
 option(USE_G2CLIB_LOW "Use g2c low-level decoders (png,jpeg2000)?" off)
-option(USE_AEC "Use AEC to enable encoding/decoding of GRIB2 data with CCSDS packing (packing type 42)." off)
 option(BUILD_EXTRA "Build user-contributed code" OFF)
 option(FTP_TEST_FILES "Fetch and test with files on FTP site." OFF)
 option(FTP_LARGE_TEST_FILES "Fetch and test with very large files on FTP site." OFF)
@@ -70,8 +69,6 @@ if(USE_G2CLIB_HIGH AND NOT USE_G2CLIB_LOW)
   message(FATAL_ERROR "USE_G2CLIB_LOW must be on when USE_G2CLIB_HIGH")
 endif()
 
-
-
 if (BUILD_SHARED_LIB AND NOT BUILD_LIB)
    message(FATAL_ERROR "BUILD_SHARED_LIB is on but BUILD_LIB is off")
 endif()
@@ -93,18 +90,12 @@ if(USE_NETCDF)
 endif()
 
 if(USE_G2CLIB_HIGH OR USE_G2CLIB_LOW)
-  find_package(g2c 2.2.0 CONFIG REQUIRED)
+  find_package(g2c 2.3.0 CONFIG REQUIRED)
 endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
 if(USE_OPENMP)
   find_package(OpenMP REQUIRED COMPONENTS C)
-endif()
-
-# Find required packages to use AEC
-message(STATUS "Checking if the user wants to use AEC...")
-if(USE_AEC)
-  find_package(libaec 1.0.6 REQUIRED)
 endif()
 
 # write config.h

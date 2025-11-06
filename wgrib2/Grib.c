@@ -161,7 +161,7 @@ int f_set_grib_type(ARG1) {
         use_bitmap = 1;
     }
 
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
     else if (strcmp(arg1,"aec") == 0 || strcmp(arg1,"a") == 0) grib_type = aec;
 #endif
     else if (strcmp(arg1,"same") == 0) {
@@ -177,7 +177,7 @@ int f_set_grib_type(ARG1) {
 #if G2_JPEG2000_ENABLED == 1
             else if (pack == 40) grib_type = jpeg;
 #endif
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
             else if (pack == 42) grib_type = aec;
 #endif
             // cannot duplicate output grib type
@@ -359,7 +359,7 @@ int grib_wrt(unsigned char **sec, float *data, unsigned int ndata, unsigned int 
         max_bits, 2, use_bitmap, out); 
     else if (grib_type == complex3) complex_grib_out(sec, data, ndata, use_scale, dec_scale, bin_scale, wanted_bits, 
         max_bits, 3, use_bitmap, out); 
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
     else if (grib_type == aec) aec_grib_out(sec, data, ndata, use_scale, dec_scale, bin_scale, wanted_bits, max_bits, out);
 #endif
     return 0;

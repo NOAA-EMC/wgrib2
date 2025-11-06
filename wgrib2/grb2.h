@@ -266,3 +266,4 @@
 #define KMA 40              /**< KMA Center Code */
 #define DWD1 78             /**< DWD1 Center Code */
 #define DWD2 79             /**< DWD2 Center Code */
+#define USAF 57             /**< USAF Center Code */

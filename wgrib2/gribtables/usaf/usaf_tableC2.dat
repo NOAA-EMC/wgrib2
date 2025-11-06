@@ -1,0 +1,57 @@
+/* Table C-2 from 557WW GRIB Edition 2 Reference Manual */
+	
+    case 0: string="557 WW Primary Table"; break;
+    case 1: string="557 WW Numerical Weather Prediction Models Products"; break;
+    case 2: string="557 WW Special Environmental Models Products"; break;
+    case 3: string="557 WW Space Products"; break;
+    case 4: string="557 WW Ensemble Products"; break;
+    case 5: string="557 WW Gridded Satellite Products"; break;
+    case 6: string="557 WW Aerosol Products"; break;
+    case 7: string="557 WW Aerosol CDFS-II"; break;
+    case 8: string="557 WW Reserved"; break;
+    case 9: string="9 OWS"; break;
+    case 10: string="14 WS (Formerly Air Force Combat Climatology Center)"; break;
+    case 11: string="14 WS (AFCCC) Numerical Weather Prediction Models Products"; break;
+
+    /* 12-14 are 14 WS Reserved. */
+    case 12:
+    case 13:
+    case 14: string="14 WS Reserved"; break;
+
+    case 15: string="15 OWS (Scott)"; break;
+    case 16: string="Reserved"; break;
+    case 17: string="17 OWS (Hickam)"; break;
+    /* 18-19 are Reserved.  Treat as default */
+    case 20: string="20 OWS (Yokota)"; break;
+    case 21: string="21 OWS (Sembach)"; break;
+    /* 22-24 are Reserved.  Treat as default. */
+    case 25: string="25 OWS (Davis-Monthan)"; break;
+    case 26: string="26 OWS (Barksdale)"; break;
+    case 27: string="27 OWS (Offutt)"; break;
+    case 28: string="28 OWS (Shaw)"; break;
+    case 29: string="Air Force Tactical Application Center (AFTAC)"; break;
+    /* 30-89 are Reserved. Treat as default. */
+    case 90: string="557 WW Operational Data Layer (ODL)"; break;
+    case 91: string="557 WW Operational Data Layer (ODL) -- Internal use only"; break;
+    /* 92-109 are Reserved.  Treat as default */
+    case 110: string="Air Force Research Lab (AFRL) Office of Research and Applications"; break;
+
+    /* 111-119 are AFRL Reserved.  Since this is different than "Reserved"
+       we must specify as list */
+    case 111:
+    case 112:
+    case 113:
+    case 114:
+    case 115:
+    case 116:
+    case 117:
+    case 118:
+    case 119: string="AFRL Reserved"; break;
+
+    case 120: string="Vandenberg AFB Western Test Range"; break;
+    /* 121-129 are Reserved.  Treat as default */
+    case 130: string="Patrick AFB Eastern Test Range"; break;
+    /* 131-139 are Reserved.  Treat as default */
+    case 140: string="AFRL Reserved"; break;
+    /* 141-255 are Reserved.  Treat as default */
+    default: string="Reserved" ; break;

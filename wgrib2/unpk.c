@@ -25,7 +25,7 @@
     #include <grib2.h>
 #endif
 
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
     #include <libaec.h>
 #endif
 
@@ -76,15 +76,13 @@ int unpk_grib(unsigned char **sec, float *data) {
     unsigned int kk;
 #endif
 
-#if (G2_PNG_ENABLED == 1 || defined USE_AEC)
+#if (G2_PNG_ENABLED == 1 || G2_AEC_ENABLED == 1)
     unsigned char *c;
 #endif
 
-#ifdef USE_AEC
-    struct aec_stream strm;
-    int status;
-    int numBitsNeeded;
-    size_t size;
+#if G2_AEC_ENABLED == 1
+    int total_out, len, flags, block_size, rsi;
+    int numBitsNeeded, size;
 #endif
 
     packing = code_table_5_0(sec);
@@ -311,7 +309,7 @@ int unpk_grib(unsigned char **sec, float *data) {
         return 0;
     }
 #endif
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
     else if (packing == 42) {		// aec
 
         p = sec[5];
@@ -345,25 +343,20 @@ int unpk_grib(unsigned char **sec, float *data) {
         }
 
 
-        strm.flags = (int) sec[5][21];
-        strm.bits_per_sample = (int) sec[5][19];
-        strm.block_size = (int) sec[5][22];
-        strm.rsi = uint2(sec[5]+23);
-
-        strm.next_in = sec[7]+5;
-        strm.avail_in = uint4(sec[7]) - 5;
+        len = uint4(sec[7]) - 5; 
+        nbits = (int) sec[5][19];
+        flags = (int) sec[5][21];
+        block_size = (int) sec[5][22];
+        rsi = uint2(sec[5]+23);
 
         numBitsNeeded = (int) sec[5][19];
-        size = ((numBitsNeeded + 7)/8) * (size_t) ndata;
+        size = ((numBitsNeeded + 7)/8) * ndata; 
 
         if ((c = (unsigned char *) malloc(size)) == NULL) fatal_error("unpk: allocation error", "");
 
-        strm.next_out = c;
-        strm.avail_out = size;
+        total_out = g2c_dec_aec(sec[7]+5, len, nbits, flags, block_size, rsi, (unsigned char *)c, size);
 
-        status = aec_buffer_decode(&strm);
-
-        if (status != AEC_OK) fatal_error_i("unpk: aec decode error %d",status);
+        if (total_out < 0) fatal_error_i("unpk: aec decode error %d", total_out);
 
         mask_pointer = (bitmap_flag == 255) ? NULL : sec[6] + 6;
 

@@ -1,0 +1,25 @@
+/* Code Table 4.212A is an extension abopted by 557WW, codifying modified IGBP
+   Land Cover categories */
+
+    case 0: string="Reserved"; break;
+    case 1: string="Evergreen Needleleaf Forest"; break;
+    case 2: string="Evergreen Broadleaf Forest"; break;
+    case 3: string="Deciduous Needleleaf Forest"; break;
+    case 4: string="Deciduous Broadleaf Forest"; break;
+    case 5: string="Mixed Forest"; break;
+    case 6: string="Closed Shrublands"; break;
+    case 7: string="Open Shrublands"; break;
+    case 8: string="Woody Savannas"; break;
+    case 9: string="Savannas"; break;
+    case 10: string="Grasslands"; break;
+    case 11: string="Permanent Wetlands"; break;
+    case 12: string="Croplands"; break;
+    case 13: string="Urban and Built-Up"; break;
+    case 14: string="Cropland/Natural Vegetation Mosaic"; break;
+    case 15: string="Snow and Ice"; break;
+    case 16: string="Barren or Sparsely Vegetated"; break;
+    case 17: string="Water"; break;
+    case 18: string="Wooded Tundra"; break;
+    case 19: string="Mixed Tundra"; break;
+    case 20: string="Barren Tundra"; break;
+    case 255: string="Missing"; break;

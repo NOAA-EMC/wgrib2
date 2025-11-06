@@ -11,6 +11,7 @@
  * 5/2013 | W. Ebisuzaki | Fixed code table 0.0 in response to error report M. Foster
  * 7/2013 | W. Ebisuzaki | Added more *_location() functions, needed by set_pdt()
  * 5/2013 | G. Schnee | Added case for DRT 5.42
+ * 5/2025 | E. Kemp | Entries for 557WW use.
  */
 
 #include <stdio.h>
@@ -598,14 +599,22 @@ int code_table_3_1(unsigned char **sec) {
  */
 int f_code_table_3_2(ARG0) {
     int val;
+    int center;
     const char *string;
     if (mode >= 0) {
-        val = code_table_3_2(sec);
+	      val = code_table_3_2(sec);
+        center = GB2_Center(sec);
         if (val >= 0) {
             string = NULL;
-            switch(val) {
+            if (center == USAF) {
+                switch(val) {
+#include "gribtables/usaf/CodeTable_3.2.USAF.dat"
+                }
+            } else {
+                switch(val) {
 #include "CodeTable_3.2.dat"
-	        }
+                }
+            }
             if (string == NULL) sprintf(inv_out,"code table 3.2=%d", val);
             else sprintf(inv_out,"code table 3.2=%d %s", val, string);
         }
@@ -2987,14 +2996,22 @@ unsigned char *code_table_4_233_location(unsigned char **sec) {
  */
 int f_code_table_4_235(ARG0) {
     int val;
+    int center;
     const char *string;
     if (mode >= 0) {
-        val = code_table_4_235(sec);
+	      val = code_table_4_235(sec);
+        center = GB2_Center(sec);
         if (val >= 0) {
             string = NULL;
-            switch(val) {
+            if (center == USAF) {
+                switch(val) {
+#include "gribtables/usaf/CodeTable_4.235.USAF.dat"
+                }
+            } else {
+                switch(val) {
 #include "CodeTable_4.235.dat"
-            }
+                }
+	          }
             if (string == NULL) sprintf(inv_out,"code table 4.235=%d", val);
             else sprintf(inv_out,"code table 4.235=%d %s", val, string);
         }

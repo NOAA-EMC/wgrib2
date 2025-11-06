@@ -33,8 +33,11 @@
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
+#ifdef USE_G2CLIB_LOW
+#include <grib2.h>
+#endif
 
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
 
 #include <libaec.h>
 
@@ -58,7 +61,7 @@
 int aec_grib_out(unsigned char ** sec, float *data, unsigned int ndata, int use_scale,
         int dec_scale, int bin_scale, int wanted_bits, int max_bits, struct seq_file *out){
 
-    int err, status;
+    int ret, status;
     unsigned char *sec0, *sec1, *sec2 , *sec3, *sec4, *sec5, *sec6, *sec7;
     unsigned int i, j, n_defined, encodedLength, nbytes;
 
@@ -67,9 +70,8 @@ int aec_grib_out(unsigned char ** sec, float *data, unsigned int ndata, int use_
     uint32_t ccsds_rsi = 128;
     float min_val, max_val;
     double ref, fmin, frange, scale, dec_factor;
-    int nbits, ii;
+    int nbits, outbuflen, ii;
 
-    struct aec_stream strm;
     unsigned char *inbuffer;
     /* printf("aec_grib_out: use_scale = %d dec_scale = %d bin_scale = %d wanted_bits = %d max_bits = %d " ,
         use_scale, dec_scale, bin_scale, wanted_bits, max_bits ); */
@@ -176,32 +178,19 @@ int aec_grib_out(unsigned char ** sec, float *data, unsigned int ndata, int use_
             }
         }
 
-        size_t outbuflen = 10240 + nbytes * (size_t) n_defined;
+        outbuflen = 10240 + nbytes * n_defined;
 
         /* bug fix ECMWF Shahram Najm */
         outbuflen += outbuflen/20 + 256;
 
-
         sec7 = (unsigned char *) malloc(outbuflen + 5);
         if (sec7 == NULL) fatal_error("aes_pk: memory allocation","");
 
-        strm.flags = ccsds_flags;
-        strm.bits_per_sample = nbits;
-        strm.block_size = ccsds_block_size;
-        strm.rsi = ccsds_rsi;
+        ret = g2c_enc_aec(inbuffer, inbuflen, nbits, ccsds_flags, ccsds_block_size, ccsds_rsi, sec7 + 5, &outbuflen);
 
-        strm.next_out = sec7 + 5;
-        strm.avail_out = outbuflen;
-        strm.next_in = inbuffer;
-        strm.avail_in = inbuflen;
+        if (ret < 0) fatal_error_i("aec_buffer_encode %d", ret);
 
-        /* printf("*** Packing with AEC flags: %d bits per sample: %d block size: %d rsi: %d \n", strm.flags, strm.bits_per_sample, strm.block_size, strm.rsi ); */
-
-        if((err = aec_buffer_encode(&strm)) != AEC_OK) fatal_error_i("aec_buffer_encode %d", err);
-
-        /* printf("*** after aec_buffer_encode() of %d bytes input, strm.avail_in: %d strm.total_in: %d\n" , inbuflen, strm.avail_in, strm.total_in); */
-
-        encodedLength = strm.total_out;
+        encodedLength = ret;
     }
         else {
         ref = min_val / dec_factor;

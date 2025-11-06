@@ -75,9 +75,9 @@ Building wgrib2 requires, CMake (version 3.15+), a C compiler, a Fortran compile
 
 Download the tarball from the release page and unpack it, and cd into the main directory of the library. Then run the following commands, substituting your directory locations for the CMAKE_INSTALL_PREFIX (where wgrib2 will be installed), and the CMAKE_PREFIX_PATH (where the build will look for dependencies):
 
-```
+```bash
 mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH="/usr/local/NCEPLIBS-g2c;/usr/local/NCEPLIBS-ip"
+cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH="/usr/local/NCEPLIBS-g2c;/usr/local/NCEPLIBS-ip" -G UnixMakefile
 make
 make install
 ```

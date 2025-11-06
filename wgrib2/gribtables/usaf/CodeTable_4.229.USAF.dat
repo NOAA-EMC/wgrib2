@@ -1,0 +1,9 @@
+/* Code Table 4.229 is an extension abopted by 557WW, for Precipitation 
+   Estimate Rank */
+    case 1: string="Better than present weather estimate"; break;
+    case 2: string="Better than SSMI estimate"; break;
+    case 3: string="Better than CDFS II estimate"; break;
+    case 4: string="Better than climo estimate"; break;
+    case 5: string="Worse than climo estimate"; break;
+
+

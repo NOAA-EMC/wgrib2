@@ -1,0 +1,7 @@
+/* Code Table 4.231 is an extension abopted by 557WW, for Snow cover presence */
+    case 0: string="Off"; break;
+    case 1: string="On"; break;
+
+
+
+

@@ -1,0 +1,25 @@
+case     0: string="Reserved"; break;
+case     1: string="Urban land"; break;
+case     2: string="Agriculture"; break;
+case     3: string="Range land"; break;
+case     4: string="Deciduous forest"; break;
+case     5: string="Coniferous forest"; break;
+case     6: string="Forest/wetland"; break;
+case     7: string="Water"; break;
+case     8: string="Wetlands"; break;
+case     9: string="Desert"; break;
+case    10: string="Tundra"; break;
+case    11: string="Ice"; break;
+case    12: string="Tropical forest"; break;
+case    13: string="Savannah"; break;
+/* 557WW extensions-- these are local, not WMO */
+case   192: string="Broadleaf Tree"; break;
+case   193: string="Needleleaf Tree"; break;
+case   194: string="C3 Grass"; break;
+case   195: string="C4 Grass"; break;
+case   196: string="Shrub"; break;
+case   197: string="Urban"; break;
+case   198: string="Water"; break;
+case   199: string="Soil"; break;
+case   200: string="Ice"; break;
+case   255: string="Missing"; break;

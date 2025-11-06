@@ -21,7 +21,7 @@ jobs:
   MacOS:
     runs-on: macos-latest
     env:
-      FC: gfortran-12
+      FC: gfortran-13
     strategy:
       fail-fast: false
       matrix:

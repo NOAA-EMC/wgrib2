@@ -89,6 +89,8 @@ struct gribtable_s local_gribtable[] = {
 #include "gribtables/bom/BOM_gribtable.dat"
 #include "gribtables/kma/KMA_gribtable.dat"
 #include "gribtables/misc/misc_gribtable.dat"
+#include "gribtables/usaf/USAF_gribtable.dat"
+#include "gribtables/nesdis/NESDIS_gribtable.dat"
     /* END MARKER */
     { -1, -1, -1, -1, -1, -1, -1, -1, NULL, NULL, NULL }
 };

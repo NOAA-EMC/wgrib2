@@ -269,12 +269,22 @@ int f_subcenter(ARG0) {
     if (mode >= 0) {
         ctr = GB2_Center(sec);
         subctr = GB2_Subcenter(sec);
-        string = NULL;
-        if (subctr > 0) {  /* a lot of messages have no sub-centre declared */
-          ctrsubctr = (ctr<<16)+subctr;
-          switch (ctrsubctr) {
+	      string = NULL;
+	      if (ctr == 7) {
+          switch (subctr) {
 #include "CommonCodeTable_12.dat"
-          }
+           }
+        }
+        if (ctr == (USAF)) {
+            switch (subctr) {
+#include "gribtables/usaf/usaf_tableC2.dat"
+            }
+        }
+        if (subctr > 0) {  /* a lot of messages have no sub-centre declared */
+            ctrsubctr = (ctr<<16)+subctr;
+            switch (ctrsubctr) {
+#include "CommonCodeTable_12.dat"
+            }
         }
         if (mode == 0 || string == NULL) {
             sprintf(inv_out,"subcenter=%d", subctr);

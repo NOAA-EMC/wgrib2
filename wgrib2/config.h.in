@@ -20,7 +20,6 @@
 #cmakedefine USE_NAMES @USE_NAMES@
 #cmakedefine USE_G2CLIB_HIGH
 #cmakedefine USE_G2CLIB_LOW
-#cmakedefine USE_AEC
 #cmakedefine BUILD_EXTRA
 #cmakedefine FTP_TEST_FILES
 #cmakedefine FTP_LARGE_TEST_FILES

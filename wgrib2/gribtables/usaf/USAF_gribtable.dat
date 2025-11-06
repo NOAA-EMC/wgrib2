@@ -1,0 +1,141 @@
+/*
+ * Local GRIB2 definitions specified by the United States Air Force 557th
+ * Weather Wing (formerly the Air Force Global Weather Central).  These
+ * entries are taken from the 557WW GRIB Edition 2 Reference Manual 
+ * last modified 12 Jul 2018.
+ *
+ * NASA GSFC
+ * 22 Oct 2018
+ */
+
+/*
+  int disc;   Section 0 Discipline
+  int mtab_set;   Section 1 Master Tables Version Number
+  int mtab_low;   Section 1 Master Tables Version Number
+  int mtab_high;   Section 1 Master Tables Version Number
+  int cntr;   Section 1 originating centre, used for local tables
+  int ltab;   Section 1 Local Tables Version Number
+  int pcat;   Section 4 Template 4.0 Parameter category
+  int pnum;   Section 4 Template 4.0 Parameter number
+  const char *name;
+  const char *desc;
+  const char *unit;
+*/
+
+/*{0,14,0,255,57,1,0,0,"WX","Weather Information", "WxInfo"} */
+
+/* Product Discipline 0, Parameter Category 0: Temperature */
+{0,14,0,255,57,1,0,192,"FRZLVLHGT","Freezing level height","gpm"},
+
+/* Product Discipline 0, Parameter Category 1: Moisture */
+{0,14,0,255,57,1,1,87,"SPRATE","Stratiform Precipitation Rate","kg m^-2 s^-1"},
+{0,14,0,255,57,1,1,121,"FSNOWC","Fraction of Snow Cover","Proportion"},
+{0,14,0,255,57,1,1,192,"CTSTM","Categorical thunderstorms","-"},
+{0,14,0,255,57,1,1,193,"CSVRTSTM","Categorical severe thunderstorms","-"},
+{0,14,0,255,57,1,1,194,"CMIXPCP","Categorical mixed precipitation","-"},
+{0,14,0,255,57,1,1,195,"SNWFL","Snowfall","in"},
+{0,14,0,255,57,1,1,197,"CSNWCOV","Categorical snow cover","-"},
+
+/* Product Discipline 0, Parameter Category 2: Momentum */
+{0,14,0,255,57,1,2,192,"WNDSPDCNVGST","Wind speed of convective gusts","m s^-1"},
+
+/* Product Discipline 0, Parameter Category 3: Mass */
+{0,14,0,255,57,1,3,192,"HGTDVALS","Height D-Values","ft"},
+{0,14,0,255,57,1,3,193,"ALTSET","Altimeter setting","in of Hg"},
+
+/* Product Discipline 0, Parameter Category 4: Short-wave Radiation */
+{0,14,0,255,57,1,4,192,"SWDIFFRAD","Shortwave diffuse radiation","W m^-2"},
+{0,14,0,255,57,1,4,193,"SWDIRRAD","Shortwave direct radiation","W m^-2"},
+
+/* Product Discipline 0, Parameter Category 6: Cloud */
+{0,14,0,255,57,1,6,192,"NUMCLDLYRS","Number of Cloud Layers","Numeric"},
+{0,14,0,255,57,1,6,193,"LYRCLDOPTDPTH","Layer Cloud Optical Depth","Numeric"},
+{0,14,0,255,57,1,6,194,"LYRCLDICEPCT","Layer Cloud Ice Percentage","%"},
+{0,14,0,255,57,1,6,195,"LYRCLDWATPTH","Layer Cloud Water Path","g m^-2"},
+{0,14,0,255,57,1,6,196,"LYRCLDPSIZE","Layer Cloud Particle Size","10^-6m"},
+{0,14,0,255,57,1,6,197,"CLDANAQI","Cloud Analysis Quality Index","%"},
+
+/* Product Discipline 0, Parameter Category 7: Thermodynamic Stability Indices */
+{0,14,0,255,57,1,7,19,"CAPEMSHR","Convective Available Potential Energy (CAPE) - shear","m^-2 s^-2"},
+{0,14,0,255,57,1,7,192,"WBFH","Wet Bulb Freezing Height","m"},
+{0,14,0,255,57,1,7,200,"LSI","Lid Strength Index (LSI)","K"},
+{0,14,0,255,57,1,7,254,"LCL","Lifted condensation level","m"},
+
+/* Product Discipline 0, Parameter Category 13: Aerosols */
+{0,14,0,255,57,1,13,192,"TDUSTCONC","Total dust concentration"," 10^-6g m^-3"},
+{0,14,0,255,57,1,13,193,"VOLASHCOV","Volcanic ash coverage","kg m^-2"},
+{0,14,0,255,57,1,13,194,"VOLASHTHCK","Volcanic ash thickness","mm"},
+{0,14,0,255,57,1,13,195,"VAAT","Volcanic ash arrival time","hr"},
+{0,14,0,255,57,1,13,196,"VAAAT","Volcanic airborne ash arrival time","hr"},
+{0,14,0,255,57,1,13,197,"VOLASHCONC","Volcanic ash concentration","mg m^-3"},
+{0,14,0,255,57,1,13,198,"VOLASHCLDLD","Volcanic ash cloud load","T km^-2"},
+/* NASA:  This is in the 557WW table.  Almost certainly a typo.  Will report. */
+{0,14,0,255,57,1,13,199,"VOLASHGRNSZ","Volcanic ash grain size","m s^-1"},
+{0,14,0,255,57,1,13,200,"VOLASHMSFRC","Volcanic ash mass fraction","fraction"},
+{0,14,0,255,57,1,13,201,"VOLASHGRNSZ","Volcanic ash grain size","mm"},
+{0,14,0,255,57,1,13,202,"VOLERUPTNUM","Volcanic eruption number","index"},
+{0,14,0,255,57,1,13,203,"VOLERUPTSTT","Volcanic eruption start time","hours since 1900"},
+{0,14,0,255,57,1,13,204,"VOLERUPTDUR","Volcanic eruption duration","hrs"},
+{0,14,0,255,57,1,13,205,"VOLPLMHGT","Volcanic plume height","km"},
+{0,14,0,255,57,1,13,206,"VOLERUPTVOL","Volcanic eruption volume","km^-3"},
+{0,14,0,255,57,1,13,207,"VOLASHDENS","Volcanic ash density","kg km^-3"},
+{0,14,0,255,57,1,13,208,"VOLASHAREA","Volcanic ash area","km^2"},
+{0,14,0,255,57,1,13,209,"VAC6325","Volcanic ash concentration at 63.25 grain size","mg m^-3"},
+{0,14,0,255,57,1,13,210,"VAC125","Volcanic ash concentration at 125 grain size","mg m^-3"},
+{0,14,0,255,57,1,13,211,"VAC250","Volcanic ash concentration at 250 grain size","mg m^-3"},
+
+/* Product Discipline 0, Parameter Category 15: Radar */
+{0,14,0,255,57,1,15,192,"HSRDBZ","Hybrid scane reflectivity","dBZ"},
+
+/* Product Discipline 0, Parameter Category 19: Physical atmospheric properties */
+{0,14,0,255,57,1,19,32,"HIFREL","Highest Freezing Level","m"},
+{0,14,0,255,57,1,19,33,"VISLFOG","Visibility Through Liquid Fog","m"},
+{0,14,0,255,57,1,19,34,"VISIFOG","Visibility Through Ice Fog","m"},
+{0,14,0,255,57,1,19,35,"VISBSN","Visbility Through Blowing Snow","m"},
+{0,14,0,255,57,1,19,192,"PTI","Panofsky Turbulence Index","numeric"},
+{0,14,0,255,57,1,19,193,"SLATTT","SLAT Turbulence Top","m"},
+{0,14,0,255,57,1,19,194,"SLATTB","SLAT Turbulence Base","m"},
+{0,14,0,255,57,1,19,195,"SLATTI","SLAT Turbulence Index","degC m degC^-1 m^-1"},
+{0,14,0,255,57,1,19,196,"CET1T","Contrail Engine Type 1 Top","m"},
+{0,14,0,255,57,1,19,197,"CET1B","Contrail Engine Type 1 Base","m"},
+{0,14,0,255,57,1,19,198,"CET2T","Contrail Engine Type 2 Top","m"},
+{0,14,0,255,57,1,19,199,"CET2B","Contrail Engine Type 2 Base","m"},
+{0,14,0,255,57,1,19,200,"CET3T","Contrail Engine Type 3 Top","m"},
+{0,14,0,255,57,1,19,201,"CET3B","Contrail Engine Type 3 Base","m"},
+{0,14,0,255,57,1,19,202,"TPI","Thunderstorm Potential Indicator","numeric (0:100)"},
+{0,14,0,255,57,1,19,207,"KETI","Knapp-Ellrod Turbulence Index","numeric"},
+{0,14,0,255,57,1,19,211,"DVIS","Dust visibility","m"},
+
+/* Product Discipline 0, Parameter Category 191: Miscellaneous */
+{0,14,0,255,57,1,191,192,"TLUFBT","Time of last update from base time","min"},
+{0,14,0,255,57,1,191,193,"SATID","Satellite Identifier","-"},
+{0,14,0,255,57,1,191,194,"SATMRGPCP","Satellite Merged Precipitation","-"},
+{0,14,0,255,57,1,191,195,"TIME","Time","-"},
+{0,14,0,255,57,1,191,198,"MAPSF","Map scale factor","numeric"},
+
+/* Product Discipline 2, Parameter Category 0: Vegetation/Biomass */
+/* Future WMO entry for evapotranspiration rate */
+{2,14,0,255,57,1,0,39, "EVARATE", "Evapotranspiration Rate", "kg/m^2/s"},
+
+{2,14,0,255,57,1,0,192,"CANHGT","Canopy Height","m"},
+{2,14,0,255,57,1,0,194,"MAVAIL","Moisture Availability","%"},
+{2,14,0,255,57,1,0,195,"VEGGRN","Vegetation greenness","proportion"},
+{2,14,0,255,57,1,0,196,"RELSMC","Relative Soil Moisture","proportion"},
+{2,14,0,255,57,1,0,197,"MIGBPLC","Land Cover (Modified IGBP categories)","-"},
+
+/* Product Discipline 2, Parameter Category 3: Soil Products */
+{2,14,0,255,57,1,3,192,"SOILTP","Soil type (NCAR Hybrid STATSGO/FAO categories)","-"},
+
+/* Product Discipline 10, Parameter Category 2: Ice */
+{10,14,0,255,57,1,2,192,"ICEMASK","Ice mask","(0,1)"},
+{10,14,0,255,57,1,2,193,"ICEAGE","Ice age","d (0-365)"},
+
+
+
+
+
+
+
+
+
+

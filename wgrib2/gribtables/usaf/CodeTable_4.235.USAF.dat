@@ -1,0 +1,12 @@
+/* Code Table 4.235 is an extension abopted by 557WW, for Precipitation type*/
+    case 0: string="No precip"; break;
+    case 1: string="rain"; break;
+    case 2: string="thunderstorm (TRW)"; break;
+    case 3: string="freezing rain (ZR)"; break;
+    case 4: string="mixed/ice"; break;
+    case 5: string="snow"; break;
+    case 6: string="severe thunderstorm (TRW)"; break;
+
+
+
+
