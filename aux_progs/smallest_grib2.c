@@ -16,9 +16,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "aux_progs.h"
+
 /** Maximum Buffer Size */
 #define SIZE 4096*4
-unsigned long int uint8(unsigned char *p);
 
 /**
  * Takes 3 input files/pipes, reads 1 grib message from each, and writes the shortest message 
