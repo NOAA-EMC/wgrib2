@@ -935,6 +935,7 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = @abs_top_srcdir@/docs/user_guide.md \
+                         @abs_top_srcdir@/docs/all_commands.md \
                          @abs_top_srcdir@/wgrib2 \
                          @abs_top_srcdir@/aux_progs \
                          @abs_top_srcdir@/wmo_scripts

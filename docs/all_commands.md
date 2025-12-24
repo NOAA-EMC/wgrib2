@@ -1,3 +1,4 @@
+@page all_commands Command Line Options
 | Command | Type | Arguments | Description |
 |---------|------|-----------|-------------|
 | [-else](@ref f_else) | else | | else, -if ... -else ... -endif |
