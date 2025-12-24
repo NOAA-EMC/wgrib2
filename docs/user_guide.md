@@ -9,6 +9,9 @@ Wgrib2 is maintained as a collaboration between [Climate Prediction
 Center (CPC)](https://www.cpc.ncep.noaa.gov/) and the [Environmental
 Modeling Center (EMC)](https://www.emc.ncep.noaa.gov/emc.php).
 
+## All Commands
+For a list of all command line options and links to their documentation pages, [see here](all_commands.md).
+
 ## Installation
 
 Download the tarball from the release page and unpack it, and cd into the main directory of the library. Then run the following commands, substituting your directory locations for the CMAKE_INSTALL_PREFIX (where wgrib2 will be installed), and the CMAKE_PREFIX_PATH (where the build will look for dependencies):
@@ -55,7 +58,7 @@ Additional CMake build options can be used to configure the build by setting the
 | DISABLE_STAT | Disable POSIX feature | OFF |
 | BUILD_EXTRA | Build user-contributed code. This code is no longer supported - use at your own risk. | OFF |
 | USE_MYSQL | Use with BUILD_EXTRA = ON to enable user-contributed MySQL options. It is user's responsibility to ensure MySQL is available. | OFF |
-
+ 
 ## Documentation for Previous Versions of wgrib2
 
 * [Legacy Web Docs](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/)
