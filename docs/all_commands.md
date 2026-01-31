@@ -24,55 +24,55 @@
 | [-checksum](@ref f_checksum) | inv | X | CRC checksum of section X (0..8), whole message (X = -1/message) or (X=data) |
 | [-cluster](@ref f_cluster) | inv |  | cluster identifier |
 | [-cluster_info](@ref f_cluster_info) | inv |  | cluster information |
-| [-code_table_0.0](@ref f_code_table_0.0) | inv |  | code table 0.0 discipline |
-| [-code_table_1.0](@ref f_code_table_1.0) | inv |  | code table 1.0 master table version |
-| [-code_table_1.1](@ref f_code_table_1.1) | inv |  | code table 1.1 local table version |
-| [-code_table_1.2](@ref f_code_table_1.2) | inv |  | code table 1.2 significance of reference time |
-| [-code_table_1.3](@ref f_code_table_1.3) | inv |  | code table 1.3 production status of processed data |
-| [-code_table_1.4](@ref f_code_table_1.4) | inv |  | code table 1.4 type of processed data |
-| [-code_table_1.5](@ref f_code_table_1.5) | inv |  | Identification template number |
-| [-code_table_1.6](@ref f_code_table_1.6) | inv |  | calendar |
-| [-code_table_3.0](@ref f_code_table_3.0) | inv |  | code table 3.0 Source of grid definition |
-| [-code_table_3.1](@ref f_code_table_3.1) | inv |  | code table 3.1 Grid definition template number |
-| [-code_table_3.11](@ref f_code_table_3.11) | inv |  | code table 3.11 regional/global thinned/reduced grid |
-| [-code_table_3.15](@ref f_code_table_3.15) | inv |  | code table 3.15 Physical meaning of vertical coordinate |
-| [-code_table_3.2](@ref f_code_table_3.2) | inv |  | code table 3.2 Size (radius) and Shape of Earth |
-| [-code_table_3.20](@ref f_code_table_3.20) | inv |  | code table 3.20 Type of Horizontal line |
-| [-code_table_3.21](@ref f_code_table_3.21) | inv |  | code table 3.21 Vertical Dimension coordinate values defn |
-| [-code_table_3.6](@ref f_code_table_3.6) | inv |  | code table 3.6 Spectral data representation type |
-| [-code_table_3.7](@ref f_code_table_3.7) | inv |  | code table 3.7 Spectral data representation mode |
-| [-code_table_3.8](@ref f_code_table_3.8) | inv |  | code table 3.8 Grid point position |
-| [-code_table_4.0](@ref f_code_table_4.0) | inv |  | code table 4.0 Product Definition Template Number |
-| [-code_table_4.1](@ref f_code_table_4.1) | inv |  | code table 4.1 |
-| [-code_table_4.10](@ref f_code_table_4.10) | inv |  | code table 4.10 statistical processing .. first occurence |
-| [-code_table_4.11](@ref f_code_table_4.11) | inv |  | code table 4.11 (first) type of time intervals |
-| [-code_table_4.11s](@ref f_code_table_4.11s) | inv |  | code table 4.11 (all) type of time intervals |
-| [-code_table_4.15](@ref f_code_table_4.15) | inv |  | code table 4.15 type of areal statistical processing |
-| [-code_table_4.16](@ref f_code_table_4.16) | inv |  | code table 4.16 quality control value |
-| [-code_table_4.2](@ref f_code_table_4.2) | inv |  | code table 4.2 |
-| [-code_table_4.230](@ref f_code_table_4.230) | inv |  | code table 4.230 chemical constituent type |
-| [-code_table_4.233](@ref f_code_table_4.233) | inv |  | code table 4.233 aerosol type |
-| [-code_table_4.235](@ref f_code_table_4.235) | inv |  | code table 4.235 Wind-generated wave spectral description |
-| [-code_table_4.240](@ref f_code_table_4.240) | inv |  | code table 4.240 Type of distribution function |
-| [-code_table_4.241](@ref f_code_table_4.241) | inv |  | code table 4.241 coverage attributes |
-| [-code_table_4.242](@ref f_code_table_4.242) | inv |  | code table 4.242 tile classification |
-| [-code_table_4.3](@ref f_code_table_4.3) | inv |  | code table 4.3 Type of Generating Process |
-| [-code_table_4.4](@ref f_code_table_4.4) | inv |  | code table 4.4 (first) |
-| [-code_table_4.5a](@ref f_code_table_4.5a) | inv |  | code table 4.5 (1st value) |
-| [-code_table_4.5b](@ref f_code_table_4.5b) | inv |  | code table 4.5 (2nd value) |
-| [-code_table_4.6](@ref f_code_table_4.6) | inv |  | code table 4.6 ensemble type |
-| [-code_table_4.7](@ref f_code_table_4.7) | inv |  | code table 4.7 derived forecast |
-| [-code_table_4.8](@ref f_code_table_4.8) | inv |  | code table 4.7 derived forecast |
-| [-code_table_4.9](@ref f_code_table_4.9) | inv |  | code table 4.9 Probability Type |
-| [-code_table_4.91](@ref f_code_table_4.91) | inv |  | code table 4.91 type of interval |
-| [-code_table_4.91b](@ref f_code_table_4.91b) | inv |  | code table 4.91 type of interval (2nd copy) |
-| [-code_table_5.0](@ref f_code_table_5.0) | inv |  | code table 5.0 data representation number |
-| [-code_table_5.1](@ref f_code_table_5.1) | inv |  | code table 5.1 type of original field values |
-| [-code_table_5.4](@ref f_code_table_5.4) | inv |  | code table 5.4 group splitting method |
-| [-code_table_5.5](@ref f_code_table_5.5) | inv |  | code table 5.5 missing value management for complex packing |
-| [-code_table_5.6](@ref f_code_table_5.6) | inv |  | code table 5.5 complex packing spatial differencing |
-| [-code_table_5.7](@ref f_code_table_5.7) | inv |  | code table 5.7 precision in IEEE packing |
-| [-code_table_6.0](@ref f_code_table_6.0) | inv |  | code table 6.0 Bitmap indicator |
+| [-code_table_0.0](@ref f_code_table_0_0) | inv |  | code table 0.0 discipline |
+| [-code_table_1.0](@ref f_code_table_1_0) | inv |  | code table 1.0 master table version |
+| [-code_table_1.1](@ref f_code_table_1_1) | inv |  | code table 1.1 local table version |
+| [-code_table_1.2](@ref f_code_table_1_2) | inv |  | code table 1.2 significance of reference time |
+| [-code_table_1.3](@ref f_code_table_1_3) | inv |  | code table 1.3 production status of processed data |
+| [-code_table_1.4](@ref f_code_table_1_4) | inv |  | code table 1.4 type of processed data |
+| [-code_table_1.5](@ref f_code_table_1_5) | inv |  | Identification template number |
+| [-code_table_1.6](@ref f_code_table_1_6) | inv |  | calendar |
+| [-code_table_3.0](@ref f_code_table_3_0) | inv |  | code table 3.0 Source of grid definition |
+| [-code_table_3.1](@ref f_code_table_3_1) | inv |  | code table 3.1 Grid definition template number |
+| [-code_table_3.11](@ref f_code_table_3_11) | inv |  | code table 3.11 regional/global thinned/reduced grid |
+| [-code_table_3.15](@ref f_code_table_3_15) | inv |  | code table 3.15 Physical meaning of vertical coordinate |
+| [-code_table_3.2](@ref f_code_table_3_2) | inv |  | code table 3.2 Size (radius) and Shape of Earth |
+| [-code_table_3.20](@ref f_code_table_3_20) | inv |  | code table 3.20 Type of Horizontal line |
+| [-code_table_3.21](@ref f_code_table_3_21) | inv |  | code table 3.21 Vertical Dimension coordinate values defn |
+| [-code_table_3.6](@ref f_code_table_3_6) | inv |  | code table 3.6 Spectral data representation type |
+| [-code_table_3.7](@ref f_code_table_3_7) | inv |  | code table 3.7 Spectral data representation mode |
+| [-code_table_3.8](@ref f_code_table_3_8) | inv |  | code table 3.8 Grid point position |
+| [-code_table_4.0](@ref f_code_table_4_0) | inv |  | code table 4.0 Product Definition Template Number |
+| [-code_table_4.1](@ref f_code_table_4_1) | inv |  | code table 4.1 |
+| [-code_table_4.10](@ref f_code_table_4_10) | inv |  | code table 4.10 statistical processing .. first occurence |
+| [-code_table_4.11](@ref f_code_table_4_11) | inv |  | code table 4.11 (first) type of time intervals |
+| [-code_table_4.11s](@ref f_code_table_4_11s) | inv |  | code table 4.11 (all) type of time intervals |
+| [-code_table_4.15](@ref f_code_table_4_15) | inv |  | code table 4.15 type of areal statistical processing |
+| [-code_table_4.16](@ref f_code_table_4_16) | inv |  | code table 4.16 quality control value |
+| [-code_table_4.2](@ref f_code_table_4_2) | inv |  | code table 4.2 |
+| [-code_table_4.230](@ref f_code_table_4_230) | inv |  | code table 4.230 chemical constituent type |
+| [-code_table_4.233](@ref f_code_table_4_233) | inv |  | code table 4.233 aerosol type |
+| [-code_table_4.235](@ref f_code_table_4_235) | inv |  | code table 4.235 Wind-generated wave spectral description |
+| [-code_table_4.240](@ref f_code_table_4_240) | inv |  | code table 4.240 Type of distribution function |
+| [-code_table_4.241](@ref f_code_table_4_241) | inv |  | code table 4.241 coverage attributes |
+| [-code_table_4.242](@ref f_code_table_4_242) | inv |  | code table 4.242 tile classification |
+| [-code_table_4.3](@ref f_code_table_4_3) | inv |  | code table 4.3 Type of Generating Process |
+| [-code_table_4.4](@ref f_code_table_4_4) | inv |  | code table 4.4 (first) |
+| [-code_table_4.5a](@ref f_code_table_4_5a) | inv |  | code table 4.5 (1st value) |
+| [-code_table_4.5b](@ref f_code_table_4_5b) | inv |  | code table 4.5 (2nd value) |
+| [-code_table_4.6](@ref f_code_table_4_6) | inv |  | code table 4.6 ensemble type |
+| [-code_table_4.7](@ref f_code_table_4_7) | inv |  | code table 4.7 derived forecast |
+| [-code_table_4.8](@ref f_code_table_4_8) | inv |  | code table 4.7 derived forecast |
+| [-code_table_4.9](@ref f_code_table_4_9) | inv |  | code table 4.9 Probability Type |
+| [-code_table_4.91](@ref f_code_table_4_91) | inv |  | code table 4.91 type of interval |
+| [-code_table_4.91b](@ref f_code_table_4_91b) | inv |  | code table 4.91 type of interval (2nd copy) |
+| [-code_table_5.0](@ref f_code_table_5_0) | inv |  | code table 5.0 data representation number |
+| [-code_table_5.1](@ref f_code_table_5_1) | inv |  | code table 5.1 type of original field values |
+| [-code_table_5.4](@ref f_code_table_5_4) | inv |  | code table 5.4 group splitting method |
+| [-code_table_5.5](@ref f_code_table_5_5) | inv |  | code table 5.5 missing value management for complex packing |
+| [-code_table_5.6](@ref f_code_table_5_6) | inv |  | code table 5.5 complex packing spatial differencing |
+| [-code_table_5.7](@ref f_code_table_5_7) | inv |  | code table 5.7 precision in IEEE packing |
+| [-code_table_6.0](@ref f_code_table_6_0) | inv |  | code table 6.0 Bitmap indicator |
 | [-ctl_ens](@ref f_ctl_ens) | inv |  | ens info for g2ctl/GrADS |
 | [-ctl_inv](@ref f_ctl_inv) | inv |  | ctl inventory dump for g2ctl/GrADS |
 | [-cyclic](@ref f_cyclic) | inv |  | is grid cyclic? (not for thinned grids) |
@@ -82,46 +82,11 @@
 | [-end_FT](@ref f_end_FT) | inv |  | verf time = reference_time + forecast_time + stat. proc time (YYYYMMDDHHMMSS) (same as -VT) |
 | [-ens](@ref f_ens) | inv |  | ensemble information |
 | [-ext_name](@ref f_ext_name) | inv |  | extended name, var+qualifiers |
-| [-flag_table_3.10](@ref f_flag_table_3.10) | inv |  | flag table 3.10 scanning mode for one diamond |
-| [-flag_table_3.3](@ref f_flag_table_3.3) | inv |  | flag table 3.3, resolution and component flags |
-| [-flag_table_3.4](@ref f_flag_table_3.4) | inv |  | flag table 3.4, scanning mode |
-| [-flag_table_3.5](@ref f_flag_table_3.5) | inv |  | flag table 3.5 projection center |
-| [-flag_table_3.9](@ref f_flag_table_3.9) | inv |  | flag table 3.9 numbering order of diamonds seen from corresponding pole |
-| [-ftime](@ref f_ftime) | inv |  | either ftime1 or ftime2 dep on version_ftime |
-| [-ftime1](@ref f_ftime1) | inv |  | forecast time |
-| [-ftime2](@ref f_ftime2) | inv |  | timestamp -- will replace -ftime in the future TESTING |
-| [-ftn_api_fn0](@ref f_ftn_api_fn0) | inv |  | n npnts nx ny msg_no submsg i11,5(1x,i11) |
-| [-full_name](@ref f_full_name) | inv |  | extended name, var+misc+lev (depreciated) |
-| [-gdt](@ref f_gdt) | inv |  | contents of Grid Definition Template (g2c) |
-| [-geolocation](@ref f_geolocation) | inv |  | package (proj4,gctpc,internal,not_used) to get lat/lon of grid points |
-| [-get_byte](@ref f_get_byte) | inv | X Y Z | get bytes in Section X, Octet Y, number of bytes Z (decimal format) |
-| [-get_hex](@ref f_get_hex) | inv | X Y Z | get bytes in Section X, Octet Y, number of bytes Z (bytes in hexadecimal format) |
-| [-get_ieee](@ref f_get_ieee) | inv | X Y Z | get ieee float in Section X, Octet Y, number of floats Z |
-| [-get_int](@ref f_get_int) | inv | X Y Z | get 4-byte ints in Section X, Octet Y, number of ints Z |
-| [-get_int2](@ref f_get_int2) | inv | X Y Z | get 2-byte ints in Section X, Octet Y, number of ints Z |
-| [-grib_max_bits](@ref f_grib_max_bits) | inv |  | maximum bits used in grib encoding |
-| [-grid](@ref f_grid) | inv |  | grid definition |
-| [-grid_id](@ref f_grid_id) | inv |  | show values from grid_id |
-| [-hybrid](@ref f_hybrid) | inv |  | shows vertical coordinate parameters from Sec4 (assuming 2 var per level) |
-| [-ij](@ref f_ij) | inv | X Y | value of field at grid(X,Y) X=1,..,nx Y=1,..,ny (WxText enabled) |
-| [-ijlat](@ref f_ijlat) | inv | X Y | lat,lon and grid value at grid(X,Y) X=1,..,nx Y=1,..,ny (WxText enabled) |
-| [-ilat](@ref f_ilat) | inv | X | lat,lon and grid value at Xth grid point, X=1,..,npnts (WxText enabled) |
-| [-JMA](@ref f_JMA) | inv |  | inventory for JMA locally defined PDT |
-| [-lev](@ref f_lev) | inv |  | level (code table 4.5) |
-| [-ctl_ens](@ref f_ctl_ens) | inv |  | ens info for g2ctl/GrADS |
-| [-ctl_inv](@ref f_ctl_inv) | inv |  | ctl inventory dump for g2ctl/GrADS |
-| [-cyclic](@ref f_cyclic) | inv |  | is grid cyclic? (not for thinned grids) |
-| [-disc](@ref f_disc) | inv |  | discipline (code table 0.0) |
-| [-domain](@ref f_domain) | inv |  | find rectangular domain for g2ctl/GrADS plots |
-| [-end_ft](@ref f_end_ft) | inv |  | verf time = reference_time + forecast_time + stat. proc time (YYYYMMDDHH) (same as -vt) |
-| [-end_FT](@ref f_end_FT) | inv |  | verf time = reference_time + forecast time (YYYYMMDDHHMMSS) (same as -VT) |
-| [-ens](@ref f_ens) | inv |  | ensemble information |
-| [-ext_name](@ref f_ext_name) | inv |  | extended name, var+qualifiers |
-| [-flag_table_3.10](@ref f_flag_table_3.10) | inv |  | flag table 3.10 scanning mode for one diamond |
-| [-flag_table_3.3](@ref f_flag_table_3.3) | inv |  | flag table 3.3, resolution and component flags |
-| [-flag_table_3.4](@ref f_flag_table_3.4) | inv |  | flag table 3.4, scanning mode |
-| [-flag_table_3.5](@ref f_flag_table_3.5) | inv |  | flag table 3.5 projection center |
-| [-flag_table_3.9](@ref f_flag_table_3.9) | inv |  | flag table 3.9 numbering order of diamonds seen from corresponding pole |
+| [-flag_table_3.10](@ref f_flag_table_3_10) | inv |  | flag table 3.10 scanning mode for one diamond |
+| [-flag_table_3.3](@ref f_flag_table_3_3) | inv |  | flag table 3.3, resolution and component flags |
+| [-flag_table_3.4](@ref f_flag_table_3_4) | inv |  | flag table 3.4, scanning mode |
+| [-flag_table_3.5](@ref f_flag_table_3_5) | inv |  | flag table 3.5 projection center |
+| [-flag_table_3.9](@ref f_flag_table_3_9) | inv |  | flag table 3.9 numbering order of diamonds seen from corresponding pole |
 | [-ftime](@ref f_ftime) | inv |  | either ftime1 or ftime2 dep on version_ftime |
 | [-ftime1](@ref f_ftime1) | inv |  | forecast time |
 | [-ftime2](@ref f_ftime2) | inv |  | timestamp -- will replace -ftime in the future TESTING |
