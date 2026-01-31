@@ -9,9 +9,6 @@ Wgrib2 is maintained as a collaboration between [Climate Prediction
 Center (CPC)](https://www.cpc.ncep.noaa.gov/) and the [Environmental
 Modeling Center (EMC)](https://www.emc.ncep.noaa.gov/emc.php).
 
-## All Commands
-For a list of all command line options and links to their documentation pages, [see here](all_commands.md).
-
 ## Installation
 
 Download the tarball from the release page and unpack it, and cd into the main directory of the library. Then run the following commands, substituting your directory locations for the CMAKE_INSTALL_PREFIX (where wgrib2 will be installed), and the CMAKE_PREFIX_PATH (where the build will look for dependencies):
