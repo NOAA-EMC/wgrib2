@@ -166,7 +166,7 @@
 | [-grid_def](@ref f_grid_def) | misc |  | read lon and lat data from grib file -- experimental |
 | [-h](@ref f_h) | misc |  | help, shows common options |
 | [-header](@ref f_header) | misc |  | f77 header or nx-ny header in text output (default) |
-| [-help](@ref f_help) | misc | X | help [search string|all], -help all, shows all options |
+| [-help](@ref f_help) | misc | X | help [search string\|all], -help all, shows all options |
 | [-ijundefine](@ref f_ijundefine) | misc | X Y Z | sets grid point values to undefined X=(in-box|out-box) Y=ix0:ix1 Z=iy0:iy1 ix=(1..nx) iy=(1..ny) |
 | [-import_bin](@ref f_import_bin) | misc | X | read binary file (X) for data |
 | [-import_grib](@ref f_import_grib) | misc | X | read grib2 file (X) for data |
