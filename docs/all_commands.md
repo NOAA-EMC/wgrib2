@@ -2,11 +2,11 @@
 | Command | Type | Arguments | Description |
 |---------|------|-----------|-------------|
 | [-else](@ref f_else) | else | | else, -if ... -else ... -endif |
-| [-elseif](@ref f_elseif) | elif | X | elseif X (POSIX regular expression) conditional on match, -if ... -elseif ... -endif |
-| [-elseif_fs](@ref f_elseif_fs) | elif | X | elseif X (fixed string) conditional execution |
-| [-elseif_n](@ref f_elseif_n) | elif | X | elseif (inv numbers in range), X=(start:end:step) |
-| [-elseif_rec](@ref f_elseif_rec) | elif | X | elseif (record numbers in range), X=(start:end:step) |
-| [-elseif_reg](@ref f_elseif_reg) | elif | X | elseif rpn registers defined, X = A, A:B, A:B:C, etc A = register number |
+| [-elseif](@ref f_if) | elif | X | elseif X (POSIX regular expression) conditional on match, -if ... -elseif ... -endif |
+| [-elseif_fs](@ref f_if_fs) | elif | X | elseif X (fixed string) conditional execution |
+| [-elseif_n](@ref f_if_n) | elif | X | elseif (inv numbers in range), X=(start:end:step) |
+| [-elseif_rec](@ref f_if_rec) | elif | X | elseif (record numbers in range), X=(start:end:step) |
+| [-elseif_reg](@ref f_if_reg) | elif | X | elseif rpn registers defined, X = A, A:B, A:B:C, etc A = register number |
 | [-endif](@ref f_endif) | endif |  | terminates if block |
 | [-if](@ref f_if) | if | X | if X (POSIX regular expression), conditional execution on match |
 | [-if_delayed_error](@ref f_if_delayed_error) | if |  | if delayed error |
@@ -247,7 +247,6 @@
 | [-v98](@ref f_v98) | misc |  | verbose mode for debugging only (v=98) |
 | [-v99](@ref f_v99) | misc |  | verbose mode for debugging only (v=99) |
 | [-version](@ref f_version) | misc |  | print version |
-| [--version](@ref f__version) | misc |  | print version |
 | [-AAIG](@ref f_AAIG) | out |  | writes Ascii ArcInfo Grid file, lat-lon grid only (alpha) |
 | [-AAIGlong](@ref f_AAIGlong) | out |  | writes Ascii ArcInfo Grid file, lat-lon grid only long-name *.asc (alpha) |
 | [-ave](@ref f_ave) | out | X Y | average X=time step Y=output v2 |
