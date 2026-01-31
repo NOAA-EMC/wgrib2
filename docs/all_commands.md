@@ -167,7 +167,7 @@
 | [-h](@ref f_h) | misc |  | help, shows common options |
 | [-header](@ref f_header) | misc |  | f77 header or nx-ny header in text output (default) |
 | [-help](@ref f_help) | misc | X | help [search string\|all], -help all, shows all options |
-| [-ijundefine](@ref f_ijundefine) | misc | X Y Z | sets grid point values to undefined X=(in-box|out-box) Y=ix0:ix1 Z=iy0:iy1 ix=(1..nx) iy=(1..ny) |
+| [-ijundefine](@ref f_ijundefine) | misc | X Y Z | sets grid point values to undefined X=(in-box\|out-box) Y=ix0:ix1 Z=iy0:iy1 ix=(1..nx) iy=(1..ny) |
 | [-import_bin](@ref f_import_bin) | misc | X | read binary file (X) for data |
 | [-import_grib](@ref f_import_grib) | misc | X | read grib2 file (X) for data |
 | [-import_grib_fs](@ref f_import_grib_fs) | misc | X Y | read grib2 file (Y) sequentially for record that matches X (fixed string) |
@@ -199,9 +199,9 @@
 | [-set_ave](@ref f_set_ave) | misc | X | set ave/acc .. only use on pdt=4.0/4.8 (old code) |
 | [-set_bin_prec](@ref f_set_bin_prec) | misc | X | X use X bits and ECMWF-style grib encoding |
 | [-set_bitmap](@ref f_set_bitmap) | misc | X | use bitmap when creating complex packed files X=1/0 |
-| [-set_byte](@ref f_set_byte) | misc | X Y Z | set bytes in Section X, Octet Y, bytes Z (a|a:b:c) |
+| [-set_byte](@ref f_set_byte) | misc | X Y Z | set bytes in Section X, Octet Y, bytes Z (a\|a:b:c) |
 | [-set_center](@ref f_set_center) | misc | X | changes center X = C or C:S C and S are center/subcenter numbers |
-| [-set_date](@ref f_set_date) | misc | X | changes date code, X=(+|-)N(hr|dy|mo|yr), YYYYMMDDHHmmSS, u(UNIX TIME) |
+| [-set_date](@ref f_set_date) | misc | X | changes date code, X=(+\|-)N(hr\|dy\|mo\|yr), YYYYMMDDHHmmSS, u(UNIX TIME) |
 | [-set_ensm_derived_fcst](@ref f_set_ensm_derived_fcst) | misc | X Y | convert PDT 0,1,2 -> 2, 8,11,12 -> 12, X=code table 4.7 Y=num ens members |
 | [-set_ens_num](@ref f_set_ens_num) | misc | X Y Z | ensemble member info, X=code table 4.6 Y=pert num Z=num ens members -1=No Change |
 | [-set_flag_table_3.3](@ref f_set_flag_table_3.3) | misc | X | flag table 3.3 = X |
@@ -211,12 +211,12 @@
 | [-set_ftime2](@ref f_set_ftime2) | misc | X | set ftime2 .. will be replace -set_ftime/ave in the future -- TESTING --- |
 | [-set_gds](@ref f_set_gds) | misc | X | makes new gds (section 3), X=size in bytes |
 | [-set_grib_max_bits](@ref f_set_grib_max_bits) | misc | X | sets scaling so number of bits does not exceed N in (new) grib output |
-| [-set_grib_type](@ref f_set_grib_type) | misc | X | set grib type = jpeg, simple, ieee, complex(1|2|3), aec, same |
-| [-set_hex](@ref f_set_hex) | misc | X Y Z | set bytes in Section X, Octet Y, bytes Z (a|a:b:c|abc) in hexadecimal |
-| [-set_ieee](@ref f_set_ieee) | misc | X Y Z | set ieee float in Section X, Octet Y, floats Z (a|a:b:c) |
+| [-set_grib_type](@ref f_set_grib_type) | misc | X | set grib type = jpeg, simple, ieee, complex(1\|2\|3), aec, same |
+| [-set_hex](@ref f_set_hex) | misc | X Y Z | set bytes in Section X, Octet Y, bytes Z (a\|a:b:c\|abc) in hexadecimal |
+| [-set_ieee](@ref f_set_ieee) | misc | X Y Z | set ieee float in Section X, Octet Y, floats Z (a\|a:b:c) |
 | [-set_ijval](@ref f_set_ijval) | misc | X Y Z | sets grid point value X=ix Y=iy Z=val |
-| [-set_int](@ref f_set_int) | misc | X Y Z | set 4-byte ints in Section X, Octet Y, signed integers Z (a|a:b:c) |
-| [-set_int2](@ref f_set_int2) | misc | X Y Z | set 2-byte ints in Section X, Octet Y, signed integers Z (a|a:b:c) |
+| [-set_int](@ref f_set_int) | misc | X Y Z | set 4-byte ints in Section X, Octet Y, signed integers Z (a\|a:b:c) |
+| [-set_int2](@ref f_set_int2) | misc | X Y Z | set 2-byte ints in Section X, Octet Y, signed integers Z (a\|a:b:c) |
 | [-set_ival](@ref f_set_ival) | misc | X Y | sets grid point value X=i1:i2:.. Y=va1:val2:.. grid[i1] = val1,etc i>0 |
 | [-set_lev](@ref f_set_lev) | misc | X | changes level code .. not complete |
 | [-set_metadata](@ref f_set_metadata) | misc | X | read meta-data for grib writing from file X |
@@ -237,7 +237,7 @@
 | [-text_fmt](@ref f_text_fmt) | misc | X | format for text output (C) |
 | [-udf](@ref f_udf) | misc | X Y | run UDF, X=program+optional_args, Y=return file |
 | [-udf_arg](@ref f_udf_arg) | misc | X Y | add grib-data to UDF argument file, X=file Y=name |
-| [-undefine](@ref f_undefine) | misc | X Y Z | sets grid point values to undefined X=(in-box|out-box) Y=lon0:lon1 Z=lat0:lat1 |
+| [-undefine](@ref f_undefine) | misc | X Y Z | sets grid point values to undefined X=(in-box\|out-box) Y=lon0:lon1 Z=lat0:lat1 |
 | [-undefine_val](@ref f_undefine_val) | misc | X | grid point set to undefined if X=val or X=low:high |
 | [-v](@ref f_v) | misc |  | verbose (v=1) |
 | [-v0](@ref f_v0) | misc |  | not verbose (v=0) |
@@ -267,25 +267,25 @@
 | [-GRIB](@ref f_GRIB) | out | X | writes entire GRIB record (all submessages) |
 | [-grib_ieee](@ref f_grib_ieee) | out | X | writes data[] to X.grb, X.head, X.tail, and X.h |
 | [-grib_out](@ref f_grib_out) | out | X | writes decoded/modified data in grib-2 format to file X |
-| [-grib_out_irr](@ref f_grib_out_irr) | out | X Y | writes irregular grid grib (GDT=130 not adopted) X=(all|defined) Y=(output file) |
+| [-grib_out_irr](@ref f_grib_out_irr) | out | X Y | writes irregular grid grib (GDT=130 not adopted) X=(all\|defined) Y=(output file) |
 | [-grib_out_irr2](@ref f_grib_out_irr2) | out | 5 args | writes irregular grid grib GDT 101 X=npnts Y=grid_no Z=grid_ref A=UUID B=(output file) |
 | [-gribtable_used](@ref f_gribtable_used) | out | X | write out sample gribtable as derived from grib file, X=file |
 | [-gridout](@ref f_gridout) | out | X | text file with grid: i j lat lon (1st record) |
 | [-ieee](@ref f_ieee) | out | X | write (default:big-endian) IEEE data to X |
-| [-ijbox](@ref f_ijbox) | out | X..Z,A | grid values in bounding box X=i1:i2[:di] Y=j1:j2[:dj] Z=file A=[bin|text|spread] |
+| [-ijbox](@ref f_ijbox) | out | X..Z,A | grid values in bounding box X=i1:i2[:di] Y=j1:j2[:dj] Z=file A=[bin\|text\|spread] |
 | [-ijsmall_grib](@ref f_ijsmall_grib) | out | X Y Z | make small domain grib file X=ix0:ix1 Y=iy0:iy1 Z=file |
 | [-irr_grid](@ref f_irr_grid) | out | X Y Z | make irregular grid (GDT=130 not adopted), nearest neighbor, X=lon-lat list Y=radius (km) Z=output grib file |
-| [-lola](@ref f_lola) | out | X..Z,A | lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=[bin|text|spread|grib] |
+| [-lola](@ref f_lola) | out | X..Z,A | lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=[bin\|text\|spread\|grib] |
 | [-merge_fcst](@ref f_merge_fcst) | out | X Y | merge forecast ave/acc/min/max X=number to intervals to merge (0=every) Y=output grib file |
 | [-mysql](@ref f_mysql) | out | 5 args | H=[host] U=[user] P=[password] D=[db] T=[table] |
-| [-mysql_dump](@ref f_mysql_dump) | out | 7 args | H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1] |
-| [-mysql_speed](@ref f_mysql_speed) | out | 7 args | H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1] |
+| [-mysql_dump](@ref f_mysql_dump) | out | 7 args | H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0\|1] PV=[remove unlikely:0\|1] |
+| [-mysql_speed](@ref f_mysql_speed) | out | 7 args | H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0\|1] PV=[remove unlikely:0\|1] |
 | [-ncep_norm](@ref f_ncep_norm) | out | X | normalize NCEP-type ave/acc X=output grib file |
 | [-ncep_uv](@ref f_ncep_uv) | out | X | combine U and V fields into one message like NCEP operations |
 | [-netcdf](@ref f_netcdf) | out | X | write netcdf data to X |
 | [-new_grid](@ref f_new_grid) | out | X..Z,A | bilinear interpolate: X=projection Y=x0:nx:dx Z=y0:ny:dy A=grib_file alpha |
 | [-new_grid_order](@ref f_new_grid_order) | out | X Y | put in required order for -new_grid, X=out Y=out2 no matching vector |
-| [-reduced_gaussian_grid](@ref f_reduced_gaussian_grid) | out | X Y Z | reduced Gaussian grid, X=outputfile Y=-1 Z=(neighbor|linear)[-extrapolate] |
+| [-reduced_gaussian_grid](@ref f_reduced_gaussian_grid) | out | X Y Z | reduced Gaussian grid, X=outputfile Y=-1 Z=(neighbor\|linear)[-extrapolate] |
 | [-small_grib](@ref f_small_grib) | out | X Y Z | make small domain grib file X=lonW:lonE Y=latS:latN Z=file |
 | [-spread](@ref f_spread) | out | X | write text - spread sheet format into X (WxText enabled) |
 | [-submsg_uv](@ref f_submsg_uv) | out | X | combine vector fields into one message |
@@ -301,14 +301,14 @@
 | [-append](@ref f_append) | init |  | append mode, write to existing output files |
 | [-crlf](@ref f_crlf) | init |  | make the end of the inventory a crlf (windows) instead of newline (unix) |
 | [-d](@ref f_d) | init | X | dump message X = n, n.m, n:offset, n.m:offset, only 1 -d allowed |
-| [-egrep](@ref f_egrep) | init | X | egrep X | wgrib2 (X is POSIX regular expression) |
-| [-egrep_v](@ref f_egrep_v) | init | X | egrep -v X | wgrib2 (X is POSIX regular expression) |
+| [-egrep](@ref f_egrep) | init | X | egrep X \| wgrib2 (X is POSIX regular expression) |
+| [-egrep_v](@ref f_egrep_v) | init | X | egrep -v X \| wgrib2 (X is POSIX regular expression) |
 | [-eof_bin](@ref f_eof_bin) | init | X Y | send (binary) integer to file upon EOF: X=file Y=integer |
 | [-eof_string](@ref f_eof_string) | init | X Y | send string to file upon EOF: X=file Y=string |
 | [-err_bin](@ref f_err_bin) | init | X Y | send (binary) integer to file upon err exit: X=file Y=integer |
 | [-err_string](@ref f_err_string) | init | X Y | send string to file upon err exit: X=file Y=string |
-| [-fgrep](@ref f_fgrep) | init | X | fgrep X | wgrib2 |
-| [-fgrep_v](@ref f_fgrep_v) | init | X | fgrep -v X | wgrib2 |
+| [-fgrep](@ref f_fgrep) | init | X | fgrep X \| wgrib2 |
+| [-fgrep_v](@ref f_fgrep_v) | init | X | fgrep -v X \| wgrib2 |
 | [-fix_ncep_2](@ref f_fix_ncep_2) | init |  | ncep bug fix 2, probability observation < -ve number |
 | [-fix_ncep_3](@ref f_fix_ncep_3) | init |  | sets flag to fix ncep bug 3 (constant fields) |
 | [-fix_ncep_4](@ref f_fix_ncep_4) | init |  | fixes NCEP grib2 files where DX and DY are undefined |
@@ -328,12 +328,12 @@
 | [-nc4](@ref f_nc4) | init |  | use netcdf4 (compressed, controlled endianness etc) |
 | [-nc_grads](@ref f_nc_grads) | init |  | require netcdf file to be grads v1.9b4 compatible (fixed time step only) |
 | [-nc_nlev](@ref f_nc_nlev) | init | X | netcdf, X = max LEV dimension for {TIME,LEV,LAT,LON} data |
-| [-nc_pack](@ref f_nc_pack) | init | X | pack/check limits of all NEW input variables, X=min:max[:byte|short|float] |
+| [-nc_pack](@ref f_nc_pack) | init | X | pack/check limits of all NEW input variables, X=min:max[:byte\|short\|float] |
 | [-ncpu](@ref f_ncpu) | init | X | number of threads, default is environment variable OMP_NUM_THREADS/number of cpus |
 | [-nc_table](@ref f_nc_table) | init | X | X is conversion_to_netcdf_table file name |
-| [-nc_time](@ref f_nc_time) | init | X | netcdf, [[-]yyyymmddhhnnss]:[dt{s[ec]|m[in]|h[our]|d[ay]}], [-] is for time alignment only |
+| [-nc_time](@ref f_nc_time) | init | X | netcdf, [[-]yyyymmddhhnnss]:[dt{s[ec]\|m[in]\|h[our]\|d[ay]}], [-] is for time alignment only |
 | [-ndate](@ref f_ndate) | init | X Y | X=date Y=dt print date + dt |
-| [-ndates](@ref f_ndates) | init | X Y Z | X=date0 Y=(date1|dt1) Z=dt2 for (date=date0; date<(date1|date0+dt1); date+=dt2) print date |
+| [-ndates](@ref f_ndates) | init | X Y Z | X=date0 Y=(date1\|dt1) Z=dt2 for (date=date0; date<(date1\|date0+dt1); date+=dt2) print date |
 | [-ndates_fmt](@ref f_ndates_fmt) | init | X | X = C format for ndates option ex. 'date=%s' |
 | [-no_append](@ref f_no_append) | init |  | not append mode, write to new output files (default) |
 | [-no_flush](@ref f_no_flush) | init |  | flush output buffers when full (default) |
@@ -344,7 +344,7 @@
 | [-not](@ref f_not) | init | X | process data that does not match X (POSIX regular expression) |
 | [-not_fs](@ref f_not_fs) | init | X | process data that does not match X (fixed string) |
 | [-one_line](@ref f_one_line) | init |  | puts all on one line (makes into inventory format) |
-| [-order](@ref f_order) | init | X | decoded data in X (raw|we:sn|we:ns) order, we:sn is default |
+| [-order](@ref f_order) | init | X | decoded data in X (raw\|we:sn\|we:ns) order, we:sn is default |
 | [-persistent](@ref f_persistent) | init | X | makes file X persistent if already opened (default on open), CW2 |
 | [-rewind_init](@ref f_rewind_init) | init | X | rewinds file X on initialization if already opened, CW2 |
 | [-set_ext_name](@ref f_set_ext_name) | init | X | X=type ext_name (1*misc+2*level+4*ftime) |
