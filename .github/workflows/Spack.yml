@@ -24,7 +24,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-
+    # If spack tests are failing in CI after spack updates or dependency changes,
+    # try clearing the cache by setting 'use-repo-cache' and 'cache-spack-lock' 
+    # to false. Then re-enable them after confirming the build works.
     - name: "Build Spack package"
       uses: NOAA-EMC/ci-test-spack-package@develop
       with:
@@ -33,8 +35,9 @@ jobs:
         custom-recipe: spack/package.py
         use-repo-cache: true
         spack-compiler: gcc
-        use-common-build-cache: false
-        repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-1
+        use-common-build-cache: true
+        cache-spack-lock: true
+        repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-2
 
   recipe-check:
     runs-on: ubuntu-latest

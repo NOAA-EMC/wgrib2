@@ -6,8 +6,10 @@
 import os
 import re
 
-import spack.build_systems.cmake
-import spack.build_systems.makefile
+from spack_repo.builtin.build_systems import cmake, makefile
+from spack_repo.builtin.build_systems.cmake import CMakePackage
+from spack_repo.builtin.build_systems.makefile import MakefilePackage
+
 from spack.package import *
 
 variant_map_common = {
@@ -247,7 +249,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
         return (flags, None, None)
 
-class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
+class CMakeBuilder(cmake.CMakeBuilder):
     # Disable parallel build
     parallel = False
 
@@ -259,7 +261,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
         return args
 
 
-class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
+class MakefileBuilder(makefile.MakefileBuilder):
     # Disable parallel build
     parallel = False
 
@@ -285,7 +287,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
             value = int(spec.variants[variant_name].value)
             makefile.filter(r"^%s=.*" % makefile_option, "{}={}".format(makefile_option, value))
 
-    def setup_build_environment(self, env):
+    def setup_build_environment(self, env: EnvironmentModifications) -> None:
         if self.spec.compiler.name in ["oneapi", "intel"]:
             comp_sys = "intel_linux"
         elif self.spec.compiler.name in ["gcc", "clang", "apple-clang"]:
