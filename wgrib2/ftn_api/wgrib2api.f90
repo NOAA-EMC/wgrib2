@@ -17,8 +17,7 @@
 !
 !   requirements:
 !        f2003 or f95 + TR 15581  (allowing subroutines to deallocate and allocate)
-!        callable wgrib2
-!        fort_wgrib2.c (wgrib2c wrapper for callable wgrib2)
+!        fort_wgrib2.c (wgrib2c wrapper)
 !
 ! Provides:
 !    wgrib2a(list of strings) :: same as $ wgrib2 [list of strings]
@@ -29,9 +28,6 @@
 !        The inventory file can be a temporary file if has the name @tmp:NAME
 !        The inventory file can be a memory file if has the name @mem:N  N=0..29
 !
-!    grb2_filter :: filters a grib file by 
-!        grb2_filter('IN.grb', 'OUT.grb', ...)
-!
 !    grb2_free_file :: releases files handles after next call to wgrib2
 !        grb2_free_file('FILE.grb')
 !
@@ -40,8 +36,9 @@
 !         uses memory files @mem:19  .. always
 !
 !    grb2_wrt :: grib2 write
-!       grb2_wrt('OUT.grb', 'TEMPLATE.grb', 'ID', ...)
+!       grb2_wrt('OUT.grb', 'TEMPLATE.grb', TEMPLATE_MSG_NO, ...)
 !       TEMPLATE.grb is a grib file that is used as a template for the new grib file
+!       TEMPLATE_MSG_NO = integer, message number of TEMPLATE.grb' to be used
 !
 !       meta = (string) .. sets metadata
 !	order = 'raw' .. fastest data must be in same order as template
@@ -355,50 +352,6 @@ contains
       grb2_mk_inv = wgrib2c(n, cmd, len(cmd(1)))
       return
    end function grb2_mk_inv
-
-!        integer function grb2_filter(ingrbfile, outgrbfile, a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,&
-!              a11,a12,a13,a14,a15,a16,a17,a18,a19,a20)
-!	use wgrib2lowapi
-!        implicit none
-!        character (len=*), intent(in):: ingrbfile, outgrbfile
-!        character (len=*), optional, intent(in):: a1,a2,a3,a4,a5,a6,a7,a8,a9,a10
-!        character (len=*), optional, intent(in):: a11,a12,a13,a14,a15,a16,a17
-!        character (len=*), optional, intent(in):: a18,a19,a20
-!
-!        character (len=300) :: lines(20), cmd(80)
-!	integer :: n, m, i, j
-!
-!        m = grb2_var_args(lines,0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11, &
-!          a12,a13,a14,a15,a16,a17,a18,a19,a20)
-!
-!	n = 0
-!        i = add_line(cmd,n,ingrbfile)
-!        i = add_line(cmd,n,'-rewind_init')
-!        i = add_line(cmd,n,ingrbfile)
-!        i = add_line(cmd,n,'-transient')
-!        i = add_line(cmd,n,ingrbfile)
-!        i = add_line(cmd,n,'-grib')
-!        i = add_line(cmd,n,outgrbfile)
-!        i = add_line(cmd,n,'-inv')
-!       ** this is linux/unix
-!        i = add_line(cmd,n,'/dev/null')
-!       ** this is for windows
-!       i = add_line(cmd,n,'NUL')
-!
-!        do j = 1, m
-!            i = add_line(cmd,n,'-match')
-!            i = add_line(cmd,n,lines(j))        
-!        enddo
-!
-!        do i = 1, n
-!           write(*,*) 'grb2_filter>>> i=',i,trim(cmd(i))
-!        enddo
-!
-!        grb2_filter = wgrib2c(n,cmd, len(cmd(1)))
-!
-!        return
-!        end function grb2_filter
-!
 
    !> This function releases file's handle after next call to wgrib2.
    !>
@@ -745,12 +698,12 @@ contains
    !> @param[in] lon 2D array of real numbers for longitude (optional). Ignored if NULL.
    !> @param[in] ref_date Reference date (optional). Ignored if NULL.
    !> @param[in] ref_edate Reference date with minutes and seconds (optional). Ignored if NULL.
-   !> @param[in] verf_date Verification date (optional). Ignored if NULL.
-   !> @param[in] verf_edate Verification date with minutes and seconds (optional). Ignored if NULL.
-   !> @param[in] start_date Start date (optional). Ignored if NULL.
-   !> @param[in] start_edate Start date with minutes and seconds (optional). Ignored if NULL.
-   !> @param[in] end_date End date (optional). Ignored if NULL.
-   !> @param[in] end_edate End date with minutes and seconds (optional). Ignored if NULL.
+   !> @param[in] verf_date Verification date YYYYMMDD (optional). Ignored if NULL.
+   !> @param[in] verf_edate Verification date YYYYMMDDmmss (optional). Ignored if NULL.
+   !> @param[in] start_date Start date YYYYMMDDHH (optional). Ignored if NULL.
+   !> @param[in] start_edate (YYYYMMDDHHmmss) Start date with minutes and seconds (optional). Ignored if NULL.
+   !> @param[in] end_date End date YYYYMMDDHHmmss (optional). Ignored if NULL.
+   !> @param[in] end_edate End date YYYYMMDDHHmmss (optional). Ignored if NULL.
    !> @param[in] order Order of the data (optional). Used with -order option to specify the order of the data.
    !> @param[in] lastuse Flag indicating if this is the last time file will be used (optional). If non-zero,
    !> the file will be closed after this call using -transient option.
@@ -889,25 +842,39 @@ contains
       endif
 
       !	verf_date: add to match command
-      if (present(verf_date).or.present(start_date)) then
+      if (present(verf_date)) then
          i = add_line(cmd,n,'-egrep')
          write(tmpline,9020) verf_date
 9020     format(':end_FT=',i10.10)
          i = add_line(cmd,n,tmpline)
       endif
 
-      !	verf_edate: add to match command
-      if (present(verf_edate).or.present(start_edate)) then
+      !	end_date: add to match command
+      if (present(end_date)) then
          i = add_line(cmd,n,'-egrep')
-         write(tmpline,9030) verf_date
+         write(tmpline,9020) end_date
+         i = add_line(cmd,n,tmpline)
+      endif
+
+      !	verf_edate: add to match command
+      if (present(verf_edate)) then
+         i = add_line(cmd,n,'-egrep')
+         write(tmpline,9030) verf_edate
 9030     format(':end_FT=',i14.14)
+         i = add_line(cmd,n,tmpline)
+      endif
+
+      !	end_edate: add to match command
+      if (present(end_edate)) then
+         i = add_line(cmd,n,'-egrep')
+         write(tmpline,9030) end_edate
          i = add_line(cmd,n,tmpline)
       endif
 
       !	start_date: add to match command
       if (present(start_date)) then
          i = add_line(cmd,n,'-egrep')
-         write(tmpline,9040) verf_date
+         write(tmpline,9040) start_date
 9040     format(':start_FT=',i10.10)
          i = add_line(cmd,n,tmpline)
       endif
@@ -915,7 +882,7 @@ contains
       !	start_edate: add to match command
       if (present(start_edate)) then
          i = add_line(cmd,n,'-egrep')
-         write(tmpline,9050) verf_date
+         write(tmpline,9050) start_edate
 9050     format(':start_FT=',i14.14)
          i = add_line(cmd,n,tmpline)
       endif
