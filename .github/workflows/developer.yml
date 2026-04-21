@@ -70,7 +70,7 @@ jobs:
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v --html-details --exclude ../tests --exclude CMakeFiles --exclude '.*\.dat$' --exclude ../src/gctpc --print-summary -o test-coverage.html &> /dev/null
 
-    - name: cache-data
+    - name: populate-data
       if: steps.cache-data.outputs.cache-hit != 'true'
       run: |
         mkdir ~/data
