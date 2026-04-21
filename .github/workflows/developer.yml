@@ -21,7 +21,7 @@ jobs:
     env:
       FC: gfortran
       CC: gcc
-      LD_LIBRARY_PATH: "/home/runner/work/wgrib2/wgrib2/nceplibs/jasper/lib/:$LD_LIBRARY_PATH"
+      LD_LIBRARY_PATH: "/home/runner/work/wgrib2/wgrib2/nceplibs/jasper/lib/"
 
     permissions:
       id-token: write
@@ -70,7 +70,7 @@ jobs:
         ctest --verbose --output-on-failure --rerun-failed
         gcovr --root .. -v --html-details --exclude ../tests --exclude CMakeFiles --exclude '.*\.dat$' --exclude ../src/gctpc --print-summary -o test-coverage.html &> /dev/null
 
-    - name: populate-data
+    - name: cache-data
       if: steps.cache-data.outputs.cache-hit != 'true'
       run: |
         mkdir ~/data
