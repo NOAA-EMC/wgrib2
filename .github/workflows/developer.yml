@@ -21,7 +21,7 @@ jobs:
     env:
       FC: gfortran
       CC: gcc
-      LD_LIBRARY_PATH: "/home/runner/work/wgrib2/wgrib2/nceplibs/jasper/lib/"
+      LD_LIBRARY_PATH: "/home/runner/work/wgrib2/wgrib2/nceplibs/jasper/lib/:$LD_LIBRARY_PATH"
 
     permissions:
       id-token: write
@@ -42,7 +42,7 @@ jobs:
         ip-version: develop
         ip-cmake-args: -DOPENMP=ON
         g2c-version: develop
-        g2c-cmake-args: -DUSE_AEC=ON -DUTILS=OFF
+        g2c-cmake-args: -DUSE_AEC=ON
 
     - name: checkout
       uses: actions/checkout@v4
