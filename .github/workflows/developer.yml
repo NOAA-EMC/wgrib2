@@ -42,7 +42,7 @@ jobs:
         ip-version: develop
         ip-cmake-args: -DOPENMP=ON
         g2c-version: develop
-        g2c-cmake-args: -DUSE_AEC=ON
+        g2c-cmake-args: -DUSE_AEC=ON -DUTILS=OFF
 
     - name: checkout
       uses: actions/checkout@v4
@@ -54,7 +54,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/data
-        key: data-3
+        key: data-2
 
     - name: build
       run: |
