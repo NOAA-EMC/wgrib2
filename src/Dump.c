@@ -75,7 +75,34 @@ extern enum input_type input;
  * @return 0 on success, error code otherwise.
  * 
  * ## Example:
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -s -d 1 -bin data.bin
+ * 1:0:d=2005090200:HGT:1000 mb:60 hour fcst
+ * @endcode
+ * 
+ * The above command writes the first record to a binary file data.bin
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -s -d 287.2 -bin data.bin
+ * 287.2:37032193:d=2005090200:VGRD:10 m above ground:60 hour fcst
+ * @endcode
+ * 
+ * The above command dumps the second submessage of record 287.
+ * 
+ * @code{.sh}
+ * $ cat gfs.t00z.master.grb2f048 | wgrib2 - | head -n 4
+ * 1:0:d=2018030400:PRES:mean sea level:48 hour fcst:
+ * 2:3565800:d=2018030400:REFC:entire atmosphere:48 hour fcst:
+ * 3:4748163:d=2018030400:VIS:surface:48 hour fcst:
+ * 4:5462029:d=2018030400:UGRD:planetary boundary layer:48 hour fcst:
+ * $ cat gfs.t00z.master.grb2f048 | wgrib2 - -d 3:4748163
+ * 3:4748163:d=2018030400:VIS:surface:48 hour fcst:
+ * $ cat gfs.t00z.master.grb2f048 | wgrib2 - -d 1:4748163
+ * 1:4748163:d=2018030400:VIS:surface:48 hour fcst:
+ * @endcode
+ * 
+ * Using the offset option on a pipe
  * 
  * @author Wesley Ebisuzaki @date 2004
 */

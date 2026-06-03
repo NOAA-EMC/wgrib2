@@ -29,7 +29,20 @@ extern unsigned int last_message;
  * @return 0 on success.
  * 
  * ## Example:
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 ../example/eta.t00z.awphys18.grb2 -match "HGT:500 mb" -text hgt.txt -end 
+ * @endcode
+ * 
+ * The above line writes out the first 500 mb HGT field to the file hgt.txt and stops reading 
+ * the file.
+ * 
+ * @code{.sh}
+ * $ wgrib2 ../example/eta.t00z.awphys18.grb2 -match "HGT:500 mb" -text hgt.txt -end 
+ * @endcode
+ * 
+ * The above line writes out all 500 mb HGT fields to the file hgt.txt.  This wastes time 
+ * if you only have one matching field.
  * 
  * @author Wesley Ebisuzaki @date 02/2008
  */

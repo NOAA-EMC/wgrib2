@@ -743,7 +743,28 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example 
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 input -ens_processing output 0 
+ * 1:0:d=2018020600:PRES:mean sea level:84 hour fcst:ENS=+1
+ * 2:83628:d=2018020600:PRES:mean sea level:84 hour fcst:ENS=+2
+ * 3:164290:d=2018020600:PRES:mean sea level:84 hour fcst:ENS=+3
+ * 4:248531:d=2018020600:PRES:mean sea level:84 hour fcst:ENS=+4
+ * 5:331723:d=2018020600:PRES:mean sea level:84 hour fcst:ENS=+5
+ * 6:412226:d=2018020600:PRES:mean sea level:84 hour fcst:ENS=+6
+ * ..
+ * $ wgrib2 output
+ * 1:0:d=2018020600:PRES:mean sea level:84 hour fcst:min all members
+ * 2:130501:d=2018020600:PRES:mean sea level:84 hour fcst:max all members
+ * 3:261002:d=2018020600:PRES:mean sea level:84 hour fcst:ens mean
+ * 4:391503:d=2018020600:PRES:mean sea level:84 hour fcst:ens spread
+ * 5:497569:d=2018020600:PRES:mean sea level:84 hour fcst:25%-75% range
+ * 6:611780:d=2018020600:PRES:mean sea level:84 hour fcst:10% all members
+ * 7:742281:d=2018020600:PRES:mean sea level:84 hour fcst:90% all members
+ * 8:872782:d=2018020600:VIS:surface:84 hour fcst:min all members
+ * 9:938123:d=2018020600:VIS:surface:84 hour fcst:max all members
+ * ... 
+ * @endcode
  *
  * @author Wesley Ebisuzaki @date 01/2018
  */

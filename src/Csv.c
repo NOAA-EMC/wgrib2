@@ -106,9 +106,58 @@ extern int latlon;
  * is a viable strategy if the conversion is limited. You need to restrict the number of fields converted and 
  * should consider only converting a regional domain. Note, I wrote "viable" and not optimal. 
  * 
- * ## Example:
- * ???
+ * ## Example 1:
  * 
+ * @code{.sh}
+ * $ wgrib2 fcst.grb2 -csv junk 
+ * 1:0:d=2007032600:HGT:1000 mb:anl:
+ * 2:125535:d=2007032600:HGT:1000 mb:3 hour fcst:
+ * $ cat junk 
+ * "2007-03-26 00:00:00","2007-03-26 00:00:00","HGT","1000 mb",0,-90,164.1
+ * "2007-03-26 00:00:00","2007-03-26 00:00:00","HGT","1000 mb",0.5,-90,164.1
+ * "2007-03-26 00:00:00","2007-03-26 00:00:00","HGT","1000 mb",1,-90,164.1
+ * "2007-03-26 00:00:00","2007-03-26 00:00:00","HGT","1000 mb",1.5,-90,164.1
+ * ...
+ * "2007-03-26 00:00:00","2007-03-26 03:00:00","HGT","1000 mb",-1.5,90,-91.7
+ * "2007-03-26 00:00:00","2007-03-26 03:00:00","HGT","1000 mb",-1,90,-91.7
+ * "2007-03-26 00:00:00","2007-03-26 03:00:00","HGT","1000 mb",-0.5,90,-91.7
+ * @endcode
+ * 
+ * ## Example 2: CSV for one point
+ * 
+ * Suppose we want a CSV for one point. You use the -undefine option to set the to undefined except for the selected 
+ * point. Suppose we have a 1x1 grid.
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.aec   -undefine out-box .9:1.1 10.9:11.1 -csv  1E11N.csv
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:70707:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * 3:96843:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19
+ * ...
+ * $ cat 1E11N.csv 
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",1,11,12440.8
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","TMP","200 mb",1,11,219.6
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","RH","200 mb",1,11,100
+ * ...
+ * @endcode
+ * 
+ * ## Example 3: CSV for two points
+ * 
+ * The simple way is do the previous example twice. There is a computationally faster method.
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.aec -rpn sto_1 -undefine out-box .9:1.1 10.9:11.1 -csv junk -rpn rcl_1 -undefine out-box 1.9:2.1 19.9:20.1 -csv junk
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:70707:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * 3:96843:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19
+ * ...
+ * $ cat junk
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",1,11,12440.8
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",2,20,12360.8
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","TMP","200 mb",1,11,219.6
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","TMP","200 mb",2,20,218.8
+ * ...
+ * @endcode
  * @author Niklas Sondell @date 2008
  */
 int f_csv(ARG1) {

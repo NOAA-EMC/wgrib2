@@ -555,7 +555,65 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ gmerge - sfg_2014060500_fhr06_mem0* | wgrib2 - -ens_qc out1 out2 out3 1
+ * 1:0:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+1
+ * 2:183334:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+2
+ * 3:366283:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+3
+ * 4:549841:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+4
+ * 5:733631:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ENS=+5
+ * ...
+ * @endcode
+ * 
+ * <pre>
+ *   gmerge - (list of ensemble members)
+ *           The output file is "-" which is a convention for stdin/stdout depending 
+ *             on the expectation. Since we expecting an output file, the "-" is stdout.
+ *           Takes the 1st grib message from each ensemble member and writes it to stdout.
+ *           Takes the 2nd grib message from each ensemble member and writes it to stdout.
+ *           etc
+ *           The gmerge step puts the data into proper order assuming,
+ *              the grib file contains no sub-messages,
+ *              the indivdual grib files are in the same order.
+ *           gmerge is not Windows compatilble.
+ * 
+ *   wgrib2 - -ens_qc out1 out2 out3 1
+ *           The input file is "-" which is a convention for stdin/stdout depending 
+ *             on the expectation. Since we expecting an input file, the "-" is stdin.
+ *           writes min, max, mean and spread to out1
+ *           writes scaled extreme values to out2
+ *           writes grid maximum scale extreme value to out3
+ * </pre>
+ * 
+ * Note: piping grib data to stdout and from stdin should not work in Windows. I have seen it work, and I have 
+ * seen it fail. My standard practice is to avoid pipes in Windows.
+ * 
+ * @code{.sh}
+ * $ wgrib2 out1
+ * 1:0:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:min all members
+ * 2:262325:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:max all members
+ * 3:524650:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ens mean
+ * 4:786975:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:ens spread
+ * 5:1000148:d=2014060412:UGRD:1-2 hybrid pressure layer:12 hour fcst:min all members
+ * ...
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 out2
+ * 1:0:d=2014060412:UGRD:0-1 hybrid pressure layer:12 hour fcst:extreme forecast index
+ * 2:131253:d=2014060412:UGRD:1-2 hybrid pressure layer:12 hour fcst:extreme forecast index
+ * 3:262506:d=2014060412:UGRD:2-3 hybrid pressure layer:12 hour fcst:extreme forecast index
+ * ...
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ cat out3
+ * UGRD:0-1 hybrid pressure layer:max scaled extreme=7.454012
+ * UGRD:1-2 hybrid pressure layer:max scaled extreme=8.029185
+ * UGRD:2-3 hybrid pressure layer:max scaled extreme=7.936052
+ * ...
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 01/2020
  */
