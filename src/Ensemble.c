@@ -49,7 +49,20 @@
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 -var-ens ens.grb
+ * 1:0:HGT:ENS=+1
+ * 2:45932:SPFH:ENS=+1
+ * 3:89724:SPFH:ENS=+1
+ * 4:144624:HGT:ENS=+1
+ * 5:198928:TMP:ENS=+1
+ * 6:219134:SPFH:ENS=+1
+ * 7.1:258504:UGRD:ENS=+1
+ * 7.2:258504:VGRD:ENS=+1
+ * 8:380298:SPFH:ENS=+1
+ * 9:441918:SPFH:ENS=+1
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2/2007
  */
@@ -196,8 +209,16 @@ int f_ens(ARG0) {
  * @return 0 on success
  * 
  * ## Example
- * ???
  * 
+ * @code{.sh}
+ * $ wgrib2 in.grb -N_ens
+ * 1:80:10 ens members
+ * 2:218826:10 ens members
+ * 3:434430:10 ens members
+ * ...
+ * @endcode
+ * 
+ * If the product definition tables don't support ensemble members, the field will be empty.
  * @author Wesley Ebisuzaki @date 2/2007
  */
 int f_N_ens(ARG0) {

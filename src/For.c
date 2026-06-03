@@ -41,6 +41,7 @@ extern int for_step;
  * The -for option ignores the submessage number when selecting the fields. 
  * 
  * ## Usage
+ * 
  * -for I:J:K  
  *      same as for n = I to J by K
  * -for I:J
@@ -57,7 +58,12 @@ extern int for_step;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 file.grb2  -for 4:5
+ * 4:13335:d=2008120200:RH:750 mb:anl:
+ * 5:17098:d=2008120200:TMP:2743 m above mean sea level:anl:
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 10/2008
  */

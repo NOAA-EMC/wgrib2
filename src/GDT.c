@@ -38,7 +38,11 @@ g2int g2_unpack3(unsigned char *,g2int *,g2int **,g2int **,
  * @return 0 for success, error code otherwise
  *
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 -gdt png.grb2
+ * 1:4:GDT Number= 0 GDT= 6 0 0 0 0 0 0 360 181 0 0 90000000 0 48 -90000000 359000000 1000000 1000000 0
+ * @endcode
  * 
  * @author Dusan Jovic @date 06/2012
  */

@@ -77,7 +77,18 @@ char ext_name_space;
  * @return 0 for success
  * 
  * ## Example:
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 percentile_precip.grib2 -stats
+ * 1:0:75% level
+ * 2:315649:90% level
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 percentile_precip.grib2 -s
+ * 1:0:d=2014101012:TPRATE:surface:2@1 hour max(13-14 hour acc fcst)++,missing=0:75% level
+ * 2:315649:d=2014101012:TPRATE:surface:2@1 hour max(13-14 hour acc fcst)++,missing=0:90% level
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 10/2010
  */
@@ -320,7 +331,15 @@ unsigned int type_ext_name;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ ./wgrib2 chem.grb2 -var
+ * 1:0:MASSDEN
+ * $ ./wgrib2 chem.grb2 -ext_name
+ * 1:0:MASSDEN.hi-res_ctl.Water_Vapour
+ * $ ./wgrib2 chem.grb2 -set_ext_name 1 -ext_name
+ * 1:0:MASSDEN.hi-res_ctl.Water_Vapour
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 10/2010
  */
@@ -378,7 +397,6 @@ int f_set_ext_name(ARG1) {
  * using -set_ext_name. 
  * 
  * ## Usage
- * -set_ext_name N
  * 
  * -ext_name
  * Prints extended name type N if N > 0. 
@@ -394,7 +412,13 @@ int f_set_ext_name(ARG1) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ ./wgrib2 chem.grb2 -var
+ * 1:0:MASSDEN
+ * $ ./wgrib2 chem.grb2 -ext_name
+ * 1:0:MASSDEN.hi-res_ctl.Water_Vapour
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 10/2010
  */
@@ -525,7 +549,19 @@ int getExtName(unsigned char **sec, int mode, char *inv_out, char *name, char *d
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.aec -set_ext_name 3 -ext_name  -set_ext_name_chars '=' '~' -var -misc -lev
+ * 1:0:HGT=ENS=+19=200~mb:HGT:ENS=+19:200 mb
+ * 2:70707:TMP=ENS=+19=200~mb:TMP:ENS=+19:200 mb
+ * 3:96843:RH=ENS=+19=200~mb:RH:ENS=+19:200 mb
+ * @endcode
+ * 
+ * <pre>
+ *  The -var -misc -lev fields:  HGT:ENS=+19:200 mb
+ *  are converted to an extended name: HGT=ENS=+19=200~mb
+ *  using the field separater '=' and space replacement of '~'
+ * </pre>
  * 
  * @author Wesley Ebisuzaki @date 10/2010
  */

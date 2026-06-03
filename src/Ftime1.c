@@ -450,6 +450,13 @@ int prt_stat_tr(int mode, unsigned char **sec, char *inv_out, unsigned char *p, 
  * 
  * @return 0 for success, error code otherwise
  * 
+ * ## Example
+ * @code{.sh}
+ * $ wgrib2 grib2.polar -ftime1
+ * 1.1:0:24 hour fcst
+ * 1.2:0:24 hour fcst
+ * @endcode
+ * 
  * @author Wesley Ebisuzaki @date 2006
  */
 int f_ftime1(ARG0) {
