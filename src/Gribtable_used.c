@@ -64,7 +64,40 @@ extern int flush_mode;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.t00z.pgrb2af180 -gribtable_used junk
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:46042:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * 3:63079:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19
+ * ...
+ * @endcode
+ * 
+ * Get rid of duplicate entries. Edit grbtbl, change UGRD to U, VGRD to V and TMP to T.
+ * 
+ * @code{.sh}
+ * sort -u junk > grbtbl
+ * @endcode
+ * 
+ * Define a user grib table.
+ * @code{.sh}
+ * $ export grib2table=`pwd`/grbtbl  
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.t00z.pgrb2af180 -match '(U|V|T)'
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:46042:d=2009060500:T:200 mb:180 hour fcst:ENS=+19
+ * 3:63079:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19
+ * 4.1:86046:d=2009060500:U:200 mb:180 hour fcst:ENS=+19
+ * 4.2:86046:d=2009060500:V:200 mb:180 hour fcst:ENS=+19
+ * 5:137483:d=2009060500:HGT:250 mb:180 hour fcst:ENS=+19
+ * 6:184669:d=2009060500:T:250 mb:180 hour fcst:ENS=+19
+ * ..
+ * @endcode
+ * 
+ * Note: U and V will not be treated as vectors in -new_grid. You have to use -new_grid_vectors to 
+ * get U and V to be vectors.
  * 
  * @author Manfred Schwarb @date 10/2020
  */

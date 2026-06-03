@@ -61,7 +61,41 @@ extern enum output_order_type output_order_wanted;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * Here is a script that reads the CORe and CFS analyses, and finds the average 500 mh height. CORe and CFS 
+ * are on different grids, so the first step is to convert them to to same grid.
+ * 
+ * @code{.sh}
+ * #!/bin/sh
+ * #
+ * # ave two Z500 fields from totally different systems (CORe, CFS)
+ * #
+ * # Step 1, convert to same grid
+ * # Step 2, use -import_grib_fs (v3.0.0+) to read the field
+ * #         use -rpn to average the two fields
+ * #         change center to unknown because the metadata is not descriptive
+ * #
+ * # Note: for Step 2,
+ * #        -match ":d=2000010100:HGT:500 mb:"  is not needed
+ * #        -import_grib_fs "d=2000010100:HGT:500 mb:anl:"  file2.grb
+ * #          can be replaced by -import_grib file2.grb
+ * # I made the code more complicated because if file1 and file2 were already on
+ * # same grid, you can avoid Step 1.
+ *
+ * file1=/cpc/cfsr/reanalyses/corefv3/ens_mean/3hr/pgb/2000/01/pgb_2000010100_ensmean
+ * file2=/cpc/cfsr/archive/6hr_h/pgb.g2/2000/01/pgb.2000010100.g2
+ *
+ * # Step 1
+ * wgrib2 $file1 -match ":d=2000010100:HGT:500 mb:" -new_grid_winds earth -new_grid ncep grid 3 file1.grb
+ * wgrib2 $file2 -match ":d=2000010100:HGT:500 mb:" -new_grid_winds earth -new_grid ncep grid 3 file2.grb
+ * echo "\n\n"
+ *
+ * # Step 2
+ * wgrib2 file1.grb -match ":d=2000010100:HGT:500 mb:" -rpn "0.5:*:sto_0" \
+ *    -import_grib_fs "d=2000010100:HGT:500 mb:anl:"  file2.grb \
+ *    -rpn "0.5:*:rcl_0:+" -set_center 255 -grib_out ave.grb
+ * exit 0
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 3/2019
  */

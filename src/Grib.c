@@ -133,7 +133,12 @@ extern int use_bitmap;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 in.grb -set_grib_type complex3 -grib_out out.grb 
+ * @endcode
+ * 
+ * The above line rewrites a file using complex3 packing.
  * 
  * @author Wesley Ebisuzaki @date 12/2007
  */
@@ -268,7 +273,19 @@ int f_set_bitmap(ARG1) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 new.grb2 -undefine out-box -10:10 20:40 -grib_out small.grb2
+ * 1:0:d=2005082812:HGT:1000 mb:78 hour fcst:
+ * @endcode
+ * 
+ * The above routine sets all the grid points outside the 10W-10E 20N-40N to undefined and then writes the 
+ * resultant field as a grib file in small.grb2. This file will be much smaller than the original field.
+ * 
+ * Hint: by proper use of the -undefine and -grib_out options, one should be able to send horizontal boundary 
+ * conditions for regional models very very quickly. Imagine just sending 4 lines of horizontal boundary conditions.
+ *
+ * Hint: gzip
  * 
  * @author Wesley Ebisuzaki @date 12/2007
  */

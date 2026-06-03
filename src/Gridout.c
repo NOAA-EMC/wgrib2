@@ -55,7 +55,21 @@ extern int latlon;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 small.grb2 -grid
+ * 1:0:grid_template=0:winds(N/S):
+ *      lat-lon grid:(2 x 2) units 1e-06 input WE:SN output WE:SN res 48
+ * 	    lat 20.000000 to 28.000000 by 8.000000
+ * 	    lon 0.000000 to 10.000000 by 10.000000 #points=4
+ * $ wgrib2 small.grb2 -gridout grid.txt
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * $ cat grid.txt
+ *          1,         1, 20.000, 0.000
+ *          2,         1, 20.000, 10.000
+ *          1,         2, 28.000, 0.000
+ *          2,         2, 28.000, 10.000
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2014
  */
