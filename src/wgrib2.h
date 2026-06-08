@@ -555,7 +555,6 @@ int gauss2ll(unsigned char **sec, double **lat, double **lon);
 int lambert2ll(unsigned char **sec, double **lat, double **lon);
 int mercator2ll(unsigned char **sec, double **lat, double **lon);
 int space_view2ll(unsigned char **sec, double **lat, double **lon);
-int cubed_sphere2ll(unsigned char **sec, double **lat, double **lon);
 int irr_grid2ll(unsigned char **sec, double **lat, double **lon);
 int stagger(unsigned char **sec, unsigned int assumed_npnts, double *x, double *y);
 
