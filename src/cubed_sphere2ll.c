@@ -29,7 +29,7 @@ int cubed_sphere2ll(unsigned char **sec, double **llat, double **llon) {
     double *x, *y;
     int nres, nscan;
     unsigned int nnx_, nny_, nnpnts, npnts_tile;
-    int gds_tile, tile, tile_start, tile_end;
+    int gds_tile, tile;
     unsigned int ncell, i, i_offset, j_offset;
     double b, sb, asb;
     double stretch, sin_lat, oneps2, onems2;
@@ -98,11 +98,9 @@ int cubed_sphere2ll(unsigned char **sec, double **llat, double **llon) {
     sin_a = sin(a);
     cos_a = cos(a);
     if (gds_tile == 0) {
-        tile_start = 1; tile_end=6;
         npnts_tile = nnpnts / 6;
     }
     else {
-        tile_start = gds_tile; tile_end=gds_tile;
         npnts_tile = nnpnts;
         /* x[] ranges from 0..nnx_-1,    y[] ranges from 0..nny_-1 for non staggered */ 
     }
@@ -204,52 +202,55 @@ int cubed_sphere2ll(unsigned char **sec, double **llat, double **llon) {
     return 0;
 }
 
-/**
- * Convert cubed sphere grid to xy coordinates.
- * 
- * @param sec Pointer to the section array.
- * @param n Number of points.
- * @param lon Pointer to the longitude array.
- * @param lat Pointer to the latitude array.
- * @param xx Pointer to the x coordinate array to be filled.
- * @param yy Pointer to the y coordinate array to be filled.
- * @param face Pointer to the face array to be filled.
- * 
- * @return 0 on success, error code otherwise.
- * 
- * @author Wesley Ebisuzaki @date 2/2019
- */
-int cubed_spherell2xy(unsigned char **sec, int n, double *lon, double *lat, double *xx, double *yy, int *face) {
-    unsigned int i, j;
-    double sp_lat, sp_lon, angle_rot, a, c, r, sin_a, cos_a;
-    unsigned char *gds;
-    double x, y, z, xprime, yprime, zprime;
-  
-    gds = sec[3];
-    // parameters for rotation
-    sp_lat = GDS_Gnom_SP_Lat(gds);
-    sp_lon = GDS_Gnom_SP_Lon(gds);
-    angle_rot = GDS_Gnom_SP_Rot(gds);
-    a = (M_PI/180.0) * (90.0+sp_lat);
-    c = (M_PI/180.0) * sp_lon;
-    r = (M_PI/180.0) * angle_rot;
-    sin_a = sin(a);
-    cos_a = cos(a);
 
-#ifdef USE_OPENMP
-#pragma omp parallel for private(i,x,y,z, xprime, yprime, zprime)
-#endif
-    for (i = 0; i < n; i++) {
-        x = cos(lat[i]*M_PI/180.0) * cos(lon[i]*M_PI/180.0 - c);
-        y = cos(lat[i]*M_PI/180.0) * sin(lon[i]*M_PI/180 - c);
-        z = sin(lat[i]*M_PI/180.0);
 
-        xprime = cos(-c) * x - sin(-c) * z;
-        zprime = sin(-c) * x + cos(-c) * z;
-
-        x = xprime;
-        z = zprime;
-    // more stuff
-    }
-    return 0;
-}
+// ------- unused and unfinished function without prototype -----------------
+///**
+// * Convert cubed sphere grid to xy coordinates.
+// *
+// * @param sec Pointer to the section array.
+// * @param n Number of points.
+// * @param lon Pointer to the longitude array.
+// * @param lat Pointer to the latitude array.
+// * @param xx Pointer to the x coordinate array to be filled.
+// * @param yy Pointer to the y coordinate array to be filled.
+// * @param face Pointer to the face array to be filled.
+// *
+// * @return 0 on success, error code otherwise.
+// *
+// * @author Wesley Ebisuzaki @date 2/2019
+// */
+//int cubed_spherell2xy(unsigned char **sec, int n, double *lon, double *lat, double *xx, double *yy, int *face) {
+//    unsigned int i, j;
+//    double sp_lat, sp_lon, angle_rot, a, c, r, sin_a, cos_a;
+//    unsigned char *gds;
+//    double x, y, z, xprime, yprime, zprime;
+//
+//    gds = sec[3];
+//    // parameters for rotation
+//    sp_lat = GDS_Gnom_SP_Lat(gds);
+//    sp_lon = GDS_Gnom_SP_Lon(gds);
+//    angle_rot = GDS_Gnom_SP_Rot(gds);
+//    a = (M_PI/180.0) * (90.0+sp_lat);
+//    c = (M_PI/180.0) * sp_lon;
+//    r = (M_PI/180.0) * angle_rot;
+//    sin_a = sin(a);
+//    cos_a = cos(a);
+//
+//#ifdef USE_OPENMP
+//#pragma omp parallel for private(i,x,y,z, xprime, yprime, zprime)
+//#endif
+//    for (i = 0; i < n; i++) {
+//        x = cos(lat[i]*M_PI/180.0) * cos(lon[i]*M_PI/180.0 - c);
+//        y = cos(lat[i]*M_PI/180.0) * sin(lon[i]*M_PI/180 - c);
+//        z = sin(lat[i]*M_PI/180.0);
+//
+//        xprime = cos(-c) * x - sin(-c) * z;
+//        zprime = sin(-c) * x + cos(-c) * z;
+//
+//        x = xprime;
+//        z = zprime;
+//    // more stuff
+//    }
+//    return 0;
+//}
