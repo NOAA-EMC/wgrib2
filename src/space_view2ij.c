@@ -31,9 +31,6 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/** Error tolerance for floating point comparisons. */
-#define ERROR 0.0001
-
 /** Pointer to array of latitude values. */
 extern double *lat;
 
