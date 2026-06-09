@@ -28,10 +28,6 @@
 #include "grib.h"
 #include "pds4.h"
 
-#ifndef min
-   #define min(a,b)  ((a) < (b) ? (a) : (b))
-#endif
-
 /* #define LEN_HEADER_PDS (28+42+100) */
 #define LEN_HEADER_PDS (28+8)
 
