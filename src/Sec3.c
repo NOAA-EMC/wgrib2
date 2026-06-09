@@ -44,6 +44,12 @@ extern enum output_order_type output_order;
 /** New line character. */
 extern char *nl;
 
+/** used by delayed error */
+extern unsigned int last_message;
+
+extern int decode;                             /**< Decode grib file flag */
+
+
 static void print_stagger(int scan, char *inv_out);
 
 /** Number of variable dimensions. */
@@ -283,8 +289,13 @@ int get_nxny_(unsigned char **sec, unsigned int *nx, unsigned int *ny, unsigned 
 
 
     if ((*nx != 0 || *ny != 0) && GB2_Sec3_npts(sec) != npoints && GDS_Scan_staggered_storage(*scan) == 0) {
-        fprintf(stderr,"two values for number of points %u (GDS) %u (calculated)\n",
-                      GB2_Sec3_npts(sec), npoints);
+        if (decode) {
+            fatal_error("two values for number of points %u (GDS-octet 7-10) and %u (thinned grid calculation)",
+               GB2_Sec3_npts(sec), npoints);
+        }
+        fprintf(stdout,"FATAL ERROR (delayed): two values for number of points %u (GDS-octet 7-10) and %u (thinned grid calculation)\n",
+             GB2_Sec3_npts(sec), npoints);
+        last_message |= DELAYED_GRID_SIZE_ERR;
     }
 
 /*
