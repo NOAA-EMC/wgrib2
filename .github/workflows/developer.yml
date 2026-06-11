@@ -43,7 +43,6 @@ jobs:
         ip-cmake-args: -DOPENMP=OFF
         g2c-version: develop
         g2c-cmake-args: -DUSE_AEC=ON
-        repo-cache: true
 
     - name: checkout
       uses: actions/checkout@v4
