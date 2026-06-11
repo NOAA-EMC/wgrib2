@@ -937,7 +937,8 @@ WARN_LOGFILE           =
 INPUT                  = @abs_top_srcdir@/docs/user_guide.md \
                          @abs_top_srcdir@/wgrib2 \
                          @abs_top_srcdir@/aux_progs \
-                         @abs_top_srcdir@/wmo_scripts
+                         @abs_top_srcdir@/wmo_scripts \
+                         @abs_top_srcdir@/user_scripts
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
