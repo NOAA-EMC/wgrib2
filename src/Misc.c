@@ -263,7 +263,12 @@ int f_i_file(ARG1) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 fcst.grb -v0
+ * 1:4:d=2007032600:HGT:1000 mb:anl:
+ * 2:422561:d=2007032600:HGT:1000 mb:3 hour fcst:
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -294,7 +299,12 @@ int f_v0(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 fcst.grb -v
+ * 1:4:d=2007032600:HGT Geopotential Height [gpm]:1000 mb:anl:
+ * 2:422561:d=2007032600:HGT Geopotential Height [gpm]:1000 mb:3 hour fcst:
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -325,7 +335,12 @@ int f_v(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 fcst.grb -v2
+ * 1:4:00Z26mar2007:HGT Geopotential Height [gpm]:lvl1=100000*10**0 lvl2=missing lvl1=(100,100000) lvl2=(255,missing):1000 mb:anl:
+ * 2:422561:00Z26mar2007:HGT Geopotential Height [gpm]:lvl1=100000*10**0 lvl2=missing lvl1=(100,100000) lvl2=(255,missing):1000 mb:3 hour fcst:
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -424,8 +439,16 @@ int f_v99(ARG0) {
  * @return 0 for success, error code otherwise
  *
  * ## Example
- * ???
- *
+ * 
+ * @code{.sh}
+ * $ wgrib2 grib.grb -header -text out.txt
+ * 1:0:d=2021042500:TURB:10 hybrid level:anl:
+ * $ cat out.txt
+ * 5760 2882
+ * 0
+ * ...
+ * @endcode
+ * 
  * @author Wesley Ebisuzaki @date 2006
  */
 int f_header(ARG0) {
@@ -454,8 +477,15 @@ int f_header(ARG0) {
  * @return 0 for success, error code otherwise
  *
  * ## Example
- * ???
- *
+ * 
+ * @code{.sh}
+ * $ wgrib2 grib.grb -no_header -text out.txt
+ * 1:0:d=2021042500:TURB:10 hybrid level:anl:
+ * $ cat out.txt
+ * 0
+ * ...
+ * @endcode
+ * 
  * @author Wesley Ebisuzaki @date 2006
  */
 int f_no_header(ARG0) {
@@ -477,6 +507,17 @@ int f_no_header(ARG0) {
  * parameters.
  * 
  * @return 0 for success, error code otherwise
+ * 
+ * ## Example 
+ * @code{.sh}
+ * $ wgrib2 -gdt png.grb2 -s
+ * 1:4:d=2009060500:RH:2 m above ground:330 hour fcst:std dev
+ * $ wgrib2 -gdt png.grb2 -s -stats
+ * 1:4:d=2009060500:RH:2 m above ground:330 hour fcst:std dev:ndata=65160:undef=0:mean=6.24625:min=0:max=29.3:cos_wt_mean=6.01318
+ * $ wgrib2 -gdt png.grb2 -s -nl -stats
+ * 1:4:d=2009060500:RH:2 m above ground:330 hour fcst:std dev:
+ * :ndata=65160:undef=0:mean=6.24625:min=0:max=29.3:cos_wt_mean=6.01318
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -544,6 +585,12 @@ int f_nl_out(ARG1) {
  *
  * @return 0 for success, error code otherwise
  *
+ * ## Example
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -print "VAR is" -var -print "LEV is" -lev
+ * 1:4:VAR is:RH:LEV is:2 m above ground
+ * @endcode
+ * 
  * @author Wesley Ebisuzaki @date 2006
  */
 int f_print(ARG1) {
@@ -572,7 +619,22 @@ int f_print(ARG1) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 LIS.c3 -if ':SNOD:' \
+ *      -s -last junk \
+ *      -print_out ' (found snod)' junk \
+ *      -nl_out junk
+ * 1:0
+ * 2:661778
+ * 3:903352
+ * 4:4108932
+ * 5:9512902:d=2014030500:SNOD:surface:anl:d=2014030500:SNOD:surface:anl:
+ * 6:14281104
+ * 7:14925511
+ * $ cat junk
+ * d=2014030500:SNOD:surface:anl: (found snod)
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -637,7 +699,11 @@ int f_print_out(ARG2) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 small.grb2  -colon ':,"' -t  -colon '","'  -var -lev -ftime -misc -colon '' -print '"'
+ * 1:0:,"d=2009060500","HGT","200 mb","180 hour fcst","ENS=+19"
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -651,8 +717,9 @@ int f_colon(ARG1) {
  */
 
 /**
- * Changes the format of the inventory so all the items are one line. This is useful in 
- * using -grid, for example, in making inventories that can be grepped. 
+ * Changes the format of the inventory so all the items are one line. 
+ * 
+ * This is useful in using -grid, for example, in making inventories that can be grepped. 
  * 
  * ## Usage
  * -one_line
@@ -662,6 +729,29 @@ int f_colon(ARG1) {
  * parameters.
  * 
  * @return 0 for success, error code otherwise
+ * 
+ * ## Example
+ * 
+ * Suppose we want select fields by the grid type. 
+ * 
+ * @code{.sh}
+ * $ ./wgrib2 eta.t00z.awphys18.grb2 -d 1 -s -grid
+ * 1:0:d=2003090300:MSLET:mean sea level:18 hour fcst:grid_template=30:
+ *       Lambert Conformal: (614 x 428) scan WE:SN res 8
+ *       Lat1 12.19 Lon1 226.541 Lov 265
+ *       Latin1 25 Latin2 25 LatSP 0 LonSP 0
+ *              North Pole (614 x 428) Dx 12.191 Dy 12.191 mode 8
+ * @endcode
+ * 
+ * The above format doesn't work with grep. By using the -one_line option, we can easily extract specific grids. 
+ * 
+ * @code{.sh}
+ * $ ./wgrib2 eta.t00z.awphys18.grb2 -d 1 -s -grid -one_line
+ * 1:0:d=2003090300:MSLET:mean sea level:18 hour fcst:grid_template=30: 
+ * Lambert Conformal: (614 x 428) scan WE:SN res 8 Lat1 12.19 Lon1 226.541 
+ * Lov 265 Latin1 25 Latin2 25 LatSP 0 LonSP 0       North Pole (614 x 428) 
+ * Dx 12.191 Dy 12.191 mode 8
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -718,7 +808,12 @@ int f_crlf(ARG0) {
  * @return Always returns 0.
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 grb2 -d 1 -append -text all.txt
+ * @endcode
+ * 
+ * The above line will append record #1 to all.txt.
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -747,7 +842,11 @@ int f_append(ARG0) {
  * @return Always returns 0.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 grb2 -d 1 -no_append -text rec.txt
+ * @endcode
+ * 
+ * The above line will write record #1 to a new file rec.txt.
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -763,16 +862,29 @@ int f_no_append(ARG0) {
 /**
  * Write inventory to a specific file.
  * 
- *  This option could be used with an option to send decoded data to STDOUT. 
+ * This option could be used with an option to send decoded data to STDOUT. 
+ * 
+ * ## Usage
+ * -inv FILE
+ * 
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * ## Examples
  * 
  * @code{.sh}
  * $ wgrib2 file -inv my.inv -text - -no_header  -match ':HGT:500 mb:' |  JOB
  * @endcode
  * 
+ * <pre>
  * -inv my.inv   writes the inventory to my.inv
  * -text -       write the decoded data as a text file to stdout
  * -no_header    no header
  * JOB           is some program that reads the raw data from stdin
+ * </pre>
  * 
  * The -inv option is similar but different from saving stdout. 
  * 
@@ -791,16 +903,11 @@ int f_no_append(ARG0) {
  * @endcode
  * 
  * The -inv option is very specialized and helps when you want to imbed wgrib2 within 
- * another program. 
+ * another program. For example, reading a grib2 record from within perl program is easy. 
  * 
- * ## Usage
- * -inv FILE
- * 
- * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
- * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
- * parameters.
- * 
- * @return 0 for success, error code otherwise
+ * @code{.unparsed}
+ * open(DATA, "wgrib2 file -inv /dev/null -text - -no_header -match ':HGT:500 mb:' |");
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */

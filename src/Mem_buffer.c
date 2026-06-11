@@ -438,7 +438,17 @@ int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.t00z.pgrb2af180 -mem_final 1 OUT.grb -grib @mem:1
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:46042:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * ...
+ * @endcode
+ * 
+ * The above line reads the file 'gep19.t00z.pgrb2af180' and and writes it to @mem:1. At the end of the grib 
+ * processing @mem:1 is written to OUT.grb. This example shows the contents of the memory file at the end of 
+ * the grib processing. 
  * 
  * @author Wesley Ebisuzaki @date 5/2015
  */
@@ -495,7 +505,24 @@ int f_mem_final(ARG2) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 -mem_init 10 gep19.t00z.pgrb2af180 @mem:10
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:46042:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * ...
+ * @endcode
+ * 
+ * The above line reads the file 'gep19.t00z.pgrb2af180' and save it in memory file, @mem:10, before grib processing. 
+ * Wgrib2 processes the memory file, @mem:10. This example has no practical application; however, the following can 
+ * be used. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb | sort -t: -k3,7 | wgrib2 -i -mem_init IN.grb 0 @mem:0 -grib OUT.grb
+ * @endcode
+ * 
+ * The above line takes the original file, IN.grb, and writes it out in sorted order. By using a memory file, a random 
+ * access read is replaced by the much faster sequential read. 
  * 
  * @author Wesley Ebisuzaki @date 5/2015
  */

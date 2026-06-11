@@ -467,6 +467,7 @@ int names;
  * ## Usage
  * -set_var X
  *
+ * <pre>
  * X = valid grib variable name such as
  * 
  * 1. text name such as HGT or TMP
@@ -484,6 +485,7 @@ int names;
  * D = center
  * E = parameter category
  * F = parameter
+ * </pre>
  * 
  * Formats 2-4 were introduced with wgrib2 v2.0.7. They intended to allow manipulation of variables 
  * which are not in the grib table. Format 2 is the inverse of -set_varX and formats 3 and 4 are the 
@@ -509,7 +511,23 @@ int names;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 p.grb
+ * $ wgrib2 p.grb
+ * 1:0:d=2009072100:PRES:mean sea level:anl:
+ * $ wgrib2 p.grb -set_var TMP -grib out.grb
+ * 1:0:d=2009072100:TMP:mean sea level:anl:
+ * $ wgrib2 out.grb
+ * 1:0:d=2009072100:TMP:mean sea level:anl:
+ * @endcode
+ * 
+ * You can use -set_var to change from old variable names to the new variable names by the appropriate use of 
+ * the -if option. This converts TSOIL (old) to SOILTMP (new):
+ * 
+ * @code{.sh}
+ * $ wgrib2 old.grb -if ":TSOIL:" -set_var SOILTMP -fi -grib new.grb
+ * @endcode
  * 
  * @note The -set_var option will rename all the fields in a grib file. If you only want to 
  * rename specific fields, you will have to use the -if and -fi options.
@@ -620,16 +638,7 @@ int f_set_var(ARG1) {
  */
 
 /**
- * Set the center and subcenter values.
- *
  * This option is deprecated. Please use the -set center option instead.
- * 
- * ## Usage
- * -set_center X
- * 
- * X = C or C:S
- * 
- * C and S are center/subcenter numbers
  * 
  * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
  * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
@@ -670,10 +679,26 @@ extern struct codetable_4_230  codetable_4_230_table[];
 /**
  * Sets the specified metadata of the in-memory grib (sub-)message.
  *
+ * You need to save the messages to make them permanent. 
+ * 
  * Expect the list of supported fields to expand as needed. At present, the -set option 
  * only changes fields within the grib file. There is some overlap between various -set_* 
  * options and the -set option. (Ex. -set_center N, and -set center N.) The -set option is 
- * the newer method.
+ * the newer method. The -set option is used by the -set_metadata option. 
+ * 
+ * ## Parameters that can be set
+ * 
+ *  The available parameters that can be set will depend on the version of wgrib2 being used. To see the parameter available,
+ *
+ * @code{.sh}
+ * $ wgrib2 grib_file -set junk junk
+ * *** FATAL ERROR: set asdf, allowed values: discipline, center, subcenter, master_table, 
+ * local_table, background_process_id, analysis_or_forecast_process_id, aerosol_size, 
+ * aerosol_wavelength, process, model_version_date, chemical, aerosol, table_1.2, table_1.3, 
+ * table_1.4, table_3.0, table_3.1/GDT, table_3.2, table_3.3, table_3.4, table_4.0/PDT, 
+ * table_4.1, table_4.2, table_4.3, table_4.5a, table_4.5b, table_4.6, table_4.7, table_4.8, 
+ * table_4.10, table_4.11, table_4.230, table_4.233, table_5.0/DRT, table_6.0, %, cluster ***
+ * @endcode
  * 
  * ## Usage
  * -set X Y
@@ -690,7 +715,21 @@ extern struct codetable_4_230  codetable_4_230_table[];
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -set center 99 -center -grib OUT.grb
+ * 1:0:center=De Bilt, Netherlands
+ * 2:46042:center=De Bilt, Netherlands
+ * 3:63079:center=De Bilt, Netherlands
+ * 4.1:86046:center=De Bilt, Netherlands
+ * ...
+ * @endcode
+ * 
+ * <pre>
+ * -set center 99       sets the "center" to a value of 99 for current grib message (De Bilt)
+ * -center              prints the value of "center"
+ * -grib OUT.grb        writes the current grib message to OUT.grb
+ * </pre>
  * 
  * @author Wesley Ebisuzaki @date 3/2008
  */

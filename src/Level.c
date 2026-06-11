@@ -377,7 +377,12 @@ int level2(int mode, int type1, int undef_val1, float value1, int type2, int und
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 grib2.polar -lev
+ * 1.1:0:500 mb
+ * 1.2:0:850 mb
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
