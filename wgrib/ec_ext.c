@@ -65,7 +65,7 @@ void EC_ext(unsigned char *pds, char *prefix, char *suffix, int verbose) {
               	   sprintf(string, "Perturbed forecast %d",
                    PDS_EcFcstNo(pds)); 
 		else
-		    strcpy(string, "Perturbed forecasts"); break;
+		    strcpy(string, "Perturbed forecasts");
 		break;
             case 14: strcpy(string, "Cluster means"); break;
             case 15: strcpy(string, "Cluster std. dev."); break;

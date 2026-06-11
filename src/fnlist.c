@@ -308,7 +308,6 @@ struct function functions[] = {
    {"cress_lola",f_cress_lola, output, 4, "lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=radius1:radius2:..:radiusN", 111},
    {"csv",f_csv, output, 1, "make comma separated file, X=file (WxText enabled)", 100},
    {"csv_long",f_csv_long, output, 1, "make comma separated file, X=file (WxText enabled)", 100},
-   {"cubeface2global",f_cubeface2global, output, 2, "write faces X as global cubed grid to Y: X=list of faces to exclude", 100},
    {"ens_processing",f_ens_processing, output, 2, "ave/min/max/spread X=output Y=0/1 default/CORe", 000},
    {"ens_qc",f_ens_qc, output, 4, "simple qc ensemble members X=stats.grb Y=extreme.grb Z=extreme.txt A=1 (qc_version)", 000},
    {"fcst_ave",f_fcst_ave, output, 2, "average X=time step Y=output v2", 000},
