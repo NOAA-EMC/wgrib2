@@ -16,8 +16,8 @@ echo "*** Testing converting from grib to netcdf to grib"
 # convert netcdf to grb
 ../src/wgrib2 junk_netcdf.template -import_netcdf junk_netcdf.nc TMP_500mb "0:1:0:181:0:360" -grib_out junk_netcdf.grb
 
-n=`../src/wgrib2 data/ref_simple_packing.grib2 -var -lev -rpn "sto_1" -import_grib junk_netcdf.grb -rpn "rcl_1:print_rms" | \
-grep -v ":rpn=0:" | wc -l`
+n=$(../src/wgrib2 data/ref_simple_packing.grib2 -var -lev -rpn "sto_1" -import_grib junk_netcdf.grb -rpn "rcl_1:print_rms" | \
+grep -v ":rpn=0:" | wc -l)
 
 rm junk_netcdf.grb junk_netcdf.nc junk_netcdf.template
 if [ "$n" -ne 1 ] ; then

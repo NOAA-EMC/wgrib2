@@ -185,19 +185,6 @@
 #define GDS_Lambert_Az_dx(gds)          (int4(gds+55) * 0.001)
 #define GDS_Lambert_Az_dy(gds)          (int4(gds+59) * 0.001)
 
-// #ifdef WMO_VALIDATION
-#define GDS_Gnom_face_size(gds)         uint4(gds+38)
-#define GDS_Gnom_i_offset(gds)		uint4(gds+42)
-#define GDS_Gnom_j_offset(gds)		uint4(gds+46)
-#define GDS_Gnom_tile(gds)              gds[50]
-#define GDS_Gnom_SP_Lat(gds)            (int4(gds+51) * 0.000001)
-#define GDS_Gnom_SP_Lon(gds)            (uint4(gds+55) * 0.000001)
-// not sure if rotation angle can be negative
-#define GDS_Gnom_SP_Rot(gds)            (int4(gds+59) * 0.000001)
-#define GDS_Gnom_Stretch(gds)           (int4(gds+63) * 0.000001)
-#define GDS_Gnom_B(gds)                 (int4(gds+67) * 0.000001)
-// #endif
-
 
 #define GDS_CrossSec_basic_ang(gds)	int4(gds+34)
 #define GDS_CrossSec_sub_ang(gds)	int4(gds+38)

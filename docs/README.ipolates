@@ -59,8 +59,7 @@ assuming the radius is the mean of the semi-major and semi-minor axes.
             Double precision GRIB2 IPOLATES: the good
 
 This library supports lat-lon values to the grib2 standard of a 
-millidegree.  The WMO standard rotated lat-lon grids are supported, and
-we are working towards supporting the FV3 cubed sphere.
+millidegree.  The WMO standard rotated lat-lon grids are supported.
 
 Double precision should be slower than single precision. However, more threaded
 code has made the performance on multi-core machines similar or much better
