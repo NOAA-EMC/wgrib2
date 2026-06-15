@@ -9,6 +9,8 @@
 #include <string.h> 
 #include <ctype.h>
 
+#include "wgrib2_test_util.h"
+
 #define BUFFER_SIZE 1024 * 64
 
 /**
