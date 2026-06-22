@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "grb2.h"
+#include "grb2.h"  /* for center codes */
 #include "wgrib2.h"
 #include "fnlist.h"
 

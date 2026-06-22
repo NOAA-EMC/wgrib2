@@ -4,7 +4,6 @@
  */
 
 #include <stdio.h>
-#include "grb2.h"
 #include "wgrib2.h"
 #include "grid_id.h"
 

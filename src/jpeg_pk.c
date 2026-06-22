@@ -16,7 +16,6 @@
 #include <string.h>
 #include <math.h>
 #include <limits.h>
-#include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
 #ifdef USE_G2CLIB
