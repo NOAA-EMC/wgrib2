@@ -10,7 +10,6 @@
 #include <limits.h>
 #include <signal.h>
 #include <setjmp.h>
-#include "grb2.h"
 
 #ifdef FORCE_32BIT_TEST
 #undef ULONG_MAX

@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include "grb2.h"
 
 unsigned long int uint8(unsigned char *p);
 
