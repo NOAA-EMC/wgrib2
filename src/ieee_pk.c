@@ -10,7 +10,6 @@
 #include <limits.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /**
  * Writes GRIB2 ieee file.

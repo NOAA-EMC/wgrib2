@@ -10,7 +10,6 @@
 #include <string.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /** Pointer to the new Section 3. */
 static unsigned char *new_sec3;

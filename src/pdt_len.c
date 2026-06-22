@@ -18,7 +18,6 @@
 #include <string.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /**
  * Return expected size of Product Definition Template (PDT), including vertical coordinates.

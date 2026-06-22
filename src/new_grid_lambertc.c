@@ -17,7 +17,6 @@
 #include "grb2.h"
 #include "wgrib2.h"
 #include "cproj.h"
-#include "fnlist.h"
 
 /**
  * Calculate the lat-lon of the first grid point given the lat-lon of the center of the grid.
