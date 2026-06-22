@@ -10,7 +10,7 @@
 #include <string.h>
 #include <limits.h>
 
-unsigned long int uint8(unsigned char *p);
+#include "aux_progs.h"
 
 int
 main()

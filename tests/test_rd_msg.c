@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int rd_msg(FILE *in, FILE *out);
+#include "aux_progs.h"
 
 int
 main()
