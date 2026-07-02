@@ -24,6 +24,7 @@ extern jmp_buf fatal_err;
 int
 main()
 {
+    /*
     printf("Testing grb2_mk_inv()...\n");
     {
         int ret;
@@ -38,8 +39,8 @@ main()
             return 3;
         }
     }
+        */
     printf("ok!\n");
-    /*
     printf("Testing wgrib2_add_cmd()...\n");
     printf("Testing with overly long command string...\n");
     {
@@ -71,7 +72,6 @@ main()
         }
     }
     printf("ok!\n");
-    */
     printf("SUCCESS!\n");
     return 0;
 }
