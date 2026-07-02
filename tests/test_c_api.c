@@ -45,6 +45,7 @@ main()
     {
         wgrib2_init_cmds();
         wgrib2_add_cmd("-test");
+        
     }
     printf("ok!\n");
     printf("Testing with overly long command string...\n");
