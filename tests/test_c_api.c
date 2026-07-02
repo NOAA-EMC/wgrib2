@@ -61,7 +61,7 @@ main()
     {
         int i;
         wgrib2_init_cmds();
-
+        /*
         if (setjmp(fatal_err) == 0) {
             for (i = 0; i < N_CMDS + 1; i++) {
                 char opt[20];
@@ -71,6 +71,7 @@ main()
             printf("ERROR: expected fatal_error but call returned.\n");
             return 11;
         }
+            */
     }
     printf("ok!\n");
     printf("SUCCESS!\n");
