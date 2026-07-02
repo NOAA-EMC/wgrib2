@@ -56,6 +56,7 @@ main()
         }
     }
     printf("ok!\n");
+    */
     printf("Testing with too many options...\n");
     {
         int i;
@@ -73,6 +74,6 @@ main()
     }
     printf("ok!\n");
     printf("SUCCESS!\n");
-    */
+    
     return 0;
 }
