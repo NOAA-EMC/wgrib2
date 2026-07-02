@@ -41,7 +41,6 @@ main()
     }
         
     printf("ok!\n");
-    /*
     printf("Testing wgrib2_add_cmd()...\n");
     printf("Testing with overly long command string...\n");
     {
@@ -57,7 +56,6 @@ main()
         }
     }
     printf("ok!\n");
-    */
     printf("Testing with too many options...\n");
     {
         int i;
