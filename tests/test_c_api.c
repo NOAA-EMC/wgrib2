@@ -39,9 +39,14 @@ main()
             return 3;
         }
     }
-        
     printf("ok!\n");
     printf("Testing wgrib2_add_cmd()...\n");
+    printf("Testing with normal command string...\n");
+    {
+        wgrib2_init_cmds();
+        wgrib2_add_cmd("-test");
+    }
+    printf("ok!\n");
     printf("Testing with overly long command string...\n");
     {
         char longopt[CMD_LEN + 1];
