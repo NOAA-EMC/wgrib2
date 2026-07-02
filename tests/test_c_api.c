@@ -43,9 +43,13 @@ main()
     printf("Testing wgrib2_add_cmd()...\n");
     printf("Testing with normal command string...\n");
     {
+        int ret;
+
         wgrib2_init_cmds();
-        wgrib2_add_cmd("-test");
-        
+
+        if ((ret = wgrib2_add_cmd("-test"))) {
+            return 4;
+        }
     }
     printf("ok!\n");
     printf("Testing with overly long command string...\n");
@@ -55,6 +59,7 @@ main()
         memset(longopt, 'A', CMD_LEN);
         longopt[CMD_LEN] = '\0';
 
+        wgrib2_add_cmd(longopt);
         /*
         if (setjmp(fatal_err) == 0) {
             wgrib2_add_cmd(longopt);
