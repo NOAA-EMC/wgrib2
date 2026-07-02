@@ -27,7 +27,6 @@ variant_map_common = {
     "g2c_low": "USE_G2CLIB_LOW",
     "g2c_high": "USE_G2CLIB_HIGH",
     "openmp": "USE_OPENMP",
-    "wmo_validation": "USE_WMO_VALIDATION",
     "ipolates": "USE_IPOLATES",
     "disable_alarm": "DISABLE_ALARM",
     "fortran_api": "MAKE_FTN_API",
@@ -197,7 +196,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
         when="@:3.7"
     )
     variant("openmp", default=True, description="OpenMP parallelization")
-    variant("wmo_validation", default=False, description="WMO validation", when="@:3.1")
     #    variant("shared", default=False, description="Enable shared library", when="+lib")
     variant("disable_stat", default=False, description="Disable POSIX feature", when="@:3.1")
     variant("openjpeg", default=False, description="Enable OpenJPEG", when="@:3.7")

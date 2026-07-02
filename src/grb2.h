@@ -196,19 +196,6 @@
 #define GDS_Lambert_Az_dx(gds)          (int4(gds+55) * 0.001)         /**< Lambert Azimuthal - X-direction grid length. */
 #define GDS_Lambert_Az_dy(gds)          (int4(gds+59) * 0.001)         /**< Lambert Azimuthal - Y-direction grid length. */
 
-// #ifdef WMO_VALIDATION
-#define GDS_Gnom_face_size(gds)         uint4(gds+38)               /**< Cubed-Sphere Gnomonic - Face size. */
-#define GDS_Gnom_i_offset(gds)		uint4(gds+42)                   /**< Cubed-Sphere Gnomonic - I offset. */
-#define GDS_Gnom_j_offset(gds)		uint4(gds+46)                   /**< Cubed-Sphere Gnomonic - J offset. */
-#define GDS_Gnom_tile(gds)              gds[50]                       /**< Cubed-Sphere Gnomonic - Tile. */
-#define GDS_Gnom_SP_Lat(gds)            (int4(gds+51) * 0.000001)     /**< Cubed-Sphere Gnomonic - Latitude of southern pole projection. */
-#define GDS_Gnom_SP_Lon(gds)            (uint4(gds+55) * 0.000001)    /**< Cubed-Sphere Gnomonic - Longitude of southern pole projection. */
-// not sure if rotation angle can be negative
-#define GDS_Gnom_SP_Rot(gds)            (int4(gds+59) * 0.000001)     /**< Cubed-Sphere Gnomonic - Angle of rotation of projection. */
-#define GDS_Gnom_Stretch(gds)           (int4(gds+63) * 0.000001)     /**< Cubed-Sphere Gnomonic - Stretch factor. */
-#define GDS_Gnom_B(gds)                 (int4(gds+67) * 0.000001)     /**< Cubed-Sphere Gnomonic - Grid spacing parameter B. */
-// #endif
-
 
 #define GDS_CrossSec_basic_ang(gds)	int4(gds+34)        /**< Cross-Section - Basic angle. */
 #define GDS_CrossSec_sub_ang(gds)	int4(gds+38)        /**< Cross-Section - Subdivisions of basic angle. */

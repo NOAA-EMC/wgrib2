@@ -310,7 +310,6 @@ int f_bin(ARG1);
 int f_cress_lola(ARG4);
 int f_csv(ARG1);
 int f_csv_long(ARG1);
-int f_cubeface2global(ARG2);
 int f_ens_processing(ARG2);
 int f_ens_qc(ARG4);
 int f_fcst_ave(ARG2);
