@@ -8,7 +8,6 @@
 
 #include "wmath.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 #ifdef USE_PROJ4
 

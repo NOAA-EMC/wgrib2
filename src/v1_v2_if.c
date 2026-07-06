@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /* runtime flags */
 

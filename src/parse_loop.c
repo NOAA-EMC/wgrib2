@@ -8,7 +8,6 @@
 #include <string.h>
 #include <limits.h>
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /**
  * Parses a loop definition string into start, end, and step values.

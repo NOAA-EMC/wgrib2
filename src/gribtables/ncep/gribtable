@@ -338,6 +338,7 @@
 0:1:0:255:0:0:2:67:NRTHTSSSR:Northward turbulent surface stress due to surface roughness:N/m^2
 0:1:0:255:0:0:2:68:CNVGUST:Convective Gust:m/s
 0:1:0:255:0:0:2:69:TURBGUST:Turbulent Gust:m/s
+0:1:0:255:0:0:2:70:WINDERO:Wind Speed Threshold for Wind Erosion:m/s
 0:0:0:255:7:1:2:192:VWSH:Vertical Speed Shear:1/s
 0:0:0:255:7:1:2:193:MFLX:Horizontal Momentum Flux:N/m^2
 0:0:0:255:7:1:2:194:USTM:U-Component Storm Motion:m/s
@@ -592,7 +593,7 @@
 0:1:0:255:0:0:7:5:SX:Sweat Index:Numeric
 0:1:0:255:0:0:7:6:CAPE:Convective Available Potential Energy:J/kg
 0:1:0:255:0:0:7:7:CIN:Convective Inhibition:J/kg
-0:1:0:255:0:0:7:8:HLCY:Storm Relative Helicity:m^2/s^2
+0:1:0:255:0:0:7:8:HLCY:Storm Relative Helicity:J/kg
 0:1:0:255:0:0:7:9:EHLX:Energy Helicity Index:Numeric
 0:1:0:255:0:0:7:10:LFTX:Surface Lifted Index:K
 0:1:0:255:0:0:7:11:4LFTX:Best (4 layer) Lifted Index:K
@@ -606,6 +607,11 @@
 0:1:0:255:0:0:7:20:TIIDEX:Thunderstorm Intensity Index:-
 0:1:0:255:0:0:7:21:SSI:Storm Severity Index:Numeric
 0:1:0:255:0:0:7:22:RMOL:Reciprocal Obukhov Length:1/m
+0:1:0:255:0:0:7:23:HLCYRM:Storm Relative Helicity - Right Moving Storm:J/kg
+0:1:0:255:0:0:7:24:HLCYLM:Storm Relative Helicity - Left Moving Storm:J/kg
+0:1:0:255:0:0:7:25:EFHL:Effective Storm Relative Helicity - Mean Flow:J/kg
+0:1:0:255:0:0:7:26:EFHLRM:Effective Storm Relative Helicity - Right Moving Storm:J/kg
+0:1:0:255:0:0:7:27:EFHLLM:Effective Storm Relative Helicity - Left Moving Storm:J/kg
 0:0:0:255:7:1:7:192:LFTX:Surface Lifted Index:K
 0:0:0:255:7:1:7:193:4LFTX:Best (4 layer) Lifted Index:K
 0:0:0:255:7:1:7:194:RI:Richardson Number:Numeric
@@ -837,6 +843,8 @@
 0:1:0:255:0:0:20:17:MSSRWETA:Mass mixing ratio with respect to wet air:kg/kg
 0:1:0:255:0:0:20:18:POTHPH:Potential of hydrogen (pH):pH
 0:1:0:255:0:0:20:19:LRATEOH:Loss Rate Due to Reaction with Hydroxyl Radical (OH):kg/kg/s
+0:1:0:255:0:0:20:20:PHRATE:Photolysis Rate:1/s
+0:1:0:255:0:0:20:21:EMISPOT:Emission Potential:kg/m^2/s
 0:1:0:255:0:0:20:50:AIA:Amount in Atmosphere:mol
 0:1:0:255:0:0:20:51:CONAIR:Concentration In Air:mol/m^3
 0:1:0:255:0:0:20:52:VMXR:Volume Mixing Ratio (Fraction in Air):mol/mol

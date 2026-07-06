@@ -11,7 +11,6 @@
 #include <ctype.h>
 #include <math.h>
 #include "wgrib2.h"
-#include "fnlist.h"
 
 #ifdef USE_IPOLATES
 
