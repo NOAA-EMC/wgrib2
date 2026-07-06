@@ -37,10 +37,10 @@ int wgrib2_add_cmd(const char *string) {
 
     j = strlen(string);
     if (j >= CMD_LEN) fatal_error("add_cmd: string too long %s", string);
-    if (n_cmds >= N_CMDS) fatal_error("add_cmd: too many options %s", string);
+    /*if (n_cmds >= N_CMDS) fatal_error("add_cmd: too many options %s", string);
     strncpy(&(cmd[n_cmds][0]), string, j+1);
     cmds[n_cmds] = &(cmd[n_cmds][0]);
-    n_cmds++;
+    n_cmds++; */
     return 0;
 }
 
