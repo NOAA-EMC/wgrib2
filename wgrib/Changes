@@ -1,19 +1,20 @@
-Upgrade from v1.8.0.12g (8/06) to v1.8.0.12o (5/07)
+May 2026
 
-Changes:
+   change code from wgrib.c to source code (*.c *.h)
+   update so that there are no warning with oneapi icx.
+   Note: this is wgrib v1.8.5
 
-        updated ncep grib table 129, 130 to on388
-        updated levels to on388
-        changed units ncep grib table 128 WTPC(186)  K->C
-        support for updates in the grib table by process owners (compile change)
-        increased stdin line buffer to 2000 characters
-        level 210 is now WMO standard for non-NCEP files
+   History: wgrib was written when Unix was a strange operating system.  
+      The various Unix systems had their own versions of "make", and 
+      other operating systems often lacked a make program.  The C 
+      programming language was the new kid on the block, and you learned 
+      from the K&R book.
 
-Reason for upgrade:
+      To help users who didn't understand make and C compilers, the script
+      src2all was written to combine all the *.c and *.h files into wgrib.c
+      so that compiling wgrib would not have to use make.  So compiling wgrib
+      was as simple as:  cc -o wgrib wgrib.c
 
-	Request from marine branch: need updated ncep tables
-
-Comments:
-        No major changes since last update except needed table updates.
-        Compile options change so that table changes can be updated with new JIF.
-	Little change in the run time is expected. 
+      When wgrib was added to the wgrib2 github repository, "wgrib.c" was
+      added.  This makes modifying the code a PITA.  
+ 

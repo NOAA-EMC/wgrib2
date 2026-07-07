@@ -4,7 +4,7 @@
 #
 # Alyson Stahl 7/26/2024
 
-n=`../src/wgrib2 -config | grep -c "Supported encoding:.*jpeg2000"`
+n=$(../src/wgrib2 -config | grep -c "Supported encoding:.*jpeg2000")
 if [ "$n" -eq 0 ] ; then
   echo "*** Not running jpeg tests"
   exit 0

@@ -2,7 +2,7 @@
 
 ## @file
 ## @brief Script to convert NCEP grib2 table information as found in the
-## [NCEP WMO GRIB2 Documentation](http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc/)
+## [NCEP WMO GRIB2 Documentation](https://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc/)
 ## into a usable form for wgrib2.
 ##
 ## As output, a file "gribtable" is produced, which contains
@@ -44,7 +44,7 @@ if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 cat /dev/null > "$outfile"
 unset POSIXLY_CORRECT
 
-urlbase="http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc"
+urlbase="https://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc"
 
 #---we use grib2_table4-1.shtml as starting point:
 url="$urlbase/grib2_table4-1.shtml"
@@ -112,6 +112,13 @@ for line in $disc_lines; do
       s/\o140//g
       s/&deg;\?/deg/g
       s/&micro;g/10-6g/ig
+      s/&eta;/Eta/ig
+      s/&omega;/Omega/ig
+      s/&phi;/Phi/ig
+      s/&rho;/Rho/ig
+      s/&sigma;/Sigma/ig
+      s/&theta;/Theta/ig
+      s/&tau;/Tau/ig
     }' | sed '{
       s/<[^<]*>//g
       s/^ *\t//
@@ -185,6 +192,7 @@ for line in $disc_lines; do
           s|:Wm-3sr-1$|:W/m^3/sr|
           s|:Wm-2nm-1$|:W/m^2/m^-9|
           s|:Wsr-1m-2$|:W/sr/m^2|
+          s|:Wm-2sr-1m-1|:W/m^2/sr/m|
           s|:integer$|:Integer|
           s|:d$|:day|
           s|:h-1$|:1/h|
@@ -192,6 +200,7 @@ for line in $disc_lines; do
           s|:gkg-1m-2s-1$|:g/kg/m^2/s|
           s|:gkg-1m$|:g/kg*m|
           s|:gkg-1s-1$|:g/kg/s|
+          s|:gkg-1$|:g/kg|
           s|:kg-1$|:1/kg|
           s|:kg-2s-1$|:1/kg^2/s|
           s|:kgday-1$|:kg/day|
@@ -259,11 +268,15 @@ for line in $disc_lines; do
           s| \* - Parameter deprecated:|:|
           s| *(Parameter Deprecated, see Note [1-9])||i
           s|[ ,]*(See Note [1-9])||i
+          s| *(see Notes 4 and 7)||i
           s| *See Note [1-9]||i
           s| *(see Note)||i
           s| See Note||i
           s| *(see Local Use Note A)||i
           s| (Defined In Section 1)||i
+          s|Hail *([01]):|Hail:|i
+          s|Weather *(2):|Weather:|i
+          s|Precipitation *(3):|Precipitation:|i
         }' | sed '{
           s|[.,]:|:|g
           s|<br:|:|
@@ -300,7 +313,7 @@ fi
 
 tmpstr=`cut -d: -f9,11 "$outfile"`
 grepstr=`echo "$tmpstr" | LC_ALL=C sort -u | cut -d: -f1 | uniq -d | tr -s "\n" " " \
-  | sed 's/ $//' | sed 's/ /\\\|/'g`
+  | sed 's/ $//' | sed 's/ /\\\|/g'`
 duplicates2=`echo "$tmpstr" | grep "^\($grepstr\):" | LC_ALL=C sort`
 if [ "$duplicates2" ]; then
   echo ""

@@ -44,6 +44,12 @@ extern enum output_order_type output_order;
 /** New line character. */
 extern char *nl;
 
+/** used by delayed error */
+extern unsigned int last_message;
+
+extern int decode;                             /**< Decode grib file flag */
+
+
 static void print_stagger(int scan, char *inv_out);
 
 /** Number of variable dimensions. */
@@ -278,13 +284,14 @@ int get_nxny_(unsigned char **sec, unsigned int *nx, unsigned int *ny, unsigned 
     else if (*nx > 0 && *ny > 0) npoints = (unsigned) *nx * *ny;
     *npnts = GB2_Sec3_npts(sec);
 
-    /* if global cubed sphere */
-    if (grid_template == 60 && GDS_Gnom_tile(gds) == 0) npoints *= 6;
-
-
     if ((*nx != 0 || *ny != 0) && GB2_Sec3_npts(sec) != npoints && GDS_Scan_staggered_storage(*scan) == 0) {
-        fprintf(stderr,"two values for number of points %u (GDS) %u (calculated)\n",
-                      GB2_Sec3_npts(sec), npoints);
+        if (decode) {
+            fatal_error("two values for number of points %u (GDS-octet 7-10) and %u (thinned grid calculation)",
+               GB2_Sec3_npts(sec), npoints);
+        }
+        fprintf(stdout,"FATAL ERROR (delayed): two values for number of points %u (GDS-octet 7-10) and %u (thinned grid calculation)\n",
+             GB2_Sec3_npts(sec), npoints);
+        last_message |= DELAYED_GRID_SIZE_ERR;
     }
 
 /*
@@ -944,29 +951,6 @@ int f_grid(ARG0) {
                 inv_out += strlen(inv_out);
                 sprintf(inv_out,"pole of stretching lat=%lf lon=%lf stretching=%lf",
                     ieee2flt(gds+40), ieee2flt(gds+44),ieee2flt(gds+48));
-                break;
-            case 60: sprintf(inv_out,"%sCubed Sphere grid: face C%d:", nl, GDS_Gnom_face_size(gds));
-                inv_out += strlen(inv_out);
-                if (GDS_Gnom_tile(gds) == 0) {
-                    sprintf(inv_out, "1-6");
-                }
-                else {
-                    sprintf(inv_out, "%d", GDS_Gnom_tile(gds));
-                }
-                inv_out += strlen(inv_out);
-                sprintf(inv_out," (%s x %s) offset (%d,%d) input %s output %s res %d",
-                        nx_str(nx_), ny_str(ny_),
-                        GDS_Gnom_i_offset(gds), GDS_Gnom_j_offset(gds),
-                        scan_order[scan>>4],output_order_name(),res);
-                inv_out += strlen(inv_out);
-                print_stagger(scan, inv_out);
-                inv_out += strlen(inv_out);
-                sprintf(inv_out,"%sPole of rotation: lat %lf lon %lf Angle of rotation: %lf %s",
-                        nl,GDS_Gnom_SP_Lat(gds), GDS_Gnom_SP_Lon(gds), GDS_Gnom_SP_Rot(gds),nl);
-                inv_out += strlen(inv_out);
-                sprintf(inv_out, "Stretching factor %lf  Gnomonic grid spacing factor %lf", GDS_Gnom_Stretch(gds),
-                    GDS_Gnom_B(gds));
-                inv_out += strlen(inv_out);
                 break;
             case 90: 
                 sprintf(inv_out,"%sSpace view perspective or orthographic grid (%d x %d)",nl,nx,ny);

@@ -1417,8 +1417,8 @@ case 535:
 case 536:
       agency="tomorrow.io";
       instype="Radiometer";
-      shortname="MWS";
-      longname="Microwave sounder";
+      shortname="TMS (Tomorrow)";
+      longname="Tomorrow Microwave Sounder";
       break;
 case 537:
       agency="tomorrow.io";
@@ -2434,6 +2434,12 @@ case 977:
       shortname="GHI";
       longname="Geostationary High-speed Imager";
       break;
+case 978:
+      agency="CNES";
+      instype="Spectrometer";
+      shortname="MicroCarb";
+      longname="Carbon Dioxide Monitoring Mission";
+      break;
 case 980:
       agency="KMA";
       instype="Imager";
@@ -2487,6 +2493,12 @@ case 988:
       instype="Conical scanning dual-frequency scatterometer";
       shortname="WindRAD";
       longname="Wind Radar";
+      break;
+case 989:
+      agency="CMA";
+      instype="GNSS occultation";
+      shortname="TGNOS-M";
+      longname="Tianmu Global Navigation Satellite System Occultation Sounder";
       break;
 case 990:
       agency="NASA";

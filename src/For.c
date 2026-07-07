@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
 

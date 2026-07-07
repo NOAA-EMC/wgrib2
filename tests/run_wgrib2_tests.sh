@@ -114,13 +114,13 @@ diff -w secs.txt simple.txt
 
 
 echo "*** test pdt 48 ***"
-n=`../src/wgrib2 ./data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -d 1 -set_pdt +48  -set_byte 4 12 00:12:0 | grep -c "aerosol_size"`
+n=$(../src/wgrib2 ./data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -d 1 -set_pdt +48  -set_byte 4 12 00:12:0 | grep -c "aerosol_size")
 if [ "$n" -ne 1 ] ; then
  exit 1
 fi
 set -x
 echo "*** test pdt 49 ***"
-n=`../src/wgrib2 ./data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -d 1 -set_pdt +49  -set_byte 4 12 00:12:0 | grep -c "aerosol_size"`
+n=$(../src/wgrib2 ./data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -d 1 -set_pdt +49  -set_byte 4 12 00:12:0 | grep -c "aerosol_size")
 if [ "$n" -ne 1 ] ; then
  exit 1
 fi
@@ -129,9 +129,9 @@ echo "*** test import_ieee big-endian ***"
 
 ../src/wgrib2 data/ref_simple_packing.grib2 -ieee ieee.bin -inv ieee.inv -d 1
 ../src/wgrib2 data/ref_simple_packing.grib2 -d 1 -rpn 0 -import_ieee ieee.bin -grib_out ieee.grb
-line=`../src/wgrib2 -d 1 data/ref_simple_packing.grib2 -rpn sto_1 -import_ieee ieee.bin -rpn "rcl_1:print_rms"`
+line=$(../src/wgrib2 -d 1 data/ref_simple_packing.grib2 -rpn sto_1 -import_ieee ieee.bin -rpn "rcl_1:print_rms")
 
-if [ `echo "$line" | grep -c ":rpn_rms=0:"` -ne 1 ] ; then
+if [ "$(echo "$line" | grep -c ":rpn_rms=0:")" -ne 1 ] ; then
   exit 1
 fi
 
@@ -139,9 +139,9 @@ echo "*** test import_ieee little-endian ***"
 
 ../src/wgrib2 data/ref_simple_packing.grib2 -little_endian -ieee ieee.bin.le -inv ieee.inv.le -d 1
 ../src/wgrib2 data/ref_simple_packing.grib2 -little_endian -d 1 -rpn 0 -import_ieee ieee.bin.le -grib_out ieee.grb.le
-line=`../src/wgrib2 -little_endian -d 1 data/ref_simple_packing.grib2 -rpn sto_1 -import_ieee ieee.bin.le -rpn "rcl_1:print_rms"`
+line=$(../src/wgrib2 -little_endian -d 1 data/ref_simple_packing.grib2 -rpn sto_1 -import_ieee ieee.bin.le -rpn "rcl_1:print_rms")
 
-if [ `echo "$line" | grep -c ":rpn_rms=0:"` -ne 1 ] ; then
+if [ "$(echo "$line" | grep -c ":rpn_rms=0:")" -ne 1 ] ; then
   exit 1
 fi
 
@@ -150,7 +150,7 @@ fi
 echo "*** test import_ieee little-endian ***"
 
 echo "*** test set_prob ***"
-line=`../src/wgrib2 data/ref_simple_packing.grib2 -d 1 -set_prob 1 2 3  222.2 0`
+line=$(../src/wgrib2 data/ref_simple_packing.grib2 -d 1 -set_prob 1 2 3  222.2 0)
 echo "$line"
 if [ "$line" != '1:0:d=2009060500:TMP:500 mb:180 hour fcst:prob >222.2:prob fcst 1/2' ] ; then
   exit 1
@@ -158,18 +158,18 @@ fi
 
 
 echo '*** test new code table 4.6 entries ***'
-line=`../src/wgrib2 data/ref_simple_packing.grib2 -set table_4.6 6`
-if [ "`echo $line`" -ne "1:0:d=2009060500:TMP:500 mb:180 hour fcst:P-ENS=19" ] ; then
+line=$(../src/wgrib2 data/ref_simple_packing.grib2 -set table_4.6 6)
+if [ "$line" != "1:0:d=2009060500:TMP:500 mb:180 hour fcst:P-ENS=19" ] ; then
   exit 1
 fi
 
 echo "*** test set_ts_dates ***"
-dates=`../src/wgrib2 data/gdaswave.t00z.wcoast.0p16.f000.grib2 -set_ts_dates 200001 1dy 1 | cut -f3 -d:`
+dates=$(../src/wgrib2 data/gdaswave.t00z.wcoast.0p16.f000.grib2 -set_ts_dates 200001 1dy 1 | cut -f3 -d:)
 
-if [ "`echo "$dates" | head -n 1`" != "d=2000010100" ] ; then
+if [ "$(echo "$dates" | head -n 1)" != "d=2000010100" ] ; then
   exit 1
 fi
-if [ "`echo "$dates" | tail -n 1`" != "d=2000011900" ] ; then
+if [ "$(echo "$dates" | tail -n 1)" != "d=2000011900" ] ; then
   exit 1
 fi
 

@@ -166,6 +166,10 @@ case    5112045: string="EasyWay - Meteotrans"; break;  // centre=78, subcentre=
 case    5112062: string="EUMETSAT"; break;  // centre=78, subcentre=254
 case    5242981: string="Albania (NMC)"; break;  // centre=80, subcentre=101
 case    5242982: string="National Research Council/Institute of Atmospheric Sciences and Climate (CNR-ISAC)"; break;  // centre=80, subcentre=102
+case    5373952: string="Norrkoping - Swedish Meteorological and Hydrological Institute (SMHI-Sweden)"; break;  // centre=82, subcentre=0
+case    5373962: string="Kangerlussuaq - Danish Meteorological Institute (DMI-Greenland)"; break;  // centre=82, subcentre=10
+case    5373972: string="Oslo - Norwegian Meteorological Institute (NMI-Norway)"; break;  // centre=82, subcentre=20
+case    5373982: string="Sodankyla - Arctic Research Centre (FMI/ARC-Finland)"; break;  // centre=82, subcentre=30
 case    5570760: string="Institut National de l'Environnement Industriel et des Risques (France)"; break;  // centre=85, subcentre=200
 case    5570761: string="Rheinisches Institut fuer Umweltforschung an der Universitaet zu Koeln E.V. (Germany)"; break;  // centre=85, subcentre=201
 case    5570762: string="Institut Francais de Recherche pour l'Exploitation de la Mer"; break;  // centre=85, subcentre=202
