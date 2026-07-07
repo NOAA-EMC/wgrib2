@@ -22,10 +22,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "aux_progs.h"
+
 /** Current Version of gmerge */
 #define VERSION "gmerge v1.6 5/2025"
-
-int rd_msg(FILE *, FILE *);
 
 /**
  * Combines two or more streams of grib files. The output takes one grib message from

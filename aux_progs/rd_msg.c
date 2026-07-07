@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned long int uint8(unsigned char *);
+#include "aux_progs.h"
 
 /** Maximum Buffer Size */
 #define BSIZE 4096*8
