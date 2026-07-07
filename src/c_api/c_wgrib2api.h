@@ -54,5 +54,5 @@ int wgrib2_cmd(void);
 int wgrib2_list_cmd(void);
 
 
-void fatal_error(const char *fmt, const char *string);
+void fatal_error(const char *fmt, ...);
 

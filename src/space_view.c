@@ -26,7 +26,6 @@
 #include "wmath.h"
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 
 /** Current output order type. */
