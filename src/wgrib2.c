@@ -499,7 +499,7 @@ int wgrib2(int argc, const char **argv) {
                         (GB2_ParmNum(sec) >= 192 && GB2_ParmNum(sec) <= 254) ||
                         (GB2_ParmCat(sec) >= 192 && GB2_ParmCat(sec) <= 254) ||
                         (GB2_Discipline(sec) >= 192 && GB2_Discipline(sec) <= 255) ) {
-                fprintf(stderr,"\n*** DELATED FATAL ERROR, local grib table=255, replaced by 1 in %s\n", in_file.filename);
+                fprintf(stderr,"\n*** FATAL ERROR (delayed), local grib table=255, replaced by 1 in %s\n", in_file.filename);
                 GB2_LocalTable(sec) = 1;
                 last_message |= DELAYED_LOCAL_GRIBTABLE_ERR;
             }

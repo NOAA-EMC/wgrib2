@@ -3,7 +3,7 @@
 #
 # Alyson Stahl 5/7/2024
 
-n=`../src/wgrib2 -config | grep -c "Supported decoding:.*png"`
+n=$(../src/wgrib2 -config | grep -c "Supported decoding:.*png")
 if [ "$n" -eq 0 ] ; then
   echo "*** Not running png tests"
   exit 0
@@ -16,7 +16,7 @@ echo "*** Running wgrib2 png tests"
 
 
 r1="1:0:(2000,1000),lon=304.937500,lat=-27.584172,val=1"
-r2=`../src/wgrib2 data/png_4bits.png -ijlat 2000 1000`
+r2=$(../src/wgrib2 data/png_4bits.png -ijlat 2000 1000)
 if [ "$r1" != "$r2" ] ; then
   echo "failed png test1 $r2"
   echo "expected         $r1"
@@ -24,7 +24,7 @@ if [ "$r1" != "$r2" ] ; then
 fi
 
 r1="1:0:(2000,2000),lon=249.995002,lat=39.995000,val=0"
-r2=`../src/wgrib2 data/large_png.grb2 -ijlat 2000 2000`
+r2=$(../src/wgrib2 data/large_png.grb2 -ijlat 2000 2000)
 if [ "$r1" != "$r2" ] ; then
   echo "failed png test2 $r2"
   echo "expected         $r1"

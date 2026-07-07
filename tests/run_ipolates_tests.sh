@@ -25,9 +25,9 @@ diff -w new_grid.txt data/ref_new_grid_gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt
 echo "*** Testing new_grid on file in incorrect order. This will return an incomplete output file and error message."
 ../src/wgrib2 new_grid_test.grb -match ":UGRD:" -grib_out test_badorder.grb
 ../src/wgrib2 new_grid_test.grb -match ":VGRD:" -append -grib_out test_badorder.grb
-{ out_err=$(../src/wgrib2 test_badorder.grb -new_grid_winds grid  \
-    -new_grid latlon 0:360:1 00:91:1 junk_badorder.grb 2>&1 1>&$out); } {out}>&1
-if [[ -z "$out_err" ]]; then 
+out_err=$(../src/wgrib2 test_badorder.grb -new_grid_winds grid  \
+    -new_grid latlon 0:360:1 00:91:1 junk_badorder.grb 3>&1 1>&2 2>&3 3>&-)
+if [ -z "$out_err" ]; then
     exit 10
 fi
 

@@ -23,9 +23,8 @@ The geolocation routines in wgrib2 are going to be changed.  The problems are
    (5) OpenMP on gctpc which does non-spherical Earth
 
   On the TO-DO list are
-   (1) support FV3 cubed sphere grid
-   (2) support FV3 regional grid
-   (3) suppoort more grids
-   (4) support grids upto 4GB points
-   (5) support interpolation for non-spherical Earth
+   (1) support FV3 regional grid
+   (2) suppoort more grids
+   (3) support grids upto 4GB points
+   (4) support interpolation for non-spherical Earth
    

@@ -13,7 +13,6 @@
 #include <limits.h>
 #include <math.h>
 #include <ctype.h>
-#include "grb2.h"
 #include "wgrib2.h"
 
 

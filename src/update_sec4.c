@@ -8,9 +8,7 @@
 #include <limits.h>
 #include <math.h>
 #include <string.h>
-#include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /** Pointer to the new Section 4. */
 static unsigned char new_sec4[SET_PDT_SIZE];

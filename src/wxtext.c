@@ -8,7 +8,6 @@
 #include <math.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /** Pointer to weather information table. */
 char *WxTable;

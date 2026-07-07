@@ -9,7 +9,6 @@
 #include <math.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 //#if USE_IPOLATES == 2
 
