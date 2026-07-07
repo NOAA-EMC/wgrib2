@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "grb2.h"
+
+#include "aux_progs.h"
 
 /** For unit tests only. Sets ULONG_MAX to 32-bit max if FORCE_32BIT_TEST is defined. */
 #ifdef FORCE_32BIT_TEST
@@ -26,7 +27,8 @@
  *
  * @author Wesley Ebisuzaki @date 2006
  */
-unsigned long int uint8(unsigned char *p) {
+
+unsigned long int uint8(const unsigned char *p) {
 
 #if (ULONG_MAX == 4294967295UL) 
     if (p[0] || p[1] || p[2] || p[3]) {

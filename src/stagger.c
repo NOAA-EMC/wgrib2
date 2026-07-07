@@ -9,7 +9,6 @@
 #include <math.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /*
  * usually x[0] = y[0] = 0.0

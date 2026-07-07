@@ -9,7 +9,6 @@
 #include <limits.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 #ifdef USE_OPENMP
 #include <omp.h>

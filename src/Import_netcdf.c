@@ -20,7 +20,6 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
-#include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
 
