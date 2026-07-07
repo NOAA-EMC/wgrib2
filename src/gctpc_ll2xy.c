@@ -11,7 +11,6 @@
 #include "cproj.h"
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /* gctpc_aux.c  interface routines to the gctpc library
    2/2012 Public Domain Wesley Ebisuzaki

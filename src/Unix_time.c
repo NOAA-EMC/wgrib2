@@ -40,7 +40,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
 
