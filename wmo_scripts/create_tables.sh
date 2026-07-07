@@ -15,7 +15,7 @@ cd tables.tmp
 
 indx=0
 for script in $scriptlist; do
-  ((++indx))
+  indx=$((indx+1))
   $script || {
       echo "Error in script $script"
       exit $indx

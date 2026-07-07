@@ -15,8 +15,8 @@ echo "*** Testing converting from grib to netcdf to grib"
 # convert netcdf to grb
 ../src/wgrib2 junk_netcdf.template -import_netcdf junk_netcdf.nc TMP_500mb "0:1:0:181:0:360" -grib_out junk_netcdf.grb
 
-n=`../src/wgrib2 data/ref_simple_packing.grib2 -var -lev -rpn "sto_1" -import_grib junk_netcdf.grb -rpn "rcl_1:print_rms" | \
-grep -v ":rpn=0:" | wc -l`
+n=$(../src/wgrib2 data/ref_simple_packing.grib2 -var -lev -rpn "sto_1" -import_grib junk_netcdf.grb -rpn "rcl_1:print_rms" | \
+grep -v ":rpn=0:" | wc -l)
 
 rm junk_netcdf.grb junk_netcdf.nc junk_netcdf.template
 if [ "$n" -ne 1 ] ; then
@@ -38,7 +38,7 @@ diff -w tablenc.txt data/ref_tablenc.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt
 
 echo "*** Testing nc_time" 
 ../src/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -match ":UGRD:" -nc_time 20200101000000 -netcdf test_time.nc
-if [ `ncdump test_time.nc | grep -c "time = 1577836800,"` -ne 1 ] ; then
+if [ "$(ncdump test_time.nc | grep -c "time = 1577836800,")" -ne 1 ] ; then
   exit 1
 fi
 

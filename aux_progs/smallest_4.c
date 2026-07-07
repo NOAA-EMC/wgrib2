@@ -6,6 +6,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "aux_progs.h"
+
 // 10/2024  Public  Domain   Wesley Ebisuzaki
 // 4 files .. same fields but with different packing
 // returns smaller of indiv fields
@@ -16,7 +19,6 @@
 
 /** Maximum Buffer Size */
 #define SIZE 4096*4
-unsigned long int uint8(unsigned char *p);
 
 /**
  * Takes 4 input files/pipes, reads 1 grib message from each, and writes the shortest message 
