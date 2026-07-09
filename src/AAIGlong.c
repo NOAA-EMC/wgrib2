@@ -51,6 +51,8 @@ extern enum output_order_type output_order_wanted;
  * -AAIGlong
  * 
  * ## File name convention for *asc output
+ * 
+ * <pre>
  * NAME = (wgrib2 -S)
  * NAME=(wgrib2 -S)
  * remove (message number)[.submessage number]:(byte location): 
@@ -60,7 +62,8 @@ extern enum output_order_type output_order_wanted;
  * replace ":" by "_"
  * replace "'" by " Q "
  * replace '"' by " Q "
- *
+ * </pre>
+ * 
  * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
  * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
  * parameters.
@@ -73,7 +76,15 @@ extern enum output_order_type output_order_wanted;
  * the NAME to be unchanging, please freeze the version of wgrib2.
  * 
  * ## Example: 
- * ???
+ * @code{.sh}
+ * $ wgrib2 gep19.t00z.pgrb2af180 -match "HGT:500 mb" -AAIGlong
+ * raster file: D=20090605000000_HGT_500 mb_180 hour fcst_ENS=+19.asc
+ * 9:280952:d=2009060500:HGT:500 mb:180 hour fcst:ENS=+19
+ * $ ls *asc
+ * D=20090605000000_HGT_500 mb_180 hour fcst_ENS=+19.asc
+ * @endcode
+ * 
+ * The above line converts all the 500 mb HGT fields into an arcinfo ascii grid file.
  * 
  * @author Wesley Ebisuzaki @date 10/2015
  */

@@ -56,6 +56,8 @@ extern enum output_order_type output_order_wanted;
  * -AAIG
  * 
  * ## File name convention for *asc output
+ * 
+ * <pre>
  * NAME = grib name (-var), ex. TEMP, HGT
  * LEVEL = level, ex. surface, 2_m_above_ground, 500_mb
  * RT = reference time YYYYMMDDHH
@@ -65,7 +67,8 @@ extern enum output_order_type output_order_wanted;
  *      output = NAME.LEVEL.RT.asc
  * If RT is different than VT:
  *      output = NAME.LEVEL.RT.VT.asc
- *
+ * </pre>
+ * 
  * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
  * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
  * parameters.
@@ -76,8 +79,12 @@ extern enum output_order_type output_order_wanted;
  * more complicated and a new file name convention was needed (-AAIGlong).
  * 
  * ## Example: 
- * ???
+ * @code{.sh}
+ * $ wgrib2 in_file -match ':HGT:400 mb:' -AAIG
+ * @endcode
  *
+ * The above line converts all the 400 mb HGT fields into an arcinfo ascii grid file.
+ * 
  * @author Wesley Ebisuzaki @date 07/2008
  */
 int f_AAIG(ARG0) {
