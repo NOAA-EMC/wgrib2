@@ -28,7 +28,7 @@ jobs:
     # try clearing the cache by setting 'use-repo-cache' and 'cache-spack-lock' 
     # to false. Then re-enable them after confirming the build works.
     - name: "Build Spack package"
-      uses: NOAA-EMC/ci-test-spack-package@f95794ec25bee2adfea2278eedbb1c222659cb5b
+      uses: NOAA-EMC/ci-test-spack-package@develop
       with:
         package-name: wgrib2
         package-variants: ${{ matrix.variants }}
