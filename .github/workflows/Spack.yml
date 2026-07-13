@@ -37,7 +37,7 @@ jobs:
         spack-compiler: gcc 
         use-common-build-cache: false
         cache-spack-lock: false
-        repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-2
+        repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-
 
   recipe-check:
     runs-on: ubuntu-latest
