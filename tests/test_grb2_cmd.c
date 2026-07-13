@@ -89,6 +89,14 @@ main()
 
     }
     printf("ok!\n");
+    printf("Testing wgrib2_cmd()...\n");
+    {
+        int ret;
+        wgrib2_init_cmds();
+        ret = wgrib2_cmd();
+        printf("wgrib2_cmd() returned %d.\n", ret);
+    }
+    printf("ok!\n");
     printf("SUCCESS!\n");
     return 0;
 }
