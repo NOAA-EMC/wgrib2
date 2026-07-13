@@ -22,10 +22,18 @@ function(copy_test_data name)
     FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 endfunction()
 
+# This function builds tests that use the wgrib2 library.
 function(build_test name)
   add_executable(${name} ${name}.c)
   target_link_libraries(${name} PRIVATE wgrib2_lib)
   target_include_directories(${name} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+  add_test(NAME ${name} COMMAND ${name})
+endfunction()
+
+# This function builds tests that use the wgrib2 C API. 
+function(build_c_api_test name)
+  add_executable(${name} ${name}.c wgrib2_test_util.c)
+  target_link_libraries(${name} PUBLIC wgrib2_c_api)
   add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
@@ -116,7 +124,6 @@ copy_test_data(ref_new_grid_gdt_32769.grib2)
 copy_test_data(png_4bits.png)
 copy_test_data(large_png.grb2)
 copy_test_data(ref_c3_overflow.grib2)
-copy_test_data(delayed_error.grib2)
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
@@ -125,7 +132,6 @@ shell_test(run_wgrib2_update_table_tests)
 
 shell_test(run_wgrib2_png_tests)
 shell_test(run_gmerge_tests)
-shell_test(run_wgrib2_delayed_err_tests)
 
 if (USE_NETCDF)
   shell_test(run_wgrib2_netcdf4_tests)
@@ -217,14 +223,14 @@ if (MAKE_FTN_API)
   target_link_libraries(test_fortran_api PRIVATE wgrib2_ftn_api)
   add_test(NAME test_fortran_api COMMAND test_fortran_api)
 endif()
+
 if (BUILD_LIB)
   shell_test(test_lib)
   # Test will not behave with Intel Classic compiler due to longjmp issues.
   if (NOT CMAKE_C_COMPILER_ID MATCHES "^Intel$")
-    add_executable(test_c_api test_c_api.c wgrib2_test_util.c)
-    target_link_libraries(test_c_api PUBLIC wgrib2_c_api)
-    add_test(NAME test_c_api COMMAND test_c_api)
+    build_c_api_test(test_c_api)
   endif()
+  build_c_api_test(test_grb2_mk_inv)
   build_test(test_string2time_unit)
   build_test(test_read_latlon)
   build_test(test_pdt_len)
@@ -233,18 +239,11 @@ if (BUILD_LIB)
   build_test(test_units)
   build_test(test_update_sec)
   build_test(test_subtime)
-  build_test(test_grid_ident)
-  build_test(test_itoshort_a)
-  build_test(test_same_sec)
-  build_test(test_manage_inv_out)
-  build_test(test_mk_gdt)
-  build_test(test_parse_loop)
-  build_test(test_parse_msg)
 endif()
+
 if (BUILD_SHARED_LIB)
   shell_test(test_shared_lib)
 endif()
-
 
 if (FTP_TEST_FILES)
   copy_test_data(ref_WW3_Regional_US_West_Coast_20220718_0000.grib2.inv)

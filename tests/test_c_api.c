@@ -1,4 +1,4 @@
-/* This is a test of the wgrib2 c api.
+/* This is a test of the functions in grb2_cmd.c, which is part of the C API for wgrib2.
  *
  * Note: This test uses setjmp/longjmp to catch fatal_error() calls. This may cause an 
  * Illegal Instruction error (or similar) when using the Intel Classic compiler. I haven't 
@@ -9,33 +9,30 @@
 */
 
 #include "c_wgrib2api.h"
-#include "wgrib2_test_util.h"
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <setjmp.h>
 
-#define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
-#define GRB_INV "junk_c_api.inv"
-#define EXP_GRB_INV "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
-
 extern jmp_buf fatal_err;
+extern char cmd[N_CMDS][CMD_LEN];
+extern char *cmds[N_CMDS+1];
 
 int
 main()
 {
-    
-    printf("Testing grb2_mk_inv()...\n");
+    printf("Testing wgrib2_init_cmds()...\n");
     {
-        int ret;
-
-        if ((ret = grb2_mk_inv(GRB_FILE, GRB_INV))) {
-            printf("grb2_mk_inv() failed with return code %d\n", ret);
+        /* cmds[0] should be NULL prior to initialization */
+        if (cmds[0] != NULL) {
+            printf("ERROR: cmds[0] should be NULL prior to initialization.\n");
             return 2;
         }
 
-        if ((ret = compare_files(GRB_INV, EXP_GRB_INV))) {
-            printf("Inventory files differ.\n");
+        /* Now checking AFTER initialization. */
+        wgrib2_init_cmds();
+        if (strcmp(cmds[0], "wgrib2 C_api") != 0) {
+            printf("ERROR: cmds[0] not initialized properly by wgrib2_init_cmds().\n");
             return 3;
         }
     }
