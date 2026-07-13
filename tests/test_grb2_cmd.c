@@ -13,6 +13,9 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <setjmp.h>
+#include <unistd.h>
+
+#define STDERR_FILE_NAME "test_stderr.txt"
 
 extern jmp_buf fatal_err;
 extern char cmd[N_CMDS][CMD_LEN];
@@ -78,7 +81,44 @@ main()
         }
     }
     printf("ok!\n");
-    printf("Testing wgrib2_list_cmd()...\n");
+    printf("Testing wgrib2_list_cmd() without initialization...\n");
+    {
+        int original_stderr, tmp;
+        char buffer[128];
+
+        fflush(stderr);
+        original_stderr = dup(STDERR_FILENO);
+        tmp = open(STDERR_FILE_NAME, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+        if (tmp < 0) {
+            printf("ERROR: could not open temporary stderr file.\n");
+            return 12;
+        }
+
+        dup2(tmp, STDERR_FILENO);
+        close(tmp);
+
+        wgrib2_list_cmd();
+
+        fflush(stderr);
+        dup2(original_stderr, STDERR_FILENO);
+        close(original_stderr);
+
+        FILE* f = fopen(STDERR_FILE_NAME, "r");
+        if (f == NULL) {
+            printf("ERROR: could not open temporary stderr file for reading.\n");
+            return 13;
+        }
+
+        fgets(buffer, sizeof(buffer), f);
+        fclose(f);
+        remove(STDERR_FILE_NAME);
+
+        if (strcmp(buffer, "no wgrib2 cmds\n") != 0) {
+            printf("ERROR: wrong stderr output: %s\n", buffer);
+            return 14;
+        }
+
+    }
     printf("SUCCESS!\n");
     return 0;
 }
