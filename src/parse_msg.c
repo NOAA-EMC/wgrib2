@@ -33,7 +33,7 @@
  * 
  * @param sec Pointer to GRIB sections.
  * 
- * @return 1 for success, error code otherwise
+ * @return 0 for success, error code otherwise
  *
  * @note sec[9] is used to store pointer to last valid bitmap.
  * 
@@ -80,7 +80,7 @@ int parse_1st_msg(unsigned char **sec) {
  *
  * @param sec Pointer to GRIB sections.
  * 
- * @return 1 for success, error code otherwise
+ * @return 0 for success, error code otherwise
  *
  * @note sec[9] is used to store pointer to last valid bitmap.
  * 

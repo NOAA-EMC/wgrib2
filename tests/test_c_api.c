@@ -24,6 +24,7 @@ extern jmp_buf fatal_err;
 int
 main()
 {
+    
     printf("Testing grb2_mk_inv()...\n");
     {
         int ret;
@@ -40,6 +41,17 @@ main()
     }
     printf("ok!\n");
     printf("Testing wgrib2_add_cmd()...\n");
+    printf("Testing with normal command string...\n");
+    {
+        int ret;
+
+        wgrib2_init_cmds();
+
+        if ((ret = wgrib2_add_cmd("-test"))) {
+            return 4;
+        }
+    }
+    printf("ok!\n");
     printf("Testing with overly long command string...\n");
     {
         char longopt[CMD_LEN + 1];
@@ -52,13 +64,13 @@ main()
             printf("ERROR: expected fatal_error but call returned.\n");
             return 10;
         }
+        
     }
     printf("ok!\n");
     printf("Testing with too many options...\n");
     {
         int i;
         wgrib2_init_cmds();
-
         if (setjmp(fatal_err) == 0) {
             for (i = 0; i < N_CMDS + 1; i++) {
                 char opt[20];
@@ -71,5 +83,6 @@ main()
     }
     printf("ok!\n");
     printf("SUCCESS!\n");
+    
     return 0;
 }

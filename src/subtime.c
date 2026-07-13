@@ -11,9 +11,6 @@
 #include "wgrib2.h"
 #include "CodeTable4_4.h"
 
-/** February 29th day of the year */
-#define  FEB29   (31+29)
-
 /** Days in each month */
 static int monthjday[13] = {0,31,59,90,120,151,181,212,243,273,304,334,365};
 

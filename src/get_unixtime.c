@@ -24,7 +24,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /**
  * Convert calendar time to Unix time.

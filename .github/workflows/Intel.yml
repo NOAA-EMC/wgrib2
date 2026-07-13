@@ -46,6 +46,7 @@ jobs:
         ip-version: develop
         g2c-version: develop
         g2c-cmake-args: -DUSE_AEC=ON
+        key-prefix: intel-
 
     - name: checkout
       uses: actions/checkout@v4

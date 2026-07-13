@@ -8,7 +8,6 @@
 #include <string.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 /**
  * Compare two GRIB section 0 fields for equality.
@@ -135,7 +134,7 @@ int same_sec1_not_var(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     if (GB2_Sec1_size(sec_b) != i) return 0;
     a = sec_a[1];
     b = sec_b[1];
-    for (j = 0; j < 12; j++) {
+    for (j = 0; j < i; j++) {
         if (j == 9 || j == 10) continue;	// mastertable or local table
         if (a[j] != b[j]) {
             if (mode) fprintf(stderr,"same_sec1_not_var: sec 1 octet %d = %u vs %u\n", j+1, a[j],b[j]);

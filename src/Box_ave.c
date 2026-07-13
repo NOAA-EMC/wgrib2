@@ -87,7 +87,14 @@ extern unsigned int ny_;
  * poor cache utilization and false sharing.
  * 
  * ## Example:
- * ???
+ * 
+ * I had a high-resolution Gaussian grid and wanted to convert it to a 1x1 degree grid. There were about 
+ * 81 grid points in a 1 degree cell. The budget interpolation in -new_grid worked but it was slow and 
+ * worked by taking 25 bilinear interpolations and averaging them to make the budget interpolation. So 
+ * the pre-existing solution was slow and slighly inaccurate. To interpolate scalars to the 1x1 grid, you 
+ * can run a box_average with 9x9 grid and then use -new_grid to get the cell average values. This method 
+ * is, as expected, slightly smoother than the budget interpolation of -new_grid. For vectors, you have to 
+ * use the budget interpolation of the -new_grid option.
  * 
  * @author Wesley Ebisuzaki @date 3/2018
  */

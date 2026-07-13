@@ -33,7 +33,25 @@
  * @return 0 for success, does not return error codes.
  * 
  * ## Example: 
- * ???
+ * @code{.sh}
+ * $ wgrib2 ngac.t00z.a3df03  -for 2:6
+ * 2:77259:d=2014081000:TMP:1 hybrid level:3 hour fcst:
+ * 3:131943:d=2014081000:RH:1 hybrid level:3 hour fcst:
+ * 4:205847:d=2014081000:MASSMR:1 hybrid level:3 hour fcst:aerosol=Dust Dry:aerosol_size >=2e-07,<2e-06:
+ * 5:243914:d=2014081000:MASSMR:1 hybrid level:3 hour fcst:aerosol=Dust Dry:aerosol_size >=2e-06,<3.6e-06:
+ * 6:279272:d=2014081000:MASSMR:1 hybrid level:3 hour fcst:aerosol=Dust Dry:aerosol_size >=3.6e-06,<6e-06:
+ * @endcode
+ * 
+ * Message 4: mass mixing ratio (MASSMR) of Dry Dust, particle size ranges from 2e-7 meters to 2e-6 meters
+ * 
+ * @code{.sh}
+ * $ wgrib2 ngac.t00z.a3df03  -for 2:6 -aerosol_size
+ * 2:77259:
+ * 3:131943:
+ * 4:205847:aerosol_size <=2e-07,>2e-06
+ * 5:243914:aerosol_size <=2e-06,>3.6e-06
+ * 6:279272:aerosol_size <=3.6e-06,>6e-06
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 02/2012
  */
@@ -72,7 +90,10 @@ int f_aerosol_size(ARG0) {
  * @return 0 for success, does not return error codes.
  * 
  * ## Example: 
- * ???
+ * @code{.sh}
+ * $ wgrib2 wrib2 ngac.t00z.a2df03  -aerosol_wavelength -d 1 
+ * 1:0:aerosol_wavelength <=5.45e-07,>=5.65e-07
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 02/2012
  */

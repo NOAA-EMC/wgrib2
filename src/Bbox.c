@@ -114,9 +114,11 @@ static int get_cindex (int i, int nx) {
  * ## Usage
  * -ijbox i1:i2:di j1:j2:dj output_file format
  * 
- * i1:i2:di specifies the x-dimension, where i1 is the starting index, i2 is the ending index, and di is the increment.
- * j1:j2:dj specifies the y-dimension, where j1 is the starting index, j2 is the ending index, and dj is the increment.
- * output_file is written in the specified format (e.g., "bin", "text", "spread").
+ * - i1:i2:di specifies the x-dimension, where i1 is the starting index, i2 is the ending index, and di is the increment.
+ * - j1:j2:dj specifies the y-dimension, where j1 is the starting index, j2 is the ending index, and dj is the increment.
+ * - output_file is written in the specified format (e.g., "bin", "text", "spread").
+ * 
+ * @note -big_endian and -little_endian have no effect the bin type output
  * 
  * @param ARG4 List of function arguments set by wgrib2's main() function (see @ref ARG4). These arguments 
  * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
@@ -125,8 +127,20 @@ static int get_cindex (int i, int nx) {
  * @return 0 for success, error code otherwise.
  * 
  * ## Example: 
- * ???
  * 
+ * Wgrib2 when writing binary, can make a fortran header at the beginning of the grid and a fortran trailer at the end of 
+ * the grid. I wanted to create a file with fortran header and trailer surrounding each row of the grid. I was able to do 
+ * it with -ijox. The grid of rtgssthr_grb2 is 1041 x 441.
+ * 
+ * @code{.sh}
+ * rm output
+ * i=1
+ * while [ $i -le 441 ] ; do
+ *    wgrib2 rtgssthr_grb2 -append -header ijbox 1:1041 $i:$i output bin
+ *    i=`expr $i + 1`
+ * done
+ * @endcode
+ *
  * @author Arlindo da Silva @date 3/2008
  */
 int f_ijbox(ARG4) {

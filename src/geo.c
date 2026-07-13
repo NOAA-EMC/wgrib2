@@ -43,7 +43,6 @@
 #include "wmath.h"
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
 
 
 /** Pointer to array of latitude values. */

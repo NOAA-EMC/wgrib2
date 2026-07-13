@@ -35,10 +35,12 @@ extern int decode;
  * ## Usage
  * -checksum N
  * 
+ * <pre>
  * Where N is:
  *   -1: whole message
  *   1-8: section number
  *   data: grid-point data
+ * </pre>
  * 
  * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
  * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
@@ -55,7 +57,50 @@ extern int decode;
  * be slightly different. 
  * 
  * ## Example:
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -checksum 3
+ * 1:0:sec3_cksum=4006285726
+ * 2:4786:sec3_cksum=4006285726
+ * 3:9572:sec3_cksum=4006285726
+ * 4:13335:sec3_cksum=4006285726
+ * 5:17098:sec3_cksum=4006285726
+ * @endcode
+ * 
+ * Section 3 is the Grid Definition Section (GDS). All 5 grib messages have the same GDS.
+ * 
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -checksum -1
+ * 1:4:msg_cksum=827378178
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -checksum 3 | cut -f3 -d: | sort -u | wc -l
+ * 1
+ * @endcode
+ * 
+ * The above example prints out the number of grid defintion sections in the file by (1) creating 
+ * the checksum for the GDS, (2) extracting the GDS checksum, (3) finding the unique checksums 
+ * and finally counting them.
+ * 
+ * Space can be saved by putting combining like grib messages.  For example, if a 100 messages share 
+ * the same bitmap and discipline, then the 100 messages could be combined into one message with a 
+ * hundred submessages.  By combining the message, only one copy of the bitmap is needed.  This saves 
+ * 99 copies of the bitmap.
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -checksum 6 | sort -k3,3 -t: | wgrib2 test.grib -i -tosubmsg new.grb2
+ * 1:0:d=2008120200:TMP:800 mb:anl:
+ * 2:4786:d=2008120200:TMP:750 mb:anl:
+ * 3:9572:d=2008120200:RH:800 mb:anl:
+ * 4:13335:d=2008120200:RH:750 mb:anl:
+ * 5:17098:d=2008120200:TMP:2743 m above mean sea level:anl:
+ * @endcode
+ * 
+ * Submessage statistics:
+ * - # submessages written  : 5
+ * - Kbytes saved           : 0
+ * - Kbytes written         : 20
  * 
  * @author R.N. Bokhorst @date 06/2009
  */
