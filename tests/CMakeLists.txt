@@ -228,7 +228,7 @@ if (BUILD_LIB)
   shell_test(test_lib)
   # Test will not behave with Intel Classic compiler due to longjmp issues.
   if (NOT CMAKE_C_COMPILER_ID MATCHES "^Intel$")
-    build_c_api_test(test_c_api)
+    build_c_api_test(test_grb2_cmd)
   endif()
   build_c_api_test(test_grb2_mk_inv)
   build_test(test_string2time_unit)

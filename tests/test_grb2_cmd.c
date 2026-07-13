@@ -37,19 +37,7 @@ main()
         }
     }
     printf("ok!\n");
-    printf("Testing wgrib2_add_cmd()...\n");
-    printf("Testing with normal command string...\n");
-    {
-        int ret;
-
-        wgrib2_init_cmds();
-
-        if ((ret = wgrib2_add_cmd("-test"))) {
-            return 4;
-        }
-    }
-    printf("ok!\n");
-    printf("Testing with overly long command string...\n");
+    printf("Testing wgrib2_add_cmd() with overly long command string...\n");
     {
         char longopt[CMD_LEN + 1];
         wgrib2_init_cmds();
@@ -64,7 +52,7 @@ main()
         
     }
     printf("ok!\n");
-    printf("Testing with too many options...\n");
+    printf("Testing wgrib2_add_cmd() with too many options...\n");
     {
         int i;
         wgrib2_init_cmds();
@@ -79,7 +67,18 @@ main()
         }
     }
     printf("ok!\n");
+    printf("Testing wgrib2_add_cmd() with normal command string...\n");
+    {
+        int ret;
+
+        wgrib2_init_cmds();
+
+        if ((ret = wgrib2_add_cmd("-test"))) {
+            return 4;
+        }
+    }
+    printf("ok!\n");
+    printf("Testing wgrib2_list_cmd()...\n");
     printf("SUCCESS!\n");
-    
     return 0;
 }
