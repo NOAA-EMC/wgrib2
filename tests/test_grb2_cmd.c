@@ -95,7 +95,11 @@ main()
         wgrib2_init_cmds();
         wgrib2_add_cmd("-test");
         ret = wgrib2_cmd();
-        printf("wgrib2_cmd() returned %d.\n", ret);
+
+        if (ret != 8) {
+            printf("ERROR: wgrib2_cmd() returned %d.\n", ret);
+            return 13;
+        }
     }
     printf("ok!\n");
     printf("SUCCESS!\n");
