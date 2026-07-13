@@ -13,6 +13,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <setjmp.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 #define STDERR_FILE_NAME "test_stderr.txt"
