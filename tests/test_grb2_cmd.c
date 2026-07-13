@@ -93,6 +93,7 @@ main()
     {
         int ret;
         wgrib2_init_cmds();
+        wgrib2_add_cmd("-test");
         ret = wgrib2_cmd();
         printf("wgrib2_cmd() returned %d.\n", ret);
     }
