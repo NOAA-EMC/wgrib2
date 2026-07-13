@@ -34,7 +34,7 @@ jobs:
         package-variants: ${{ matrix.variants }}
         custom-recipe: spack/package.py
         use-repo-cache: false
-        spack-compiler: gcc
+        spack-compiler: gcc 
         use-common-build-cache: false
         cache-spack-lock: false
         repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-2
