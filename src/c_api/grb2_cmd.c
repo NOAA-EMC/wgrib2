@@ -57,14 +57,22 @@ int wgrib2_cmd(void) {
 
 /**
  * List all command-line options used.
- *
+ * 
+  * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2018 | W. Ebisuzaki | Initial
+ * 7/2026 | A. Stahl | Added return codes for testing purposes
+ * 
+ * @return Returns 1 if no commands have been initialized, 0 otherwise.
+ * 
  * @author Wesley Ebisuzaki @date 3/2018
  */
 int wgrib2_list_cmd(void) {
     int i;
     if (n_cmds < 0) {
         fprintf(stderr,"no wgrib2 cmds\n");
-        return 0;
+        return 1;
     }
     fprintf(stderr,"wgrib2  ");
     for (i = 1; i < n_cmds; i++) {
