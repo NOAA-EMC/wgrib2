@@ -38,7 +38,6 @@ jobs:
         use-common-build-cache: true
         cache-spack-lock: true
         repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-
-        spack-ref: faa14e1c4943025dbf14505ebbc97027868950fd
 
   recipe-check:
     runs-on: ubuntu-latest
