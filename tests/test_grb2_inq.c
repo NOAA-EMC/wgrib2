@@ -396,7 +396,7 @@ main()
             return 33;
         }
 
-        options = DATA;
+        options = DATA|LATLON|META|GRIDMETA;
         ret = grb2_inqVA(SMALL_GRB_FILE, SMALL_GRB_INV, options, NULL);
         if (ret != 0) {
             printf("ERROR: grb2_inqVA() returned %lld, expected 0.\n", ret);
