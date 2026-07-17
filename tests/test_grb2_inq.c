@@ -9,8 +9,8 @@
 #include <stdio.h>
 
 #define NDATA 100
-#define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
-#define GRB_INV "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
+#define GRB_FILE "data/gdas.t12z.pgrb2.1p00.anl.75r.grib2"
+#define GRB_INV "junk_grb2_inq.inv"
 
 int wgrib2_set_reg(float *data, size_t size, int reg);
 int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n);
@@ -338,6 +338,12 @@ main()
         long long int ret;
         unsigned int options;
 
+        /* Make the inv file. */
+        if (grb2_mk_inv(GRB_FILE, GRB_INV)) {
+            printf("ERROR: grb2_mk_inv() failed.\n");
+            return 1;
+        }
+
         /* Reset to avoid unexpected behavior. */
         grb2_inq_set_state(0, 0, 0);
 
@@ -388,7 +394,7 @@ main()
             return 32;
         }
 
-        options = DATA|SEQUENTIAL;
+        options = DATA;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
         if (ret != 0) {
             printf("ERROR: grb2_inqVA() returned %lld, expected 0.\n", ret);
