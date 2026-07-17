@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #define NDATA 100
-#define GRB_FILE "data/png_4bits.png"
+#define GRB_FILE "data/ref_c3_overflow.grib2"
 #define GRB_INV "junk_grb2_inq.inv"
 
 int wgrib2_set_reg(float *data, size_t size, int reg);
