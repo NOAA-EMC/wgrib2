@@ -340,12 +340,6 @@ main()
         long long int ret;
         unsigned int options;
 
-        /* Make the inv file. */
-        if (grb2_mk_inv(GRB_FILE, GRB_INV)) {
-            printf("ERROR: grb2_mk_inv() failed.\n");
-            return 1;
-        }
-
         /* Reset to avoid unexpected behavior. */
         grb2_inq_set_state(0, 0, 0);
 
@@ -396,11 +390,17 @@ main()
             return 32;
         }
 
-        options = DATA|SEQUENTIAL;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        /* Make the inv file for SMALL_GRB_FILE. */
+        if (grb2_mk_inv(SMALL_GRB_FILE, SMALL_GRB_INV)) {
+            printf("ERROR: grb2_mk_inv() failed.\n");
+            return 33;
+        }
+
+        options = DATA;
+        ret = grb2_inqVA(SMALL_GRB_FILE, SMALL_GRB_INV, options, NULL);
         if (ret != 0) {
             printf("ERROR: grb2_inqVA() returned %lld, expected 0.\n", ret);
-            return 33;
+            return 34;
         }
 
     }
