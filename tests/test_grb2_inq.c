@@ -338,11 +338,39 @@ main()
         long long int ret;
         unsigned int options;
 
-        options = SEQUENTIAL;
+        /* Reset to avoid unexpected behavior. */
+        grb2_inq_set_state(0, 0, 0);
 
+
+        /* WENS & LATLON conflict test. Should return -1. */
+        options = WENS | LATLON;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        if (ret != -1) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -1.\n", ret);
+            return 26;
+        }
 
-        printf("grb2_inqVA() returned %lld\n", ret);
+        /* WENS & RAW_ORDER conflict test. Should return -1. */
+        options = WENS | RAW_ORDER;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        if (ret != -1) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -1.\n", ret);
+            return 27;
+        }
+
+        /* LATLON & RAW_ORDER conflict test. Should return -1. */
+        options = LATLON | RAW_ORDER;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        if (ret != -1) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -1.\n", ret);
+            return 28;
+        }
+
+        /* Add additional invalid argument. Should return -2. */
+        options = SEQUENTIAL;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "invalid_arg", NULL);
+        printf("grb2_inqVA() returned %lld, expected -2.\n", ret);
+
     }
     printf("SUCCESS!\n");
     return 0;
