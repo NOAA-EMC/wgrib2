@@ -242,6 +242,10 @@ main()
         npnts = 0;
         grb2_inq_set_state(last_options, good, npnts);
 
+        /* Set register 17 with metadata. */
+        wgrib2_set_mem_buffer(data, ndata, 17);
+
+
         /* Last find failed (good = 0), so should return -1. */
         ret = grb2_size_gridmeta();
         if (ret != -1) {
