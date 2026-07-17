@@ -353,6 +353,12 @@ int grb2_get_meta(unsigned char *meta, int nbytes) {
 /**
  * Get the size of the memory buffer for grid metadata stored in RPN register.
  *
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2018 | W. Ebisuzaki | Initial
+ * 7/2026 | A. Stahl | New error codes for testing purposes
+ * 
  * @return Size of the memory buffer for grid metadata on success, error code otherwise
  * - 0 :: Failure in wgrib2_get_mem_buffer_size()
  * - -1 :: last find did not work
@@ -381,10 +387,21 @@ int grb2_size_gridmeta(void) {
 /**
  * Get memory-copy of grid metadata from RPN register.
  * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2018 | W. Ebisuzaki | Initial
+ * 7/2026 | A. Stahl | New error codes for testing purposes
+ * 
  * @param meta Pointer to the grid metadata array.
  * @param nbytes Size of the grid metadata buffer.
  * 
- * @return 0 on success, error code otherwise.
+ * @return 
+ * - 0 :: success
+ * - 10 :: last find did not work
+ * - 11 :: grb2_inq did not request reading grid metadata
+ * - 12 :: size of grid metadata = 0, grid problem?
+ * - 13 :: size of metadata is too big
  * 
  * @note Grid metadata stored in register 17.
  * 
@@ -396,21 +413,21 @@ int grb2_get_gridmeta(unsigned char *meta, int nbytes) {
 
     if (good == 0) {
         fprintf(stderr,"grb2_get_gridmeta: last find did not work.\n");
-        return 1;
+        return 10;
     }
     if ((last_options & GRIDMETA) == 0) {
         fprintf(stderr,"grb2_get_gridmeta: grb2_inq did not request reading metadata.\n");
-        return 1;
+        return 11;
     }
 
     size = wgrib2_get_mem_buffer_size(17);
     if (size == 0) {
         fprintf(stderr,"grb2_get_gridmeta: size of gridmeta = 0, grid problem?.\n");
-        return 1;
+        return 12;
     }
     if (size > INT_MAX  || size+1 > (size_t) nbytes) {
         fprintf(stderr,"grb2_get_gridmeta: size of metadata is too big.\n");
-        return 1;
+        return 13;
     }
     err = wgrib2_get_mem_buffer(meta, size, 17);
     if (err == 0) meta[size] = 0;	/* end the string */

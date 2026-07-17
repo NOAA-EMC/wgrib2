@@ -245,7 +245,6 @@ main()
         /* Set register 17 with metadata. */
         wgrib2_set_mem_buffer(data, ndata, 17);
 
-
         /* Last find failed (good = 0), so should return -1. */
         ret = grb2_size_gridmeta();
         if (ret != -1) {
@@ -270,6 +269,66 @@ main()
         if (ret != (int)(ndata + 1)) {
             printf("ERROR: grb2_size_gridmeta() returned %d, expected %d.\n", ret, (int)(ndata + 1));
             return 20;
+        }
+    }
+    printf("Testing grb2_get_gridmeta()...\n");
+    {
+        int ret;
+        int last_options, good, npnts;
+        size_t ndata = NDATA;
+        unsigned char data[NDATA] = { 0 };
+
+        /* Reset all from last tests. */
+        last_options = 0;
+        good = 0;
+        npnts = 0;
+        grb2_inq_set_state(last_options, good, npnts);
+
+        /* Last find failed (good = 0), so should return 10. */
+        ret = grb2_get_gridmeta(data, ndata);
+        if (ret != 10) {
+            printf("ERROR: grb2_get_gridmeta() returned %d, expected 10.\n", ret);
+            return 21;
+        }
+
+        /* Invalid options (reading grid metadata not requested). Should return 11. */
+        good = 1;
+        grb2_inq_set_state(last_options, good, npnts);
+
+        ret = grb2_get_gridmeta(data, ndata);
+        if (ret != 11) {
+            printf("ERROR: grb2_get_gridmeta() returned %d, expected 11.\n", ret);
+            return 22;
+        }
+
+        last_options = META;
+        grb2_inq_set_state(last_options, good, npnts);
+
+        /* Set register 17 with bad size. */
+        wgrib2_set_mem_buffer(data, 0, 17);
+
+        /* Size of grid metadata is 0, so should return 12 (grid problem). */
+        ret = grb2_get_gridmeta(data, ndata);
+        if (ret != 12) {
+            printf("ERROR: grb2_get_gridmeta() returned %d, expected 12.\n", ret);
+            return 23;
+        }
+
+        /* Set register 17 with grid metadata of correct size. */
+        wgrib2_set_mem_buffer(data, ndata, 17);
+
+        /* Size mismatch. Should return 13. */
+        ret = grb2_get_gridmeta(data, ndata-1);
+        if (ret != 13) {
+            printf("ERROR: grb2_get_gridmeta() returned %d, expected 13.\n", ret);
+            return 24;
+        }
+
+        /* Valid Case. Should return 0. */
+        ret = grb2_get_gridmeta(data, ndata+1);
+        if (ret != 0) {
+            printf("ERROR: grb2_get_gridmeta() returned %d, expected 0.\n", ret);
+            return 25;
         }
     }
     printf("SUCCESS!\n");
