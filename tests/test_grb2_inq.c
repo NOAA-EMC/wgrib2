@@ -412,7 +412,6 @@ main()
             printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
             return 36;
         }
-
     }
     printf("SUCCESS!\n");
     return 0;
