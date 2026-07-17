@@ -357,7 +357,7 @@ int grb2_get_meta(unsigned char *meta, int nbytes) {
  * Date | Programmer | Comments
  * -----|------------|---------
  * 3/2018 | W. Ebisuzaki | Initial
- * 7/2026 | A. Stahl | New error codes for testing purposes
+ * 7/2026 | A. Stahl | New error codes for testing purposes + replaced META w/ GRIDMETA
  * 
  * @return Size of the memory buffer for grid metadata on success, error code otherwise
  * - 0 :: Failure in wgrib2_get_mem_buffer_size()
@@ -391,7 +391,7 @@ int grb2_size_gridmeta(void) {
  * Date | Programmer | Comments
  * -----|------------|---------
  * 3/2018 | W. Ebisuzaki | Initial
- * 7/2026 | A. Stahl | New error codes for testing purposes + replaced META with GRIDMETA
+ * 7/2026 | A. Stahl | New error codes for testing purposes
  * 
  * @param meta Pointer to the grid metadata array.
  * @param nbytes Size of the grid metadata buffer.
