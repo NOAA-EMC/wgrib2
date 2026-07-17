@@ -32,29 +32,29 @@ main()
 
         grb2_inq_set_state(last_options, good, npnts);
 
-        /* Last find failed (good = 0), so should return 3. */
+        /* Last find failed (good = 0), so should return 10. */
         ret = grb2_get_data(data, ndata);
-        if (ret != 3) {
-            printf("ERROR: grb2_get_data() returned %d, expected 3.\n", ret);
+        if (ret != 10) {
+            printf("ERROR: grb2_get_data() returned %d, expected 10.\n", ret);
             return 2;
         }
 
-        /* Wrong size data (ndata != npnts). Should return 2. */
+        /* Wrong size data (ndata != npnts). Should return 11. */
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
         ret = grb2_get_data(data, ndata);
-        if (ret != 2) {
-            printf("ERROR: grb2_get_data() returned %d, expected 2.\n", ret);
+        if (ret != 11) {
+            printf("ERROR: grb2_get_data() returned %d, expected 11.\n", ret);
             return 3;
         }
 
-        /* Invalid options (reading data not requested). Should return 4. */
+        /* Invalid options (reading data not requested). Should return 12. */
         good = 1;
         npnts = ndata;
         grb2_inq_set_state(last_options, good, npnts);
         ret = grb2_get_data(data, ndata);
-        if (ret != 4) {
-            printf("ERROR: grb2_get_data() returned %d, expected 4.\n", ret);
+        if (ret != 12) {
+            printf("ERROR: grb2_get_data() returned %d, expected 12.\n", ret);
             return 4;
         }
 
@@ -68,7 +68,7 @@ main()
             printf("ERROR: grb2_get_data() returned %d, expected 0.\n", ret);
             return 5;
         }
-    }
+    }    
     printf("SUCCESS!\n");
     return 0;
 }

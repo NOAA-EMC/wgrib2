@@ -190,10 +190,11 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
  * 
  * @return 
  * - 0 :: success
- * - 1 :: invalid register
- * - 2 :: size mismatch
- * - 3 :: last inquiry was not successful
- * - 4 :: invalid options
+ * - 10 :: last find did not work
+ * - 11 :: wrong size data
+ * - 12 :: grb2_inq did not request reading data
+ * 
+ * See documentation for wgrib2_get_reg_data() for additional error codes.
  * 
  * @note Grid data stored in register 19.
  * 
@@ -203,15 +204,15 @@ int grb2_get_data(float *data, int ndata) {
 
     if (good == 0) {
         fprintf(stderr,"grb2_get_data: last find did not work.\n");
-        return 3;
+        return 10;
     }
     if (ndata != npnts) {
         fprintf(stderr,"grb2_get_data: wrong size data.\n");
-        return 2;
+        return 11;
     }
     if ((last_options & DATA) == 0) {
         fprintf(stderr,"grb2_get_data: grb2_inq did not request reading data.\n");
-        return 4;
+        return 12;
     }
 
     return  wgrib2_get_reg_data(data, ndata, 19);
@@ -220,11 +221,24 @@ int grb2_get_data(float *data, int ndata) {
 /**
  * Get memory-copy of longitude and latitude data from RPN registers.
  *
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2018 | W. Ebisuzaki | Initial
+ * 7/2026 | A. Stahl | New error codes for testing purposes
+ * 
  * @param lon Pointer to the longitude array.
  * @param lat Pointer to the latitude array.
  * @param ndata Number of data points.
  *
- * @return 0 on success, error code otherwise.
+ * @return 
+ * - 0 :: success
+ * - 10 :: last find did not work
+ * - 11 :: wrong size data
+ * - 12 :: grb2_inq did not request reading data
+ * 
+ * See documentation for wgrib2_get_reg_data() for additional error codes. This function
+ * returns the sum of the error codes from reading the longitude and latitude registers.
  *
  * @note Longitude and latitude data stored in registers 17 and 18, respectively.
  * 
@@ -234,15 +248,15 @@ int grb2_get_lonlat(float *lon, float *lat, int ndata) {
     int err1, err2;
     if (good == 0) {
         fprintf(stderr,"grb2_get_lonlat: last find did not work.\n");
-        return 1;
+        return 10;
     }
     if (ndata != npnts) {
         fprintf(stderr,"grb2_get_lonlat: wrong size data.\n");
-        return 1;
+        return 11;
     }
     if ((last_options & LONLAT) == 0) {
         fprintf(stderr,"grb2_get_lonlat: grb2_inq did not request reading lonlat.\n");
-        return 1;
+        return 12;
     }
 
     err1 = wgrib2_get_reg_data(lon, ndata, 17);
