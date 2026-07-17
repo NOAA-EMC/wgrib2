@@ -26,10 +26,10 @@ int wgrib2_get_mem_buffer(unsigned char *my_buffer, size_t size, int n);
 int wgrib2_get_reg_data(float *data, size_t size, int reg);
 
 /** Last options used. */
-static int last_options;
+STATIC_TESTABLE int last_options;
 
 /** Flag indicating if the inquiry was successful. */
-static int good;
+STATIC_TESTABLE int good;
 
 /** Number of points in grid. */
 static unsigned int npnts;
