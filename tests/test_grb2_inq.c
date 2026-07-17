@@ -11,8 +11,6 @@
 #define NDATA 100
 #define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
 #define GRB_INV "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
-#define SMALL_GRB_FILE "data/png_4bits.png"
-#define SMALL_GRB_INV "junk_grb2_inq.inv"
 
 int wgrib2_set_reg(float *data, size_t size, int reg);
 int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n);
@@ -384,20 +382,14 @@ main()
 
         /* Non-sequential option with empty argument. Should return -5. */
         options = 0;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "", NULL);
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "");
         if (ret != -5) {
             printf("ERROR: grb2_inqVA() returned %lld, expected -5.\n", ret);
             return 32;
         }
 
-        /* Make the inv file for SMALL_GRB_FILE. */
-        if (grb2_mk_inv(SMALL_GRB_FILE, SMALL_GRB_INV)) {
-            printf("ERROR: grb2_mk_inv() failed.\n");
-            return 33;
-        }
-
         options = DATA|LATLON|META|GRIDMETA;
-        ret = grb2_inqVA(SMALL_GRB_FILE, SMALL_GRB_INV, options, NULL);
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "SWELL");
         if (ret != 0) {
             printf("ERROR: grb2_inqVA() returned %lld, expected 0.\n", ret);
             return 34;
