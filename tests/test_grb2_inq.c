@@ -338,11 +338,11 @@ main()
         long long int ret;
         unsigned int options;
 
-        options = 0;
+        options = SEQUENTIAL;
 
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
 
-        printf("grb2_inqVA() returned %d\n", ret);
+        printf("grb2_inqVA() returned %lld\n", ret);
     }
     printf("SUCCESS!\n");
     return 0;
