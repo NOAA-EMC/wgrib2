@@ -11,6 +11,7 @@
 #define NDATA 100
 
 int wgrib2_set_reg(float *data, size_t size, int reg);
+int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n);
 
 int
 main()
@@ -124,6 +125,50 @@ main()
             printf("ERROR: grb2_get_lonlat() returned %d, expected 0.\n", ret);
             return 9;
         }
+    }
+    printf("Testing grb2_size_meta() and grb2_get_meta()...\n");
+    {
+        int ret;
+        int last_options, good, npnts;
+        size_t ndata = NDATA;
+        unsigned char data[NDATA] = { 0 };
+
+        /* Set register 18 with metadata. */
+        wgrib2_set_mem_buffer(data, ndata, 18);
+
+        /* Reset all from last tests. */
+        last_options = 0;
+        good = 0;
+        npnts = 0;
+
+        grb2_inq_set_state(last_options, good, npnts);
+
+        /* Last find failed (good = 0), so should return -1. */
+        ret = grb2_size_meta();
+        if (ret != -1) {
+            printf("ERROR: grb2_size_meta() returned %d, expected -1.\n", ret);
+            return 10;
+        }
+
+        /* Invalid options (reading metadata not requested). Should return -2. */
+        good = 1;
+        grb2_inq_set_state(last_options, good, npnts);
+        ret = grb2_size_meta();
+        if (ret != -2) {
+            printf("ERROR: grb2_size_meta() returned %d, expected -2.\n", ret);
+            return 11;
+        }
+
+        /* Valid Case. Should return buffer size. */
+        last_options = META;
+        good = 1;
+        grb2_inq_set_state(last_options, good, npnts);
+        ret = grb2_size_meta();
+        if (ret != (int)ndata) {
+            printf("ERROR: grb2_size_meta() returned %d, expected %d.\n", ret, (int)ndata);
+            return 12;
+        }
+
     }
     printf("SUCCESS!\n");
     return 0;

@@ -235,7 +235,7 @@ int grb2_get_data(float *data, int ndata) {
  * - 0 :: success
  * - 10 :: last find did not work
  * - 11 :: wrong size data
- * - 12 :: grb2_inq did not request reading data
+ * - 12 :: grb2_inq did not request reading lonlat
  * 
  * See documentation for wgrib2_get_reg_data() for additional error codes. This function
  * returns the sum of the error codes from reading the longitude and latitude registers.
@@ -267,8 +267,17 @@ int grb2_get_lonlat(float *lon, float *lat, int ndata) {
 /**
  * Get the size of the memory buffer for metadata stored in RPN register.
  *
- * @return Size of the memory buffer for metadata, or 0 if an error occurred.
- *
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2018 | W. Ebisuzaki | Initial
+ * 7/2026 | A. Stahl | New error codes for testing purposes
+ * 
+ * @return Size of the memory buffer for metadata on success, error code otherwise
+ * - 0 :: Failure in wgrib2_get_mem_buffer_size()
+ * - -1 :: last find did not work
+ * - -2 :: grb2_inq did not request reading metadata
+ * 
  * @note Metadata stored in register 18.
  *
  * @author Wesley Ebisuzaki @date 3/2018
@@ -278,11 +287,11 @@ int grb2_size_meta(void) {
 
     if (good == 0) {
         fprintf(stderr,"grb2_size_meta: last find did not work.\n");
-        return 0;
+        return -1;
     }
     if ((last_options & META) == 0) {
         fprintf(stderr,"grb2_size_meta: grb2_inq did not request reading metadata.\n");
-        return 0;
+        return -2;
     }
     size = (unsigned int) wgrib2_get_mem_buffer_size(18);
     if (size == 0) return 0;
