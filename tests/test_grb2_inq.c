@@ -10,9 +10,6 @@
 
 #define NDATA 100
 
-extern int last_options;
-extern int good;
-
 int
 main()
 {
@@ -22,7 +19,10 @@ main()
         int ndata = NDATA;
         float data[NDATA] = { 0. };
 
-        good = 1;
+        ret = grb2_inq_good();
+
+        printf("grb2_inq_good() returned: %d\n", ret);
+
     }
     printf("SUCCESS!\n");
     return 0;

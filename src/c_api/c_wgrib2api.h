@@ -7,18 +7,6 @@
 
 int grb2_mk_inv(char *grb, char *inv);
 
-#ifdef TESTING_MODE 
-#define STATIC_TESTABLE
-#else
-/**
- * Some unit tests need to be able to access static variables in order to test functions in isolation. Variables
- * that are "STATIC_TESTABLE" rather than just "static" can be accessed externally if TESTING_MODE is defined.
- * 
- * TESTING_MODE is undefined as the default, making STATIC_TESTABLE equivalent to static.
- */
-#define STATIC_TESTABLE static
-#endif
-
 #define grb2_UNDEFINED       9.999e20   /**< Undefined value - if bitmap. */
 #define grb2_UNDEFINED_LOW   9.9989e20  /**< Floor of undefined value.*/
 #define grb2_UNDEFINED_HIGH  9.9991e20  /**< Ceiling of undefined value.*/
@@ -65,6 +53,10 @@ int wgrib2_add_cmd(const char *string);
 int wgrib2_cmd(void);
 int wgrib2_list_cmd(void);
 
-
 void fatal_error(const char *fmt, ...);
 
+/* Functions to support unit testing only. */
+int grb2_inq_last_options(void);
+int grb2_inq_good(void);
+int grb2_inq_npnts(void);
+void grb2_inq_set_state(int last_options_val, int good_val, int npnts_val);

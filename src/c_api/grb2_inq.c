@@ -26,10 +26,10 @@ int wgrib2_get_mem_buffer(unsigned char *my_buffer, size_t size, int n);
 int wgrib2_get_reg_data(float *data, size_t size, int reg);
 
 /** Last options used. */
-STATIC_TESTABLE int last_options;
+static int last_options;
 
 /** Flag indicating if the inquiry was successful. */
-STATIC_TESTABLE int good;
+static int good;
 
 /** Number of points in grid. */
 static unsigned int npnts;
@@ -365,4 +365,54 @@ int grb2_get_gridmeta(unsigned char *meta, int nbytes) {
     err = wgrib2_get_mem_buffer(meta, size, 17);
     if (err == 0) meta[size] = 0;	/* end the string */
     return err;
+}
+
+
+/**
+ * For testing purposes only. Get the value of the static variable last_options.
+ *
+ * @return The current value of last_options.
+ * 
+ * @author Alyson Stahl @date 7/2026
+ */
+int grb2_inq_last_options(void) {
+    return last_options;
+}
+
+/**
+ * For testing purposes only. Get the value of the static variable good.
+ *
+ * @return The current value of good.
+ * 
+ * @author Alyson Stahl @date 7/2026
+ */
+int grb2_inq_good(void) {
+    return good;
+}
+
+/**
+ * For testing purposes only. Get the value of the static variable npnts.
+ *
+ * @return The current value of npnts.
+ * 
+ * @author Alyson Stahl @date 7/2026
+ */
+int grb2_inq_npnts(void) {
+    return npnts;
+}
+
+/**
+ * For testing purposes only. Set the state of the static variables last_options, good, and npnts.
+ *
+ * @param last_options_val The value to set for last_options. Bitwise OR of option flags used in last inquiry.
+ * options = SEQUENTIAL | DATA | LATLON | WENS | RAW_ORDER | META | GRIDMETA | REGEX
+ * @param good_val The value to set for good. It is a flag indicating if last inquiry was successful. (0 = failure, otherwise success)
+ * @param npnts_val The value to set for npnts. It represents the number of data points in the last inquiry.
+ * 
+ * @author Alyson Stahl @date 7/2026
+ */
+void grb2_inq_set_state(int last_options_val, int good_val, int npnts_val) {
+    last_options = last_options_val;
+    good = good_val;
+    npnts = npnts_val;
 }
