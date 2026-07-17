@@ -389,7 +389,21 @@ main()
             return 31;
         }
 
+        /* Non-sequential option with empty argument. Should return -5. */
+        options = 0;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "", NULL);
+        if (ret != -5) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -5.\n", ret);
+            return 32;
+        }
 
+        options = DATA;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        if (ret != 0) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected 0.\n", ret);
+            return 33;
+        }
+        
 
     }
     printf("SUCCESS!\n");
