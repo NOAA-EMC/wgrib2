@@ -190,12 +190,18 @@ main()
         }
 
         /* Invalid options (reading metadata not requested). Should return 11. */
+        good = 1;
+        grb2_inq_set_state(last_options, good, npnts);
+
         ret = grb2_get_meta(data, ndata);
         if (ret != 11) {
             printf("ERROR: grb2_get_meta() returned %d, expected 11.\n", ret);
             return 14;
         }
 
+        last_options = META;
+        grb2_inq_set_state(last_options, good, npnts);
+        
         /* Set register 18 with bad size. */
         wgrib2_set_mem_buffer(data, 0, 18);
 
