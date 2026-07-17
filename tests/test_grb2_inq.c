@@ -368,7 +368,7 @@ main()
 
         /* Add additional invalid argument. Should return -2. */
         options = SEQUENTIAL;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "invalid_arg", NULL);
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
         printf("grb2_inqVA() returned %lld, expected -2.\n", ret);
 
     }
