@@ -341,9 +341,67 @@ main()
         /* Reset to avoid unexpected behavior. */
         grb2_inq_set_state(0, 0, 0);
 
-        options = 0;
+        /* WENS & LATLON conflict test. Should return -1. */
+        options = WENS | LATLON;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
-        printf("grb2_inqVA() returned %lld.\n", ret);
+        if (ret != -1) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -1.\n", ret);
+            return 26;
+        }
+
+        /* WENS & RAW_ORDER conflict test. Should return -1. */
+        options = WENS | RAW_ORDER;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        if (ret != -1) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -1.\n", ret);
+            return 27;
+        }
+
+        /* LATLON & RAW_ORDER conflict test. Should return -1. */
+        options = LATLON | RAW_ORDER;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        if (ret != -1) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -1.\n", ret);
+            return 28;
+        }
+
+        /* Invalid file name. Should return -2. */
+        options = SEQUENTIAL;
+        ret = grb2_inqVA("invalid.grib2", GRB_INV, options, NULL);
+        if (ret != -2) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -2.\n", ret);
+            return 29;
+        }
+
+        /* Invalid argument. Should return -3. */
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
+        if (ret != -3) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -3.\n", ret);
+            return 30;
+        }
+
+        /* Non-sequential option without proper workflow. Should return -4. */
+        options = 0;
+        ret = grb2_inqVA(GRB_FILE, "invalid.inv", options, NULL);
+        if (ret != -4) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -4.\n", ret);
+            return 31;
+        }
+
+        /* Non-sequential option with empty argument. Should return -5. */
+        options = 0;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "", NULL);
+        if (ret != -5) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -5.\n", ret);
+            return 32;
+        }
+
+        options = DATA;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        if (ret != 0) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected 0.\n", ret);
+            return 33;
+        }
 
     }
     printf("SUCCESS!\n");
