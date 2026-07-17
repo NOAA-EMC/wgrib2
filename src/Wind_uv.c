@@ -75,8 +75,29 @@ extern enum output_grib_type grib_type;
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 gep19.t00z.pgrb2af180 -wind_dir wind.grb -wind_speed wind.grb -match "(UGRD|VGRD)"
+ * 4.1:86046:d=2009060500:UGRD:200 mb:180 hour fcst:ENS=+19
+ * 4.2:86046:d=2009060500:VGRD:200 mb:180 hour fcst:ENS=+19
+ * 8.1:226831:d=2009060500:UGRD:250 mb:180 hour fcst:ENS=+19
+ * 8.2:226831:d=2009060500:VGRD:250 mb:180 hour fcst:ENS=+19
+ * @endcode
  * 
+ * @code{.sh}
+ * $ wgrib2 wind.grb -wind_uv uv.grb
+ * 1:0:d=2009060500:WDIR:200 mb:180 hour fcst:ENS=+19
+ * 2:97922:d=2009060500:WIND:200 mb:180 hour fcst:ENS=+19
+ * 3:179554:d=2009060500:WDIR:250 mb:180 hour fcst:ENS=+19
+ * 4:277476:d=2009060500:WIND:250 mb:180 hour fcst:ENS=+19
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 uv.grb
+ * 1:0:d=2009060500:UGRD:200 mb:180 hour fcst:ENS=+19
+ * 2:89777:d=2009060500:UGRD:200 mb:180 hour fcst:ENS=+19
+ * 3:179554:d=2009060500:UGRD:250 mb:180 hour fcst:ENS=+19
+ * 4:269331:d=2009060500:UGRD:250 mb:180 hour fcst:ENS=+19
+ * @endcode
  * @author Wesley Ebisuzaki @date 4/2019
  */
 int f_wind_uv(ARG1) {

@@ -51,7 +51,16 @@
  * @return Always returns 0
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 sref.t03z.pgrb243.prob.grib2 -prob
+ * 1:0:prob <273
+ * 2:1378:prob <273
+ * 3:2756:prob >500
+ * 4:6309:prob >1000
+ * 5:8800:prob >2000
+ * 6:9801:prob >3000
+ * 7:10262:prob >4000
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 11/2008
  */

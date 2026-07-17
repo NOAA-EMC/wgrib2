@@ -786,10 +786,11 @@ static int do_ave(struct ave_struct *save) {
  * Code_Table_4.11
  * - 1 or analyses,  time series of set of analyses/forecasts
  * - 2 or forecast,  time series from one (long) forecast
- * 
+ * <pre>
  * (time interval):  (integer)(units)
  * 
  * units:            hr, dy, mo, yr, mn
+ * </pre>
  * 
  * ### Code Table 4.11 = 1 (analyses)
  * When Code Table 4.1 is set to 1, the input fields have to be processed in a special order. 
@@ -797,7 +798,8 @@ static int do_ave(struct ave_struct *save) {
  * process 4 fields with reference times incrementing by 6 hours with the same forecast time, 
  * variable, level and grid. Whenever the field is unexpected, a new average is made. Note: 
  * the -time_processing option will handle missing fields. For example
- * 
+ *
+ * <pre> 
  * Code Table 4.10 = 0, Code Table 4.11 = 1
  *
  *      U500 2000-01-02 00Z             start ave
@@ -814,12 +816,14 @@ static int do_ave(struct ave_struct *save) {
  *      Z500 2000-01-02 18Z             end ave
  * 
  * Code Table 4.1 = 1 is good for making means of many analyses. 
+ * </pre>
  * 
  * ### Code Table 4.11 = 2 (forecast)
  * When Code Table 4.1 is set to 1, the input fields have to be processed in a special order. 
  * Suppose that you want to make a daily average from one forecast with using forecast 
  * hour = 0, 6, 12 and 18. (The forecast for the first day.) 
  * 
+ * <pre>
  * Code Table 4.10 = 0, Code Table 4.11 = 2
  * 
  *      U500 start 2000-01-02 00Z fhour=00 hours    start ave
@@ -836,6 +840,7 @@ static int do_ave(struct ave_struct *save) {
  *      T500 start 2000-01-02 00Z fhour=18 hours    end ave
  * 
  * Code Table 4.11 = 2 is good for processing a single forecast run. 
+ * </pre>
  * 
  * ### Code Table 4.11 = 3, 4, 5
  * These values of Code Table 4.11 are not commonly used and are not supported. 
@@ -883,7 +888,97 @@ static int do_ave(struct ave_struct *save) {
  * ### -fcst_ave (dt) (output)
  * This option has been replaced by a macro that calls "-time_processing 0 2 (dt) (output)". 
  * 
- * ## Limitations
+ * ## Minutes and Seconds 
+ * There is no minutes time unit. Wgrib2 uses the standard GrADS names for time units which means the "mn" 
+ * is the unit for minutes. Unfortunately it is too easy to confuse "mn" with the month time unit. When 
+ * there is a real need for minutes, then "mn" will be added. 
+ * 
+ * ## Fast Averaging
+ * Suppose we have a month of analyses at 3 hour intervals and want to make a monthly mean for Nov. 2014. 
+ * Using the above approach, the steps would be 
+ * 
+ * @code{.sh}
+ * $cat narr.201411????.grb2 >tmp.grb2
+ * $ wgrib2 tmp.grb2 |  \
+ *      sort -t: -k4,4 -k5,5 -k6,6 -k3,3 | \
+ *      wgrib2 tmp.grb -i -set_grib_type c3 -ave 3hr narr.201411
+ * @endcode
+ * 
+ * - The first line creates a file with all the data.
+ * - The second line make an inventory.
+ * - The third line sorts the inventory in the order for -ave to process.
+ * - The fourth line makes the average by processing data in the order determined by the inventory created by line 3.
+ * 
+ * The above approach processes one average at a time and requires a minimal amout of memory. However, if you count 
+ * the I/O operations, you find that there are 4 I/O operations for every field as well as the writes of the monthly 
+ * means. In addition, the read (line 4) is random access. 
+ * 
+ * HPC file systems are very fast for large files that are read sequentially. On the other hand, HPC file systems are 
+ * horrible for small random access reads like in the previous example. Making monthly means by averaging 3 hourly NARR 
+ * data was taking about three quarters of an hour on a multi-million dollar machine. The problem was that the file 
+ * system was optimized for large sequential reads rather than small random-access reads. The following shows another approach. 
+ * 
+ * @code{.sh}
+ * $ cat narr.201411????.grb2 | \
+ *      wgrib2 - \
+ *          -if_fs ":HGT:200 mb:" -ave 3hr narr.201411 -endif \
+ *          -if_fs ":UGRD:200 mb:" -ave 3hr narr.201411 -endif \
+ *          -if_fs ":VGRD:200 mb:" -ave 3hr narr.201411 -endif \
+ *          -if_fs ":TMP:200 mb:" -ave 3hr narr.201411 -endif
+ * @endcode
+ * 
+ * - The first line copies the data in chronological order and writes it to the pipe.
+ * - The second line has wgrib2 read the grib data from the pipe.
+ * - The third line selects the Z200 fields and runs the averaging option on it.  We are assuming the narr.* fields only 
+ * have one Z200 field and narr.201411???? puts the data into chronological order.
+ * - Lines 4-6 apply the averaging option to other fields.
+ * 
+ * The above approach computes the mean of Z200, U200, V200 and T200 data at the same time with the use of more memory. 
+ * The I/O consists of sequential read of all the files and the writes of the monthly means. The above script only creates 
+ * the mean of Z200, U200, V200 and T200 but you could write a very long command line and compute the mean of all the fields 
+ * in the file.
+ * 
+ * ### Fast Forecast Averaging
+ * Sometimes one wants to average several forecasts starting from the same initial time. An example would producing a week-4 forecast.
+ * @code{.sh}
+ * wgrib2 $1 -match_inv | cut -f4-5 -d:  >$tmp
+ * cmd="cat $* | $wgrib2 - -set_grib_type c3 "
+ * while read line
+ * do
+ *   cmd="$cmd -if_fs '$line' -fcst_ave $dt $out "
+ * done <$tmp
+ * eval $cmd
+ * @endcode
+ * 
+ * 1. $1 is the first file to average. Line 1 creates a file with the name and level for each field. It is assumed that the name and 
+ * level is unique in the file.
+ * 2. cmd is the command line that is being built
+ * 3. loop over all the lines in file $tmp
+ * 4. generate the "-if_fs/-fcst_ave" for the cmd line. Older versions of the web paged used -if but that caused problems when
+ * $line included metacharacters such as parentheses.
+ * 5. bash syntax to have the while loop read from $tmp
+ * 6. run the command line
+ * 
+ * ### Monthly Climatologies
+ * Once you can make an average, making a monthly climatology should be easy. Except it isn't. Here are some of the problems that I encountered. 
+ * 1. February has 28 days except when it doesn't. This causes problems because wgrib2 -ave will not average 28 and 29 day intervals.
+ * 2. '116@6 hour ave(anl)' includes a regex metacharacter
+ * 3. the process id changed
+ * 4. the subcenter changed 
+ * 
+ * The solutions were:
+ * 
+ * 1. rewrite the grib file with:
+ * @code{.sh}
+ *  -if_fs '116@6 hour ave(anl)' -set_ftime2 '112@6 hour ave(anl)' -endif \
+ *  -if_fs '116@6 hour ave(6 hour fcst)' -set_ftime2 '112@6 hour ave(6 hour fcst)' -endif \
+ *  -if_fs '116@6 hour ave(3-6 hour acc fcst)' -set_ftime2 '112@6 hour ave(3-6 hour acc fcst)' -endif \
+ * @endcode
+ * 2. Use -if_fs instead of -if
+ * 3. rewrite the file with -set analysis_or_forecast_process_id 180
+ * 4. rewrite the file with -set subcenter 0 
+ * 
+ * ### Limitations
  * Fast averaging has limits impossed by wgrib2. For example, there is a limit in the maximum 
  * number of -if/-if_fs clauses. Wgrib2 v2.0.6 can process up to 2000 -if and 2000 -if_fs 
  * options. Wgrib2 v2.0.6 can accept 10000 words on the command line. Since each -if_fs/-ave 
@@ -902,9 +997,6 @@ static int do_ave(struct ave_struct *save) {
  * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
- * 
- * ## Example
- * ???
  * 
  * @author Wesley Ebisuzaki @date 4/2009
  */

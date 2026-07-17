@@ -38,7 +38,19 @@
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 sst.grb2  -set_ensm_derived_fcst 1 10 -grib newsst.grb
+ * 1:0:d=1981110100:TMP:surface:0-1 month ave anl:wt ens-mean
+ * @endcode
+ * 
+ * <pre>
+ * -set_ensm_derived_fcst 1 10
+ *      1 = weighted mean of all members (code table 4.7)
+ *      10 = number of ensemble members
+
+ * -grib newsst.grb
+ *      save the new grib file in newsst.grb
+ * </pre>
  * 
  * @author Wesley Ebisuzaki @date 11/2011
  */

@@ -64,7 +64,17 @@ extern unsigned int npnts;
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 small.grb2 small.grb2 -set_ijval 1 1 91 -set_ijval 2 1 92 -set_ijval 1 2 93 -set_ijval 2 2 94 -grib_out new.grb2
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * $ wgrib2 new.grb2 -csv new.csv
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * $ cat new.csv
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",0,20,91
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",10,20,92
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",0,28,93
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",10,28,94
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2/2009
  */
@@ -134,7 +144,17 @@ int f_set_ijval(ARG3) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 small.grb2 -set_ival 1:2:3:4 91:92:93:94 -gribout new.grb2
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * $ wgrib2 new.grb2 -csv new.csv
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * $ cat new.csv
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",0,20,91
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",10,20,92
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",0,28,93
+ * "2009-06-05 00:00:00","2009-06-12 12:00:00","HGT","200 mb",10,28,94
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2/2009
  */

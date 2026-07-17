@@ -32,7 +32,19 @@
  * @return 0 for success, error code otherwise
  * 
  * ## Example 
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -Sec0
+ * 1:4:Sec0=GRIB reserved 0x0000 Discipline=0 Grib_Edition=2 len=44444
+ * @endcode
+ * 
+ * <pre>
+ * GRIB                          octets 1-4, should be GRIB
+ * reserved 0x0000               octects 5-6, 0x0000 if not used
+ * Discipline=0                  Discipline, Table 0.0
+ * Grib_Edition=2                Edition, 2 for grib version2
+ * len=44444                     length in octets/bytes of entire grib message
+ * </pre>
  * 
  * @author Wesley Ebisuzaki @date 12/2006
  */
@@ -66,7 +78,10 @@ int f_Sec0(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 f.grb -table
+ * 1:0:discipline=0 master_table=2 local_table=1
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2007
  */

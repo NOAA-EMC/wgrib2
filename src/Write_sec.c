@@ -47,7 +47,10 @@ extern int flush_mode;
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 IN.grb -write_sec 0 sec0.dat -write_sec 1 sec1.dat -write_sec 2 sec2.dat -write_sec 3 sec3.dat \
+ *      -write_sec 4 sec4.dat -write_sec 5 sec5.dat -write_sec 6 sec6.dat -write_sec 7 sec7.dat
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 11/2020
  */
@@ -121,7 +124,10 @@ int f_write_sec(ARG2) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 IN.grb -read_sec 0 sec0.dat -read_sec 1 sec1.dat -read_sec 2 sec2.dat -read_sec 3 sec3.dat \
+ *      -read_sec 4 sec4.dat -read_sec 5 sec5.dat -read_sec 6 sec6.dat -read_sec 7 sec7.dat
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 11/2020
  */

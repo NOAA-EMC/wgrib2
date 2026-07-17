@@ -73,7 +73,13 @@
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -unix_time
+ * 1:0:unix_rt=1228176000:unix_vt=1228176000
+ * @endcode
+ * 
+ * - unix_rt is the reference time
+ * - unix_vt is the verification time
  * 
  * @author Pablo Romero @date 3/24/2009
  */

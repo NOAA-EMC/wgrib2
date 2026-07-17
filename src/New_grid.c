@@ -441,8 +441,41 @@ int f_new_grid_interpolation(ARG1) {
  * 
  * @return 0 for success, error code otherwise
  * 
- * ## Example
- * ???
+ * ## Examples
+ * 
+ * The following creates a grib output file called "new.grb".
+ * @code{.sh}
+ * $ wgrib2 gep19.aec -for 1:5  -new_grid_winds earth -new_grid ncep grid 3 new.grb
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:70707:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * 3:96843:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19
+ * 4:125750:d=2009060500:UGRD:200 mb:180 hour fcst:ENS=+19
+ * 5:166391:d=2009060500:VGRD:200 mb:180 hour fcst:ENS=+19
+ * @endcode
+ * 
+ * The following creates a binary formatted output file "new.bin", the scan order is we:ns. U and V are paired, 
+ * so the input order is the same as the output order.
+ * @code{.sh}
+ * $ wgrib2 gep19.aec -for 1:5  -new_grid_format bin -new_grid_winds earth -new_grid ncep grid 3 new.bin
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:70707:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * 3:96843:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19
+ * 4:125750:d=2009060500:UGRD:200 mb:180 hour fcst:ENS=+19
+ * 5:166391:d=2009060500:VGRD:200 mb:180 hour fcst:ENS=+19
+ * @endcode
+ * 
+ * The following compares the binary and grib output files.
+ * @code{.sh}
+ * $ wgrib2 new.grb  -rpn sto_0 -import_bin new.bin -rpn 'raw2:rcl_0:print_corr'
+ * 1:0:rpn_corr=1:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:130502:rpn_corr=1:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * 3:203989:rpn_corr=1:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19
+ * 4:261186:rpn_corr=1:d=2009060500:UGRD:200 mb:180 hour fcst:ENS=+19
+ * 5:350963:rpn_corr=1:d=2009060500:VGRD:200 mb:180 hour fcst:ENS=+19
+ * @endcode
+ * 
+ * The binary file was written in we:ns, and -import_bin does not change the scan order. Therefore we have to change 
+ * the order we:sn by raw2. rpn_corr=1 .. new.grb == new.bin upto a grib rounding error.
  * 
  * @author Wesley Ebisuzaki @date 6/2010
  */
@@ -800,10 +833,160 @@ unsigned char blank_sec1[21] = { 0,0,0,21,1,
  * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
  * parameters.
  * 
+ * ## Changes from copygb
+ * 
+ * People may want to convert from copygb and copygb2 to wgrib2's -new_grid. Some differences to keep in mind.
+ * 1. copygb default vectors: UGRD/VGRD
+ * 2. wgrib2 default vectors: depends on version of wgrib2. See new_grid_vectors.
+ * 3. copygb can have vectors in any order
+ * 4. wgrib2 must have V follow U for vectors pairs
+ * 5. copygb has bilinear, bicubic, nearest neighbor, budget, neighbor budget, and spectral interpolations.
+ * 6. wgrib2 has bilinear, bicubic, nearest neighbor, budget, and spectral interpolations. 
+ * 7. wgrib2 can select the interpolation type depending on the variable (ex soil type)
+ * 8. copygb uses fixed Earth's radius
+ * 9. wgrib2 uses Earth's radius based on grib message
+ * 10. wgrib2 doesn't have merging, mapthreshold or map files
+ * 11. copygb by default, ignores the binary scaling and preserves decimal scaling
+ * 12. wgrib2 by default, preserves binary and decimal scaling
+ * 13. copygb does grib1.
+ * 14. copygb2 does grib2.
+ * 15. wgrib2 does grib2.
+ * 
+ * ## Speed: Interpolation Weights
+ * The first step of the -new_grid interpolation is to calculate the interpolation weights. (Each grid point on the 
+ * new grid is a weighted average of a small set of the old grid points.) To save time for future interpolations, 
+ * the last set of weights is saved. Consequently interpolation is fastest when the input and output grids don't change. 
+ * While one can have multiple -new_grid options on the command line, it is not recommended because the caching of the 
+ * weights wouldn't work and weights would have to be recalculated every time. 
+ * 
+ * ## Converting from WE:SN to WE:NS Grids
+ * Many of wgrib2 grib2 writing options will write the grid in WE:SN order. This natural because geolocation is only enabled 
+ * when the internal grids are in WE:SN order. However, some codes need the grid in WE:NS order. To convert a grib file from 
+ * WE:SN order to WE:NS order, the simplest way is to use -new_grid. Lat0 and lon0 need to be lat/lon of the top left corner 
+ * of the grid. Dlon will a positive number and dlat will be negative.
+ * 
+ * If you want to be tricky, you can do a variation of the "NDFD work arounds" technique. It will be faster and more generic.
+ * 
+ * ### NDFD work arounds
+ * The -new_grid option will give the following error when trying to regrid a field that is written in (WE|EW):SN order.
+ * @code{.sh}
+ * *** FATAL ERROR: mk_kgds: unsupported scan mode 80
+ * @endcode
+ * The (WE|EW):SN order means that the odd rows are in WE order and the even rows are EW order. The rows go from south to north. 
+ * This scan order is commonly used by NDFD in order to make newbies brain hurt. Try writting a program to get the lat-lon of the 
+ * Nth grid point. 
+ * 
+ * The (WE|EW):SN order is not supported by the ipolates library which does the regridding for the -new_grid option. The simplest 
+ * work around is to convert the grid to a WE:SN order. 
+ * 
+ * 1. Find the grid dimensions.
+ * @code{.sh}
+ * $ wgrib2 blend.grb -nxny 
+ * 1:0:(2145 x 1597)
+ * @endcode
+ * 
+ * 2. Use -ijsmall_grib to rewrite the entire grid. -ijsmall_grib will write the subgrid in WE:SN order.
+ * @code{.sh}
+ * $ wgrib2 blend.grb -ijsmall_grib 1:2145 1:1597 blend2.grb
+ * @endcode
+ * 
+ * ## Thinned Gaussian Grids to other Grids
+ * Converting from a thinned Gaussian grid is a two step process using wgrib2. First you convert from the thinned grid to full grid 
+ * using -reduced_gaussian_grid. Then you can use -new_grid to interpolate to your desired grid. 
+ * 
+ * ## Quilting tiles - Merging files
+ * Quilting is what we call combining (regional) forecasts for different domains together onto a single grid. For example, you may want 
+ * to combine various regional oceanic forecasts with a global oceanic forecast to produce a forecast for a for the user who is on a 
+ * route that covers different model domains. 
+ * 
+ * Yes, it has been done using -new_grid, -import_grib -rpn/merge. See Example 7 from @ref f_rpn.
+ * 
  * @return 0 for success, error code otherwise
  * 
- * ## Example
- * ???
+ * ## Examples
+ * 
+ * The following examples interpolate from IN.grb to OUT.grb. The output file uses the same grib packing as 
+ * the input file.
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -set_grib_type same -new_grid_winds earth -new_grid latlon 100:10:1 30:20:1 OUT.grb
+ * @endcode
+ * 
+ * Makes a 10x20, 1x1 degree lat-lon grid, lower left corner: 100E 30N
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -set_grib_type same -new_grid_winds earth -new_grid ncep grid 221 OUT.grb
+ * @endcode
+ * 
+ * Interpolates to NCEP grid 221.
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -set_grib_type same -new_grid_winds earth -new_grid `grid_defn.pl OLD.grb` OUT.grb
+ * @endcode
+ * 
+ * Interpolates using the grid format of OLD.grb (1st record)
+ * 
+ * ### Example: Sorting the Inventory
+ * In this example, U and V are not in the required order. This shows a sorting to the required order for 
+ * -new_grid to work.
+ * 
+ * @code{.sh}
+ * $ wgrib2 201201.A | sed -e 's/:UGRD:/:UGRDa:/' -e 's/:VGRD:/:UGRDb:/'  | \
+ *      sort -t: -k3,3 -k5,8 -k4,4 | \
+ *      wgrib2 201201.A -i -new_grid_winds earth -new_grid ncep grid 2 201201.A.grd2
+ * @endcode
+ * 
+ * - The first line creates an inventory with new variable names: UGRD -> UGRDa and VGRD -> UGRDb
+ * - The second line sorts the inventory so that UGRDb follows UGRDB.
+ * - The third line regrids the file, with the order of processing controlled by the inventory.
+ * 
+ * ### Type of Interpolation
+ * The IPOLATES library supports a number of interpolation schemes including bilinear (default), bicubic, 
+ * neighbor, budget, and spectral. The interpolation method can be selected by using the -new_grid_interpolation 
+ * option before the -new_grid option. Some of the interpolation options need numeric parameters which are set by 
+ * the -new_grid_ipopt option. IPOPT is defined in the iplib library documentation. 
+ * 
+ * You can use different interpolations for different variables. For example, a bilinear interpolation of soil or 
+ * vegetation type is meaningless. So nearest neighbor interpolation is used instead. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -new_grid_winds earth \
+ *    -new_grid_interpolation bilinear \
+ *    -if ":(VGTYP|SOTYP):" -new_grid_interpolation neighbor -fi \
+ *    -new_grid latlon 0:360:1 90:181:-1 OUT.grb
+ * @endcode
+ * 
+ * - line 2: set default interpolation to bilinear
+ * - line 3: if VGTYP or SOTYP then set the interpolation to nearest neighbor
+ * - line 4: do the interpolation
+ * 
+ * When you convert from a high resolution grid to a lower resolution grid, you have to be consider changing from 
+ * the default interpolation (bilinear) to a budget interpolation. The budget gives a better estimate of the cell 
+ * average (the default is 25 bilinear interpolations). 
+ * 
+ * ### Changing from grid-relative to Earth-relative winds and vice versa
+ * Most NCEP grib files use grid-relative winds. If you want to convert to Earth-relative winds or grid-relative 
+ * winds, you can use the -new_grid option. 
+ * 
+ * To Earth relative:
+ * @code{.sh}
+ * $ wgrib2 IN.grb -set_grib_type same -new_grid_winds earth -new_grid_interpolation neighbor \
+ *      -new_grid `grid_defn.pl IN.grb` OUT.grb
+ * @endcode
+ * 
+ * To Grid relative:
+ * @code{.sh}
+ * $ wgrib2 IN.grb -set_grib_type same -new_grid_winds grid -new_grid_interpolation neighbor \
+ *      -new_grid `grid_defn.pl IN.grb` OUT.grb
+ * @endcode
+ * 
+ * - "-set_grib_type same" preserves the grib packing or compression
+ * - "-new_grid_interpolation neighbor" should be faster than the default bilinear
+ * - `grid_defn.pl IN.grb` returns the grid definition of the first grib message in IN.grb
+ * 
+ * The limirations of the above command are:
+ * - IN.grb can only have one grid type 
+ * - OUT.grb will have any submessages converted into messages 
  * 
  * @author Wesley Ebisuzaki @date 6/2010
  */

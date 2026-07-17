@@ -116,7 +116,39 @@ int f_set_byte(ARG3) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * The file, template_512.grb, was converted from grib1, and the delta-lon, and the extreme latitudes were 
+ * only to the nearest millidegree (grib1 precision). 
+ * 
+ * @code{.sh}
+ * $ wgrib2 template_512.grb -grid
+ * 1:0:grid_template=40:winds(N/S):
+ *	    Gaussian grid: (512 x 256) units 1e-06 input WE:NS output WE:SN
+ *	    number of latitudes between pole-equator=128 #points=131072
+ *	    lat 89.463000 to -89.463000
+ *	    lon 0.000000 to 359.233000 by 0.703000
+ * @endcode
+ * 
+ * The grid with full precision can be obtained by using -new_grid, and the contents of sec3 (grid definition) 
+ * can be obtained by -0xSec 3. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 template_512.grb -new_grid_winds earth -new_grid ncep grid 170 junk
+ * 1:0:d=2016010109:PRES:mean sea level:2390 hour fcst:
+ * $ wgrib2 junk -0xSec 3
+ * 1:0:Sec3(1..72)=0x0000004803000002000000000028060000000000000000000000000000000000020000000
+ * 10000000000ffffffff05551826000000003085551826156a6f6b000aba950000008000
+ * @endcode
+ * 
+ * The script to change the precision of the Gaussian grid is given by:
+ * @code{.sh}
+ * $ sec3='000000480300000200000000002806000000000000000000000000000000000002000000010000000000ffffffff05551826000000003085551826156a6f6b000aba950000008000'
+ * $ wgrib2 $1 -set_hex 3 1 "$sec3" -grid -grib $1.new
+ * @endcode
+ * 
+ * The above script assumes that the size of the original section 3 is greater or equal to the size of the new 
+ * section 3. If it isn't, you have to use the option -set_sec_size 3 72. Of course, you cannot make arbitrary 
+ * changes to the grid definition because the number of grid points has to match the grid points in the data 
+ * section. 
  * 
  * @author Wesley Ebisuzaki @date 3/2008
  */
@@ -381,7 +413,10 @@ int f_set_ieee(ARG3) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 f.grb2 -get_byte 0 1 16
+ * 1:0:0-1=71,82,73,66,0,0,0,2,0,0,0,0,0,0,18,178
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 5/2009
  */
@@ -453,7 +488,12 @@ int f_get_byte(ARG3) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 f.grb2 -get_hex 0 1 12
+ * 1:0:0-1=71,52,49,42,00,00,00,02,00,00,00,00
+ * 2:46042:0-1=71,52,49,42,00,00,00,02,00,00,00,00
+ * 3:63079:0-1=71,52,49,42,00,00,00,02,00,00,00,00
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 5/2009
  */
@@ -520,7 +560,10 @@ int f_get_hex(ARG3) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 f.grb -get_int 3 7 1  
+ * 1:0:3-7=65160
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 5/2009
  */
@@ -583,7 +626,10 @@ int f_get_int(ARG3) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 f.grb -get_int2 1 6 1  
+ * 1:0:1-6=7
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 5/2009
  */
@@ -640,7 +686,17 @@ int f_get_int2(ARG3) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 rtgssthr_grb_0.083_awips.grib2
+ * 1:0:d=2009062900:TMP:surface:anl:
+ * : field is surface temperature, SST over water
+ * $ wgrib2 rtgssthr_grb_0.083_awips.grib2 -packing -v
+ * 1:0:packing=grid point data - jpeg2000 compression,j val=(27133+i*2^0)*10^-2, i=0..8191 (#bits=13)
+ *  : jpeg2000 packing, reference value is 27133
+ * $ wgrib2 rtgssthr_grb_0.083_awips.grib2 -get_ieee 5 12 1
+ * 1:0:5-12=27133.000000
+ *  : for jpeg2000 packing, the reference value is stored in Section 5, octet 12-15
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 5/2009
  */

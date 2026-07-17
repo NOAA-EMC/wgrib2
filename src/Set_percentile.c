@@ -38,7 +38,11 @@
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib p.grb -set_percentile 50 -grib_out new.grb
+ * 1:0:d=2010020304:PRMSL:mean sea level:6 hour fcst:50% level
+ * 2:17960:d=2010020304:PRES:1 hybrid level:3 hour fcst:50% level
+ * @endcode
  *
  * @author Wesley Ebisuzaki @date 2/2015
  */

@@ -24,8 +24,16 @@
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -Sec5
+ * 1:4:Sec5 len=21 #defined data points=65160 Data Repr. Template=5.41
+ * @endcode
  * 
+ * <pre>
+ * len=21                       Section 5 is 21 octets/bytes in length
+ * #defined data points=65160   Number of data points with values present in Section 7
+ * Data Repr. Template=5.41     Data Represenation Template is 5.41
+ * </pre>
  * @author Wesley Ebisuzaki @date 2006
  */
 int f_Sec5(ARG0) {
@@ -53,7 +61,10 @@ int f_Sec5(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -s -npts -d 1
+ * 1:0:d=2005090200:HGT:1000 mb:60 hour fcst:npts=259920
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -89,7 +100,25 @@ int f_npts(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -packing
+ * 1:4:packing=grid point data - png compression,_
+ * $ wgrib2 png.grb2 -v -packing
+ * 1:4:packing=grid point data - png compression,_ val=(0+i*2^0)*10^-1, i=0..65535 (#bits=16)
+ * @endcode
+ * 
+ * The file, png.grb2, was packed using the obsolete png compression. The grid point values can have the 
+ * values (0+i*2^0)*10^-1 where i is an integer that ranges from 0..65535.
+ * 
+ * @code{.sh}
+ * $ wgrib2 small.grb2 -packing
+ * 1:0:packing=grid point data - simple packing,s
+ * $ wgrib2 small.grb2 -v -packing
+ * 1:0:packing=grid point data - simple packing,s val=(1.22666e+06+i*2^2)*10^-2, i=0..4095 (#bits=12)
+ * @endcode
+ * 
+ * The file small.grb2 is using simple packing, integers are stored using 12 bits (#bits=12). The grid points 
+ * can have values of (1.22666e+06+i*2^2)*10^-2 where i is an integer that ranges from 0..4095.
  * 
  * @author Wesley Ebisuzaki @date 2006
  */

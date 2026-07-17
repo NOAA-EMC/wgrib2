@@ -57,8 +57,24 @@
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 png.grb -grib OUT.grb
+ * 1:4:d=2009060500:RH:2 m above ground:330 hour fcst:std dev
+ * $ wgrib2 png.grb -set_pdt 0 -grib OUT.grb
+ * 1:4:d=2009060500:var discipline=0 center=7 local_table=1 parmcat=255 parm=255:no_level:-1 missing fcst:
+ * $ wgrib2 png.grb -set_pdt +0 -grib OUT.grb
+ * 1:4:d=2009060500:RH:2 m above ground:330 hour fcst:
+ * @endcode
  *
+ * Suppose a program has problems with pdt 60 and 61. Changing the pdt to 1 and 11 will solve the incompatibility 
+ * with only a little loss of metadata. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -if ":pdt=60:" -set_pdt +1 -fi \
+ *                -if ":pdt=61:" -set_pdt +11 -fi \
+ *                -grib OUT.grb
+ * @endcode
+ * 
  * @author Wesley Ebisuzaki @date 9/2008
  */
 int f_set_pdt(ARG1) {

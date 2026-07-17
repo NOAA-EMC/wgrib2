@@ -33,7 +33,12 @@ extern int warn_nonzero_min_sec;
  * @return 0 for success, error code otherwise
  * 
  * ## Example 
- * ???
+ * @code{.sh}
+ * $ wgrib2 g720_360.grb2 -t
+ * 1:4:d=2009010100
+ * $ wgrib2 g720_360.grb2 -t -v2
+ * 1:4:00Z01jan2009
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 12/2006
  */
@@ -77,7 +82,10 @@ int f_t(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example 
- * ???
+ * @code{.sh}
+ * $ wgrib2 g720_360.grb2 -T
+ * 1:4:D=20090101000000
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 12/2006
  */
@@ -175,7 +183,10 @@ int f_MM(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ *  * @code{.sh}
+ * $ wgrib2 png.grb2 -RT
+ * 1:4:RT=Start of fcst
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 12/2006
  */
@@ -216,7 +227,13 @@ int f_RT(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -center
+ * 1:0:center=US National Weather Service - NCEP (WMC)
+ * 2:46042:center=US National Weather Service - NCEP (WMC)
+ * 3:63079:center=US National Weather Service - NCEP (WMC)
+ * ...
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 12/2006
  */
@@ -257,7 +274,14 @@ int f_center(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -subcenter
+ * 1:0:subcenter=NCEP Ensemble Products
+ * 2:46042:subcenter=NCEP Ensemble Products
+ * 3:63079:subcenter=NCEP Ensemble Products
+ * 4.1:86046:subcenter=NCEP Ensemble Products
+ * ...
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 12/2006
  */

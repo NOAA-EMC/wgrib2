@@ -79,7 +79,18 @@ int *raw_variable_dim = NULL;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -Sec3
+ * 1:4:Sec3 len=72 src gdef=0 npts=65160 Grid Def Template=3.0 opt arg=0
+ * @endcode
+ * 
+ * <pre>
+ * len=72                        Section 3 is 72 octets/bytes in length
+ * src gdef=0                    Source of grid definition, Code Table 3.0
+ * npts=65160                    Number of data points
+ * Grid Def Template=3.0         Grid definition template number, Code Table 3.1
+ * opt arg=0                     optional arguments
+ * </pre>
  * 
  * @author Wesley Ebisuzaki @date 1/2007
  */
@@ -320,8 +331,20 @@ int get_nxny_(unsigned char **sec, unsigned int *nx, unsigned int *ny, unsigned 
  * 
  * @return Always returns 0
  * 
- * ## Example
- * ???
+ * ## Examples
+ * @code{.sh}
+ * $ ./wgrib2 test.grb2 -s -nxny -d 1
+ * 1:0:d=2005090200:HGT:1000 mb:60 hour fcst:(720 x 361)
+ * @endcode
+ * 
+ * The above grid is a 0.5 x 0.5 degree global grid. 
+ * 
+ * @code{.sh}
+ * $ ./wgrib2 ../ecmwf/gaussian_reduced.grib2 -s -nxny -d 1
+ * 1:0:d=2006081712:var discipline=0 master_table=4 parmcat=0 parm=0:500 mb:12 hour fcst:(-1 x 800)
+ * @endcode
+ * 
+ * Here, the thinned Gaussian grid has 800 latitudes and a varying number of longitude points. 
  * 
  * @author Wesley Ebisuzaki @date 1/2007
  */
@@ -421,7 +444,20 @@ const char *scan_order[] = {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 ds_ens.grb -scan
+ * 1:0:scan=5 input=WE|EW:SN output=WE:SN
+ * 2:218709:scan=5 input=WE|EW:SN output=WE:SN
+ * 3:434276:scan=5 input=WE|EW:SN output=WE:SN
+ * ...
+ * @endcode
+ * 
+ * <pre>
+ * input=WE|EW:SN   the grib file is in WE|EW:SN scan order
+ * output=WE:SN     the internal registers and output files except for grib
+ *                  will be in WE:SN order, use the -order option to change
+ *                  the output scan order
+ * </pre>
  * 
  * @author Wesley Ebisuzaki @date 1/2007
  */
@@ -465,7 +501,23 @@ const char *jma_scan_order[] = {	// JMA 3.1 bits 1-3
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * png.grib is on a 360x181 grid
+ * 
+ * @code{.sh}
+ * $ wgrib2 -grid png.grb2
+ * 1:4:grid_template=0:winds(N/S):
+ *	lat-lon grid:(360 x 181) units 1e-06 input WE:NS output WE:SN res 48
+ *	lat 90.000000 to -90.000000 by 1.000000
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 -nlons png.grb2
+ * 1:4:nlon (S/N)=360 360 360 360 360 360 360 360 360 360 360 360 360 360 360 360 360 360 360 360 360 ...
+ * @endcode
+ * 
+ * Note: The above output is truncated for brevity. The full output would list 181 values of 360.
+ * 
+ * Each row has 360 grid points. 
  * 
  * @author Wesley Ebisuzaki @date 1/2007
  */
@@ -544,7 +596,7 @@ int f_nlons(ARG0) {
  * The only exceptions is when angles are saved to rpn registers which are single precision, and if wgrib2 
  * is configured to call the old (single precision) iplib library. 
  * 
- * ## Staggered Grids
+ * ## Staggered Grids, wgrib2 2.0.8+
  * Staggered grids are often used in grid point (as opposed to spectral) atmospheric models. (Arakawa, A.; 
  * Lamb, V.R. (1977). "Computational design of the basic dynamical processes of the UCLA general circulation 
  * model". Methods in Computational Physics: Advances in Research and Applications. 17: 173–265.) There are 
@@ -579,9 +631,50 @@ int f_nlons(ARG0) {
  * 
  * @return 0 for success, error code otherwise
  * 
- * ## Example
- * ???
+ * ## Examples
  * 
+ * The following examples are for a grid definitions of a lat-lon, Lambert Conformal, Gaussian and Mercator grids. 
+ * These are the most common grids that are commonly distributed from NCEP. Other commonly used grids are: polar 
+ * stereographic, rotated lat-lon and thinned Gaussian. Radar and satellites often use different grids. 
+ * 
+ * ### lat-lon grid
+ * @code{.sh}
+ * $ wgrib2 gep19.t00z.pgb2af180 -grid -d 1
+ * 1:0:grid_template=0:winds(N/S):
+ *	lat-lon grid:(360 x 181) units 1e-06 input WE:NS output WE:SN res 48
+ *	lat 90.000000 to -90.000000 by 1.000000
+ *	lon 0.000000 to 359.000000 by 1.000000 #points=65160
+ * @endcode
+ * 
+ * ### Lambert Conformal grid
+ * @code{.sh}
+ * $ wgrib2 nam.683 -grid
+ * 1:0:grid_template=30:winds(grid):
+ *	Lambert Conformal: (1473 x 1025) input WE:SN output WE:SN res 8
+ *	Lat1 12.190000 Lon1 226.541000 LoV 265.000000
+ *	LatD 25.000000 Latin1 25.000000 Latin2 25.000000
+ *	LatSP 0.000000 LonSP 0.000000
+ * @endcode
+ * 
+ * ### Gaussian grid
+ * @code{.sh}
+ * $ wgrib2 .t00z.master.grb2f048 -grid -d 1
+ * 1:0:grid_template=40:winds(N/S):
+ *	Gaussian grid: (3072 x 1536) units 1e-06 input WE:NS output WE:SN
+ *	number of latitudes between pole-equator=768 #points=4718592
+ *	lat 89.909340 to -89.909340
+ *	lon 0.000000 to 359.882813 by 0.117188
+ * @endcode
+ * 
+ * ### Mercator grid
+ * @code{.sh}
+ * $ wgrib2 merc.g2 -grid -d 1
+ * 1:0:grid_template=10:winds(N/S):
+ *	Mercator grid: (73 x 23) LatD 22.500000 input WE:SN output WE:SN res 48
+ *	lat -48.090000 to 48.090000 by 513669.000000 m
+ *	lon 0.000000 to 0.000000 by 513669.000000 m
+ *	orientation 0.000000
+ * @endcode
  * @author Wesley Ebisuzaki @date 1/2007
  */
 int f_grid(ARG0) {

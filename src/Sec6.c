@@ -51,8 +51,13 @@
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
  * 
+ * @code{.sh}
+ * $ wgrib2 grib2.polar -bitmap
+ * 1.1:0:no bitmap
+ * 1.2:0:no bitmap
+ * @endcode
+
  * @author Wesley Ebisuzaki @date 2006
  */
 int f_bitmap(ARG0) {
@@ -98,7 +103,15 @@ int f_bitmap(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -Sec6
+ * 1:4:Sec6 length 6 bitmap indicator 255
+ * @endcode
+ * 
+ * <pre>
+ * length=6                       Section 6 is 6 octets/bytes in length
+ * bitmap indicator 255           Table 6.0 has a value of 255, (no bitmap)
+ * </pre>
  * 
  * @author Wesley Ebisuzaki @date 2006
  */

@@ -44,7 +44,12 @@
  * @return 0 for success, error code otherwise.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 IN.grb -ncpu 3 -new_grid_winds grid -new_grid ncep grid 221 - | wgrib2 - -ncpu 1 -set_grib_type j -ncep_uv OUT.grb
+ * @endcode
+ * 
+ * The above line uses 3 threads for regridding and one thread for jpeg2000 compression. The jpeg2000 
+ * compression routines can't take advantage of more than one thread. 
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
