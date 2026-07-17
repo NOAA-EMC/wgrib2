@@ -23,7 +23,7 @@ main()
         float data[NDATA] = { 0. };
 
         /* Set register 19 with data. */
-        wgrib2_set_reg(data, ndata * sizeof(float), 19);
+        wgrib2_set_reg(data, (size_t)ndata, 19);
 
         /* Give intial values to avoid undefined behavior. */
         last_options = 0;
