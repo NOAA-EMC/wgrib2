@@ -9,6 +9,8 @@
 #include <stdio.h>
 
 #define NDATA 100
+#define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
+#define GRB_INV "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
 int wgrib2_set_reg(float *data, size_t size, int reg);
 int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n);
@@ -330,6 +332,17 @@ main()
             printf("ERROR: grb2_get_gridmeta() returned %d, expected 0.\n", ret);
             return 25;
         }
+    }
+    printf("Testing grb2_inqVA()...\n");
+    {
+        int ret;
+        unsigned int options;
+
+        options = 0;
+
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options);
+
+        printf("grb2_inqVA() returned %d\n", ret);
     }
     printf("SUCCESS!\n");
     return 0;
