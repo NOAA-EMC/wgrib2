@@ -9,8 +9,10 @@
 #include <stdio.h>
 
 #define NDATA 100
-#define GRB_FILE "data/ref_c3_overflow.grib2"
-#define GRB_INV "junk_grb2_inq.inv"
+#define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
+#define GRB_INV "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
+#define SMALL_GRB_FILE "data/png_4bits.png"
+#define SMALL_GRB_INV "junk_grb2_inq.inv"
 
 int wgrib2_set_reg(float *data, size_t size, int reg);
 int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n);
