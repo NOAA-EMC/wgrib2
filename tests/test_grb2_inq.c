@@ -374,12 +374,23 @@ main()
             return 29;
         }
 
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
-        if (ret != 0) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected 0.\n", ret);
+        /* Invalid argument. Should return -3. */
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
+        if (ret != -3) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -3.\n", ret);
             return 30;
         }
 
+        /* Non-sequential option without proper workflow. Should return -4. */
+        options = 0;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        if (ret != -4) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -4.\n", ret);
+            return 31;
+        }
+
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "", NULL);
+        printf("grb2_inqVA() returned %lld, expected -4.\n", ret);
 
     }
     printf("SUCCESS!\n");
