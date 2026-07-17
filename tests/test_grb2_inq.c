@@ -201,7 +201,7 @@ main()
 
         last_options = META;
         grb2_inq_set_state(last_options, good, npnts);
-        
+
         /* Set register 18 with bad size. */
         wgrib2_set_mem_buffer(data, 0, 18);
 
@@ -223,7 +223,7 @@ main()
         }
 
         /* Valid Case. Should return 0. */
-        ret = grb2_get_meta(data, ndata);
+        ret = grb2_get_meta(data, ndata+1);
         if (ret != 0) {
             printf("ERROR: grb2_get_meta() returned %d, expected 0.\n", ret);
             return 17;
