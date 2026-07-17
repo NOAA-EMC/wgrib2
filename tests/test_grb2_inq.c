@@ -388,8 +388,8 @@ main()
             return 32;
         }
 
-        options = SEQUENTIAL|DATA|LATLON|META|GRIDMETA;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "SWELL");
+        options = DATA|LATLON|META|GRIDMETA;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
         if (ret != 0) {
             printf("ERROR: grb2_inqVA() returned %lld, expected 0.\n", ret);
             return 34;
