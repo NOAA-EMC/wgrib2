@@ -383,7 +383,7 @@ main()
 
         /* ??? Should return -4. */
         options = 0;
-        ret = grb2_inqVA(GRB_FILE, "data/ref_wind.gdas.t12z.pgrb2.1p00.anl.75r.grib2.inv", options, NULL);
+        ret = grb2_inqVA(GRB_FILE, GRB_BAD_INV, options, NULL);
         if (ret != -4) {
             printf("ERROR: grb2_inqVA() returned %lld, expected -4.\n", ret);
             return 31;
