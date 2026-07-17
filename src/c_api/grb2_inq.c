@@ -448,40 +448,6 @@ int grb2_get_gridmeta(unsigned char *meta, int nbytes) {
     return err;
 }
 
-
-/**
- * For testing purposes only. Get the value of the static variable last_options.
- *
- * @return The current value of last_options.
- * 
- * @author Alyson Stahl @date 7/2026
- */
-int grb2_inq_last_options(void) {
-    return last_options;
-}
-
-/**
- * For testing purposes only. Get the value of the static variable good.
- *
- * @return The current value of good.
- * 
- * @author Alyson Stahl @date 7/2026
- */
-int grb2_inq_good(void) {
-    return good;
-}
-
-/**
- * For testing purposes only. Get the value of the static variable npnts.
- *
- * @return The current value of npnts.
- * 
- * @author Alyson Stahl @date 7/2026
- */
-int grb2_inq_npnts(void) {
-    return npnts;
-}
-
 /**
  * For testing purposes only. Set the state of the static variables last_options, good, and npnts.
  *
