@@ -179,10 +179,21 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
 /**
  * Get memory-copy of grid data from RPN register.
  * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2018 | W. Ebisuzaki | Initial
+ * 7/2026 | A. Stahl | New error codes for testing purposes
+ * 
  * @param data Pointer to the data array.
  * @param ndata Number of data points.
  * 
- * @return 0 on success, 1 on error.
+ * @return 
+ * - 0 :: success
+ * - 1 :: invalid register
+ * - 2 :: size mismatch
+ * - 3 :: last inquiry was not successful
+ * - 4 :: invalid options
  * 
  * @note Grid data stored in register 19.
  * 
@@ -192,15 +203,15 @@ int grb2_get_data(float *data, int ndata) {
 
     if (good == 0) {
         fprintf(stderr,"grb2_get_data: last find did not work.\n");
-        return 1;
+        return 3;
     }
     if (ndata != npnts) {
         fprintf(stderr,"grb2_get_data: wrong size data.\n");
-        return 1;
+        return 2;
     }
     if ((last_options & DATA) == 0) {
         fprintf(stderr,"grb2_get_data: grb2_inq did not request reading data.\n");
-        return 1;
+        return 4;
     }
 
     return  wgrib2_get_reg_data(data, ndata, 19);
