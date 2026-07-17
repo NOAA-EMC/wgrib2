@@ -52,12 +52,26 @@ static int inv_no;
 /**
  * This function performs an inquiry of a grib message.
  * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2018 | W. Ebisuzaki | Initial
+ * 7/2026 | A. Stahl | New error codes for testing purposes
+ * 
  * @param grb Input grib file.
  * @param inv Inventory of input file.
  * @param options Bitwise OR of option flags.
  * options = SEQUENTIAL | DATA | LATLON | WENS | RAW_ORDER | META | GRIDMETA | REGEX
  * @param ... Additional optional arguments.
  *
+ * @return The number of points in the grid, error code otherwise
+ * - 0 :: Failure in wgrib2_get_mem_buffer_size()
+ * - -1 :: Conflicting options (e.g., WENS and LATLON used together)
+ * - -2 :: Failed to call wgrib2
+ * - -3 :: Error retrieving memory buffer
+ * - -4 :: Error parsing basic grid info
+ * - -5 :: Inventory number greater than 1
+ * 
  * @return The number of points in the grid, or 0 if an error occurred.
  *
  * @author Wesley Ebisuzaki @date 3/2018
@@ -119,11 +133,11 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
     if (options & WENS) {
         if (options & LATLON) {
             fprintf(stderr,"grb2_inq: WENS option cannot be used at same time as LATLON option\n");
-            return 1;
+            return -1;
         }
         if (options & RAW_ORDER) {
             fprintf(stderr,"grb2_inq: WENS option cannot be used at same time as RAW_ORDER option\n");
-            return 1;
+            return -1;
         }
         wgrib2_add_cmd("-order");
         wgrib2_add_cmd("we:ns");
@@ -133,7 +147,7 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
     if (options & RAW_ORDER) {
         if (options & LATLON) {
             fprintf(stderr,"grb2_inq: RAW_ORDER option cannot be used at same time as LATLON option\n");
-            return 1;
+            return -1;
         }
         wgrib2_add_cmd("-order");
         wgrib2_add_cmd("raw");
@@ -156,19 +170,19 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
     wgrib2_list_cmd();
 
     i = wgrib2_cmd();
-    if (i) return 0;		/* failed call to wgrib2 */
+    if (i) return -2;		/* failed call to wgrib2 */
 
     /* read basic parameters in register 19 */
 
     bufsize = sizeof(buffer);
     i = wgrib2_get_mem_buffer((unsigned char *) buffer, bufsize, 19);
-    if (i != 0) return 0; /* something wrong .. probably not found */
+    if (i != 0) return -3; /* something wrong .. probably not found */
 
     i = sscanf(buffer, "%11d %11u %11u %11u %11d %11d",&inv_no,&npnts,&nx_,&ny_,&msg_no, &submsg);
     printf(">>> wgrb2_scannf = %d\n",i);
-    if (i != 6) return 0;
+    if (i != 6) return -4;
 
-    if (inv_no > 1) return 0;
+    if (inv_no > 1) return -5;
 
     /* finally success */
     good = 1;
