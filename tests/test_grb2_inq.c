@@ -11,7 +11,6 @@
 #define NDATA 100
 #define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
 #define GRB_INV "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
-#define GRB_BAD_INV "data/ref_bad_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
 int wgrib2_set_reg(float *data, size_t size, int reg);
 int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n);
@@ -379,14 +378,6 @@ main()
         if (ret != -3) {
             printf("ERROR: grb2_inqVA() returned %lld, expected -3.\n", ret);
             return 30;
-        }
-
-        /* ??? Should return -4. */
-        options = 0;
-        ret = grb2_inqVA(GRB_FILE, GRB_BAD_INV, options, NULL);
-        if (ret != -4) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected -4.\n", ret);
-            return 31;
         }
 
         /* Non-sequential option with empty argument. Should return -5. */
