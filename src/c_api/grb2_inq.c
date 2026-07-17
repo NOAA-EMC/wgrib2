@@ -353,7 +353,10 @@ int grb2_get_meta(unsigned char *meta, int nbytes) {
 /**
  * Get the size of the memory buffer for grid metadata stored in RPN register.
  *
- * @return Size of the memory buffer for grid metadata, or 0 if an error occurred.
+ * @return Size of the memory buffer for grid metadata on success, error code otherwise
+ * - 0 :: Failure in wgrib2_get_mem_buffer_size()
+ * - -1 :: last find did not work
+ * - -2 :: grb2_inq did not request reading grid metadata
  *
  * @note Grid metadata stored in register 17.
  *
@@ -364,11 +367,11 @@ int grb2_size_gridmeta(void) {
 
     if (good == 0) {
         fprintf(stderr,"grb2_size_gridmeta: last find did not work.\n");
-        return 0;
+        return -1;
     }
     if ((last_options & META) == 0) {
         fprintf(stderr,"grb2_size_gridmeta: grb2_inq did not request reading gridmetadata\n");
-        return 0;
+        return -2;
     }
     size = (unsigned int) wgrib2_get_mem_buffer_size(17);
     if (size == 0) return 0;
