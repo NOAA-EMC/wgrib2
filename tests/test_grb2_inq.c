@@ -333,7 +333,7 @@ main()
             return 25;
         }
     }
-    printf("Testing grb2_inqVA()...\n");
+    printf("Testing grb2_inq()...\n");
     {
         int ret;
         unsigned int options;
@@ -342,7 +342,7 @@ main()
 
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options);
 
-        printf("grb2_inqVA() returned %d\n", ret);
+        printf("grb2_inq() returned %d\n", ret);
     }
     printf("SUCCESS!\n");
     return 0;
