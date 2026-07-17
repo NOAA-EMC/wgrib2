@@ -336,6 +336,7 @@ main()
     printf("Testing grb2_inqVA()...\n");
     {
         long long int ret;
+        long long int size = 36391;
         unsigned int options;
 
         /* Reset to avoid unexpected behavior. */
@@ -388,10 +389,11 @@ main()
             return 32;
         }
 
+        /* Test with non-conflicting options. */
         options = DATA|LATLON|META|GRIDMETA;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
-        if (ret != 0) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected 0.\n", ret);
+        if (ret != size) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
             return 34;
         }
 
