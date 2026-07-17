@@ -397,6 +397,14 @@ main()
             return 34;
         }
 
+        /* Test with WENS */
+        options = WENS;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
+        if (ret != size) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
+            return 35;
+        }
+
     }
     printf("SUCCESS!\n");
     return 0;
