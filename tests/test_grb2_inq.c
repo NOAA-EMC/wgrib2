@@ -126,7 +126,7 @@ main()
             return 9;
         }
     }
-    printf("Testing grb2_size_meta() and grb2_get_meta()...\n");
+    printf("Testing grb2_size_meta()...\n");
     {
         int ret;
         int last_options, good, npnts;
@@ -159,14 +159,68 @@ main()
             return 11;
         }
 
-        /* Valid Case. Should return buffer size. */
+        /* Valid Case. Should return buffer size + 1. */
         last_options = META;
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
         ret = grb2_size_meta();
-        if (ret != (int)ndata) {
-            printf("ERROR: grb2_size_meta() returned %d, expected %d.\n", ret, (int)ndata);
+        if (ret != (int)(ndata + 1)) {
+            printf("ERROR: grb2_size_meta() returned %d, expected %d.\n", ret, (int)(ndata + 1));
             return 12;
+        }
+    }
+    printf("Testing grb2_get_meta()...\n");
+    {
+        int ret;
+        int last_options, good, npnts;
+        size_t ndata = NDATA;
+        unsigned char data[NDATA] = { 0 };
+
+        /* Reset all from last tests. */
+        last_options = 0;
+        good = 0;
+        npnts = 0;
+        grb2_inq_set_state(last_options, good, npnts);
+
+        /* Last find failed (good = 0), so should return 10. */
+        ret = grb2_get_meta(data, ndata);
+        if (ret != 10) {
+            printf("ERROR: grb2_get_meta() returned %d, expected 10.\n", ret);
+            return 13;
+        }
+
+        /* Invalid options (reading metadata not requested). Should return 11. */
+        ret = grb2_get_meta(data, ndata);
+        if (ret != 11) {
+            printf("ERROR: grb2_get_meta() returned %d, expected 11.\n", ret);
+            return 14;
+        }
+
+        /* Set register 18 with bad size. */
+        wgrib2_set_mem_buffer(data, 0, 18);
+
+        /* Size of metadata is 0, so should return 12 (grib format error). */
+        ret = grb2_get_meta(data, ndata);
+        if (ret != 12) {
+            printf("ERROR: grb2_get_meta() returned %d, expected 12.\n", ret);
+            return 15;
+        }
+
+        /* Set register 18 with metadata of correct size. */
+        wgrib2_set_mem_buffer(data, ndata, 18);
+
+        /* Size mismatch. Should return 13. */
+        ret = grb2_get_meta(data, ndata-1);
+        if (ret != 13) {
+            printf("ERROR: grb2_get_meta() returned %d, expected 13.\n", ret);
+            return 16;
+        }
+
+        /* Valid Case. Should return 0. */
+        ret = grb2_get_meta(data, ndata);
+        if (ret != 0) {
+            printf("ERROR: grb2_get_meta() returned %d, expected 0.\n", ret);
+            return 17;
         }
 
     }

@@ -301,10 +301,23 @@ int grb2_size_meta(void) {
 /**
  * Get memory-copy of metadata from RPN register.
  * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2018 | W. Ebisuzaki | Initial
+ * 7/2026 | A. Stahl | New error codes for testing purposes
+ * 
  * @param meta Pointer to the metadata array.
  * @param nbytes Size of the metadata buffer.
  * 
- * @return 0 on success, error code otherwise.
+ * @return 
+ * - 0 :: success
+ * - 10 :: last find did not work
+ * - 11 :: grb2_inq did not request reading metadata
+ * - 12 :: grib format error
+ * - 13 :: size of metadata is too big
+ * 
+ * See documentation for wgrib2_get_mem_buffer() for additional error codes.
  * 
  * @note Metadata stored in register 18.
  * 
@@ -316,21 +329,21 @@ int grb2_get_meta(unsigned char *meta, int nbytes) {
 
     if (good == 0) {
         fprintf(stderr,"grb2_get_meta: last find did not work.\n");
-        return 1;
+        return 10;
     }
     if ((last_options & META) == 0) {
         fprintf(stderr,"grb2_get_meta: grb2_inq did not request reading metadata.\n");
-        return 1;
+        return 11;
     }
 
     size = wgrib2_get_mem_buffer_size(18);
     if (size == 0) {
         fprintf(stderr,"grb2_get_meta: size = 0, grib format error\n");
-        return 1;
+        return 12;
     }
     if (size > INT_MAX  || size+1 > (size_t) nbytes) {
         fprintf(stderr,"grb2_get_meta: size of metadata is too big.\n");
-        return 1;
+        return 13;
     }
     err = wgrib2_get_mem_buffer(meta, size, 18);
     if (err == 0) meta[size] = 0;	/* end the string */
