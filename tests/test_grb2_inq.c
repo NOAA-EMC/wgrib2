@@ -262,7 +262,7 @@ main()
         }
 
         /* Valid Case. Should return buffer size + 1. */
-        last_options = META;
+        last_options = GRIDMETA;
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
         ret = grb2_size_gridmeta();
@@ -301,7 +301,7 @@ main()
             return 22;
         }
 
-        last_options = META;
+        last_options = GRIDMETA;
         grb2_inq_set_state(last_options, good, npnts);
 
         /* Set register 17 with bad size. */

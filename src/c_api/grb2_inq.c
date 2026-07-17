@@ -375,7 +375,7 @@ int grb2_size_gridmeta(void) {
         fprintf(stderr,"grb2_size_gridmeta: last find did not work.\n");
         return -1;
     }
-    if ((last_options & META) == 0) {
+    if ((last_options & GRIDMETA) == 0) {
         fprintf(stderr,"grb2_size_gridmeta: grb2_inq did not request reading gridmetadata\n");
         return -2;
     }
@@ -391,7 +391,7 @@ int grb2_size_gridmeta(void) {
  * Date | Programmer | Comments
  * -----|------------|---------
  * 3/2018 | W. Ebisuzaki | Initial
- * 7/2026 | A. Stahl | New error codes for testing purposes
+ * 7/2026 | A. Stahl | New error codes for testing purposes + replaced META with GRIDMETA
  * 
  * @param meta Pointer to the grid metadata array.
  * @param nbytes Size of the grid metadata buffer.
