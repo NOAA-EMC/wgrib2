@@ -405,6 +405,14 @@ main()
             return 35;
         }
 
+        /* Test with RAW_ORDER */
+        options = RAW_ORDER;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
+        if (ret != size) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
+            return 36;
+        }
+
     }
     printf("SUCCESS!\n");
     return 0;
