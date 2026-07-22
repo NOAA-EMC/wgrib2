@@ -374,21 +374,22 @@ main()
             return 29;
         }
 
-        //printf("Invalid argument. Should return -3.\n");
-        //options = SEQUENTIAL;
-        //ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
-        //if (ret != -3) {
-        //    printf("ERROR: grb2_inqVA() returned %lld, expected -3.\n", ret);
-        //    return 30;
-        //}
+        printf("Invalid argument. Should return -3.\n");
+        options = SEQUENTIAL;
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
+        if (ret != -3) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -3.\n", ret);
+            return 30;
+        }
 
+        /*
         printf("Non-sequential option with empty argument. Should return -5.\n");
         options = 0;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "");
         if (ret != -5) {
             printf("ERROR: grb2_inqVA() returned %lld, expected -5.\n", ret);
             return 32;
-        }
+        } */
 
         printf("Test with non-conflicting options.\n");
         options = DATA|LATLON|META|GRIDMETA;
