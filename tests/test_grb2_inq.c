@@ -382,18 +382,17 @@ main()
             return 30;
         }
 
-        /*
         printf("Non-sequential option with empty argument. Should return -5.\n");
         options = 0;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "");
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "", NULL);
         if (ret != -5) {
             printf("ERROR: grb2_inqVA() returned %lld, expected -5.\n", ret);
             return 32;
-        } */
+        }
 
         printf("Test with non-conflicting options.\n");
         options = DATA|LATLON|META|GRIDMETA;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD", NULL);
         if (ret != size) {
             printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
             return 34;
@@ -401,7 +400,7 @@ main()
 
         printf("Test with WENS.\n");
         options = WENS;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD", NULL);
         if (ret != size) {
             printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
             return 35;
@@ -409,7 +408,7 @@ main()
 
         printf("Test with RAW_ORDER.\n");
         options = RAW_ORDER;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
+        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD", NULL);
         if (ret != size) {
             printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
             return 36;
