@@ -367,20 +367,20 @@ main()
         }
 
         printf("Invalid file name. Should return -2.\n");
-        // options = SEQUENTIAL;
-        //ret = grb2_inqVA("invalid.grib2", GRB_INV, options, NULL);
-        //if (ret != -2) {
-        //    printf("ERROR: grb2_inqVA() returned %lld, expected -2.\n", ret);
-        //    return 29;
-        //}
-
-        printf("Invalid argument. Should return -3.\n");
         options = SEQUENTIAL;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
-        if (ret != -3) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected -3.\n", ret);
-            return 30;
+        ret = grb2_inqVA("invalid.grib2", GRB_INV, options, NULL);
+        if (ret != -2) {
+            printf("ERROR: grb2_inqVA() returned %lld, expected -2.\n", ret);
+            return 29;
         }
+
+        //printf("Invalid argument. Should return -3.\n");
+        //options = SEQUENTIAL;
+        //ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
+        //if (ret != -3) {
+        //    printf("ERROR: grb2_inqVA() returned %lld, expected -3.\n", ret);
+        //    return 30;
+        //}
 
         printf("Non-sequential option with empty argument. Should return -5.\n");
         options = 0;
