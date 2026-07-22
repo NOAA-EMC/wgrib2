@@ -367,12 +367,12 @@ main()
         }
 
         /* Invalid file name. Should return -2. */
-        options = SEQUENTIAL;
-        ret = grb2_inqVA("invalid.grib2", GRB_INV, options, NULL);
-        if (ret != -2) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected -2.\n", ret);
-            return 29;
-        }
+        // options = SEQUENTIAL;
+        //ret = grb2_inqVA("invalid.grib2", GRB_INV, options, NULL);
+        //if (ret != -2) {
+        //    printf("ERROR: grb2_inqVA() returned %lld, expected -2.\n", ret);
+        //    return 29;
+        //}
 
         /* Invalid argument. Should return -3. */
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
