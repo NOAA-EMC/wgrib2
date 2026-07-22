@@ -35,14 +35,14 @@ main()
 
         grb2_inq_set_state(last_options, good, npnts);
 
-        /* Last find failed (good = 0), so should return 10. */
+        printf("Last find failed (good = 0), so should return 10.\n");
         ret = grb2_get_data(data, ndata);
         if (ret != 10) {
             printf("ERROR: grb2_get_data() returned %d, expected 10.\n", ret);
             return 2;
         }
 
-        /* Wrong size data (ndata != npnts). Should return 11. */
+        printf("Wrong size data (ndata != npnts). Should return 11.\n");
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
         ret = grb2_get_data(data, ndata);
@@ -51,7 +51,7 @@ main()
             return 3;
         }
 
-        /* Invalid options (reading data not requested). Should return 12. */
+        printf("Invalid options (reading data not requested). Should return 12.\n");
         good = 1;
         npnts = ndata;
         grb2_inq_set_state(last_options, good, npnts);
@@ -61,7 +61,7 @@ main()
             return 4;
         }
 
-        /* Valid Case. Should return 0. */
+        printf("Valid Case. Should return 0.\n");
         last_options = DATA;
         good = 1;
         npnts = ndata;
@@ -91,14 +91,14 @@ main()
 
         grb2_inq_set_state(last_options, good, npnts);
 
-        /* Last find failed (good = 0), so should return 10. */
+        printf("Last find failed (good = 0), so should return 10.\n");
         ret = grb2_get_lonlat(lon, lat, ndata);
         if (ret != 10) {
             printf("ERROR: grb2_get_lonlat() returned %d, expected 10.\n", ret);
             return 6;
         }
 
-        /* Wrong size data (ndata != npnts). Should return 11. */
+        printf("Wrong size data (ndata != npnts). Should return 11.\n");
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
         ret = grb2_get_lonlat(lon, lat, ndata);
@@ -107,7 +107,7 @@ main()
             return 7;
         }
 
-        /* Invalid options (reading lonlat not requested). Should return 12. */
+        printf("Invalid options (reading lonlat not requested). Should return 12.\n");
         good = 1;
         npnts = ndata;
         grb2_inq_set_state(last_options, good, npnts);
@@ -117,7 +117,7 @@ main()
             return 8;
         }
 
-        /* Valid Case. Should return 0. */
+        printf("Valid Case. Should return 0.\n");
         last_options = LONLAT;
         good = 1;
         npnts = ndata;
@@ -145,14 +145,14 @@ main()
 
         grb2_inq_set_state(last_options, good, npnts);
 
-        /* Last find failed (good = 0), so should return -1. */
+        printf("Last find failed (good = 0), so should return -1.\n");
         ret = grb2_size_meta();
         if (ret != -1) {
             printf("ERROR: grb2_size_meta() returned %d, expected -1.\n", ret);
             return 10;
         }
 
-        /* Invalid options (reading metadata not requested). Should return -2. */
+        printf("Invalid options (reading metadata not requested). Should return -2.\n");
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
         ret = grb2_size_meta();
@@ -161,7 +161,7 @@ main()
             return 11;
         }
 
-        /* Valid Case. Should return buffer size + 1. */
+        printf("Valid Case. Should return buffer size + 1.\n");
         last_options = META;
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
@@ -184,14 +184,14 @@ main()
         npnts = 0;
         grb2_inq_set_state(last_options, good, npnts);
 
-        /* Last find failed (good = 0), so should return 10. */
+        printf("Last find failed (good = 0), so should return 10.\n");
         ret = grb2_get_meta(data, ndata);
         if (ret != 10) {
             printf("ERROR: grb2_get_meta() returned %d, expected 10.\n", ret);
             return 13;
         }
 
-        /* Invalid options (reading metadata not requested). Should return 11. */
+        printf("Invalid options (reading metadata not requested). Should return 11.\n");
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
 
@@ -207,7 +207,7 @@ main()
         /* Set register 18 with bad size. */
         wgrib2_set_mem_buffer(data, 0, 18);
 
-        /* Size of metadata is 0, so should return 12 (grib format error). */
+        printf("Size of metadata is 0, so should return 12 (grib format error).\n");
         ret = grb2_get_meta(data, ndata);
         if (ret != 12) {
             printf("ERROR: grb2_get_meta() returned %d, expected 12.\n", ret);
@@ -217,14 +217,14 @@ main()
         /* Set register 18 with metadata of correct size. */
         wgrib2_set_mem_buffer(data, ndata, 18);
 
-        /* Size mismatch. Should return 13. */
+        printf("Size mismatch. Should return 13.\n");
         ret = grb2_get_meta(data, ndata-1);
         if (ret != 13) {
             printf("ERROR: grb2_get_meta() returned %d, expected 13.\n", ret);
             return 16;
         }
 
-        /* Valid Case. Should return 0. */
+        printf("Valid Case. Should return 0.\n");
         ret = grb2_get_meta(data, ndata+1);
         if (ret != 0) {
             printf("ERROR: grb2_get_meta() returned %d, expected 0.\n", ret);
@@ -247,14 +247,14 @@ main()
         /* Set register 17 with metadata. */
         wgrib2_set_mem_buffer(data, ndata, 17);
 
-        /* Last find failed (good = 0), so should return -1. */
+        printf("Last find failed (good = 0), so should return -1.\n");
         ret = grb2_size_gridmeta();
         if (ret != -1) {
             printf("ERROR: grb2_size_gridmeta() returned %d, expected -1.\n", ret);
             return 18;
         }
 
-        /* Invalid options (reading grid metadata not requested). Should return -2. */
+        printf("Invalid options (reading grid metadata not requested). Should return -2.\n");
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
         ret = grb2_size_gridmeta();
@@ -263,7 +263,7 @@ main()
             return 19;
         }
 
-        /* Valid Case. Should return buffer size + 1. */
+        printf("Valid Case. Should return buffer size + 1.\n");
         last_options = GRIDMETA;
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
@@ -286,14 +286,14 @@ main()
         npnts = 0;
         grb2_inq_set_state(last_options, good, npnts);
 
-        /* Last find failed (good = 0), so should return 10. */
+        printf("Last find failed (good = 0), so should return 10.\n");
         ret = grb2_get_gridmeta(data, ndata);
         if (ret != 10) {
             printf("ERROR: grb2_get_gridmeta() returned %d, expected 10.\n", ret);
             return 21;
         }
 
-        /* Invalid options (reading grid metadata not requested). Should return 11. */
+        printf("Invalid options (reading grid metadata not requested). Should return 11.\n");
         good = 1;
         grb2_inq_set_state(last_options, good, npnts);
 
@@ -309,7 +309,7 @@ main()
         /* Set register 17 with bad size. */
         wgrib2_set_mem_buffer(data, 0, 17);
 
-        /* Size of grid metadata is 0, so should return 12 (grid problem). */
+        printf("Size of grid metadata is 0, so should return 12 (grid problem).\n");
         ret = grb2_get_gridmeta(data, ndata);
         if (ret != 12) {
             printf("ERROR: grb2_get_gridmeta() returned %d, expected 12.\n", ret);
@@ -319,14 +319,14 @@ main()
         /* Set register 17 with grid metadata of correct size. */
         wgrib2_set_mem_buffer(data, ndata, 17);
 
-        /* Size mismatch. Should return 13. */
+        printf("Size mismatch. Should return 13.\n");
         ret = grb2_get_gridmeta(data, ndata-1);
         if (ret != 13) {
             printf("ERROR: grb2_get_gridmeta() returned %d, expected 13.\n", ret);
             return 24;
         }
 
-        /* Valid Case. Should return 0. */
+        printf("Valid Case. Should return 0.\n");
         ret = grb2_get_gridmeta(data, ndata+1);
         if (ret != 0) {
             printf("ERROR: grb2_get_gridmeta() returned %d, expected 0.\n", ret);
@@ -342,7 +342,7 @@ main()
         /* Reset to avoid unexpected behavior. */
         grb2_inq_set_state(0, 0, 0);
 
-        /* WENS & LATLON conflict test. Should return -1. */
+        printf("WENS & LATLON conflict test. Should return -1.\n");
         options = WENS | LATLON;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
         if (ret != -1) {
@@ -350,7 +350,7 @@ main()
             return 26;
         }
 
-        /* WENS & RAW_ORDER conflict test. Should return -1. */
+        printf("WENS & RAW_ORDER conflict test. Should return -1.\n");
         options = WENS | RAW_ORDER;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
         if (ret != -1) {
@@ -358,7 +358,7 @@ main()
             return 27;
         }
 
-        /* LATLON & RAW_ORDER conflict test. Should return -1. */
+        printf("LATLON & RAW_ORDER conflict test. Should return -1.\n");
         options = LATLON | RAW_ORDER;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
         if (ret != -1) {
@@ -366,7 +366,7 @@ main()
             return 28;
         }
 
-        /* Invalid file name. Should return -2. */
+        printf("Invalid file name. Should return -2.\n");
         // options = SEQUENTIAL;
         //ret = grb2_inqVA("invalid.grib2", GRB_INV, options, NULL);
         //if (ret != -2) {
@@ -374,7 +374,7 @@ main()
         //    return 29;
         //}
 
-        /* Invalid argument. Should return -3. */
+        printf("Invalid argument. Should return -3.\n");
         options = SEQUENTIAL;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
         if (ret != -3) {
@@ -382,7 +382,7 @@ main()
             return 30;
         }
 
-        /* Non-sequential option with empty argument. Should return -5. */
+        printf("Non-sequential option with empty argument. Should return -5.\n");
         options = 0;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "");
         if (ret != -5) {
@@ -390,7 +390,7 @@ main()
             return 32;
         }
 
-        /* Test with non-conflicting options. */
+        printf("Test with non-conflicting options.\n");
         options = DATA|LATLON|META|GRIDMETA;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
         if (ret != size) {
@@ -398,7 +398,7 @@ main()
             return 34;
         }
 
-        /* Test with WENS */
+        printf("Test with WENS.\n");
         options = WENS;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
         if (ret != size) {
@@ -406,7 +406,7 @@ main()
             return 35;
         }
 
-        /* Test with RAW_ORDER */
+        printf("Test with RAW_ORDER.\n");
         options = RAW_ORDER;
         ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD");
         if (ret != size) {
