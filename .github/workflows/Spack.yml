@@ -33,10 +33,10 @@ jobs:
         package-name: wgrib2
         package-variants: ${{ matrix.variants }}
         custom-recipe: spack/package.py
-        use-repo-cache: true
+        use-repo-cache: false
         spack-compiler: gcc
         use-common-build-cache: true
-        cache-spack-lock: true
+        cache-spack-lock: false
         repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-
 
   recipe-check:
