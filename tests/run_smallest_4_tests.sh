@@ -153,31 +153,31 @@ fi
 # Message 4 Errors 
 
 # First 4 bytes does not start with GRIB
-../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_1.grb2 "$file4" && exit 1
+../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_1.grb2 && exit 1
 if [ $? -ne 1 ]; then
     echo "Error: Test failed for bad sec0 message at byte 1 in file 4."
     exit 1
 fi
 
-../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_2.grb2 "$file4" && exit 1
+../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_2.grb2 && exit 1
 if [ $? -ne 1 ]; then
     echo "Error: Test failed for bad sec0 message at byte 2 in file 4."
     exit 1
 fi
 
-../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_3.grb2 "$file4" && exit 1
+../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_3.grb2 && exit 1
 if [ $? -ne 1 ]; then
     echo "Error: Test failed for bad sec0 message at byte 3 in file 4."
     exit 1
 fi
 
-../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_4.grb2 "$file4" && exit 1
+../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_4.grb2 && exit 1
 if [ $? -ne 1 ]; then
     echo "Error: Test failed for bad sec0 message at byte 4 in file 4."
     exit 1
 fi
 
-../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_size.grb2 "$file4" && exit 1
+../aux_progs/smallest_4 "$output" "$file1" "$file2" "$file3" data/bad_sec0_size.grb2 && exit 1
 if [ $? -ne 4 ]; then
     echo "Error: Test failed for read error in file 4."
     exit 1
