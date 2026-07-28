@@ -43,7 +43,11 @@
  * @param argc Number of command line arguments
  * @param argv Array of command line arguments
  *
- * @return 0 on success, non-zero on error
+ * @return 
+ * - 0 :: Success
+ * - 1 :: First 4 bytes not "GRIB"
+ * - 4 :: Read error occurred
+ * - 8 :: Exact error is written to stderr
  *
  * @author Wesley Ebisuzaki @date 2010
  */
@@ -96,6 +100,7 @@ int main(int argc, char **argv) {
         if (buffer1[0] != 'G' || buffer1[1] != 'R' || buffer1[2] != 'I' || 
             buffer1[3] != 'B') exit(1);
         size[1] = uint8(&(buffer1[8]));
+        printf("size[1] = %d\n", size[1]);
         if (size1 < size[1]) {
             size1 = size[1];
             buffer1 = realloc(buffer1, size1);
