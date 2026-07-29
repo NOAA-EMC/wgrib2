@@ -333,6 +333,8 @@ main()
             return 25;
         }
     }
+    // GRIB file has JPEG packing type.
+#if G2_JPEG2000_ENABLED == 1
     printf("Testing grb2_inqVA()...\n");
     {
         long long int ret;
@@ -414,6 +416,7 @@ main()
             return 36;
         }
     }
+#endif
     printf("SUCCESS!\n");
     return 0;
 }
