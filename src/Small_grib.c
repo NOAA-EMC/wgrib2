@@ -440,7 +440,21 @@ extern int GDS_change_no;
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 fcst.grb2 -small_grib 10:20 -20:20 small.grb
+ * 1:0:d=2007032600:HGT:1000 mb:anl:
+ * @endcode
+ * 
+ * This writes a small grib file from 10E-20E and 20S-20N. Often you want to preserve the grib compression. 
+ * In this case, you would add the option `-set_grib_type same` to the wgrib2 command line. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 small.grb -grid
+ * 1:0:grid_template=0:
+ *       lat-lon grid:(21 x 81) units 1e-06 input WE:SN output WE:SN res 48
+ *       lat -20.000000 to 20.000000 by 0.500000
+ *       lon 10.000000 to 20.000000 by 0.500000 #points=1701
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 5/2008
  */

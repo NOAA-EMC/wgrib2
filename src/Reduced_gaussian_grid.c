@@ -150,7 +150,35 @@ static void interpolate(float *in, int n_in, float *out, int n_out, enum interpo
  * @return 0 on success, error code otherwise
  * 
  * ## Example
- * ???
+ * See that reduced_gaussian_surface_jpeg.grib2 is a reduced Gaussian grid.
+ * @code{.sh}
+ * $ wgrib2 reduced_gaussian_surface_jpeg.grib2 -grid
+ * 1:0:grid_template=40:winds(N/S):
+ *	thinned global Gaussian grid: (-1 x 64) units 1e-06 input WE:NS output raw
+ *	number of latitudes between pole-equator=32 #points=6114
+ *	lat 87.864000 to -87.864000
+ *	lon 0.000000 to 357.188000 by -2147.483647
+ *	#grid points by latitude: 20 27 36 40 45 50 60 64 72 75 80 90 90
+ *	 96 100 108 108 120 120 120 128 128 128 128 128 128 128 128 128 128 128 128 128
+ *	 128 128 128 128 128 128 128 128 128 128 128 120 120 120 108 108 100 96 90 90
+ *	 80 75 72 64 60 50 45 40 36 27 20
+ * @endcode
+ * 
+ * Write regular Gaussian grid in new.grb.
+ * @code{.sh}
+ * $ wgrib2 reduced_gaussian_surface_jpeg.grib2 -reduced_gaussian_grid new.grb -1 linear
+ * 1:0:d=2007032312:TMP:surface:anl:
+ * @endcode
+ * 
+ * Check that new.grb is a regular Gaussian grid.
+ * @code{.sh}
+ * $ wgrib2 new.grb -grid
+ * 1:0:grid_template=40:winds(N/S):
+ *	Gaussian grid: (128 x 64) units 1e-06 input WE:NS output WE:SN
+ *	number of latitudes between pole-equator=32 #points=8192
+ *	lat 87.864000 to -87.864000
+ *	lon 0.000000 to 357.187500 by 2.812500
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 10/2017
  */

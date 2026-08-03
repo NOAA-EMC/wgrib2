@@ -44,7 +44,11 @@
  * @return Always returns 0
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 gep19.t00z.pgrb2af180  -scaling -for 13:14 -v -packing
+ * 13:473374:scaling ref=2.32109e+06 dec_scale=-3 bin_scale=4 nbits=16:packing=grid point data - jpeg2000 compression,j val=(2.32109e+06+i*2^4)*10^-3, i=0..65535 (#bits=16)
+ * 14:528630:scaling ref=2215 dec_scale=-1 bin_scale=0 nbits=10:packing=grid point data - jpeg2000 compression,j val=(2215+i*2^0)*10^-1, i=0..1023 (#bits=10)
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -90,7 +94,15 @@ int f_scaling(ARG0) {
  * @return Always returns 0
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.t00z.pgrb2af180  -scale -for 13:14
+ * 13:473374:scale=-3,4
+ * 14:528630:scale=-1,0
+ * $ wgrib2 gep19.t00z.pgrb2af180  -scale -for 13:14 -v -packing
+ * 13:473374:scale=-3,4:packing=grid point data - jpeg2000 compression,j val=(2.32109e+06+i*2^4)*10^-3, i=0..65535 (#bits=16)
+ * 14:528630:scale=-1,0:packing=grid point data - jpeg2000 compression,j val=(2215+i*2^0)*10^-1, i=0..1023 (#bits=10)
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */

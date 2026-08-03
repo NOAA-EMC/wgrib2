@@ -182,7 +182,10 @@ int f_set_metadata(ARG1) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 small.grb2  -set_metadata_str "1:0:d=2001020304:TMP:10 mb:anl:"
+ * 1:0:d=2001020304:TMP:10 mb:anl:ENS=+19
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 4/2019
  */

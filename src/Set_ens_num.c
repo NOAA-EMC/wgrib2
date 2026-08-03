@@ -47,8 +47,29 @@
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 ds.td.bin -set_ens_num 3 1 10 -grib ds_ens.grb
+ * 1:80:d=2009062918:DPT:surface:60 hour fcst:ENS=+1
+ * 2:218826:d=2009062918:DPT:surface:66 hour fcst:ENS=+1
+ * 3:434430:d=2009062918:DPT:surface:72 hour fcst:ENS=+1
+ * 4:652869:d=2009062918:DPT:surface:78 hour fcst:ENS=+1
+ * 5:871866:d=2009062918:DPT:surface:84 hour fcst:ENS=+1
+ * 6:1088694:d=2009062918:DPT:surface:90 hour fcst:ENS=+1
+ * 7:1304003:d=2009062918:DPT:surface:96 hour fcst:ENS=+1
+ * 8:1549304:d=2009062918:DPT:surface:102 hour fcst:ENS=+1
+ * ...
+ * @endcode
  * 
+ * <pre>
+ * -set_ens_num 3 1 10
+ *      3 = positive perturbed forecast
+ *      1 = perturbation number
+ *      10 = number of ensemble members
+ * 
+ * -grib ds_ens.grb
+ *      save the new grib file in ds_ens.grb
+ * </pre>
+
  * @author Wesley Ebisuzaki @date 11/2011
  */
 int f_set_ens_num(ARG3) {

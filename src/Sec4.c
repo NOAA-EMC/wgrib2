@@ -33,7 +33,18 @@
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 -Sec4 png.grb2 
+ * 1:4:Sec4 len=36 #vert coordinate=0 Product Defn Template=4.2 size=36 free=0
+ * @endcode
+ * 
+ * <pre>
+ * len=36                        Section 4 is 36 octets/bytes in length
+ * #vert coordinate=0            no vertical coordinates have been defined
+ * Product Defn Template=4.2     using Product Definition Template 4.2  (Code Table 4.0)
+ * size=36                       Size of PDT excluding vertical coordinates
+ * free=0                        Should be zero, len-size-8*#vert_coordinates
+ * </pre>
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -71,7 +82,28 @@ int f_Sec4(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -processid
+ * 1:4:background generating process=0 forecast generating process=80
+ * @endcode
+ * 
+ * You can change the process id using the -set option.
+ * 
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -set analysis_or_forecast_process_id 11 -processid
+ * 1:4:background generating process=0 forecast generating process=11
+ * @endcode
+ * 
+ * You can add the process id to the match inventory by
+ *
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -match_inv_add processid x x -match_inv
+ * 1:4:d=2009060500:RH:2 m above ground:330 hour fcst:ens std dev:
+ *  RH.ens_std_dev:n=1:npts=65160:var0_2_1_7_1_1:pdt=2:D=20090605000000:
+ *  start_FT=20090618180000:end_FT=20090618180000:scaling ref=0 dec_scale=-1 bin_scale=0 
+ *  nbits=16:background generating process=0 forecast generating process=80:
+ *  330 hour fcst:vt=2009061818:
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -127,7 +159,16 @@ int f_processid(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -0xSec 0
+ * 1:4:Sec0(1..16)=0x4752494200000002000000000000ad9c
+ * $ wgrib2 png.grb2 -0xSec 0 -v1
+ * 1:4:Sec0(1..16)= 47 52 49 42 00 00 00 02 00 00 00 00 00 00 ad 9c
+ * $ wgrib2 png.grb2 -0xSec 0 -v2
+ * 1:4:Sec0(1..16)=1:47 2:52 3:49 4:42 5:00 6:00 7:00 8:02 9:00 10:00 11:00 12:00 13:00 14:00 15:ad 16:9c 
+ * @endcode
+ * 
+ * The above 3 examples show a hex dump of Section 0 using the different verbosity levels.
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -242,7 +283,12 @@ int f_0xSec(ARG1) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 chem.grb2 -var
+ * 1:0:MASSDEN
+ * $ wgrib2 chem.grb2 -ext_name
+ * 1:0:MASSDEN.hi-res_ctl.Water_Vapour
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -291,7 +337,10 @@ int f_var(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -varX
+ * 1:0:var0_2_1_7_3_5
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -350,7 +399,10 @@ int f_varX(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 -pdt png.grb2
+ * 1:4:code table 4.0=2 Derived forecasts based on all ensemble members at a horizontal level or in a horizontal layer at a point in time.
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */

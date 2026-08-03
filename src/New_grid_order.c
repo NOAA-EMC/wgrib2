@@ -212,7 +212,42 @@ static int wrt_uv_sec(unsigned char **sec1, unsigned char **sec2, struct seq_fil
  * @return 0 on success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.badorder -new_grid_winds earth -new_grid ncep grid 3 test.grb
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:70707:d=2009060500:UGRD:200 mb:180 hour fcst:ENS=+19
+ * 3:111348:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * -new_grid: VGRD doesn't pair with previous vector field, field ignored
+ * 4:137484:d=2009060500:VGRD:250 mb:180 hour fcst:ENS=+19
+ * 5:182284:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19
+ * 6:211191:d=2009060500:VGRD:200 mb:180 hour fcst:ENS=+19
+ * 7:254630:d=2009060500:HGT:250 mb:180 hour fcst:ENS=+19
+ * 8:325988:d=2009060500:TMP:250 mb:180 hour fcst:ENS=+19
+ * 9:351022:d=2009060500:UGRD:250 mb:180 hour fcst:ENS=+19
+ * 10:393024:d=2009060500:RH:250 mb:180 hour fcst:ENS=+19
+ * 11:424624:d=2009060500:HGT:500 mb:180 hour fcst:ENS=+19
+ * -new_grid: last field UGRD was not interpolated (missing V)
+ * @endcode
+ * 
+ * The operation failed because U and V are not in the proper order. Calling -new_grid_order 
+ * will fix the problem.
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.badorder -new_grid_order - junk | \
+ *      wgrib2 - -new_grid_winds earth -new_grid ncep grid 3 test.grb
+ * 1:3:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19
+ * 2:70820:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19
+ * 3:97067:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19
+ * 4.1:126028:d=2009060500:UGRD:200 mb:180 hour fcst:ENS=+19
+ * 4.2:126028:d=2009060500:VGRD:200 mb:180 hour fcst:ENS=+19
+ * 5:210051:d=2009060500:HGT:250 mb:180 hour fcst:ENS=+19
+ * 6:281464:d=2009060500:TMP:250 mb:180 hour fcst:ENS=+19
+ * 7.1:306553:d=2009060500:UGRD:250 mb:180 hour fcst:ENS=+19
+ * 7.2:306553:d=2009060500:VGRD:250 mb:180 hour fcst:ENS=+19
+ * 8:393299:d=2009060500:RH:250 mb:180 hour fcst:ENS=+19
+ * 9:424954:d=2009060500:HGT:500 mb:180 hour fcst:ENS=+19
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 10/2019
  */

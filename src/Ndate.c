@@ -73,7 +73,11 @@
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndate  2016010212 -6hr
+ * 2016010206
+ * @endcode
+ * 
  * 
  * @author Wesley Ebisuzaki @date 1/2019
  */

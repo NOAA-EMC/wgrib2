@@ -246,8 +246,171 @@ static void reg_wt(double *val, double *wt, float *data, int i, int j, int nx, i
  * 
  * @return 0 for success, error code otherwise
  * 
- * ## Example
- * ???
+ * ## Example 1
+ * The standard units of grib temperature is K but you want the text output in Celcius. 
+ * @code{.sh}
+ * $ wgrib2 a.grb -match ":TMP:850 mb:" -rpn "273.15:-" -text C.dat
+ * @endcode
+ * Fahrenheit is easy too (F = (K-273.15)*9/5+32). 
+ * @code{.sh}
+ * $ wgrib2 a.grb -match ":TMP:850 mb:" -rpn "273.15:-:9:*:5:/:32:+" -text F.dat
+ * @endcode
+ * 
+ * ## Example 2
+ * Suppose you want to limit the relative humidity values to 100. This example only affect the RH fields. 
+ * All submessages will be converted into messages. 
+ * @code{.sh}
+ * $ wgrib2 a.grb -if ":RH:" -rpn "100:min" -fi -grib_out out.grb -not_if ":RH:" -grib out.grb
+ * @endcode
+ * 
+ * ## Example 3
+ * Suppose that you wanted the 500 to 1000 mb thickness, and the file only contained one field of Z1000 and one field of Z500. 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -match ":HGT:" -match ":(500|1000) mb:" \
+ *    -if ":500 mb:" -rpn sto_1 -fi \
+ *    -if ":1000 mb:" -rpn sto_2 -fi \
+ *    -if_reg "1:2" \
+ *        -rpn "rcl_1:rcl_2:-:clr_1:clr_2" \
+ *        -set_var THICK -set_lev "500-1000 mb" \
+ *        -set_grib_type c3 -grib_out OUT.grb
+ * @endcode
+ * - line 1: only process the HGT at 500 and 1000 mb which save processing time
+ * - line 2: store HGT at 500mb in register 1
+ * - line 3: store HGT at 1000mb in register 2
+ * - line 4: if (register 1 and register 2 have values then
+ * - line 5: calculate the thickness: reg_1 - reg_2
+ * - line 6: set variable type to THICK, and level to "500-1000 mb"
+ * - line 7: write out the WIND data to a grib file with complex compression
+ * 
+ * Note: this is a very simple script and that doesn't check the matching date code, grid type, etc.
+ * 
+ * ## Example 4
+ *  Write out the 500 mb wind speed.
+ *
+ * @code{.sh}
+ * $ wgrib2 IN.grb -match ":[UV]grd:500 mb:" \
+ *    -if ":UGRD:" -rpn "sto_1" -fi \
+ *    -if ":VGRD:" -rpn "sto_2" -fi \
+ *    -if_reg 1:2 \
+ *        -rpn "rcl_1:sq:rcl_2:sq:+:sqrt:clr_1:clr_2" \
+ *        -set_var WIND \
+ *        -grib_out out.grb
+ * @endcode
+ * 
+ * - line 1: only process the U and V at 500 mb
+ * - line 2: store U 500mb in register 1
+ * - line 3: store V 500mb in register 2
+ * - line 4: if (register 1 and register 2 have values then
+ * - line 5: calculate the wind speed: sqrt(reg_1**2 + reg_2**2)
+ * - line 6: set variable type to WIND (wind speed)
+ * - line 7: write out the WIND data to a grib file
+
+ * Note: this is a very simple script and that doesn't check the matching
+ * date code, grid type, etc.
+ *
+ * Note: there are options to calculate wind speed and wind direction
+ * 
+ * ## Example 5
+ * Suppose someone made a mistake and the latent heat flux (LHTFL) had the wrong sign. RPN to the rescue.
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -match ":LHTFL:" -rpn "-1:*" -grib_out new_lhtfl.grb
+ * @endcode
+ *
+ * The file, new_lhtfl, only contained the LHTFL fields. You duplicate the file with the fixed LHTFL fields by
+ * @code{.sh}
+ * $ wgrib2 IN.grb -if ":LHTFL:" -rpn "-1:*" -fi -grib_out new.grb
+ * @endcode
+ *
+ * It would be faster if you only compressed the LHTFL fields. (-grib uses the original compressed data and 
+ * -grib_out uses the "data" register.)
+ * @code{.sh}
+ * $ wgrib2 IN.grb -set_grib_type jpeg \
+ *   -not_if ":LHTFL:" -grib new.grb -if ":LHTFL:" -grib_out new.grb
+ * @endcode
+ * 
+ * If both the latent and sensible heat fluxes needed a sign reversal, you could do,
+ *
+ * @code{.sh}
+ * $ wgrib2 IN.grb -if ":(LHTFL|SHTFL):" -rpn "-1:*" -fi -grib_out new.grb
+ * @endcode
+ * 
+ * ## Example 6
+ * If you want to set certain values to undefined, you define a mask and then apply the mask. In this example, values below 20 are 
+ * set to undefined. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 a.grb -rpn "dup:20:>=:mask" -grib_out -set_grib_type c3 new.grb 
+ * @endcode
+ * 
+ * <pre>
+ * The RPN calculator is used:
+ *     dup       the data is duplicated
+ *     20        20 is pushed on the stack
+ *     >=        test data >= 20, top of stack is 1/0 depending on test >= 20
+ *     mask      apply mask to the data
+ * 
+ * -set_grib_type c3    sets the grib compression to complex3
+ * -grib_out new.grb    writes a grib message using the decoded data
+ * </pre>
+ * 
+ * Don't forget to enclose the argument to rpn in quotes because the shell can do unexpect things. 
+ * 
+ * ## Example 7: Quilting/Merging
+ * Suppose that we have 4 forecast systems with different domains and resolutions. We have the NAM, ARPEGE and the ALADIN regional 
+ * models and the global GFS. We want a grid that combines the 4 forecasts with a high to low priority. 
+ * 
+ * The 4 forecasts have different fields and resolutions in their grib files. So the first step is select a specific field and 
+ * convert it to a common grid. 
+ * 
+ * @code{.sh}
+ * $ rm NAM_TEMP2M.grb ARPEGE_TEMP2M.grb ALADIN_TEMP2M.grb GFS_TEMP2M.grb
+ * $ wgrib2 NAM.grb -match ":TMP:2 m above ground:" -new_grid_winds earth -new_grid A B C NAM_TEMP2M.grb
+ * $ wgrib2 ARPEGE.grb -match ":TMP:2 m above ground:" -new_grid_winds earth -new_grid A B C ARPEGE_TEMP2M.grb
+ * $ wgrib2 ALADIN.grb -match ":TMP:2 m above ground:" -new_grid_winds earth -new_grid A B C ALADIN_TEMP2M.grb
+ * $ wgrib2 GFS.grb -match ":TMP:2 m above ground:" -new_grid_winds earth -new_grid A B C GFS_TEMP2M.grb
+ * @endcode
+ * A, B and C are some -new_grid parameters.
+ * 
+ * Make sure that the new grid include all 4 forecasts domains. Check that files are not empty or missing.
+ * 
+ * @code{.sh}
+ * $ wgrib2 NAM_TEMP2M.grb -rpn sto_1 \
+ *  -import_grib ARPEGE_TEMP2M.grb -rpn "rcl_1:merge:sto_1" \
+ *  -import_grib ALADIN_TEMP2M.grb -rpn "rcl_1:merge:sto_1" \
+ *  -import_grib GFS_TEMP2M.grb -rpn "rcl_1:merge:sto_1" \
+ *  -grib_out WX_TEMP2M_QUILT.grb
+ * @endcode
+ * The priority from high to low is NAM, ARPEGE, ALADIN and GFS. 
+ * 
+ * ## Example 8: Land Mask
+ * The file mask.grb contains the values 0 for water, 1 for land and 2 for sea ice. I wanted a small file with 0 for water+sea-ice 
+ * and 1 for land. 
+ * @code{.sh}
+ * $ wgrib2 mask.grb -rpn "1:==" -set_scaling 0 1 -set_grib_type c1 -grib_out land.grb
+ * @endcode
+ * 
+ * <pre>
+ *      -rpn "1:=="        if grid value is 1, the new value is 1 else 0
+ *      -set_scaling 0 1   1 bit for storing the grib values
+ *      -set_grib_type c1  complex packing 1 is good for long runs of the same value.
+ *      The file sizes  16 bits/point 16 bits precision simple packing (mask.grb)
+ *                   0.7 bits per point 16 bits precision complex packing 1 (mask.grb)
+ *                   0.2 bits per point complex packing 1 (land.grb)
+ *      grid size: 131K points, land.grb is 3331 bytes
+ * </pre>
+ * 
+ * ## Example 9: Total-total index]
+ * An [example](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/rpn_non-trivial_example.html) of calculating the dewpoint and 
+ * total-total index is more involved. Using an on-line infix to postfix (reverse polish) calculator is helpful. 
+ * 
+ * ## Example 10: Global Precipitation
+ * The model has the precipitation in the variable PRATE which has units of mm/sec (assuming 1 gm H2O = 1cc). Suppose I wanted the 
+ * globally averaged precip in the non-metric unit of mm/day. It's one command away:
+ * 
+ * @code{.sh}
+ * $ wgrib2 gfsfile -match PRATE -s -rpn "86400:*" -stats
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 4/2009
  */
@@ -1367,7 +1530,38 @@ int push(int top, unsigned int ndata, int type, float f, float *ff, double *d) {
  * @return 0 for success, error code otherwise.
  * 
  * ## Example
- * ???
+ * Here is an example of computing the 500 mb wind speed. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 a.grb -match ":[UV]grd:500 mb:anl:" \
+ *    -if ":UGRD:" -rpn "sto_1" -fi \
+ *    -if ":VGRD:" -rpn "sto_2" -fi \
+ *    -if_reg 1:2 \
+ *        -rpn "rcl_1:sq:rcl_2:sq:+:sqrt:clr_1:clr_2" \
+ *        -set_var WIND \
+ *        -grib_out out.grb
+ * @endcode
+ * 
+ * - line 1: only process the U and V at 500 mb
+ * - line 2: store U 500mb analysis in register 1
+ * - line 3: store V 500mb analysis in register 2
+ * - line 4: if (register 1 and register 2 have values then
+ * - line 5: calculate the wind speed: sqrt(reg_1**2 + reg_2**2)
+ * - line 6: set variable time to WIND (wind speed)
+ * - line 7: write out the WIND data to a grib file
+ *         -grib_out is an output option and ends the -if block
+ * 
+ * With operational NCEP files, the V field immediately follows the corresponding U field. If we assume 
+ * that this is always true, then the following computes all the wind speeds. 
+ * @code{.sh}
+ * $ wgrib2 a.grb -match ":[UV]grd:" \
+ *   -if ":UGRD:" -rpn "sto_1" -fi \
+ *   -if ":VGRD:" -rpn "sto_2" -fi \
+ *   -if_reg 1:2 \
+ *       -rpn "rcl_1:sq:rcl_2:sq:+:sqrt:clr_1:clr_2" \
+ *       -set_var WIND \
+ *       -grib_out out.grb
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 4/2009
  */

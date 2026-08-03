@@ -77,7 +77,26 @@
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 png.grb2
+ * 1:4:d=2009060500:RH:2 m above ground:330 hour fcst:ens std dev
+ * $ wgrib2 png.grb2 -set_date 20180101 -grib OUTFILE -s
+ * :4:d=2018010100:RH:2 m above ground:330 hour fcst:ens std dev
+ * $ wgrib2 png.grb2 -set_date +12hr -grib OUTFILE -s
+ * 1:4:d=2009060512:RH:2 m above ground:330 hour fcst:ens std dev
+ * $ wgrib2 png.grb2 -set_date -12hr -grib OUTFILE -s
+ * 1:4:d=2009060412:RH:2 m above ground:330 hour fcst:ens std dev
+ * @endcode
+ * 
+ * Note: The following two commands produce a different inventory.
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -set_date -12hr -grib OUTFILE -s 
+ * @endcode
+ * @code{.sh}
+ * $ wgrib2 png.grb2 -s -set_date -12hr -grib OUTFILE
+ * @endcode
+ * 
+ * That is because the latter prints the inventory before the date has been modified.
  * 
  * @author Wesley Ebisuzaki @date 3/2008
  */

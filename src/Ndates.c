@@ -36,11 +36,15 @@ extern struct seq_file inv_file;
 /**
  * Creates a list of date codes.
  * 
- * This option has nothing to do with grib, but adding it to wgrib2 was trivial, and this option has been so helpful in scripting. Anyways, if a Swiss army knife can have a bottle opener, wgrib2 can have a date code routine. Anyways one less program to port is helpful. 
+ * This option has nothing to do with grib, but adding it to wgrib2 was trivial, and this option has been so helpful in scripting. 
+ * Anyways, if a Swiss army knife can have a bottle opener, wgrib2 can have a date code routine. Anyways one less program to port 
+ * is helpful. 
  * 
- * Note that until wgrib2 v3.0.3, the number of date codes was limited by the stdout buffer size. (See wgrib2 -config.) Wgrib2 v3.1.4 allows the optional equal sign option to include the terminating date code. 
+ * Note that until wgrib2 v3.0.3, the number of date codes was limited by the stdout buffer size. (See wgrib2 -config.) Recent versions
+ * allow the optional equal sign option to include the terminating date code. 
  * 
- * The -ndate and -ndates options are initialization routines. They are run when all the options are initialized. Therefore they are run before reading the grib file. The -ndates_fmt option has to preceed the -ndates option to alter the output format. 
+ * The -ndate and -ndates options are initialization routines. They are run when all the options are initialized. Therefore they are run 
+ * before reading the grib file. The -ndates_fmt option has to preceed the -ndates option to alter the output format. 
  * 
  * The wgrib2 command line can have multple -ndates options.
  * 
@@ -137,6 +141,102 @@ extern struct seq_file inv_file;
  * parameters.
  * 
  * @return 0 for success, error code otherwise
+ * 
+ * ## Examples
+ * 
+ * Suppose you want a list of days for 2003. 
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndates 2003 2004 1dy
+ * 20030101 20030102 ... 20231231
+ * @endcode
+ * 
+ * You could get the same result by:
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndates 2003 1yr 1dy
+ * @endcode
+ * 
+ * Now suppose you want the output to include the hours, then
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndates 2003 2004 24hr
+ * 2003010100 2003010200 ... 2023123100
+ * @endcode
+ * 
+ * Suppose that you want the list of day from April 2000 to December 2000 inclusive. Then you can use the 
+ * inclusive form of -ndates. 
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndates 200004 =200012 1mo
+ * 200004 ... 200012
+ * @endcode
+ * 
+ * This command prints date codes for 1 month, every day:
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndates 2019020100 1mo 1dy
+ * @endcode
+ * 
+ * This prints date codes for 1 day, every 6 hours:
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndates 2019020100 1dy 6hr
+ * @endcode
+ * 
+ * This prints the months from 202001 to 202012 (inclusive):
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndates 202001 202101 1mo
+ * @endcode
+ * 
+ * ### Finding the Julian Date (ordinal date)
+ * The ordinal date is the year and day of the year ranging from 1 and 366. To get the day of the year 
+ * from YYYYMMDD, you can use -ndates. 
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndates {YYYY-1}1231 {YYYYMMDD} 1dy | wc -w
+ * @endcode
+ * 
+ * ### Date from the Julian Date (ordinal date)
+ * Using wgrib2 to convert the date code to the Julian day is easy. 
+ * 
+ * Let YYYY be the year and N be the Julian date.
+ * @code{.sh}
+ * $ wgrib2 /dev/null -ndate {YYYY} {N-1}dy
+ * @endcode
+ * 
+ * ### Changing the ndates Format
+ * The output of -ndates has the format:
+ * <pre>
+ * ( DATE)*
+ * </pre>
+ * space followed by the date, repeated N times.
+ * 
+ * For example:
+ * @code{.sh}
+ * 2001010100 2001010106 2001010112 ...
+ * @endcode
+ * 
+ * For must uses, this format is fine. However, the xargs program wants each date to be on its own line. 
+ * <pre>
+ * (DATE1)
+ * (DATE2)
+ * (DATE3)
+ * ...
+ * </pre>
+ * 
+ * To convert the ndates format, use sed. 
+ * @code{.sh}
+ * $ dates=`wgrib2 /dev/null -ndates 200001 1mo 1dy | sed 's/^ //' | sed 's/ /\n/g'`
+ * @endcode
+ * The first sed command removes the leading space, and the second sed command replaces the spaces with newlines. 
+ * Note that '\n' is the backslash character followed by the letter n. This is the bash convention for single quoted
+ * strings.
+ * @code{.sh}
+ * $ echo "$dates"
+ * @endcode
+ * You should see the dates printed one per line.
+ * 
+ * @code{.sh}
+ * $ echo "$dates" | xargs -P4 -t -I% cp $dir/pgb_%_ensmean $out_dir/
+ * @endcode
+ * "xargs -P4" runs using 4 processes. The "-t" option echoes the command to be executred. The "-I%" option replaces 
+ * the % with the line from stdin.
+ * 
+ * You could also change the format by the -ndates_fmt option (see @ref f_ndates_fmt).
  * 
  * @author Wesley Ebisuzaki @date 1/2019
  */
@@ -346,7 +446,14 @@ int f_ndates(ARG3) {
  * 
  * @return 0 for success, error code otherwise
  * 
+ * ## Example
+ * @code{.sh}
+ * $ dates=`wgrib2 /dev/null -ndates_fmt "%s\n" -ndates 200001 1mo 1dy`
+ * $ echo "$dates" | xargs -P4 -t -I% cp $dir/pgb_%_ensmean $out_dir/
+ * @endcode
+ * 
  * @author Wesley Ebisuzaki @date 1/2019
+ * 
  */
 int f_ndates_fmt(ARG1) {
     const char *in;

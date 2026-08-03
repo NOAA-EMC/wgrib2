@@ -83,7 +83,17 @@ int f_start_timer(ARG0) {
  * @return Always returns 0.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 gep19.aec -s -start_timer -csv junk.csv -timer
+ * 1:0:d=2009060500:HGT:200 mb:180 hour fcst:ENS=+19:time=0.068086
+ * 2:70707:d=2009060500:TMP:200 mb:180 hour fcst:ENS=+19:time=0.064850
+ * 3:96843:d=2009060500:RH:200 mb:180 hour fcst:ENS=+19:time=0.055596
+ * ...
+ * 51:2278237:d=2009060500:PRMSL:mean sea level:180 hour fcst:ENS=+19:time=0.065116
+ * finalize-time=0.000015:ave_time=0.061512 count=51
+ * @endcode
+ * 
+ * Writing of the CSV is taking about 0.06 seconds per field.
  * 
  * @author Wesley Ebisuzaki @date 3/2019
  */

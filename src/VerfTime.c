@@ -54,7 +54,12 @@ static const char *months = "janfebmaraprmayjunjulaugsepoctnovdec";
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 g720_360.grb2 -vt
+ * 1:4:vt=2009010600
+ * $ wgrib2 g720_360.grb2 -vt -v2
+ * 1:4:00Z06jan2009
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 9/2006
  */
@@ -98,7 +103,10 @@ int f_vt(ARG0) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 g720_360.grb2 -VT
+ * 1:4:vt=20090106000000
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 9/2006
  */
@@ -234,7 +242,10 @@ int verftime(unsigned char **sec, int *year, int *month, int *day, int *hour, in
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 grib.grb2 -start_ft
+ * 1:0:start_ft=2025030512
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 9/2006
  */
@@ -294,7 +305,10 @@ int f_start_ft(ARG0) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 grib.grb2 -start_FT
+ * 1:0:start_FT=20250305120000
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 9/2006
  */
@@ -354,7 +368,10 @@ int f_start_FT(ARG0) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 grib.grb2 -end_ft
+ * 1:0:end_ft=2025030514
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 9/2006
  */
@@ -414,7 +431,10 @@ int f_end_ft(ARG0) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 grib.grb2 -end_FT
+ * 1:0:end_FT=20250305140000
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 9/2006
  */

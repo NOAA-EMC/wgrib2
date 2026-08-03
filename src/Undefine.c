@@ -73,7 +73,22 @@ extern unsigned int ny_;
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -undefine out-box 350:10 -10:10 -stats
+ * 1:0:ndata=65160:undef=64719:mean=94.1229:min=58.1:max=125.2
+ * @endcode
+ * 
+ * The above line calculates the statistics for the box -10W-10E 10S-10N 
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -undefine out-box 10:30 20:40 -undefine in-box 12:28 22:38 -bin boundary.bin
+ * @endcode
+ * 
+ * The above line undefines the grid points outside of a box and then undefines the grid points of a smaller 
+ * box that is contained in the first box. Then it writes the data as a binary file. The data file contains the 
+ * data points for a perimeter of a box. Why would someone want to do that? Think "horizontal boundary conditions 
+ * for a regional model". For this to work well, a module to write the data out in grib-2 needs to be written. 
+ * To work in the (i,j) coordinates, see the -ijundefine option. 
  * 
  * @author Wesley Ebisuzaki @date 10/2007
  */
@@ -189,7 +204,21 @@ int f_undefine(ARG3) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -ijundefine out-box 1:1 1:10 -stats
+ * @endcode
+ * 
+ * The above line calculates the statistics for ix=1, iy=1..10. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -ijundefine out-box 10:30 20:40 -ijundefine in-box 11:29 21:39 -bin boundary.bin
+ * @endcode
+ * 
+ * The above line undefines the grid points outside of a box and then undefines the grid points of a smaller 
+ * box that is contained in the first box. Then it writes the data as a binary file. The data file contains 
+ * the data points for a perimeter of a box. Why would someone want to do that? Think "horizontal boundary 
+ * conditions for a regional model". For this to work well, a module to write the data out in grib-2 needs to 
+ * be written. BTW the binary file will compress to an extremely small file. 
  * 
  * @author Wesley Ebisuzaki @date 10/2007
  */

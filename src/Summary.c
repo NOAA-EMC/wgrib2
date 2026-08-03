@@ -55,7 +55,22 @@ extern int GDS_change_no;
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 fcst.grb2 -count
+ * 1:4:d=2007032600:HGT:1000 mb:anl:
+ * 2:422561:d=2007032600:HGT:1000 mb:3 hour fcst:
+ * number of records: 2
+ * @endcode
+ * 
+ * The above example shows that there were two records in the file. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 fcst.grb2 -count -match fcst
+ * 2:422561:d=2007032600:HGT:1000 mb:3 hour fcst:
+ * number of records: 1
+ * @endcode
+ *
+ * The above example shows that only 1 record had the string fcst in it.
  * 
  * @author Wesley Ebisuzaki @date 10/2008
  */
@@ -107,8 +122,15 @@ int f_count(ARG0) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 fcst.grb2 -bin fcst.bin -grid_changes
+ * 1:4:d=2007032600:HGT:1000 mb:anl:
+ * 2:422561:d=2007032600:HGT:1000 mb:3 hour fcst:
+ * Good: only one grid
+ * number of records: 2
+ * @endcode
  * 
+ * In the above example, we converted the file to binary. It consisted of a single grid and two records. 
  * @author Wesley Ebisuzaki @date 10/2008
  */
 int f_grid_changes(ARG0) {
@@ -152,7 +174,42 @@ int f_grid_changes(ARG0) {
  * @return 0 on success. Throws fatal_error() on failure.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 LIS.c3 
+ * 1:0:d=2014030500:SPRATE:surface:anl:
+ * 2:661778:d=2014030500:RPRATE:surface:anl:
+ * 3:903352:d=2014030500:SKINT:surface:anl:
+ * 4:4108932:d=2014030500:SDWE:surface:anl:
+ * 5:9512902:d=2014030500:SNOD:surface:anl:
+ * 6:14281104:d=2014030500:PRATE:surface:anl:
+ * 7:14925511:d=2014030500:TMP:surface:anl:
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 LIS.c3  -error_final count ne 7 -if ':TMP:' -error_final count ne 1 -endif
+ * 1:0:d=2014030500:SPRATE:surface:anl:
+ * 2:661778:d=2014030500:RPRATE:surface:anl:
+ * 3:903352:d=2014030500:SKINT:surface:anl:
+ * 4:4108932:d=2014030500:SDWE:surface:anl:
+ * 5:9512902:d=2014030500:SNOD:surface:anl:
+ * 6:14281104:d=2014030500:PRATE:surface:anl:
+ * 7:14925511:d=2014030500:TMP:surface:anl:
+ * $ echo $?
+ * 0
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 LIS.c3  -error_final count ne 7 -if ':TMP:' -error_final count ne 3 -endif
+ * 1:0:d=2014030500:SPRATE:surface:anl:
+ * 2:661778:d=2014030500:RPRATE:surface:anl:
+ * 3:903352:d=2014030500:SKINT:surface:anl:
+ * 4:4108932:d=2014030500:SDWE:surface:anl:
+ * 5:9512902:d=2014030500:SNOD:surface:anl:
+ * 6:14281104:d=2014030500:PRATE:surface:anl:
+ * 7:14925511:d=2014030500:TMP:surface:anl:
+ * $ echo $?
+ * 1
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 10/2008
  */

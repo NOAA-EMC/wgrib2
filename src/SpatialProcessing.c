@@ -37,7 +37,15 @@
  * @return Always returns 0.
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 file1 -spatial_proc
+ * 1:0:d=2015101200:CAT:200 mb:12 hour fcst:spatial max:missing interpolation
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 file2 -spatial_proc
+ * 1:0:d=2015101200:PRMSL:mean sea level:anl:spatial none:bilinear interpolation
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2010
  */
