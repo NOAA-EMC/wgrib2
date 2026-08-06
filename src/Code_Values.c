@@ -40,7 +40,11 @@
  * pairs of IEEE single precision floats. 
  * 
  * ## Example:
- * ???
+ * 
+ * @code{.sh}
+ * $  wgrib2 -number_of_coordinate_values_after_template COSMO_EU_1rec.grib2 -get_byte 4 6 2
+ * 1:0:number_coordinates_values_in_pdt=45:4-6=0,45
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -103,7 +107,11 @@ int number_of_coordinate_values_after_template(unsigned char **sec) {
  * @return 0 for success, error code otherwise.
  * 
  * ## Example:
- * ???
+ * @code{.sh}
+ * $ wgrib2 percentile_precip.grib2 -s -pds_fcst_time -code_table_4.4
+ * 1:0:d=2014101012:TPRATE:surface:2@1 hour max(13-14 hour acc fcst)++,missing=0:75% level:pds_fcst_time1=13:code table 4.4=1 (hour)
+ * 2:315649:d=2014101012:TPRATE:surface:2@1 hour max(13-14 hour acc fcst)++,missing=0:90% level:pds_fcst_time1=13:code table 4.4=1 (hour)
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -798,7 +806,7 @@ unsigned char *year_of_model_version_date_location(unsigned char **sec) {
  */
 
 /**
- * Prints the percentile value.
+ * Prints the percentile value, if available.
  * 
  * ## Usage:
  * -percent
@@ -808,6 +816,30 @@ unsigned char *year_of_model_version_date_location(unsigned char **sec) {
  * parameters.
  * 
  * @return 0 for success, error code otherwise.
+ * 
+ * ## Example:
+ * 
+ * @code{.sh}
+ * $ wgrib2 example.grb2 
+ * 1:0:d=2026060100:WIND:10 m above ground:1 hour fcst:0% level
+ * 2:1594550:d=2026060100:WIND:10 m above ground:1 hour fcst:5% level
+ * 3:3416868:d=2026060100:WIND:10 m above ground:1 hour fcst:10% level
+ * ...
+ * 19:32573956:d=2026060100:WIND:10 m above ground:1 hour fcst:90% level
+ * 20:34624043:d=2026060100:WIND:10 m above ground:1 hour fcst:95% level
+ * 21:36674130:d=2026060100:WIND:10 m above ground:1 hour fcst:100% level
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 example.grb2 -percent
+ * 1:0:0%
+ * 2:1594550:5%
+ * 3:3416868:10%
+ * ...
+ * 19:32573956:90%
+ * 20:34624043:95%
+ * 21:36674130:100%
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2009
  */

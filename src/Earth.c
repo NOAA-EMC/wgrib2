@@ -35,7 +35,11 @@
  * @return 0 on success, error code otherwise.
  * 
  * ## Example:
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 -radius png.grb2
+ * 1:4:code3.2=6 sphere predefined radius=6371229.0 m
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2010
  */
@@ -93,7 +97,12 @@ int f_radius(ARG0) {
  * @return 0 on success, error code otherwise.
  * 
  * ## Example:
- * ???
+ * @code{.sh}
+ * $ wgrib2 small.grb2 -set_radius 0 -radius
+ * 1:0:code3.2=0 sphere predefined radius=6367470.0 m
+ * $ wgrib2 small.grb2 -set_radius 1:6300000 -radius
+ * 1:0:code3.2=1 sphere user defined radius=6300000.0 m
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2010
  */

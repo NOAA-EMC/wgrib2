@@ -51,7 +51,45 @@ extern double *lon;
  * @return 0 on success, error code otherwise.
  * 
  * ## Example:
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -stats
+ * 1:0:ndata=65160:undef=0:mean=83.8696:min=-428.1:max=317.8
+ * @endcode
+ * 
+ * <pre>
+ * ndata = number of grid points
+ * undef = number of grid points with an undefined value
+ * mean = grid point average (not area weighted)
+ * min = minimum value
+ * max = maximum value
+ * </pre>
+ * 
+ * The -stats option can be combined with the -undefine option to produce statistics for a box.
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -stats
+ * 1:4:ndata=10512:undef=0:mean=77.5081:min=-370:max=340.2:cos_wt_mean=97.267
+ * @endcode
+ * 
+ * produces the global statistics. By setting grid points to undefined, we can produce the statistics for 
+ * a box.
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -undefine outobx 0:90 -10:10 -stats
+ * 1:4:ndata=10512:undef=10179:mean=79.8829:min=41:max=144:cos_wt_mean=79.8688
+ * @endcode
+ * 
+ * Note, if we reverse the order of the -stats and -undefine options, we get the global mean. That is 
+ * because the -stats option is excuted before the -undefine options.
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -stats -undefine out-box 0:10 -10:10
+ * 1:4:ndata=10512:undef=0:mean=77.5081:min=-370:max=340.2:cos_wt_mean=97.267
+ * @endcode
+ * 
+ * If all the data are undefined, the -stats option will produce values of zero for the the mean, min 
+ * and max. The -min and -max options will yield a text string of "undefined".
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -120,12 +158,18 @@ int f_stats(ARG0) {
  * ## Usage:
  * -max
  * 
- * @param ARG0???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success, error code otherwise.
  * 
  * ## Example:
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -max
+ * 1:0:max=317.8
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -161,7 +205,11 @@ int f_max(ARG0) {
  * @return 0 on success, error code otherwise.
  * 
  * ## Example:
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -min
+ * 1:0:min=-428.1
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */

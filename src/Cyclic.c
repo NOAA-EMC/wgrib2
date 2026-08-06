@@ -81,7 +81,24 @@ extern int *raw_variable_dim;
  * @return 0 on success, error code otherwise.
  * 
  * ## Example:
- * ???
+ * @code{.sh}
+ * $ wgrib2 gdt140.g2 -cyclic -nl -grid
+ * 1:0:not cyclic:
+ * :grid_template=140:winds(N/S):
+ * 	    Lambert Azimuthal Equal Area grid: (1050 x 1050) input WE:NS output WE:SN res 48
+ * 	    Lat1 18.876988 Lon1 225.000000 Cen Lon 0.000000 Std Par 90.000000
+ * 	    Dx 10000.000000 m Dy 10000.000000 m mode 48
+ * @endcode 
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep19.t00z.pgrb2af180 -cyclic -nl -grid
+ * 1:0:cyclic:
+ * :grid_template=0:winds(N/S):
+ * 	    lat-lon grid:(360 x 181) units 1e-06 input WE:NS output WE:SN res 48
+ * 	    lat 90.000000 to -90.000000 by 1.000000
+ * 	    lon 0.000000 to 359.000000 by 1.000000 #points=65160
+ * @endcode 
+ * 
  * @author Wesley Ebisuzaki @date 2009
  */
 int f_cyclic(ARG0) {
