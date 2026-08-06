@@ -75,9 +75,6 @@ extern int header;
  * 
  * @return 0 for success, error code otherwise
  * 
- * ## Example 
- * ???
- * 
  * @author Wesley Ebisuzaki @date 10/2008
  */
 int f_import_text(ARG1) {
@@ -163,9 +160,6 @@ int f_import_text(ARG1) {
  * 
  * @return 0 for success, error code otherwise
  * 
- * ## Example 
- * ???
- * 
  * @author Wesley Ebisuzaki @date 10/2008
  */
 int f_import_ieee(ARG1) {
@@ -240,8 +234,33 @@ int f_import_ieee(ARG1) {
  * 
  * @return 0 for success, error code otherwise
  * 
- * ## Example 
- * ???
+ * ## Example 1:
+ * 
+ * @code{.sh}
+ * # Make a binary sequential file of the fields
+ * $ wgrib2 IN.grb -bin dump.bin  
+ * # Alter dump.bin
+ * $ Fix.sh dump.bin dump.bin.new 
+ * $ wgrib2 IN.grb -set_grib_type same -import_bin dump.bin.new -set_scaling same same -grib_out IN.new.grb
+ * @endcode
+ * 
+ * The -import options reads the data for one field and overwrites the current grid point values. The -grib_out 
+ * option writes a new grib message with the new grid point values.
+ * 
+ * ## Example 2: using import to write a grib file
+ * 
+ * <pre>
+ * template.grb2            is a single message (field/record) grib2 file with the appropriate grid
+ *                          usually a simple type like 6 hour forecast or analysis
+ * new.bin                  is a binary file with a single field with th same grid as template.grb2
+ * </pre>
+ * 
+ * @code{.sh}
+ * wgrib2 template.grb2 -import_bin new.bin -set_var GEOLAT -set_lev "surface" -set_ftime "anl" \
+ *    -set_date 1999123112 -set_grib_max_bits 24 -set_bin_prec 24 -grib_out new.grb2
+ * @endcode
+ * 
+ * This commands writes new.bin as a grib2 file as GEOLAT at 12Z Dec 31, 1999 using 24 bits precision.
  * 
  * @author Wesley Ebisuzaki @date 10/2008
  */

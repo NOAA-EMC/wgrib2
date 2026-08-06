@@ -49,7 +49,12 @@ extern int run_flag;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 file.grb2  -if_rec 4:5 -s -fi
+ * 4:13335:d=2008120200:RH:750 mb:anl:
+ * 5:17098:d=2008120200:TMP:2743 m above mean sea level:anl:
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 08/2010
  */

@@ -66,7 +66,20 @@ extern enum geolocation_type geolocation;
  * @return 0 for success
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 burned_area_20120131_12_23_1km.grib2 -geolocation -lon -90 30 
+ * 1:0:geolocation=gctpc:lon=270.004694,lat=29.997210,val=0
+ * @endcode
+ * 
+ * The gctpc routines were used for geolocation.
+ * 
+ * @code{.sh}
+ * $ wgrib2 burned_area_20120131_12_23_1km.grib2 -geolocation
+ * 1:0:geolocation=not_used
+ * @endcode
+ * 
+ * The geolocation was not used.
  * 
  * @author Wesley Ebisuzaki @date 4/2020
  */

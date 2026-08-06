@@ -17,20 +17,29 @@ extern int only_submsg;
 /**
  * Process by submessage number.
  * 
- * Usually wgrib2 ignores the distinction between messages and submessages; wgrib2 treats submessages like messages except that the "message number" in the inventory is replaced by a "message number.submessage number" in the inventory. If you want to work with submessages, the following options are available.
+ * Usually wgrib2 ignores the distinction between messages and submessages; wgrib2 treats submessages like 
+ * messages except that the "message number" in the inventory is replaced by a "message number.submessage number" 
+ * in the inventory. If you want to work with submessages, the following options are available.
  * 
  * -GRIB FILE : copy a message to FILE
  * -ncep_uv FILE : combine U,V into a message like in NCEP operations
  * -tosubmsg FILE : create a file with submessages
  * -submsg N : process by submessage number
  * 
- * The -submsg N option allows to process by submessage number. If the N is zero, all the submessages are processed which pretty pointless as this the default operation. If N is one, then all the messages are processed once. (Messages with only one field are considered to have one submessage.) The following will copy from IN.grb to OUT.grb and preserve the submessage structure. 
+ * The -submsg N option allows to process by submessage number. If the N is zero, all the submessages are processed 
+ * which pretty pointless as this the default operation. If N is one, then all the messages are processed once. 
+ * (Messages with only one field are considered to have one submessage.) The following will copy from IN.grb to OUT.grb 
+ * and preserve the submessage structure. 
  * 
  * @code{.sh}
  * wgrib2 IN.grb -submsg 1 -GRIB OUT.grb
  * @endcode{}
  * 
  * This will copy all the 200 mb fields assuming U/V are in the same message and keep U/V in the same message. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -submsg 1 -if ":200 mb:" -GRIB 200mb.grb
+ * @endcode{}
  * 
  * ## Usage
  * -submsg N
@@ -44,7 +53,10 @@ extern int only_submsg;
  * @return Always returns 0.
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -submsg 1 -if ":200 mb:" -GRIB 200.grb2 -if ":100 mb:" -GRIB 100.grb2
+ * @endcode{}
  * 
  * @author Wesley Ebisuzaki @date 2006
  */

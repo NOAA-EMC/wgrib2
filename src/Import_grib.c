@@ -84,9 +84,6 @@ extern enum output_order_type output_order_wanted;
  * 
  * @return 0 for success, error code otherwise
  * 
- * ## Example 
- * ???
- * 
  * @author Wesley Ebisuzaki @date 12/2014
  */
 int f_import_grib(ARG1) {
