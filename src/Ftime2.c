@@ -105,7 +105,12 @@ extern int ftime_mode;
  * @return 0 for success
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 grib2.polar -ftime2
+ * 1.1:0:24 hour fcst
+ * 1.2:0:24 hour fcst
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 12/2020
  */

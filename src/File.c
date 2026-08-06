@@ -101,7 +101,20 @@ extern const char *nl;
  * @return 0 for success, error code otherwise
  * 
  * ## Example 
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -s | grep ":RH:2 m" | wgrib2 -i test.grb2 -bin data.bin
+ * 285:36796469:d=2005090200:RH:2 m above ground:60 hour fcst
+ * @endcode
+ * 
+ * <pre>
+ *       wgrib               ==>                 wgrib2
+ *
+ *       -header -bin -o out.bin                 -header -order raw -bin out.bin
+ *       -bin -o out.bin                         -order raw -bin out.bin
+ * </pre>
+ * 
+ * The above line extracts the 2 meter RH from file test.grb2 and writes it in data.bin
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -178,7 +191,18 @@ int f_bin(ARG1) {
  * @return 0 for success, error code otherwise
  *
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -s | grep ":RH:2 m" | wgrib2 -i test.grb2 -ieee data.bin
+ * 285:36796469:d=2005090200:RH:2 m above ground:60 hour fcst
+ * @endcode
+ * 
+ * <pre>
+ *       wgrib               ==>                 wgrib2
+ *
+ *       -header -ieee -o out.bin                 -header -order raw -ieee out.bin
+ *       -ieee -o out.bin                         -order raw -ieee out.bin
+ * </pre>
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -253,7 +277,22 @@ int f_text_fmt(ARG1) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 cdas.t00z.sfluxgrbf06.grib2 -d 1 -text_col 3 -text junk 
+ * 1:0:d=2016122700:UFLX:surface:0-6 hour ave fcst:
+ * $ head junk
+ * 192 94
+ * 0.037 0.035 0.034
+ * 0.032 0.031 0.029
+ * 0.028 0.026 0.025
+ * 0.023 0.022 0.019
+ * 0.016 0.015 0.014
+ * 0.013 0.015 0.015
+ * 0.013 0.012 0.011
+ * 0.009 0.008 0.006
+ * 0.005 0.003 0.002
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -304,7 +343,13 @@ int f_text_col(ARG1) {
  * @return 0 for success, error code otherwise
  *
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -s | grep ":RH:2 m" | wgrib2 -i test.grb2 -text data.txt
+ * 285:36796469:d=2005090200:RH:2 m above ground:60 hour fcst
+ * @endcode
+ * 
+ * The above line extracts the 2 meter RH from file test.grb2 and writes it in data.txt
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
@@ -376,7 +421,13 @@ int f_text(ARG1) {
  * regional domain. Note, I wrote "viable" and not optimal. 
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 test.grb2 -s | grep ":RH:2 m" | wgrib2 -i test.grb2 -spread data.txt
+ * 285:36796469:d=2005090200:RH:2 m above ground:60 hour fcst
+ * @endcode
+ * 
+ * The above line extracts the 2 meter RH from file test.grb2 and writes it in data.txt.
  * 
  * @author Wesley Ebisuzaki @date 2006
  */

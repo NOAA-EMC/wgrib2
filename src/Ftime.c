@@ -105,7 +105,11 @@ int version_ftime = DEFAULT_FTIME;
  * @return 0 for success
  * 
  * ## Example
- * ???
+ * @code{.sh}
+ * $ wgrib2 grib2.polar -ftime
+ * 1.1:0:24 hour fcst
+ * 1.2:0:24 hour fcst
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2017
  */

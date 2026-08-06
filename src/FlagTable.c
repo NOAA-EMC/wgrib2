@@ -166,7 +166,11 @@ unsigned char *flag_table_3_3_location(unsigned char **sec) {
  * @return 0 on success
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $wgrib2 png.grb2 -vector_dir
+ * 1:4:winds(N/S)
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 12/2006
  */
