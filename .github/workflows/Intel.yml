@@ -59,6 +59,6 @@ jobs:
         mkdir b
         cd b
         export CFLAGS='-I/home/runner/work/wgrib2/wgrib2/nceplibs/NCEPLIBS-g2c/include'
-        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c" .. -DUSE_OPENMP=OFF -DUSE_G2CLIB=ON -DUSE_IPOLATES=OFF
+        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip;$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c" .. -DUSE_OPENMP=OFF -DUSE_G2CLIB=ON -DUSE_IPOLATES=OFF -DUSE_NETCDF=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed

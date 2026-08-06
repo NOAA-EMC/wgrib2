@@ -67,7 +67,11 @@ extern int ieee_little_endian;
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 new.grb2 -s 
+ * 1:0:d=2021042500:TURB:10 hybrid level:anl:
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 3/2008
  */
@@ -152,7 +156,8 @@ int f_s2(ARG0) {
  */
 
 /**
- * Prints simple inventory with minutes and seconds (subject to change).
+ * Prints out a simple inventory with minutes and seconds. -S is equivalent to -T, -var, -lev, -ftime, 
+ * and -misc yyppp 
  * 
  * ## Usage
  * -S
@@ -164,7 +169,11 @@ int f_s2(ARG0) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 new.grb2 -S
+ * 1:0:D=20210425000000:TURB:10 hybrid level:anl:
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 3/2008
  */
@@ -279,7 +288,21 @@ int f_s_out(ARG1) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * To write the file:
+ * @code{.sh}
+ * $ wgrib2 IN.grb -inv_f77 bin 100  inv.dat
+ * @endcode
+ * 
+ * To read the file in fortran:
+ * @code{.f}
+ * character*100  m_inv
+ * open(unit=11,file='inv.dat',form='unformatted')
+ * read(11) m_inv
+ * write(*,*) 'first record:',trim(m_inv)
+ * read(11) m_inv
+ * write(*,*) 'second record:',trim(m_inv)
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 3/2008
  */
@@ -398,6 +421,13 @@ int f_inv_f77(ARG3) {
  * 
  * @return 0 for success, error code otherwise
  * 
+ * ## Example
+ * 
+ * @code{.sh}
+ * $ wgrib2 new.grb2 -verf
+ * 1:0:D=20210425000000:TURB:10 hybrid level:anl:
+ * @endcode
+ * 
  * @author Wesley Ebisuzaki @date 3/2008
  */
 int f_verf(ARG0) {
@@ -448,6 +478,17 @@ int f_verf(ARG0) {
  * 
  * @return 0 for success, error code otherwise
  * 
+ * ## Example
+ * 
+ * @code{.sh}
+ * $ wgrib2 new.grb2 -V
+ * 1:0:vt=2021042500:10 hybrid level:anl:TURB Turbulence [-]:
+ *  ndata=16600320:undef=0:mean=0.34895:min=0:max=4
+ *  grid_template=0:winds(N/S):
+ *	    lat-lon grid:(5760 x 2882) units 1e-06 input WE:SN output WE:SN res 48
+ *	    lat -90.000000 to 90.000000 by 0.062500
+ *	    lon 180.000000 to 179.937500 by 0.062500 #points=16600320
+ * @endcode
  * @author Manfred Schwarb @date 3/2008
  */
 int f_V(ARG0) {

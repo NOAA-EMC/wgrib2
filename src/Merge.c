@@ -104,7 +104,62 @@ enum processing_type {ave, acc, max, min};
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 prate.l.gdas.201404.ts -for 1:4
+ * 1:0:d=2014040100:PRATE:surface:0-1 hour ave fcst:
+ * 2:13083:d=2014040100:PRATE:surface:1-2 hour ave fcst:
+ * 3:26587:d=2014040100:PRATE:surface:2-3 hour ave fcst:
+ * 4:40437:d=2014040100:PRATE:surface:3-4 hour ave fcst:
+ * @endcode
+ * 
+ * To list all of the input:
+ * @code{.sh}
+ * $ wgrib2 preas.201404.ts -for 1:4 -merge_fcst 4 /tmp/all.grb
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 /tmp/all.grb 
+ * 1:0:d=2014040100:PRATE:surface:0-4 hour ave fcst:
+ * @endcode
+ * 
+ * To list all of the input:
+ * @code{.sh}
+ * $ wgrib2 prate.l.gdas.201404.ts -for 1:4 -merge_fcst 2 /tmp/all2.grb
+ * @endcode
+ * 
+ * @code{.sh}
+ * $ wgrib2 /tmp/all2.grb 
+ * 1:0:d=2014040100:PRATE:surface:0-2 hour ave fcst:
+ * 2:29531:d=2014040100:PRATE:surface:2-4 hour ave fcst:
+ * @endcode
+ * 
+ * The -merge_fcst option needs the fields to be processed in order. Fields that are not fcst averages/accumlations are 
+ * ignored. In the previous example, the input data was a time series of one varianble, and the fields were in order. 
+ * The more common case is that you have the fhr06 (0-6 hour forecast), fhr12 (6-12 hour forecast), fhr18 (12-18 hour forecast) 
+ * and fhr24 (18-24 hour forecast) files and you want the 0-24 hour mean. Each of the forecast files contain hundreds of fields. 
+ * 
+ * @code{.sh}
+ * $ cat fhr06 fhr12 fhr18 fhr24 | \
+ *      wgrib2 - -set_grib_type c1 -set_grib_max_bits 20 -set_bin_prec 20 \
+ *      -if ":PRATE:" -merge_fcst 4 OUT \
+ *      -if ":APCP:" -merge_fcst 4 OUT \
+ *      -if ":ACPCP:" -merge_fcst 4 OUT \
+ *      -if ":BGRUN:" -merge_fcst 4 OUT
+ * @endcode
+ * 
+ * The above command works by
+ * 1. The first line writes the grib to stdout in chronological order
+ * 2. The second line has wgrib2 read from stdin and sets the packing and precision
+ * 3. The third line processes the PRATE, the -merge_fcst sees the data in the proper order
+ * 4. The 4-6 lines process the APCP, ACPCP and BGRUN fields 
+ * 
+ * You can use the old and slow way which is:
+ * @code{.sh}
+ * $ cat fhr06 fhr12 fhr18 fhr24 > IN.grb
+ * $ wgrib2 IN.grb | sort -t: -k4,4 -k5,5 -k6,6n | wgrib2 -i IN.grb -grib OUT.grb
+ * $ wgrib2 OUT.grb -merge_fcst 4 OUT
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 8/2009
  */

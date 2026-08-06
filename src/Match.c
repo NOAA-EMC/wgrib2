@@ -203,17 +203,26 @@ static char *preprocess_match(const char *arg) {
  * is that new items in the "match inventory" will be added as the second last item. Consequently the last 
  * item in the inventory will always be ":vt=YYYYMMDDHH:". In order to future proof your -match, and -not 
  * selections, you must not include any item before the ":vt=YYYYMMDD:" field. 
- *
+ * <pre>
  *      -match ":vt=2011111500:"                  good
  *      -not ":vt=2011111500:$"                   good (dollar sign matches the end of the line)
  *      -not ":n=10:vt=2011111500:"               bad (item before :vt=)
  *      -match ":RH:975 mb:anl::vt=2010050806:"   bad (item before :vt=)
+ * </pre>
  * 
  * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
  * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
  * parameters.
  * 
  * @return 0 for success, error code otherwise
+ * 
+ * ## Example
+ * 
+ * @code{.sh}
+ * wgrib2 IN.grb -match ":(UGRD|VGRD|TMP):(200|500) mb:"
+ * @endcode
+ * 
+ * Selects the UGRD, VGRD and TMP fields at the 200 and 500 mb levels.
  * 
  * @author Wesley Ebisuzaki @date 2/2008
  */
@@ -392,8 +401,60 @@ int f_not(ARG1)  {
  * 
  * @return 0 for success, error code otherwise
  * 
- * ## Example
- * ???
+ * ## Version 1 Example
+ * 
+ * @code{.sh}
+ * $ wgrib2 gribfile -if ":(UGRD|VGRD):" -grib winds.grb \
+ *                   -if ":TMP:" -grib tmp.grb \
+ *                   -if ":HGT:" -grib hgt.grb \
+ *                   -not_if ":(UGRD|VGRD|TMP|HGT):" -grib rest.grb
+ * @endcode
+ * 
+ * Note: -grib is an output option.
+ * 
+ * @code{.sh}
+ * $ wgrib2 gribfile -new_grid_interpolation bilinear \
+ *      -if ":SOTYP:" -new_grid_interpolation neighbor -fi \
+ *      ...
+ * @endcode
+ * 
+ * Note: -fi is an output option.
+ * 
+ * ## Version 2 Examples
+ * 
+ * ### Example 1
+ * 
+ * @code{.sh}
+ * $ wgrib2 gribfile -if ":(UGRD|VGRD):" -grib winds.grb \
+ *                   -elseif ":TMP:" -grib tmp.grb \
+ *                   -elseif ":HGT:" -grib hgt.grb \
+ *                   -else -grib rest.grb -endif
+ * $ wgrib2 gribfile -new_grid_interpolation bilinear \
+ *      -if ":SOTYP:" -new_grid_interpolation neighbor -endif \
+ *      ...
+ * @endcode
+ * 
+ * ### Example 2
+ * 
+ * The SNOHF and Clear Sky radienaces were converted from the nemsio file as an instantaneous forecast rather an 
+ * average. (A problem with the nemsio file.) So I needed to change the grib files. The new IF blocks make the 
+ * code look readable. The old IF blocks would be a mess. 
+ * 
+ * @code{.sh}
+ * # bash: fix SNOHF and CS(radiances) timing info
+ * for f in *.grb
+ * do
+ * wgrib2 $f \
+ *   -if "(:SNOHF:|:CS)" \
+ *     -if ":3 hour fcst:" -set_ftime "0-3 hour ave fcst" -endif  \
+ *     -if ":6 hour fcst:" -set_ftime "3-6 hour ave fcst" -endif  \
+ *     -if ":9 hour fcst:" -set_ftime "6-9 hour ave fcst" -endif \
+ *     -if ":12 hour fcst:" -set_ftime "9-12 hour ave fcst" -endif \
+ *     -if ":15 hour fcst:" -set_ftime "12-15 hour ave fcst" -endif \
+ *   -endif \
+ *   -grib ../test/$f
+ * done
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2/2008
  */
@@ -588,15 +649,15 @@ int is_egrep(const char *s) {
  * examples are 
  * 
  * @code{.sh}
- * wgrib2 input.grb -match ':UGRD:200 mb:' -grib u.grb
- * wgrib2 input.grb -match ':(UGRD|VGRD|TMP):200 mb:' -grib uvt.grb
+ * $ wgrib2 input.grb -match ':UGRD:200 mb:' -grib u.grb
+ * $ wgrib2 input.grb -match ':(UGRD|VGRD|TMP):200 mb:' -grib uvt.grb
  * @endcode
  * 
  * Now regex are powerful but can produce some surprises. For example, you want the 19th (positive 
  * perturbation) ensemble member which is denoted by 'ENS=+19' in the match inventory. You try, 
  * 
  * @code{.sh}
- * wgrib2 input.grb -match ':ENS=+19:' -grib e19.grb
+ * $ wgrib2 input.grb -match ':ENS=+19:' -grib e19.grb
  * @endcode
  * 
  * Surprise, the above line does not work. The plus sign is a regex metacharacter indicating that the 
@@ -604,14 +665,14 @@ int is_egrep(const char *s) {
  * To get the above match to work, you can quote the plus sign with a backslash. 
  * 
  * @code{.sh}
- * wgrib2 input.grb -match ':ENS=\+19:' -grib e19.grb
+ * $ wgrib2 input.grb -match ':ENS=\+19:' -grib e19.grb
  * @endcode
  * 
  * Alternatively you could change the regex match into fixed-string mode. In fixed-string mode, the regex 
  * metacharacters are considered to be ordinary characters. 
  * 
  * @code{.sh}
- * wgrib2 -set_regex 1 input.grb -match ':ENS=+19:' -grib e19.grb
+ * $ wgrib2 -set_regex 1 input.grb -match ':ENS=+19:' -grib e19.grb
  * @endcode
  * 
  * Most of the regex options have a fs (fixed string) version, such as -match and -match_fs. It is better 
@@ -619,7 +680,7 @@ int is_egrep(const char *s) {
  * string versions were added because regex library may be unavaible on non-POSIX systems. 
  * 
  * @code{.sh}
- * wgrib2 input.grb -match_fs ':ENS=+19:' -grib e19.grb
+ * $ wgrib2 input.grb -match_fs ':ENS=+19:' -grib e19.grb
  * @endcode
  * 
  * The third mode is the metacharacters have to be quoted. Here is an example that gets the 19th, 20th and 
@@ -627,7 +688,7 @@ int is_egrep(const char *s) {
  * metacharacters than to quote the ordinary characters correspond to metacharacters. 
  * 
  * @code{.sh}
- * wgrib2 -set_regex 2 input.grb -match ':ENS=+\(19\|20\|21\):' -grib e19_20_21.grb
+ * $ wgrib2 -set_regex 2 input.grb -match ':ENS=+\(19\|20\|21\):' -grib e19_20_21.grb
  * @endcode
  * 
  * ## Usage
@@ -642,7 +703,17 @@ int is_egrep(const char *s) {
  * @return 0 for success, error code otherwise
  * 
  * ## Example
- * ???
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep.grb -match ':UGRD:200 mb:' -match ':ENS=+19:'
+ * @endcode
+ * 
+ * This provides no output.
+ * 
+ * @code{.sh}
+ * $ wgrib2 gep.grb -set_regex 1 -match ':UGRD:200 mb:' -match ':ENS=+19:'
+ * 4.1:86046:d=2009060500:UGRD:200 mb:180 hour fcst:ENS=+19
+ * @endcode
  * 
  * @author Wesley Ebisuzaki @date 2/2008
  */
@@ -664,19 +735,19 @@ int f_set_regex(ARG1)  {
  * When you use wgrib2 extensively, common sequences keep occuring, such as, 
  * 
  * @code{.sh}
- * wgrib2 A.grb >A.inv
- * cat A.inv | fgrep ":HGT:" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib hgt500.grb
- * cat A.inv | fgrep ":TMP:" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib tmp500.grb
- * cat A.inv | egrep ":(UGRD|VGRD):" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib wind500.grb
+ * $ wgrib2 A.grb >A.inv
+ * $ cat A.inv | fgrep ":HGT:" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib hgt500.grb
+ * $ cat A.inv | fgrep ":TMP:" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib tmp500.grb
+ * $ cat A.inv | egrep ":(UGRD|VGRD):" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib wind500.grb
  * @endcode
  * 
  * Using the various -grep, -inv and the -i_file option, the above example can be written as 
  * 
  * @code{.sh}
- * wgrib2 A.grb -inv A.inv
- * wgrib2 -fgrep ":HGT:" -fgrep ":500 mb:" -i_file A.inv A.grb -grib hgt500.grb
- * wgrib2 -fgrep ":TMP:" -fgrep ":500 mb:" -i_file A.inv A.grb -grib tmp500.grb
- * wgrib2 -egrep ":(UGRD|VGRD):" -fgrep ":500 mb:" -i_file A.inv A.grb -grib wind500.grb
+ * $ wgrib2 A.grb -inv A.inv
+ * $ wgrib2 -fgrep ":HGT:" -fgrep ":500 mb:" -i_file A.inv A.grb -grib hgt500.grb
+ * $ wgrib2 -fgrep ":TMP:" -fgrep ":500 mb:" -i_file A.inv A.grb -grib tmp500.grb
+ * $ wgrib2 -egrep ":(UGRD|VGRD):" -fgrep ":500 mb:" -i_file A.inv A.grb -grib wind500.grb
  * @endcode
  * 
  * The first version is easier to read. So why were the extra options added? 
@@ -704,6 +775,7 @@ int f_set_regex(ARG1)  {
  * 
  * Definition of grep options:
  * 
+ * <pre>
  * (...) | wgrib2 -OP1 X (...)
  * behaves like
  * (...) | OP2 X | wgrib2 (...) 
@@ -713,6 +785,7 @@ int f_set_regex(ARG1)  {
  *      if OP1 == egrep_v     then OP2 = egrep -v
  *      if OP1 == fgrep_v     then OP2 = fgrep -v
  * 
+ * </pre>
  * X is a posix extended regular expression (egrep, egrep_v) or a fixed string (fgrep, fgrep_v)
  * 
  * The number of -fgrep and -fgrep_v options is limited to 200.
@@ -761,19 +834,19 @@ int f_egrep(ARG1)  {
  * When you use wgrib2 extensively, common sequences keep occuring, such as, 
  * 
  * @code{.sh}
- * wgrib2 A.grb >A.inv
- * cat A.inv | fgrep ":HGT:" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib hgt500.grb
- * cat A.inv | fgrep ":TMP:" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib tmp500.grb
- * cat A.inv | egrep ":(UGRD|VGRD):" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib wind500.grb
+ * $ wgrib2 A.grb >A.inv
+ * $ cat A.inv | fgrep ":HGT:" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib hgt500.grb
+ * $ cat A.inv | fgrep ":TMP:" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib tmp500.grb
+ * $ cat A.inv | egrep ":(UGRD|VGRD):" | fgrep ":500 mb:" | wgrib2 -i A.grb -grib wind500.grb
  * @endcode
  * 
  * Using the various -grep, -inv and the -i_file option, the above example can be written as 
  * 
  * @code{.sh}
- * wgrib2 A.grb -inv A.inv
- * wgrib2 -fgrep ":HGT:" -fgrep ":500 mb:" -i_file A.inv A.grb -grib hgt500.grb
- * wgrib2 -fgrep ":TMP:" -fgrep ":500 mb:" -i_file A.inv A.grb -grib tmp500.grb
- * wgrib2 -egrep ":(UGRD|VGRD):" -fgrep ":500 mb:" -i_file A.inv A.grb -grib wind500.grb
+ * $ wgrib2 A.grb -inv A.inv
+ * $ wgrib2 -fgrep ":HGT:" -fgrep ":500 mb:" -i_file A.inv A.grb -grib hgt500.grb
+ * $ wgrib2 -fgrep ":TMP:" -fgrep ":500 mb:" -i_file A.inv A.grb -grib tmp500.grb
+ * $ wgrib2 -egrep ":(UGRD|VGRD):" -fgrep ":500 mb:" -i_file A.inv A.grb -grib wind500.grb
  * @endcode
  * 
  * The first version is easier to read. So why were the extra options added? 
@@ -799,6 +872,7 @@ int f_egrep(ARG1)  {
  * 
  * The -grep options are used in wgrib2api's grb2_inq(..) function. 
  * 
+ * <pre>
  * Definition of grep options:
  * 
  * (...) | wgrib2 -OP1 X (...)
@@ -809,6 +883,7 @@ int f_egrep(ARG1)  {
  *      if OP1 == fgrep       then OP2 = fgrep
  *      if OP1 == egrep_v     then OP2 = egrep -v
  *      if OP1 == fgrep_v     then OP2 = fgrep -v
+ * </pre>
  * 
  * X is a posix extended regular expression (egrep, egrep_v) or a fixed string (fgrep, fgrep_v)
  * 
