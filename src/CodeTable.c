@@ -1303,7 +1303,7 @@ int code_table_4_3(unsigned char **sec) {
  * @author Wesley Ebisuzaki @date 2009
  */
 unsigned char *code_table_4_3_location(unsigned char **sec) {
-    int pdt, center, n, np;
+    int pdt, center, np;
 
     pdt =  GB2_ProdDefTemplateNo(sec);
     center = GB2_Center(sec);
@@ -1367,8 +1367,8 @@ unsigned char *code_table_4_3_location(unsigned char **sec) {
         case 67:
         case 68:
             np = sec[4][19];
-            if (np == 255) n = 0;
-            return sec[4]+20+5*n;
+            if (np == 255) np = 0;
+            return sec[4]+20+5*np;
         case 70:
         case 71:
         case 72:
