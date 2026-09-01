@@ -335,7 +335,7 @@ main()
     }
     // GRIB file has JPEG packing type.
 #if G2_JPEG2000_ENABLED == 1
-    printf("Testing grb2_inqVA()...\n");
+    printf("Testing grb2_inq()...\n");
     {
         long long int ret;
         long long int size = 36391;
@@ -346,73 +346,73 @@ main()
 
         printf("WENS & LATLON conflict test. Should return -1.\n");
         options = WENS | LATLON;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        ret = grb2_inq(GRB_FILE, GRB_INV, options);
         if (ret != -1) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected -1.\n", ret);
+            printf("ERROR: grb2_inq() returned %lld, expected -1.\n", ret);
             return 26;
         }
 
         printf("WENS & RAW_ORDER conflict test. Should return -1.\n");
         options = WENS | RAW_ORDER;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        ret = grb2_inq(GRB_FILE, GRB_INV, options);
         if (ret != -1) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected -1.\n", ret);
+            printf("ERROR: grb2_inq() returned %lld, expected -1.\n", ret);
             return 27;
         }
 
         printf("LATLON & RAW_ORDER conflict test. Should return -1.\n");
         options = LATLON | RAW_ORDER;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, NULL);
+        ret = grb2_inq(GRB_FILE, GRB_INV, options);
         if (ret != -1) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected -1.\n", ret);
+            printf("ERROR: grb2_inq() returned %lld, expected -1.\n", ret);
             return 28;
         }
 
         printf("Invalid file name. Should return -2.\n");
         options = SEQUENTIAL;
-        ret = grb2_inqVA("invalid.grib2", GRB_INV, options, NULL);
+        ret = grb2_inq("invalid.grib2", GRB_INV, options);
         if (ret != -2) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected -2.\n", ret);
+            printf("ERROR: grb2_inq() returned %lld, expected -2.\n", ret);
             return 29;
         }
 
         printf("Invalid argument. Should return -3.\n");
         options = SEQUENTIAL;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "-invalid_arg", NULL);
+        ret = grb2_inq(GRB_FILE, GRB_INV, options, "-invalid_arg");
         if (ret != -3) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected -3.\n", ret);
+            printf("ERROR: grb2_inq() returned %lld, expected -3.\n", ret);
             return 30;
         }
 
         printf("Non-sequential option with empty argument. Should return -5.\n");
         options = 0;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "", NULL);
+        ret = grb2_inq(GRB_FILE, GRB_INV, options, "");
         if (ret != -5) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected -5.\n", ret);
+            printf("ERROR: grb2_inq() returned %lld, expected -5.\n", ret);
             return 32;
         }
 
         printf("Test with non-conflicting options.\n");
         options = DATA|LATLON|META|GRIDMETA;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD", NULL);
+        ret = grb2_inq(GRB_FILE, GRB_INV, options, "UGRD");
         if (ret != size) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
+            printf("ERROR: grb2_inq() returned %lld, expected %lld.\n", ret, size);
             return 34;
         }
 
         printf("Test with WENS.\n");
         options = WENS;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD", NULL);
+        ret = grb2_inq(GRB_FILE, GRB_INV, options, "UGRD");
         if (ret != size) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
+            printf("ERROR: grb2_inq() returned %lld, expected %lld.\n", ret, size);
             return 35;
         }
 
         printf("Test with RAW_ORDER.\n");
         options = RAW_ORDER;
-        ret = grb2_inqVA(GRB_FILE, GRB_INV, options, "UGRD", NULL);
+        ret = grb2_inq(GRB_FILE, GRB_INV, options, "UGRD");
         if (ret != size) {
-            printf("ERROR: grb2_inqVA() returned %lld, expected %lld.\n", ret, size);
+            printf("ERROR: grb2_inq() returned %lld, expected %lld.\n", ret, size);
             return 36;
         }
     }

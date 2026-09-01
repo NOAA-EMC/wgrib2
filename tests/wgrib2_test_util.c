@@ -79,13 +79,6 @@ int compare_grib2_files(const char *fname1, const char *fname2) {
         size_t n1 = fread(buf1, 1, BUFFER_SIZE, f1);
         size_t n2 = fread(buf2, 1, BUFFER_SIZE, f2);
 
-        if (n1 != n2) {
-            fclose(f1);
-            fclose(f2);
-            printf("Files differ in size.\n");
-            return 102; 
-        }
-
         if (n1 == 0) {
             int err1 = ferror(f1);
             int err2 = ferror(f2);
@@ -93,11 +86,19 @@ int compare_grib2_files(const char *fname1, const char *fname2) {
             fclose(f2);
             if (err1 || err2) {
                 printf("Error reading files.\n");
-                return 103;  
+                return 102;  
             } else {
                 return 0;   // End of both files reached, they are identical
             }
         }
+
+        if (n1 != n2) {
+            fclose(f1);
+            fclose(f2);
+            printf("Files differ in size.\n");
+            return 103; 
+        }
+
 
         if (memcmp(buf1, buf2, n1) != 0) {
             fclose(f1);
