@@ -1611,7 +1611,7 @@ int wgrib2_get_reg_data(float *data, size_t size, int reg) {
  * @return
  * - 0 :: success
  * - 1 :: invalid register
- * - 2 :: size mismatch
+ * - 2 :: allocation failure
  *
  * @author Wesley Ebisuzaki @date 4/2009
  */
