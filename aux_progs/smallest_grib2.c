@@ -43,7 +43,11 @@
  * @param argc Number of command line arguments
  * @param argv Array of command line arguments
  *
- * @return 0 on success, non-zero on error
+ * @return 
+ * - 0 :: Success
+ * - 1 :: First 4 bytes not "GRIB"
+ * - 4 :: Read error occurred
+ * - 8 :: Exact error is written to stderr
  *
  * @author Wesley Ebisuzaki @date 2010
  */

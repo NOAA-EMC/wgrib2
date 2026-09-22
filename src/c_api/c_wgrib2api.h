@@ -53,6 +53,7 @@ int wgrib2_add_cmd(const char *string);
 int wgrib2_cmd(void);
 int wgrib2_list_cmd(void);
 
-
 void fatal_error(const char *fmt, ...);
 
+/* Functions to support unit testing only. */
+void grb2_inq_set_state(int last_options_val, int good_val, int npnts_val);
