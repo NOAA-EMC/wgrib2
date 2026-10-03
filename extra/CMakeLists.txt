@@ -34,6 +34,10 @@ else()
   message(STATUS "MySQL not found: building wgrib2_extra without MySQL support")
 endif()
 
+if(USE_OPENMP)
+  target_link_libraries(wgrib2_extra PUBLIC OpenMP::OpenMP_C)
+endif()
+
 if (BUILD_LIB)
   set_property(TARGET wgrib2_extra PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()

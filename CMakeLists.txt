@@ -94,7 +94,27 @@ message(STATUS "Writing config.h...")
 configure_file("${PROJECT_SOURCE_DIR}/src/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-message(STATUS "Adding wgrib2, aux_probs subdirectories...")
+message(STATUS "Setting compiler flags...")
+if(CMAKE_C_COMPILER_ID MATCHES "^Intel$")
+  set(CMAKE_C_FLAGS "-g -traceback -fp-model=precise ${CMAKE_C_FLAGS}")
+  set(CMAKE_C_FLAGS_DEBUG "-O0 -fp-model=precise ${CMAKE_C_FLAGS_DEBUG}")
+elseif(CMAKE_C_COMPILER_ID MATCHES "^IntelLLVM$")
+  set(CMAKE_C_FLAGS "-O3 -g -traceback -fp-model=strict ${CMAKE_C_FLAGS}")
+  set(CMAKE_C_FLAGS_DEBUG "-O0 -g -traceback -fp-model=strict ${CMAKE_C_FLAGS_DEBUG}")
+elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
+  set(CMAKE_C_FLAGS "-O3 -g -Wall -Werror=format-security ${CMAKE_C_FLAGS}")
+  set(CMAKE_C_FLAGS_DEBUG "-O0 -g -Wall -Werror=format-security ${CMAKE_C_FLAGS_DEBUG}")
+endif()
+
+if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
+  set(CMAKE_Fortran_FLAGS "-g -traceback ${CMAKE_Fortran_FLAGS}")
+  set(CMAKE_Fortran_FLAGS_DEBUG "-O0 -g -traceback ${CMAKE_Fortran_FLAGS_DEBUG}")
+elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
+  set(CMAKE_Fortran_FLAGS "-O2 -g -Wall -Wno-tabs -fbacktrace ${CMAKE_Fortran_FLAGS}")
+  set(CMAKE_Fortran_FLAGS_DEBUG "-O0 -ggdb -Wall -fbacktrace ${CMAKE_Fortran_FLAGS_DEBUG}")
+endif()
+
+message(STATUS "Adding extra, src and aux_progs subdirectories...")
 
 if (BUILD_EXTRA)
   add_subdirectory(extra)
@@ -136,10 +156,6 @@ endif()
 if (BUILD_WGRIB)
   add_subdirectory(wgrib)
 endif()
-
-#  to set compiler flags
-#  see wgrib2/CMakeLists.txt
-#
 
 # Turn on unit testing.
 include(CTest)
