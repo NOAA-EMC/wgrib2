@@ -9,8 +9,12 @@
 #include <stdio.h>
 
 #define NDATA 100
+#include "config.h"
+#ifdef USE_G2CLIB
+#include <grib2.h>
 #define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
 #define GRB_INV "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
+#endif
 
 int wgrib2_set_reg(float *data, size_t size, int reg);
 int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n);
