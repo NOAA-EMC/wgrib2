@@ -10,6 +10,6 @@ cd tables.tmp || exit 1
 #  diff -Nu "../../src/$fil" .
 #done
 
-cp -vp ./*.dat ./*.c ../../src/
+cp -vp ./*.dat ./*.c ./*.h ../../src/
 
 exit
