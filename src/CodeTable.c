@@ -1303,7 +1303,7 @@ int code_table_4_3(unsigned char **sec) {
  * @author Wesley Ebisuzaki @date 2009
  */
 unsigned char *code_table_4_3_location(unsigned char **sec) {
-    int pdt, center, np;
+    int pdt, center, np, nutaftac;
 
     pdt =  GB2_ProdDefTemplateNo(sec);
     center = GB2_Center(sec);
