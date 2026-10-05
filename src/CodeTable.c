@@ -1303,77 +1303,12 @@ int code_table_4_3(unsigned char **sec) {
  * @author Wesley Ebisuzaki @date 2009
  */
 unsigned char *code_table_4_3_location(unsigned char **sec) {
-    int pdt, center, n, np;
+    int pdt, center, np, nutaftac;
 
     pdt =  GB2_ProdDefTemplateNo(sec);
     center = GB2_Center(sec);
     switch(pdt) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-        case 11:
-        case 12:
-        case 13:
-        case 14:
-        case 15:
-        case 20:
-        case 30:
-        case 31:
-        case 32:
-        case 33:
-        case 34:
-        case 35:
-        case 47:
-        case 60:
-        case 61:
-        case 1000:
-        case 1001:
-        case 1002:
-        case 1100:
-        case 1101:
-            return sec[4]+11;
-        case 40:
-        case 41:
-        case 42:
-        case 43:
-        case 52:
-            return sec[4]+13;
-        case 44:
-        case 45:
-        case 46:
-            return sec[4]+24;
-        case 48:
-        case 49:
-            return sec[4]+35;
-        case 53:
-        case 54:
-            np = sec[4][12];
-            return sec[4] + 15 + 2*np;
-        case 56:
-        case 59:
-        case 62:
-        case 63:
-            return sec[4]+17;
-        case 57:
-        case 58:
-        case 67:
-        case 68:
-            np = sec[4][19];
-            if (np == 255) n = 0;
-            return sec[4]+20+5*n;
-        case 70:
-        case 71:
-        case 72:
-        case 73:
-            return sec[4]+16;
+#include "CodeTable_4.3_location.dat"
     }
     if (center == JMA1 || center == JMA2) {
         switch(pdt) {
