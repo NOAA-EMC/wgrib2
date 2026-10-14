@@ -1,0 +1,62 @@
+{% set version = "3.8.0" %}
+{% set wz = "1" %}
+
+package:
+  name: wgrib2
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/wetterzentrale/wgrib2-wz.git
+  git_rev: v{{ version }}-wz{{ wz }}
+
+build:
+  # Higher than the conda-forge build number, and the string marks this as our
+  # own build (conda-forge wgrib2 does not build the extra/ MySQL functions).
+  number: 100
+  string: wz{{ wz }}_{{ PKG_BUILDNUM }}
+  skip: true  # [not linux]
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('fortran') }}
+    - {{ stdlib('c') }}
+    - cmake
+    - make
+  host:
+    - nceplibs-g2c >=2.3.0
+    - nceplibs-ip >=5.2.0
+    - libaec
+    - libnetcdf
+    - libpng
+    - zlib
+    - mariadb-connector-c
+  run:
+    - nceplibs-g2c >=2.3.0
+    - nceplibs-ip >=5.2.0
+    - libaec
+    - libnetcdf
+    - libpng
+    - zlib
+    - mariadb-connector-c
+
+test:
+  commands:
+    - wgrib2 -version | grep "3.8.0"
+    - wgrib2 -config | grep "mysql package is installed"
+    - wgrib2 -config | grep "IPOLATES"
+    - wgrib2 -h mysql_speed_ens | grep "mysql_speed_ens"
+
+about:
+  home: https://github.com/wetterzentrale/wgrib2-wz
+  license: GPL-2.0-or-later
+  license_file: wgrib2/LICENSE-wgrib2
+  summary: wgrib2 (NOAA-EMC) with the wetterzentrale MySQL functions (-mysql_speed_ens, option file credentials)
+  description: |
+    Fork of NOAA-EMC/wgrib2 with the extra/ MySQL functions built (BUILD_EXTRA=ON),
+    the ensemble loader -mysql_speed_ens, and "-" as password to read the
+    credentials from the group [wgrib2] of ~/.my.cnf. See docs/README.wz.
+
+extra:
+  recipe-maintainers:
+    - RogierFloors
