@@ -1,0 +1,56 @@
+wetterzentrale changes on top of NOAA-EMC/wgrib2
+================================================
+
+This fork (branch `wz`) is the upstream release v3.8.0 plus a few changes.
+Upstream releases are merged into `wz` (see "Upgrading" below).
+
+Changes
+-------
+1. extra/Mysql_speed_ens.c: new function `-mysql_speed_ens`, registered in
+   extra/fnlist_extra.h, wgrib2/fnlist.c and wgrib2/fnlist.h. It is the
+   ensemble variant of `-mysql_speed`:
+   - the ensemble member comes from perturbation_number(); for centre 78
+     (DWD ICON) one is subtracted because ICON has no control run;
+   - the parameter mapping comes from the table
+     `wgrib2_parameter_mapping_ens` (instead of `wgrib2_parameter_mapping`);
+   - the column names get a member suffix, `<param>_<level>_P<nn>`;
+   - the run time column `rt` is not loaded;
+   - the limits are larger (MAX_NXNY 20,000,000; MAX_SQL_INSERT 30,000).
+2. cmake/FindMySQL.cmake and extra/CMakeLists.txt: find and link the MySQL /
+   MariaDB client library when USE_MYSQL=ON (the upstream CMake build only
+   defines USE_MYSQL).
+3. extra/fnlist_extra.h, wgrib2/fnlist.h: declare f_lev() and give the mysql
+   functions their ARG5/ARG7 prototypes. Without this the build fails with
+   GCC 14 and later (implicit declaration / incompatible pointer types).
+
+Building
+--------
+Use a conda environment with the compilers, nceplibs-ip (>= 5.2), nceplibs-g2c,
+libnetcdf, libaec and mariadb-connector-c:
+
+  E=/home/rogier/miniforge3/envs/wgrib2-build
+  cmake -S . -B build \
+    -DCMAKE_C_COMPILER=$E/bin/x86_64-conda-linux-gnu-gcc \
+    -DCMAKE_Fortran_COMPILER=$E/bin/x86_64-conda-linux-gnu-gfortran \
+    -DMYSQL_CONFIG=$E/bin/mariadb_config \
+    -DBUILD_EXTRA=ON -DUSE_MYSQL=ON -DUSE_NETCDF=ON -DUSE_IPOLATES=ON \
+    -DUSE_OPENMP=ON -DUSE_G2CLIB_HIGH=ON -DUSE_G2CLIB_LOW=ON \
+    -DBUILD_SHARED_LIB=OFF -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
+    -DCMAKE_PREFIX_PATH=$E -DCMAKE_INSTALL_PREFIX=<install dir>
+  cmake --build build -j8
+
+The conda MariaDB connector looks for the server socket in /tmp/mysql.sock.
+On this server the socket is /var/lib/mysql/mysql.sock, so programs using
+`localhost` need MYSQL_UNIX_PORT=/var/lib/mysql/mysql.sock in the environment.
+
+Not included compared with the old v3.1.3 build: Proj4 geolocation.
+
+Upgrading
+---------
+  git fetch upstream --tags
+  git checkout wz
+  git merge vX.Y.Z
+
+Conflicts can only be in wgrib2/fnlist.c, wgrib2/fnlist.h (in newer upstream
+versions src/fnlist.*), extra/CMakeLists.txt and extra/fnlist_extra.h. After
+a merge rebuild and compare the output with the previous binary.
