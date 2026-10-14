@@ -8,3 +8,6 @@ int f_mysql(ARG5);
 int f_mysql_dump(ARG7);
 int f_mysql_speed(ARG7);
 int f_mysql_speed_ens(ARG7);
+
+/* used by the mysql functions; declared in wgrib2/fnlist.h */
+int f_lev(ARG0);
