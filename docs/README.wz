@@ -25,23 +25,17 @@ Changes
 
 Building
 --------
-Use a conda environment with the compilers, nceplibs-ip (>= 5.2), nceplibs-g2c,
-libnetcdf, libaec and mariadb-connector-c:
+The program is built as a conda package from the recipe in `recipe/` (the source of the build is a git tag of
+this repository, set by `git_rev` in `recipe/meta.yaml`):
 
-  E=/home/rogier/miniforge3/envs/wgrib2-build
-  cmake -S . -B build \
-    -DCMAKE_C_COMPILER=$E/bin/x86_64-conda-linux-gnu-gcc \
-    -DCMAKE_Fortran_COMPILER=$E/bin/x86_64-conda-linux-gnu-gfortran \
-    -DMYSQL_CONFIG=$E/bin/mariadb_config \
-    -DBUILD_EXTRA=ON -DUSE_MYSQL=ON -DUSE_NETCDF=ON -DUSE_IPOLATES=ON \
-    -DUSE_OPENMP=ON -DUSE_G2CLIB_HIGH=ON -DUSE_G2CLIB_LOW=ON \
-    -DBUILD_SHARED_LIB=OFF -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
-    -DCMAKE_PREFIX_PATH=$E -DCMAKE_INSTALL_PREFIX=<install dir>
-  cmake --build build -j8
+  cd recipe
+  conda build . -c conda-forge --override-channels
+  mamba install -n dwd314 -c <conda-bld channel> -c conda-forge --override-channels wgrib2=3.8.0=wz1_100
 
-The conda MariaDB connector looks for the server socket in /tmp/mysql.sock.
-On this server the socket is /var/lib/mysql/mysql.sock, so programs using
-`localhost` need MYSQL_UNIX_PORT=/var/lib/mysql/mysql.sock in the environment.
+`recipe/build.sh` shows the CMake options (BUILD_EXTRA=ON, USE_MYSQL, USE_IPOLATES, USE_NETCDF, ...).
+`recipe/conda_build_config.yaml` pins the compilers to gcc/gfortran 16 (nceplibs-ip's Fortran module files
+need the same gfortran version). The MySQL client is mariadb-connector-c, which looks for the server
+socket in /tmp/mysql.sock; use `socket=` in the [wgrib2] option file group or MYSQL_UNIX_PORT.
 
 Not included compared with the old v3.1.3 build: Proj4 geolocation.
 
