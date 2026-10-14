@@ -11,6 +11,12 @@ include_directories(../wgrib2/)
 add_library(wgrib2_extra OBJECT ${src})
 target_compile_definitions(wgrib2_extra PUBLIC ${definitions_list}) 
 
+# The MySQL code needs the client library (see cmake/FindMySQL.cmake).
+if (USE_MYSQL)
+  find_package(MySQL REQUIRED)
+  target_link_libraries(wgrib2_extra PUBLIC MySQL::MySQL)
+endif()
+
 if (BUILD_LIB)
   set_property(TARGET wgrib2_extra PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
