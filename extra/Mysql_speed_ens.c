@@ -17,6 +17,7 @@
 #ifdef USE_MYSQL
 
 #include <mysql.h>
+#include "Mysql_connect.h"
 
 
 extern int decode, GDS_change_no, new_GDS, latlon;
@@ -126,7 +127,7 @@ int f_mysql_speed_ens(ARG7) {
 	mysql_options(save->conn,MYSQL_OPT_LOCAL_INFILE, (char *) &load_local_infile);
 
 	/* Connect to database */
-	if (!mysql_real_connect(save->conn, server, user, password, database, 0, NULL, 0)) {
+	if (!wgrib2_mysql_connect(save->conn, server, user, password, database)) {
 	   fatal_error("f_mysql_speed: could not connect to %s", mysql_error(save->conn));
 	} 
 	return 0;

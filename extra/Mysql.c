@@ -23,6 +23,7 @@
 #ifdef USE_MYSQL
 
 #include <mysql.h>
+#include "Mysql_connect.h"
 
 extern int decode;
 extern int latlon;
@@ -79,7 +80,7 @@ int f_mysql(ARG5) {
 	save->conn = mysql_init(NULL);
 
 	/* Connect to database */
-	if (!mysql_real_connect(save->conn, server, user, password, database, 0, NULL, 0))
+	if (!wgrib2_mysql_connect(save->conn, server, user, password, database))
 	    fatal_error("mysql error %s", mysql_error(save->conn));
     }
 
