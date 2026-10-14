@@ -7,3 +7,4 @@
 int f_mysql(ARG5);
 int f_mysql_dump(ARG7);
 int f_mysql_speed(ARG7);
+int f_mysql_speed_ens(ARG7);
