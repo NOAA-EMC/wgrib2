@@ -34,8 +34,12 @@ int wgrib2_set_reg(float *data, size_t size, int reg);
  * @param ndata Number of data points.
  * @param ... Additional optional arguments.
  *
- * @return 0 on success, error code otherwise.
- *
+ * @return
+ * - 0 :: success
+ * - 1 :: ndata == 0
+ * - 2 :: error saving data to reg_9
+ * - 3 :: failed call to wgrib2
+ * 
  * @author Wesley Ebisuzaki @date 3/2018
  */
 int grb2_wrtVA(const char *grb, const char *template, int msgno, float *data, 
@@ -55,7 +59,7 @@ int grb2_wrtVA(const char *grb, const char *template, int msgno, float *data,
     ierr = wgrib2_set_reg(data, ndata, 9);
     if (ierr) {
         fprintf(stderr,"grb2_wrt error: saving data to reg_9\n");
-        return 1;
+        return 2;
     }
 
     /* create wgrib2 command line */
@@ -161,6 +165,6 @@ int grb2_wrtVA(const char *grb, const char *template, int msgno, float *data,
     wgrib2_add_cmd(grb);
     wgrib2_list_cmd();
     i = wgrib2_cmd();
-    if (i) return 2;		/* failed call to wgrib2 */
+    if (i) return 3;		/* failed call to wgrib2 */
     return  0;
 }
