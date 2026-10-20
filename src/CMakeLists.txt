@@ -15,26 +15,6 @@
 #  incuding aec, jasper, etc were included with the wgrib2 library
 #  in github version, it is different.
 
-message(STATUS "Setting wgrib2 compiler flags...")
-if(CMAKE_C_COMPILER_ID MATCHES "^Intel$")
-  set(CMAKE_C_FLAGS "-g -traceback -fp-model=precise ${CMAKE_C_FLAGS}")
-  set(CMAKE_C_FLAGS_DEBUG "-O0 -fp-model=precise ${CMAKE_C_FLAGS_DEBUG}")
-elseif(CMAKE_C_COMPILER_ID MATCHES "^IntelLLVM$")
-  set(CMAKE_C_FLAGS "-O3 -g -traceback -fp-model=strict ${CMAKE_C_FLAGS}")
-  set(CMAKE_C_FLAGS_DEBUG "-O0 -g -traceback -fp-model=strict ${CMAKE_C_FLAGS_DEBUG}")
-elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
-  set(CMAKE_C_FLAGS "-O3 -g -Wall -Werror=format-security ${CMAKE_C_FLAGS}")
-  set(CMAKE_C_FLAGS_DEBUG "-O0 -g -Wall -Werror=format-security ${CMAKE_C_FLAGS_DEBUG}")
-endif()
-
-if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-  set(CMAKE_Fortran_FLAGS "-g -traceback ${CMAKE_Fortran_FLAGS}")
-  set(CMAKE_Fortran_FLAGS_DEBUG "-O0 -g -traceback ${CMAKE_Fortran_FLAGS_DEBUG}")
-elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
-  set(CMAKE_Fortran_FLAGS "-O2 -g -Wall -Wno-tabs -fbacktrace ${CMAKE_Fortran_FLAGS}")
-  set(CMAKE_Fortran_FLAGS_DEBUG "-O0 -ggdb -Wall -fbacktrace ${CMAKE_Fortran_FLAGS_DEBUG}")
-endif()
-
 # sets lib_src
 set(lib_src AAIG.c AAIGlong.c addtime.c aec_pk.c Aerosol.c Alarm.c
 Alias.c Ave_test.c Ave_var.c Bbox.c bitstream.c Box_ave.c

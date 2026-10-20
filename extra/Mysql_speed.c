@@ -12,7 +12,7 @@
 #include <string.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist_extra.h"
+#include "fnlist.h"
 
 #ifdef USE_MYSQL
 
@@ -114,10 +114,10 @@ int f_mysql_speed(ARG7) {
 	save->validtime[0] = 0;
 	load_local_infile = 1;		// 1 = LOAD LOCAL INFILE,  0 = do not LOAD LOCAL INFILE
 
-	if (sscanf(arg6,"%d", &save->wlon) != 1) {
+	if (sscanf(arg6,"%u", &save->wlon) != 1) {
             fatal_error("Argument 6, use western longitudes, has to be 0 or 1, error parsing %s", arg6);
         }
-        if (sscanf(arg7,"%d", &save->remove_unlikely) != 1) {
+        if (sscanf(arg7,"%u", &save->remove_unlikely) != 1) {
             fatal_error("Argument 7, remove unlikely values, has to be 0 or 1, error parsing %s", arg7);
         }
 	

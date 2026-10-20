@@ -17,7 +17,7 @@
 #include <string.h>
 // #include <unistd.h>
 #include "wgrib2.h"
-#include "fnlist_extra.h"
+#include "fnlist.h"
 
 #ifdef USE_MYSQL
 
