@@ -46,8 +46,6 @@ target_include_directories(wgrib2_extra PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
   
-#install(FILES "fnlist_extra.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
 install(
   TARGETS wgrib2_extra
   EXPORT wgrib2_exports

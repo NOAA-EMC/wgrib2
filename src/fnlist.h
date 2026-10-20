@@ -401,6 +401,8 @@ int f_set_ftime_mode(ARG1);
 int f_set_regex(ARG1);
 int f_tigge(ARG0);
 int f_transient(ARG1);
+#ifdef BUILD_EXTRA
 int f_mysql(ARG5);
 int f_mysql_dump(ARG7);
 int f_mysql_speed(ARG7);
+#endif

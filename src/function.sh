@@ -96,7 +96,8 @@ echo "var=$v $var $var1"
 
 grep "^ \* HEADER:" ../extra/[A-Z]*.c | cut -f3- -d: | sort -t: -k3,3 -k2,2 >fnlist_extra
 
-echo "   #ifdef BUILD_EXTRA" >>fnlist.c
+echo "#ifdef BUILD_EXTRA" >>fnlist.c
+echo "#ifdef BUILD_EXTRA" >>fnlist.h
 
 {
    read line
@@ -129,15 +130,19 @@ echo "var=$v $var $var1"
       done
       t="$t);"
 #       echo "$t"
-      echo "$t" >> fnlist.h
+      ARG="ARG`expr $arg - 1`"
+      echo "int $var1($ARG);" >> fnlist.h
       read line
    done
 } < fnlist_extra
 
-echo "   #endif" >>fnlist.c
+echo "#endif" >>fnlist.c
 echo "};" >>fnlist.c
 
-echo " " >> fnlist.c
+echo "" >> fnlist.c
 echo "/** Number of functions in the function list. */" >> fnlist.c
 echo "int nfunctions = sizeof functions / sizeof functions[0];" >> fnlist.c
-rm fnlist
+
+echo "#endif" >>fnlist.h
+
+rm fnlist fnlist_extra
